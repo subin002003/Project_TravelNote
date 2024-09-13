@@ -9,7 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 public class ItineraryDTO {
 
-	private int companionNo;
 	private int itineraryNo;
 	private int userNo;
+	private int regionNo;
+	private String itineraryStartDate;
+	private String itineraryEndDate;
+	private String itineraryTitle;
 }
