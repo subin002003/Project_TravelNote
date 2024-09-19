@@ -8,7 +8,7 @@ const Header = () => {
       {/* 임시 링크 */}
       <ul>
         <li>
-          <Link to="/foreign/Main">해외 여행 페이지</Link>
+          <Link to="/foreign/list">해외 여행 메뉴로 이동</Link>
         </li>
       </ul>
     </>

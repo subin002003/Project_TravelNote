@@ -2,3 +2,7 @@
 npm install axios
 npm install react-router-dom 
 npm install recoil
+
+2024-09-19 16:40 채예원
+npm install react-datepicker
+npm install date-fns

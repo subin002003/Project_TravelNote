@@ -1,28 +1,22 @@
-import { useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import "./foreignPlan.css";
+import ForeignList from "./ForeignList";
+import ItineraryForm from "./ItineraryForm";
 
 const ForeignMain = () => {
-  const [regionList, setRegionList] = useState(["지역"]);
   return (
     <>
-      <div className="plan-title">여행지 목록</div>
-      <div className="foreign-list">
-        <ul>
-          {regionList.map((region, index) => {
-            return <Region />;
-          })}
-        </ul>
+      <div className="foreign-title">
+        <h2>해외 여행 플래너</h2>
       </div>
+      <Routes>
+        <Route path="list" element={<ForeignList />}></Route>
+        <Route
+          path="createItinerary/:regionNo"
+          element={<ItineraryForm />}
+        ></Route>
+      </Routes>
     </>
-  );
-};
-
-const Region = (props) => {
-  const region = props.region;
-  const index = props.index;
-  return (
-    <li key={"region-" + index}>
-      <div></div>
-    </li>
   );
 };
 
