@@ -4,8 +4,8 @@ import Footer from "./component/common/Footer";
 import Header from "./component/common/Header";
 import Main from "./component/common/Main";
 import ForeignMain from "./foreignPlan/ForeignMain";
-import DomesticMain from "./Domestic/DomesticMain";
-import CityDetail from "./Domestic/CityDetail";
+import DomesticMain from "./component/Domestic/DomesticMain";
+import CityDetail from "./component/Domestic/CityDetail";
 import JoinUser from "./component/user/JoinUser";
 
 function App() {

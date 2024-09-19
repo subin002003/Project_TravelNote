@@ -7,7 +7,7 @@ const CityDetail = () => {
       <div className="detail-content">
         <h2>{cityName}</h2>
         <img
-          src={`url to=${cityName}images`}
+          src={`/images/${cityName}.jpg`}
           alt={cityName}
           className="city-detail-image"
         />
