@@ -14,11 +14,14 @@ import lombok.NoArgsConstructor;
 @Alias(value="product")
 public class ProductDTO {
 	private int productNo;
-	private int userNo;
 	private String productName;
+	private String productSubName;
 	private String productThumb;
 	private int productPrice;
 	private String productInfo;
+	private String productLatitude;
+	private String productLongitude;
+	private String productWriter;
 	private int productStatus;
 	private String enrollDate;
 	private List<ProductFileDTO> fileList;

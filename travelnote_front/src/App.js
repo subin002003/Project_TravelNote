@@ -5,18 +5,20 @@ import Header from "./component/common/Header";
 import Main from "./component/common/Main";
 import ForeignMain from "./foreignPlan/ForeignMain";
 import JoinUser from "./component/user/JoinUser";
+import ProductMain from "./component/product/ProductMain";
 
 function App() {
   return (
     <div className="wrap">
       <Header />
       <main className="content">
-        <h1>Travel Note 메인 페이지</h1>
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/foreign/*" element={<ForeignMain />}></Route>
+          <Route path="/joinUser" element={<JoinUser />}></Route>
+          <Route path="/product/*" element={<ProductMain />} />
+        </Routes>
       </main>
-      <Routes>
-        <Route path="/foreign/*" element={<ForeignMain />}></Route>
-        <Route path="/joinUser" element={<JoinUser />}></Route>
-      </Routes>
       <Footer />
     </div>
   );
