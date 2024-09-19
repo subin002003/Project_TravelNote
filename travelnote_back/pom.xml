@@ -32,7 +32,8 @@
 	
 	<packaging>jar</packaging>
 	
-	<dependencies>	
+	<dependencies>
+		<!-- swagger-ui -->
 		<!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
 		<dependency>
 		    <groupId>org.springdoc</groupId>
