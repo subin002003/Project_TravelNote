@@ -1,8 +1,15 @@
 package kr.co.iei.foreignPlan.model.dto;
 
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.type.Alias;
 
-@Repository
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Alias(value="plan")
 public class PlanDTO {
 	private int planNo;
 	private int itineraryNo;
