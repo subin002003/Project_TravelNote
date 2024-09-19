@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Alias(value="place")
-public class PlaceDTO {
+@Alias(value="foreignPlace")
+public class ForeignPlaceDTO {
 	private int placeNo;
 	private String placeName;
 	private String placeAddress;

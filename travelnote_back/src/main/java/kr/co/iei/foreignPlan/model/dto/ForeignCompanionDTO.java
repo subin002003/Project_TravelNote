@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Alias(value="region")
-public class RegionDTO {
-	private int regionNo;
-	private String regionName;
-	private String countryName;
-	private String timeZone;
-	private String currencyCode;
+@Alias(value="foreginCompanion")
+public class ForeignCompanionDTO {
+	private int companionNo;
+	private int itineraryNo;
+	private int userNo;
 }
