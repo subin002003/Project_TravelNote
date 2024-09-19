@@ -1,11 +1,16 @@
 package kr.co.iei.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.iei.user.model.service.UserService;
+import kr.co.iei.util.EmailSender;
 
 @CrossOrigin("*")
 @RestController
@@ -13,4 +18,19 @@ import kr.co.iei.user.model.service.UserService;
 public class UserController {
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private EmailSender sender;
+	
+	@GetMapping(value="/checkEmail/{userEmail}")
+	public ResponseEntity<Integer> checkEmail(@PathVariable String userEmail){
+		int result = userService.checkEmail(userEmail);
+		return ResponseEntity.ok(result);	
+	}
+	
+	@PostMapping(value = "/verifyEmail/{userEmail}")
+	public ResponseEntity<String> verifyEmail(@PathVariable String userEmail){
+		String verifyToken = userService.sendVerificationCode(userEmail);
+		return ResponseEntity.ok(verifyToken);	
+	}
+	
 }

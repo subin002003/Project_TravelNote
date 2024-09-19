@@ -59,6 +59,7 @@ a:hover {
 }
 
 button {
+  font-family: "SUITE-Regular";
   background-color: var(--main-color);
   color: white;
   border: none;
