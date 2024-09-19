@@ -1,3 +1,4 @@
+import "./default.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jejuImage from "./images/mainImage/jeju.jpg";
