@@ -4,6 +4,7 @@ import Footer from "./component/common/Footer";
 import Header from "./component/common/Header";
 import Main from "./component/common/Main";
 import ForeignMain from "./foreignPlan/ForeignMain";
+import DomesticMain from "./Domestic/DomesticMain";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       </main>
       <Routes>
         <Route path="/foreign/*" element={<ForeignMain />}></Route>
+        <Route path="/Domestic/*" element={<DomesticMain />}></Route>
       </Routes>
       <Footer />
     </div>
