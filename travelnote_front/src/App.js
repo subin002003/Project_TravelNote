@@ -4,6 +4,7 @@ import Footer from "./component/common/Footer";
 import Header from "./component/common/Header";
 import Main from "./component/common/Main";
 import ForeignMain from "./foreignPlan/ForeignMain";
+import JoinUser from "./component/user/JoinUser";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/foreign/*" element={<ForeignMain />}></Route>
+          <Route path="/joinUser" element={<JoinUser />}></Route>
         </Routes>
       </main>
       <Footer />
