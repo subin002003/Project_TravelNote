@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Alias(value="plan")
-public class PlanDTO {
+@Alias(value="foreignPlan")
+public class ForeignPlanDTO {
 	private int planNo;
 	private int itineraryNo;
 	private int planDay;

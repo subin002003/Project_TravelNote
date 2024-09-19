@@ -9,12 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Alias(value="itinerary")
-public class ItineraryDTO {
-	private int itineraryNo;
-	private int userNo;
+@Alias(value="foreignRegion")
+public class ForeignRegionDTO {
 	private int regionNo;
-	private String itineraryStartDate;
-	private String itineraryEndDate;
-	private String itineraryTitle;	
+	private String regionName;
+	private String countryName;
+	private String timeZone;
+	private String currencyCode;
 }

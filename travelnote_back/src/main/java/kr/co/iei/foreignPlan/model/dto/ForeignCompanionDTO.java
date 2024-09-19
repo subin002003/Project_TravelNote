@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Alias(value="companion")
-public class CompanionDTO {
+@Alias(value="foreginCompanion")
+public class ForeignCompanionDTO {
 	private int companionNo;
 	private int itineraryNo;
 	private int userNo;
