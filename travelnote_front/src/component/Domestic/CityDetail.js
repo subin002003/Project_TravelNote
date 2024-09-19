@@ -13,7 +13,16 @@ const CityDetail = () => {
         />
         <form className="trip-form">
           <input type="text" placeholder="여행 제목을 입력해주세요" />
-
+          <div className="date-inputs">
+            {" "}
+            <label>
+              여행 시작 날짜:
+              <input type="date" />{" "}
+            </label>{" "}
+            <label>
+              여행 종료 날짜: <input type="date" />{" "}
+            </label>{" "}
+          </div>
           <button className="create-trip-btn">여행 일정 만들기</button>
         </form>
       </div>
