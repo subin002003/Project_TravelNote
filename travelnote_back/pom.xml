@@ -30,18 +30,20 @@
 		<java.version>17</java.version>
 	</properties>
 
-	<dependencies>	
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
-			<version>3.3.2</version>
-		</dependency>
+	
 
 	
 	<packaging>jar</packaging>
 	
 	<dependencies>
+	
+	<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+			<version>3.3.2</version>
+		</dependency>
+		
 		<!-- swagger-ui -->
 		<!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
 		<dependency>
