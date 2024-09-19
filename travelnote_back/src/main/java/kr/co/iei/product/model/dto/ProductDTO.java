@@ -17,6 +17,7 @@ public class ProductDTO {
 	private int userNo;
 	private String productName;
 	private String productThumb;
+	private int productPrice;
 	private String productInfo;
 	private int productStatus;
 	private String enrollDate;
