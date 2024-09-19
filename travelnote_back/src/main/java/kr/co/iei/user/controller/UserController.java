@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.iei.user.model.dto.UserDTO;
 import kr.co.iei.user.model.dto.VerifyInfoDTO;
 import kr.co.iei.user.model.service.UserService;
 import kr.co.iei.util.EmailSender;
@@ -46,5 +47,12 @@ public class UserController {
 		int result = userService.checkNick(userNick);
 		return ResponseEntity.ok(result);
 	}
+	
+	@PostMapping
+	public ResponseEntity<Integer> joinUser(@RequestBody UserDTO user){
+		int result = userService.joinUser(user);
+		return ResponseEntity.ok(result);
+	}
+	
 	
 }

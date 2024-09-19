@@ -174,11 +174,11 @@ const JoinUser = () => {
     nameRef.current.classList.remove("valid");
     const nameReg = /^[가-힣]{1,7}$/;
     if (!nameReg.test(user.userName)) {
-      setPhoneState(1);
+      setNameState(1);
       nameRef.current.classList.add("invalid");
       nameRef.current.innerText = "양식에 맞춰 입력해주세요.";
     } else {
-      setPhoneState(2);
+      setNameState(2);
       nameRef.current.classList.add("valid");
       nameRef.current.innerText = "";
     }
@@ -199,9 +199,11 @@ const JoinUser = () => {
     } else {
       axios.get(`${backServer}/user/checkNick/${user.userNick}`).then((res) => {
         if (res.data === 0) {
+          setNickState(3);
           nickRef.current.classList.add("valid");
           nickRef.current.innerText = "사용 가능한 닉네임 입니다.";
         } else {
+          setNickState(2);
           nickRef.current.classList.add("invalid");
           nickRef.current.innerText = "중복된 닉네임 입니다.";
         }
@@ -209,7 +211,38 @@ const JoinUser = () => {
     }
   };
 
-  const join = () => {};
+  const join = () => {
+    console.log("이메일체크 : " + emailCheck);
+    console.log("pw체크 : " + pwState);
+    console.log("phonesTATE : " + phoneState);
+    console.log("namestate : " + nameState);
+    console.log("nickstate : " + nickState);
+    if (
+      emailCheck === 4 &&
+      pwState === 3 &&
+      phoneState === 2 &&
+      nameState === 2 &&
+      nickState === 3
+    ) {
+      axios
+        .post(`${backServer}/user`, user)
+        .then((res) => {
+          console.log(res);
+          Swal.fire({
+            title: "가입 성공 !",
+            icon: "success",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      Swal.fire({
+        title: "입력값을 확인해주세요.",
+        icon: "success",
+      });
+    }
+  };
 
   return (
     <section className="section">
@@ -369,7 +402,7 @@ const JoinUser = () => {
             </div>
           </div>
           <div className="join-btn-box">
-            <button type="button">가입하기</button>
+            <button type="submit">가입하기</button>
           </div>
         </form>
       </div>

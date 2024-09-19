@@ -1,9 +1,14 @@
 package kr.co.iei.user.model.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.databind.Module.SetupContext;
 
 import kr.co.iei.user.model.dao.UserDao;
+import kr.co.iei.user.model.dto.UserDTO;
 import kr.co.iei.user.model.dto.VerifyInfoDTO;
 import kr.co.iei.util.EmailSender;
 import kr.co.iei.util.JwtUtils;
@@ -16,6 +21,8 @@ public class UserService {
 	private JwtUtils jwtUtil;
 	@Autowired
 	private EmailSender emailSender;
+	@Autowired
+	private BCryptPasswordEncoder encoder;
 
 	public int checkEmail(String userEmail) {
 		int result = userDao.checkEmail(userEmail);
@@ -59,6 +66,14 @@ public class UserService {
 
 	public int checkNick(String userNick) {
 		int result = userDao.checkNick(userNick);
+		return result;
+	}
+
+	@Transactional
+	public int joinUser(UserDTO user) {
+		String encPw = encoder.encode(user.getUserPw());
+		user.setUserPw(encPw);
+		int result = userDao.joinUser(user);
 		return result;
 	}
 }

@@ -7,4 +7,7 @@
 	<select id="checkNick" resultType="int">
 		select count(*) from user_tbl where user_nick = #{userNick}
 	</select>
+	<insert id="joinUser">
+		insert into user_tbl values(user_seq.nextval, #{userEmail}, #{userPw}, #{userName}, #{userPhone}, #{userNick}, 1, null)
+	</insert>
 </mapper>
