@@ -7,4 +7,6 @@ public interface UserDao {
 
 	int checkEmail(String userEmail);
 
+	int checkNick(String userNick);
+
 }

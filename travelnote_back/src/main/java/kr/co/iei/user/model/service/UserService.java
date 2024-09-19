@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.co.iei.user.model.dao.UserDao;
+import kr.co.iei.user.model.dto.VerifyInfoDTO;
 import kr.co.iei.util.EmailSender;
 import kr.co.iei.util.JwtUtils;
 
@@ -43,5 +44,21 @@ public class UserService {
 		emailSender.sendMail(emailTitle, userEmail, emailContent);
 		String verifyToken = jwtUtil.verifyToken(userEmail, verificationCode);
 		return verifyToken;
+	}
+
+	public int verifyCode(VerifyInfoDTO verifyInfo) {
+		//Token 에서 인증코드 추출하기
+		String tokenVerificationCode = jwtUtil.separateVerificationCode(verifyInfo.getVerifyToken());
+		String userVerificationCode = verifyInfo.getVerificationCode();
+		if(tokenVerificationCode.equals(userVerificationCode)) {
+			return 1;
+		}else {
+			return 0;
+		}
+	}
+
+	public int checkNick(String userNick) {
+		int result = userDao.checkNick(userNick);
+		return result;
 	}
 }

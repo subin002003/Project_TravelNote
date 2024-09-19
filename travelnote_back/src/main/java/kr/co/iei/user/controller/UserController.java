@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.iei.user.model.dto.VerifyInfoDTO;
 import kr.co.iei.user.model.service.UserService;
 import kr.co.iei.util.EmailSender;
 
@@ -31,6 +33,18 @@ public class UserController {
 	public ResponseEntity<String> verifyEmail(@PathVariable String userEmail){
 		String verifyToken = userService.sendVerificationCode(userEmail);
 		return ResponseEntity.ok(verifyToken);	
+	}
+	
+	@PostMapping(value = "/verifyCode")
+	public ResponseEntity<Integer> verifyCode(@RequestBody VerifyInfoDTO verifyInfo){
+		int result = userService.verifyCode(verifyInfo);
+		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping(value = "/checkNick/{userNick}")
+	public ResponseEntity<Integer> checkNick(@PathVariable String userNick){
+		int result = userService.checkNick(userNick);
+		return ResponseEntity.ok(result);
 	}
 	
 }

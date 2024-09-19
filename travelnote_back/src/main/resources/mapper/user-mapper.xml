@@ -4,4 +4,7 @@
 	<select id="checkEmail" resultType="int">
 		select count(*) from user_tbl where user_email = #{userEmail}
 	</select>
+	<select id="checkNick" resultType="int">
+		select count(*) from user_tbl where user_nick = #{userNick}
+	</select>
 </mapper>
