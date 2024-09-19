@@ -13,7 +13,8 @@ const Main = () => {
 
   const API_KEYS = {
     weather: "a33e108aafd2700b393505935a10c98e", // OpenWeatherMap API 키
-    exchange: "a08f2cb5d24898544c7a1ded", // ExchangeRate API 키
+    exchange: "fca_live_EeFeNGdxZTuLBGhbi5zT4weOAZk1AgA4ahK7Q0EP", // freecurrency API 키
+    //exchange: "a08f2cb5d24898544c7a1ded", // ExchangeRate API 키
   };
 
   // 지역 이름(name) /  해당 통화(currency) / 지역 설명(description) / 지역 이미지(image)
@@ -68,11 +69,15 @@ const Main = () => {
     };
 
     const fetchExchangeRate = async () => {
-      const BASE_CURRENCY = "KRW"; // 한국 원화
+      // const BASE_CURRENCY = "KRW"; // 한국 원화
       try {
+        // const response = await axios.get(
+        //   `https://v6.exchangerate-api.com/v6/${API_KEYS.exchange}/latest/${BASE_CURRENCY}`
+        // );
         const response = await axios.get(
-          `https://v6.exchangerate-api.com/v6/${API_KEYS.exchange}/latest/${BASE_CURRENCY}`
+          `https://api.freecurrencyapi.com/v1/latest?apikey=${API_KEYS.exchange}`
         );
+
         setExchangeRate(response.data);
       } catch (error) {
         console.error("환율 정보를 가져오는 중 오류 발생:", error);
@@ -83,13 +88,13 @@ const Main = () => {
     fetchExchangeRate();
   }, [currentIndex]); // currentIndex가 변경될 때마다 호출
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % locations.length);
-    }, 4000); // 4000ms (4초)마다 다음 위치로 이동
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCurrentIndex((prevIndex) => (prevIndex + 1) % locations.length);
+  //   }, 4000); // 4000ms (4초)마다 다음 위치로 이동
 
-    return () => clearInterval(interval); // 컴포넌트 언마운트 시 interval 정리
-  }, []);
+  //   return () => clearInterval(interval); // 컴포넌트 언마운트 시 interval 정리
+  // }, []);
 
   const nextLocation = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % locations.length);
@@ -148,13 +153,17 @@ const Main = () => {
         {exchangeRate ? (
           <div>
             <p>기본 통화 : KRW</p>
-            <p>
+            {/* <p>
               1 {locations[currentIndex].currency} ={" "}
               {1 /
                 exchangeRate.conversion_rates[
                   locations[currentIndex].currency
                 ]}{" "}
               KRW
+            </p> */}
+            <p>
+              1 {locations[currentIndex].currency} ={" "}
+              {exchangeRate[locations[currentIndex].currency]} KRW
             </p>
           </div>
         ) : (
