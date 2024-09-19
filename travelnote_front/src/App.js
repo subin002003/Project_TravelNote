@@ -11,12 +11,12 @@ function App() {
     <div className="wrap">
       <Header />
       <main className="content">
-        <h1>Travel Note 메인 페이지</h1>
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/foreign/*" element={<ForeignMain />}></Route>
+          <Route path="/joinUser" element={<JoinUser />}></Route>
+        </Routes>
       </main>
-      <Routes>
-        <Route path="/foreign/*" element={<ForeignMain />}></Route>
-        <Route path="/joinUser" element={<JoinUser />}></Route>
-      </Routes>
       <Footer />
     </div>
   );
