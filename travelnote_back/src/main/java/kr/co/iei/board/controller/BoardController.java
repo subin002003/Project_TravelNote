@@ -1,16 +1,17 @@
-package kr.co.iei.Domestic.controller;
+package kr.co.iei.board.controller;
 
+import org.apache.ibatis.type.Alias;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.co.iei.Domestic.model.service.DomesticService;
+import kr.co.iei.board.model.service.BoardService;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping(value = "/domestic")
-public class DomesticController {
+@RequestMapping("/board")
+public class BoardController {
 	@Autowired
-	private DomesticService domestivService;
+	private BoardService boardService;
 }

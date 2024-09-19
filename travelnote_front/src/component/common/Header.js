@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import "./default.css";
 
 const Header = () => {
   return (

@@ -2,4 +2,75 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.co.iei.product.model.dao.ProductDao">
   
+  <select id="totalCount">
+  	select count(*) from product where product_status=1
+  </select>
+  
+  <select id="selectProductList" resultType="product">
+  	select * from
+	    (select rownum as rnum, p.*  from
+	        (select
+	              product_no,
+	              product_name,
+	              product_sub_name,
+	              product_thumb,
+	              product_price,
+	              to_char(enroll_date, 'yyyy-mm-dd') as enroll_date
+	         from product where product_status=1 order by product_no desc) p)
+	where rnum between #{start} and #{end}
+  </select>
+  
+  <insert id="insertProduct">
+  	insert into product values(product_seq.nextval, #{productName}, #{productSubName}, #{productThumb}, #{productPrice}, #{productInfo}, #{productLatitude}, #{productLongitude}, #{productWriter}, 1, sysdate)
+  	<selectKey resultType="int" keyProperty="productNo" order="AFTER">
+  		select max(product_no) from product
+  	</selectKey>
+  </insert>
+  
+  <insert id="insertProductFile">
+  	insert into product_file values(product_file_seq.nextval, #{productNo}, #{filename}, #{filepath})
+  </insert>
+  
+  <select id="selectOneProduct" resultMap="getProduct">
+  	select 
+  		product_no,
+        product_name,
+        product_sub_name,
+        product_thumb,
+        product_price,
+        product_info,
+        product_latitude,
+        product_longitude,
+        product_writer,
+  		to_char(enroll_date, 'yyyy-mm-dd') as enroll_date
+  	from product where product_no=#{productNo}
+  </select>
+  
+  <select id="selectOneProductFileList">
+  	select * from product_file where product_no=#{productNo}
+  </select>
+  
+  <resultMap type="product" id="getProduct">
+  	<result column="product_no" property="productNo" />
+  	<result column="product_name" property="productName" />
+  	<result column="product_sub_name" property="productSubName" />
+  	<result column="product_thumb" property="productThumb" />
+  	<result column="product_price" property="productPrice" />
+  	<result column="product_info" property="productInfo" />
+  	<result column="product_latitude" property="productLatitude" />
+  	<result column="product_longitude" property="productLongitude" />
+  	<result column="product_writer" property="productWriter" />
+  	<result column="enroll_date" property="enrollDate" />
+  	<collection property="fileList" 
+  				select="selectOneProductFileList"
+  				column="product_no"
+  				javaType="java.util.List"
+  				ofType="productFile"
+  	 />
+  </resultMap>
+  
+  <select id="getProductFile" resultType="productFile">
+  	select * from product_file where product_file_no=#{productFileNo}
+  </select>
+  
 </mapper>
