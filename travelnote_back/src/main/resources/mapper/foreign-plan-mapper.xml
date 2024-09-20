@@ -38,7 +38,7 @@
 	</select>
 	
 	<insert id="insertItinerary">
-		insert into itinerary values(itinerary_no_seq.nextval, #{userNo}, #{regionNo}, #{itineraryStartDate}, #{itineraryEndDate}, #{itineraryTitle})
+		insert into itinerary values(itinerary_no_seq.nextval, (select user_no from user_tbl where user_email = #{userEmail}), #{regionNo}, #{itineraryStartDate}, #{itineraryEndDate}, #{itineraryTitle})
 		<selectKey resultType="int" keyProperty="itineraryNo" order="AFTER">
 			select max(itinerary_no) from itinerary
 		</selectKey>

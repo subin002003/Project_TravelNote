@@ -1,10 +1,18 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState, useRecoilValue } from "recoil";
 import Swal from "sweetalert2";
+import {
+  isLoginState,
+  loginEmailState,
+  userTypeState,
+} from "../utils/RecoilData";
 
 const ForeignList = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  const isLogin = useRecoilValue(isLoginState);
+
   const navigate = useNavigate();
   const [regionTotalCount, setRegionTotalCount] = useState(0); // 여행지 개수
   const [isMoreRegionLeft, setIsMoreRegionLeft] = useState(true); // 더보기 버튼 띄울지 여부
@@ -85,6 +93,9 @@ const ForeignList = () => {
   // 섹션
   return (
     <section className="section">
+      <div className="foreign-title">
+        <h2>해외 여행 플래너</h2>
+      </div>
       <div className="foreign-search-box">
         <input
           placeholder="어디로 갈까요?"
@@ -105,6 +116,7 @@ const ForeignList = () => {
           navigate={navigate}
           moreButtonHandler={moreButtonHandler}
           isMoreRegionLeft={isMoreRegionLeft}
+          isLogin={isLogin}
         />
       ) : (
         <div className="foreign-list">
@@ -123,6 +135,7 @@ const RegionList = (props) => {
     navigate,
     moreButtonHandler,
     isMoreRegionLeft,
+    isLogin,
   } = props;
 
   return (
@@ -135,6 +148,7 @@ const RegionList = (props) => {
               region={region}
               backServer={backServer}
               navigate={navigate}
+              isLogin={isLogin}
             />
           );
         })}
@@ -160,11 +174,19 @@ const RegionList = (props) => {
 
 // 여행지 li
 const Region = (props) => {
-  const { backServer, region, navigate } = props;
+  const { backServer, region, navigate, isLogin } = props;
 
   // 클릭 시 여행 일정 생성으로 이동
   const createItinerary = () => {
-    navigate(`/foreign/createItinerary/${region.regionNo}`);
+    console.log(isLogin);
+    if (isLogin) {
+      navigate(`/foreign/createItinerary/${region.regionNo}`);
+    } else {
+      Swal.fire({
+        icon: "info",
+        text: "로그인이 필요합니다.",
+      });
+    }
   };
 
   return (
