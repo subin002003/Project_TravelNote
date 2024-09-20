@@ -12,12 +12,14 @@ const NaverCallback = () => {
     });
     naverLogin.getLoginStatus((status) => {
       if (status) {
-        const user = naverLogin.user;
-        console.log("User Info:", user);
-        navigate("/");
+        const token = naverLogin.accessToken.accessToken; // 액세스 토큰 확인
+        console.log("네이버 로그인 성공, 액세스 토큰: ", token);
+        console.log("액세스 토큰: ", naverLogin.accessToken);
       } else {
-        console.error("네이버 로그인 실패");
-        navigate("/");
+        console.error("액세스 토큰을 받지 못했습니다.");
+        console.error("로그인 실패: 응답에서 오류 발생");
+        // 오류 응답 로그 확인
+        console.log(naverLogin);
       }
     });
   }, [navigate]);
