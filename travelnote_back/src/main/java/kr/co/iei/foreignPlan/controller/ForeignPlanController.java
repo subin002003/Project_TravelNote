@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.iei.foreignPlan.model.dto.ForeignRegionDTO;
 import kr.co.iei.foreignPlan.model.service.ForeignPlanService;
 
 @RestController
@@ -26,4 +27,10 @@ public class ForeignPlanController {
 		return ResponseEntity.ok(list);
 	}
 	
+	// 여행지 정보 조회
+	@GetMapping(value="/view/{regionNo}")
+	public ResponseEntity<ForeignRegionDTO> view(@PathVariable int regionNo) {
+		ForeignRegionDTO region = foreignPlanService.selectOneRegion(regionNo);
+		return ResponseEntity.ok(region);
+	}
 }

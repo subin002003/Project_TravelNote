@@ -4,8 +4,7 @@ npm install react-router-dom
 npm install recoil
 
 2024-09-19 16:40 채예원
-npm install react-datepicker
-npm install date-fns
+npm install react-datepicker date-fns
 
 2024-09-19 오후 16:51 - 이수빈
 npm install sweetalert2
