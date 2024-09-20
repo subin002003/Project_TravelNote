@@ -84,7 +84,7 @@ const ProductList = () => {
     axios
       .get(`${backServer}/product/list/${reqPage}`)
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
         setProductList(res.data.list);
         setPi(res.data.pi);
       })
@@ -96,7 +96,7 @@ const ProductList = () => {
   return (
     <section className="section product-list">
       <Link to="/product/write" className="btn-primary">
-        상품등록
+        상품 등록
       </Link>
 
       <div className="product-list-wrap">
@@ -139,7 +139,7 @@ const ProductItem = (props) => {
             style={{ width: "150px" }}
             src={
               product.productThumb
-                ? `${backServer}/product/thumb/${product.productList}`
+                ? `${backServer}/product/thumb/${product.productThumb}`
                 : "/image/default_img.png"
             }
           />

@@ -25,4 +25,6 @@ public interface ProductDao {
 
 	ProductFileDTO getProductFile(int productFileNo);
 
+	int deleteProduct(int productNo);
+
 }

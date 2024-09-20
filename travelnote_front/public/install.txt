@@ -16,3 +16,11 @@ npm install sweetalert2
 2024-09-19 오후 17:22 이수빈
 npm install date-fns react-day-picker
 
+2024-09-20 오전 09:58 이수빈
+npm i swiper --force
+
+2024-09-20 오전 10:16 이수빈
+npm install -g react-devtools
+
+2024-09-20 오후 14:54 이수빈
+npm install @toast-ui/react-editor --force
