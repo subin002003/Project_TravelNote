@@ -75,6 +75,13 @@ const ForeignList = () => {
       });
   };
 
+  // 엔터 치면 검색
+  const activateSearch = (e) => {
+    if (e.keyCode === 13) {
+      document.getElementById("search-button").click();
+    }
+  };
+
   // 섹션
   return (
     <section className="section">
@@ -85,8 +92,9 @@ const ForeignList = () => {
           onChange={(e) => {
             setSearchInput(e.target.value);
           }}
+          onKeyUp={activateSearch}
         ></input>
-        <button type="button" onClick={searchRegion}>
+        <button id="search-button" type="button" onClick={searchRegion}>
           검색
         </button>
       </div>

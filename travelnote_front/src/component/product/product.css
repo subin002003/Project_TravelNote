@@ -33,6 +33,10 @@ a:hover {
   text-decoration: none;
 }
 
+.content {
+  margin: 30px 0;
+}
+
 /* ProductList */
 .product-list-wrap {
   margin: 20px 0;
@@ -102,7 +106,16 @@ a:hover {
 }
 
 /* ProductView */
+.sec {
+  margin: 150px 0;
+}
+
+.line {
+  border: 1px solid var(--gray);
+}
+
 .view-btn-box {
+  margin-top: 150px;
   display: flex;
   gap: 10px;
 }
@@ -116,10 +129,11 @@ a:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  float: left;
+  box-shadow: 0px 0px 12px #a3a3a3;
 }
 .date-picker {
   margin-right: 40px;
+  float: left;
 }
 
 /* button */

@@ -3,9 +3,6 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div>
-        <div className="logo">
-          <Link to="/">LOGO</Link>
-        </div>
         <p>여행 일정 관리 사이트</p>
         <p>travelNote입니다.</p>
         <ul>

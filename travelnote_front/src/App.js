@@ -9,6 +9,7 @@ import CityDetail from "./component/Domestic/CityDetail";
 import JoinUser from "./component/user/JoinUser";
 import ProductMain from "./component/product/ProductMain";
 import Login from "./component/user/Login";
+import FreeBoardMain from "./component/freeBoard/FreeBoardMain";
 import { useRecoilState } from "recoil";
 import { loginEmailState, userTypeState } from "./component/utils/RecoilData";
 import { useEffect } from "react";
@@ -53,7 +54,7 @@ function App() {
     <div className="wrap">
       <Header />
 
-      <main className="content">
+      <main className="content" style={{ marginBottom: "500px" }}>
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/foreign/*" element={<ForeignMain />}></Route>
@@ -63,6 +64,7 @@ function App() {
           <Route path="/product/*" element={<ProductMain />} />
           <Route path="/Domestic/*" element={<DomesticMain />}></Route>
           <Route path="/city/:cityName" element={<CityDetail />} />
+          <Route path="/freeBoard/*" element={<FreeBoardMain />} />
         </Routes>
       </main>
 

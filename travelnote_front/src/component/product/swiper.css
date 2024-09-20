@@ -1,0 +1,32 @@
+.swiper-wrapper {
+  margin: 0;
+  padding: 0;
+}
+
+.swiper-slide {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+.swiper-pagination {
+  position: relative !important;
+  left: 50%;
+  bottom: 10px; /* 원하는 위치 조정 */
+  transform: translateX(-50%);
+  z-index: 10; /* 다른 요소들 위에 표시 */
+}
