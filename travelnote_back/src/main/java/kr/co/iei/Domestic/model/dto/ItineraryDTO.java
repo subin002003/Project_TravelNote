@@ -14,6 +14,7 @@ public class ItineraryDTO {
 
 	private int itineraryNo;
 	private int userNo;
+	private String userEmail;
 	private int regionNo;
 	private String itineraryStartDate;
 	private String itineraryEndDate;
