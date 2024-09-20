@@ -88,3 +88,34 @@
 .pw-group {
   margin-bottom: 15px;
 }
+
+.login-box {
+  width: 600px;
+  height: 500px;
+  margin: 0 auto;
+  background-color: var(--base-color);
+  padding: 20px;
+}
+
+.img-box {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+  background-color: var(--main-color);
+}
+
+.login-input-group {
+  margin: 0 auto;
+  text-align: center;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.login-btn-box {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.login-btn {
+  width: 336px;
+}

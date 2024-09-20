@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.Module.SetupContext;
 
 import kr.co.iei.user.model.dao.UserDao;
+import kr.co.iei.user.model.dto.LoginUserDTO;
 import kr.co.iei.user.model.dto.UserDTO;
 import kr.co.iei.user.model.dto.VerifyInfoDTO;
 import kr.co.iei.util.EmailSender;
@@ -15,6 +16,7 @@ import kr.co.iei.util.JwtUtils;
 
 @Service
 public class UserService {
+	
 	@Autowired
 	private UserDao userDao;
 	@Autowired
@@ -29,6 +31,7 @@ public class UserService {
 		return result;
 	}
 	
+
 	public String createVerificationCode() {
 		String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         StringBuilder verificationCode = new StringBuilder();
@@ -76,4 +79,31 @@ public class UserService {
 		int result = userDao.joinUser(user);
 		return result;
 	}
+
+	public LoginUserDTO login(UserDTO user) {
+		UserDTO u = userDao.selectOneUser(user.getUserEmail());
+		if(u != null && encoder.matches(user.getUserPw(), u.getUserPw())) {
+			String accessToken = jwtUtil.createAccessToken(u.getUserEmail(), u.getUserType());
+			String refreshToken = jwtUtil.createRefreshToken(u.getUserEmail(), u.getUserType());
+			LoginUserDTO loginUser = new LoginUserDTO(accessToken, refreshToken, u.getUserEmail(), u.getUserType());
+			return loginUser;
+		}else {
+			return null;
+		}
+	}
+
+	public LoginUserDTO refresh(String token) {
+		try {
+			LoginUserDTO loginUser = jwtUtil.checkToken(token);
+			String accessToken = jwtUtil.createAccessToken(loginUser.getUserEmail(), loginUser.getUserType());
+			String refreshToken = jwtUtil.createAccessToken(loginUser.getUserEmail(), loginUser.getUserType());
+			loginUser.setAccessToken(accessToken);
+			loginUser.setRefreshToken(refreshToken);
+			return loginUser;
+		} catch (Exception e) {
+			
+		}
+		return null;
+	}
+	
 }

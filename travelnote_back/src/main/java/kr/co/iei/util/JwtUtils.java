@@ -8,18 +8,21 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
+import kr.co.iei.user.model.dto.LoginUserDTO;
+
 @Component
 public class JwtUtils {
-    
+	
     @Value("${jwt.secret-key}")
     public String secretKey;
-    
+
     @Value("${jwt.expire-hour}")
     public int expireHour;
-    
+
     @Value("${jwt.expire-hour-refresh}")
     public int expireHourRefresh;
 
@@ -85,15 +88,37 @@ public class JwtUtils {
                 .getBody()
                 .get("verificationCode", String.class); // "verificationCode" 클레임 추출
     }
-    
-    
- // JWT 유효성 검사
+
+    // JWT 유효성 검사
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
+            Jwts.parserBuilder()             // parserBuilder() 사용
+                .setSigningKey(key)          // SecretKey 설정
+                .build()                     // JwtParser 빌드
+                .parseClaimsJws(token);      // 토큰 파싱
             return true;
         } catch (Exception e) {
             return false;
         }
     }
+    
+    public LoginUserDTO checkToken(String token) {
+		//1. 토큰 해석을위한 암호화 키 셋팅
+    	SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());  // SecretKey 생성
+
+        Claims claims = Jwts.parserBuilder()   // parserBuilder() 사용
+                .setSigningKey(key)            // 서명 키 설정
+                .build()                       // JwtParser 빌드
+                .parseClaimsJws(token)         // 토큰 파싱
+                .getBody(); 
+		
+		String userEmail = (String)claims.get("userEmail");
+		int userType = (int)claims.get("userType");
+		LoginUserDTO loginUser = new LoginUserDTO();
+		loginUser.setUserEmail(userEmail);
+		loginUser.setUserType(userType);;
+		return loginUser;
+	}
+    
 }

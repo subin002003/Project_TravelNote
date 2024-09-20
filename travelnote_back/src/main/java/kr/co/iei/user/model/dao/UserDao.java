@@ -13,4 +13,6 @@ public interface UserDao {
 
 	int joinUser(UserDTO user);
 
+	UserDTO selectOneUser(String userEmail);
+
 }

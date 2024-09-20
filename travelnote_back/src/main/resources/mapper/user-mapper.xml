@@ -10,4 +10,7 @@
 	<insert id="joinUser">
 		insert into user_tbl values(user_seq.nextval, #{userEmail}, #{userPw}, #{userName}, #{userPhone}, #{userNick}, 1, null)
 	</insert>
+	<select id="selectOneUser" resultType="user">
+		select * from user_tbl where user_email = #{userEmail}
+	</select>
 </mapper>
