@@ -73,4 +73,8 @@
   	select * from product_file where product_file_no=#{productFileNo}
   </select>
   
+  <delete id="deleteProduct">
+  	delete from product where product_no=#{productNo}
+  </delete>
+  
 </mapper>

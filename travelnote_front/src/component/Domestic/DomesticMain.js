@@ -60,7 +60,7 @@ const DomesticMain = () => {
           검색
         </button>
       </div>
-
+      {/* 목록 조회 */}
       <div className="city-list">
         {filteredRegions.map((region, index) => (
           <CityCard
@@ -125,7 +125,7 @@ const CityCard = ({ city, country }) => {
         return "/images/포항.jpg";
 
       default:
-        return "/image/default_img.png"; // 기본 이미지
+        return "/image/default_img.png"; // 이미지 없으면 기본 이미지 대체
     }
   };
 

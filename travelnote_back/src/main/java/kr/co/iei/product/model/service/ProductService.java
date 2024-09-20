@@ -57,4 +57,15 @@ public class ProductService {
 		ProductFileDTO productFile = productDao.getProductFile(productFileNo);
 		return productFile;
 	}
+
+	@Transactional
+	public List<ProductFileDTO> deleteProduct(int productNo) {
+		List<ProductFileDTO> fileList = productDao.selectOneProductFileList(productNo);
+		int result = productDao.deleteProduct(productNo);
+		if(result > 0) {
+			return fileList;
+		}else {			
+			return null;
+		}
+	}
 }
