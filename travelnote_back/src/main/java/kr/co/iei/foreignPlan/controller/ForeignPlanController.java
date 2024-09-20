@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.iei.foreignPlan.model.dto.ForeignRegionDTO;
@@ -20,10 +22,10 @@ public class ForeignPlanController {
 	@Autowired
 	private ForeignPlanService foreignPlanService;
 	
-	// 여행지 목록 조회
+	// 여행지 목록 조회, 검색
 	@GetMapping(value="/list/{reqPage}")
-	public ResponseEntity<List> list(@PathVariable int reqPage) {
-		List list = foreignPlanService.selectRegionList(reqPage);
+	public ResponseEntity<List> list(@PathVariable int reqPage, @RequestParam(required = false) String searchInput) {
+		List list = foreignPlanService.selectRegionList(reqPage, searchInput);
 		return ResponseEntity.ok(list);
 	}
 	
@@ -33,4 +35,5 @@ public class ForeignPlanController {
 		ForeignRegionDTO region = foreignPlanService.selectOneRegion(regionNo);
 		return ResponseEntity.ok(region);
 	}
+	
 }

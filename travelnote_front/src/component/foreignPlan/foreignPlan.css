@@ -1,12 +1,19 @@
 /* 임시 */
 .section {
   /* background-color: var(--background-color); */
+  margin: 50px auto;
 }
 
-/* List */
+/* ForeignList */
 .foreign-title > h2 {
   text-align: center;
-  padding-top: 30px;
+  padding-top: 50px;
+}
+.foreign-list > div {
+  text-align: center;
+  font-size: 25px;
+  margin: 150px;
+  color: var(--text-color);
 }
 .foreign-list ul {
   display: flex;

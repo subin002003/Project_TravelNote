@@ -38,7 +38,6 @@ const ItineraryForm = () => {
         {/* 여행지 정보 */}
         <div className="foreign-info-box">
           <h2>
-            국가명 지역명
             {region.countryName} {region.regionName}
           </h2>
           <div className="region-info-box">

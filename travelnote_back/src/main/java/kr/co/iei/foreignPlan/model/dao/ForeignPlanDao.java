@@ -4,9 +4,14 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.iei.foreignPlan.model.dto.ForeignRegionDTO;
+
 @Mapper
 public interface ForeignPlanDao {
 
-	List selectRegionList(int startNum, int endNum);
+	List selectRegionList(int startNum, int endNum, String searchInput);
+
+	ForeignRegionDTO selectOneRegion(int regionNo);
+
 
 }
