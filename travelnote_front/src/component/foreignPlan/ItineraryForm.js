@@ -1,17 +1,22 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DatePicker from "react-datepicker";
+import { getMonth, getDate, getDay, getYear } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/locale";
+import Swal from "sweetalert2";
 
 const ItineraryForm = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  const navigate = useNavigate();
   const regionNo = useParams().regionNo;
   const [region, setRegion] = useState({});
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [itineraryTitle, setItineraryTitle] = useState("");
+  const [itineraryStartDate, setItineraryStartDate] = useState("");
+  const [itineraryEndDate, setItineraryEndDate] = useState("");
 
   // 지역 정보 조회
   useEffect(() => {
@@ -25,14 +30,72 @@ const ItineraryForm = () => {
       });
   }, []);
 
+  // 여행 제목 변경 핸들러
+  const changeInput = (e) => {
+    const userInput = e.target.value.trim();
+    if (userInput == "") {
+      setItineraryTitle("");
+    } else {
+      setItineraryTitle(e.target.value);
+    }
+  };
+
+  // 날짜 변경 핸들러
+  const changeStartDate = (e) => {
+    setStartDate(e);
+
+    const year = getYear(e);
+    const month = String(getMonth(e) + 1).padStart(2, "0");
+    const date = String(getDate(e)).padStart(2, "0");
+
+    setItineraryStartDate(year + "-" + month + "-" + date);
+  };
+  const changeEndDate = (e) => {
+    setEndDate(e);
+
+    const year = getYear(e);
+    const month = String(getMonth(e) + 1).padStart(2, "0");
+    const date = String(getDate(e)).padStart(2, "0");
+
+    setItineraryEndDate(year + "-" + month + "-" + date);
+  };
+
   // 새 일정 생성
+  const createItinerary = () => {
+    if (startDate !== "" && endDate !== "") {
+      const form = new FormData();
+      form.append("userNo", 1);
+      form.append("regionNo", regionNo);
+      form.append("itineraryStartDate", itineraryStartDate);
+      form.append("itineraryEndDate", itineraryEndDate);
+      if (itineraryTitle === "") {
+        form.append("itineraryTitle", `${region.regionName}으로 떠나는 여행`);
+      } else {
+        form.append("itineraryTitle", itineraryTitle.trim());
+      }
+      axios
+        .post(`${backServer}/foreign/createItinerary`, form)
+        .then((res) => {
+          if (res.data > 0) {
+            navigate(`/foreign/viewPlan/${res.data}`);
+          }
+        })
+        .catch((err) => {});
+    } else {
+      Swal.fire({
+        icon: "warning",
+        text: "날짜를 입력해 주세요.",
+      });
+    }
+  };
 
   return (
     <section className="section">
       <form
         className="itinerary-form"
-        onClick={(e) => {
+        onSubmit={(e) => {
           e.preventDefault();
+          createItinerary();
         }}
       >
         {/* 여행지 정보 */}
@@ -65,25 +128,21 @@ const ItineraryForm = () => {
             <div className="itinerary-input-item">
               <p>여행 제목</p>
               <input
-                id="itinerary-input"
+                className="itinerary-input"
                 name="itineraryTitle"
                 value={itineraryTitle}
-                onChange={(e) => {
-                  setItineraryTitle(e.target.value);
-                }}
-                placeholder="여행 제목을 입력해 주세요."
+                onChange={changeInput}
+                placeholder={region.regionName + "로 떠나는 여행"}
               ></input>
             </div>
             <div className="itinerary-input-item">
               <p>시작 날짜</p>
               <DatePicker
-                id="itinerary-input"
+                className="itinerary-input"
                 name="startDate"
                 selected={startDate}
                 dateFormat="YYYY년 MM월 dd일"
-                onChange={(date) => {
-                  setStartDate(date);
-                }}
+                onChange={changeStartDate}
                 maxDate={endDate}
                 locale={ko}
               />
@@ -91,13 +150,11 @@ const ItineraryForm = () => {
             <div className="itinerary-input-item">
               <p>종료 날짜</p>
               <DatePicker
-                id="itinerary-input"
+                className="itinerary-input"
                 name="endDate"
                 selected={endDate}
                 dateFormat="YYYY년 MM월 dd일"
-                onChange={(date) => {
-                  setEndDate(date);
-                }}
+                onChange={changeEndDate}
                 minDate={startDate}
                 locale={ko}
               />
