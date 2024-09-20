@@ -4,7 +4,9 @@ import "./default.css";
 const Header = () => {
   return (
     <header className="header">
-      <div header-container>
+      <div data-header-container>
+        {" "}
+        {/* 수정된 부분 */}
         <div className="logo">
           <Link to="/">LOGO</Link>
         </div>
@@ -22,7 +24,9 @@ const MainNavi = () => {
         <li>
           <Link to="/foreign/list">해외 여행 메뉴로 이동</Link>
         </li>
-        <li>메뉴2</li>
+        <li>
+          <Link to="/domestic/list">국내 여행 메뉴로 이동</Link>
+        </li>
         <li>메뉴3</li>
         <li>메뉴4</li>
       </ul>
@@ -38,4 +42,5 @@ const HeaderLink = () => {
     </ul>
   );
 };
+
 export default Header;

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.iei.Domestic.model.dao.DomesticDao">
+
+	<select id="getAllRegions" resultType="region">
+		select reg.*, time_zone, currency_code from
+			(select * from (select rownum as rnum, r.* from
+				(select * from region where country_name != '국가명' order by region_no desc)r)
+				where rnum between #{startNum} and #{endNum})reg
+		left join region_info on reg.region_no = region_info.region_no
+	</select>
+
+</mapper>
