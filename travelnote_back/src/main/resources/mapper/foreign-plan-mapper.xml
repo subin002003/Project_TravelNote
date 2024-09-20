@@ -26,9 +26,10 @@
 			(select * from region
 			where country_name != '대한민국'
 			<if test="searchInput != ''">
-				and (country_name like '%' || #{searchInput}|| '%' or region_name like '%' || #{searchInput}|| '%')
+				and ((region_name = #{searchInput} or country_name = #{searchInput})
+				or (country_name like '%' || #{searchInput}|| '%' or region_name like '%' || #{searchInput}|| '%'))
 			</if>
-			order by region_no desc)r)
+			)r)
 		where rnum between #{startNum} and #{endNum}
 	</select>
 	
