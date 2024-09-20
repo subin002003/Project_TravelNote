@@ -3,8 +3,10 @@ import "../common/default.css";
 import "./user.css";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 const JoinUser = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     userEmail: "",
     userPw: "",
@@ -232,6 +234,7 @@ const JoinUser = () => {
             title: "가입 성공 !",
             icon: "success",
           });
+          navigate("/");
         })
         .catch((err) => {
           console.log(err);
@@ -398,7 +401,7 @@ const JoinUser = () => {
               ></input>
             </div>
             <div className="msg-box">
-              <p ref={nickRef}>닉네임 확인 문구</p>
+              <p ref={nickRef}></p>
             </div>
           </div>
           <div className="join-btn-box">
