@@ -1,8 +1,21 @@
 import { useParams } from "react-router-dom";
 import "./CityDetail.css";
+import axios from "axios";
+import { useState } from "react";
 
 const CityDetail = () => {
+  const backServer = process.env.REACT_APP_BACK_SERVER;
   const { cityName } = useParams();
+  const regionNo = useParams();
+
+  axios
+    .post(`${backServer}/regions/Schedule/${regionNo}`)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   return (
     <div className="city-detail">
       <div className="detail-content">
