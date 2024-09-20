@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import "./default.css";
-
+import { useState } from "react";
 const Header = () => {
   return (
     <header className="header">
@@ -16,6 +16,13 @@ const Header = () => {
 };
 
 const MainNavi = () => {
+  const [isCommunityOpen, setIsCommunityOpen] = useState(false);
+  const handleMouseEnter = () => {
+    setIsCommunityOpen(true);
+  };
+  const handleMouseLeave = () => {
+    setIsCommunityOpen(false);
+  };
   return (
     <nav className="nav">
       <ul>
@@ -24,7 +31,22 @@ const MainNavi = () => {
         </li>
         <li>메뉴2</li>
         <li>메뉴3</li>
-        <li>메뉴4</li>
+        <li onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+          Community
+          {isCommunityOpen && (
+            <ul className="community-menu">
+              <li>
+                <Link to="/freeBoard/list">자유게시판</Link>
+              </li>
+              <li>
+                <Link to="/QnaBoard/list">QnA게시판</Link>
+              </li>
+              <li>
+                <Link to="/reviewBoard/list">후기게시판</Link>
+              </li>
+            </ul>
+          )}
+        </li>
       </ul>
     </nav>
   );
