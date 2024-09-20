@@ -5,8 +5,7 @@
 .join-frm {
   margin: 0 auto;
   background-color: var(--base-color);
-  width: 1000px;
-  height: 800px;
+  width: 800px;
   border-radius: 30px;
   padding: 15px;
 }
@@ -14,7 +13,7 @@
   width: 200px;
   height: 200px;
   background-color: var(--main-color);
-  margin: 0 auto;
+  margin: 10px auto;
 }
 .select-box {
   text-align: center;
@@ -23,4 +22,69 @@
 }
 .select-box > label {
   padding: 5px;
+}
+.input-group {
+  margin: 0 auto;
+  width: 600px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+.input-box {
+  height: 40px;
+}
+.check {
+  display: none;
+}
+.label-box {
+  margin-bottom: 10px;
+}
+.label-box > label {
+  font-weight: 900;
+}
+.input-box > input {
+  width: 60%;
+  height: 80%;
+}
+
+.button-box {
+  width: 400px;
+  margin: 0 auto;
+  padding: 10px;
+  text-align: center;
+}
+
+.button-box > button {
+  width: 100px;
+  margin: 0px 10px;
+}
+.verify-btn {
+  width: 120px !important;
+}
+.verify-box {
+  margin-top: 20px;
+}
+.join-btn-box {
+  width: 400px;
+  text-align: center;
+  margin: 0 auto;
+}
+.join-btn-box > button {
+  font-family: "SUITE-Regular";
+  width: 200px;
+  font-weight: 700;
+}
+
+.valid {
+  color: green;
+}
+.invalid {
+  color: red;
+}
+
+.hidden {
+  display: none;
+}
+
+.pw-group {
+  margin-bottom: 15px;
 }

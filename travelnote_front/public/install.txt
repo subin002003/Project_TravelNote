@@ -6,8 +6,13 @@ npm install recoil
 2024-09-19 16:40 채예원
 npm install react-datepicker date-fns
 
+2024-09-10 오후 03:19 - 오건하
+npm install sweetalert2
+
+
 2024-09-19 오후 16:51 - 이수빈
 npm install sweetalert2
 
 2024-09-19 오후 17:22 이수빈
 npm install date-fns react-day-picker
+

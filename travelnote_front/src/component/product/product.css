@@ -106,14 +106,20 @@ a:hover {
   display: flex;
   gap: 10px;
 }
-.date-picker {
-  width: 480px;
+.date-picker,
+.people {
+  width: 560px;
   height: 85px;
   border: 1px solid var(--main-color);
   border-radius: 20px;
+  background-color: var(--white);
   display: flex;
   justify-content: center;
   align-items: center;
+  float: left;
+}
+.date-picker {
+  margin-right: 40px;
 }
 
 /* button */

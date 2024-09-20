@@ -55,10 +55,11 @@ a {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 button {
+  font-family: "SUITE-Regular";
   background-color: var(--main-color);
   color: white;
   border: none;
@@ -76,4 +77,82 @@ button:hover {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 15px;
+}
+
+/* Header(MainNavi) */
+.header {
+  background-color: #eef2f3;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 21;
+  display: flex;
+  justify-content: space-between; /* 양쪽 끝으로 정렬 */
+  align-items: center;
+  padding: 10px 20px;
+}
+.header > div {
+  display: flex;
+  justify-content: space-between; /* 내부 아이템들 간의 간격 조정 */
+  align-items: center;
+  width: 100%; /* 전체 너비 사용 */
+}
+.logo {
+  font-size: 60px;
+  margin-right: 60px;
+}
+
+.nav {
+  flex: 1;
+}
+.nav > ul {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+.nav > ul > li {
+  margin: 0px 15px;
+  position: relative;
+}
+
+/* Header(HeaderLink) */
+.user-menu a {
+  transition-duration: 0.3s;
+}
+.user-menu {
+  margin-left: auto; /* 왼쪽 항목을 오른쪽으로 이동 */
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.user-menu li {
+  margin-left: 20px;
+}
+
+/* Footer */
+.footer {
+  background-color: #dff6ff;
+}
+
+.footer > div > p {
+  margin: 10px 0px;
+  font-family: ns-b;
+  font-size: 16px;
+}
+
+.footer > div {
+  max-width: 1400px;
+  padding: 20px 10px;
+}
+
+.footer > div > ul {
+  list-style-type: none;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.footer > div > ul > li {
+  float: left;
+  padding-right: 20px;
 }
