@@ -6,9 +6,18 @@ import { getMonth, getDate, getDay, getYear } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/locale";
 import Swal from "sweetalert2";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  isLoginState,
+  loginEmailState,
+  userTypeState,
+} from "../utils/RecoilData";
 
 const ItineraryForm = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
+  const [userType, setUserType] = useRecoilState(userTypeState);
+  const isLogin = useRecoilValue(isLoginState);
   const navigate = useNavigate();
   const regionNo = useParams().regionNo;
   const [region, setRegion] = useState({});
@@ -64,7 +73,7 @@ const ItineraryForm = () => {
   const createItinerary = () => {
     if (startDate !== "" && endDate !== "") {
       const form = new FormData();
-      form.append("userNo", 1);
+      form.append("userEmail", loginEmail);
       form.append("regionNo", regionNo);
       form.append("itineraryStartDate", itineraryStartDate);
       form.append("itineraryEndDate", itineraryEndDate);

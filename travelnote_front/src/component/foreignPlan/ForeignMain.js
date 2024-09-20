@@ -6,22 +6,14 @@ import ForeignPlanView from "./ForeignPlanView";
 
 const ForeignMain = () => {
   return (
-    <>
-      <div className="foreign-title">
-        <h2>해외 여행 플래너</h2>
-      </div>
-      <Routes>
-        <Route path="list" element={<ForeignList />}></Route>
-        <Route
-          path="createItinerary/:regionNo"
-          element={<ItineraryForm />}
-        ></Route>
-        <Route
-          path="viewPlan/:itineraryNo"
-          element={<ForeignPlanView />}
-        ></Route>
-      </Routes>
-    </>
+    <Routes>
+      <Route path="list" element={<ForeignList />}></Route>
+      <Route
+        path="createItinerary/:regionNo"
+        element={<ItineraryForm />}
+      ></Route>
+      <Route path="viewPlan/:itineraryNo" element={<ForeignPlanView />}></Route>
+    </Routes>
   );
 };
 

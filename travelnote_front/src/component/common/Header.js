@@ -36,7 +36,7 @@ const MainNavi = () => {
     <nav className="nav">
       <ul>
         <li>
-          <Link to="/foreign/list">해외 여행 메뉴로 이동</Link>
+          <Link to="/foreign/list">해외 여행</Link>
         </li>
         <li>
           <Link to="/domestic/list">국내 여행 메뉴로 이동</Link>
