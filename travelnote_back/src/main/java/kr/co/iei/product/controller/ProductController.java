@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -107,4 +108,20 @@ public class ProductController {
 //				.contentType(MediaType.APPLICATION_OCTET_STREAM)
 //				.body(resource);
 //	}
+	
+	@DeleteMapping(value="/{productNo}")
+	public ResponseEntity<Integer> deleteProduct(@PathVariable int productNo) {
+		List<ProductFileDTO> delFileList = productService.deleteProduct(productNo);
+		if(delFileList != null) {
+			String savepath = root + "/product/";
+			for(ProductFileDTO productFile : delFileList) {
+				File delFile = new File(savepath+productFile.getFilepath());
+				delFile.delete();
+			}
+			return ResponseEntity.ok(1);
+		}else {
+			return ResponseEntity.ok(0);
+		}
+	}
+	
 }

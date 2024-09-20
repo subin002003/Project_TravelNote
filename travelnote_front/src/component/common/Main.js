@@ -114,11 +114,11 @@ const Main = () => {
         style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}
       >
         <button onClick={prevLocation}>
-          <span class="material-icons">chevron_left</span>
+          <span className="material-icons">chevron_left</span>
         </button>
         <h2 style={{ margin: "0 20px" }}>{locations[currentIndex].name}</h2>
         <button onClick={nextLocation}>
-          <span class="material-icons">chevron_right</span>
+          <span className="material-icons">chevron_right</span>
         </button>
       </div>
 
