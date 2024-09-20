@@ -7,7 +7,8 @@ import {
 import { useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import NaverLogin from "./NaverLogin";
 
 const Login = () => {
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
@@ -52,7 +53,9 @@ const Login = () => {
   return (
     <section className="section">
       <div className="login-box">
-        <div className="img-box"></div>
+        <div className="img-box">
+          <img className="logo" src="/image/logo1.png"></img>
+        </div>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -85,10 +88,21 @@ const Login = () => {
               ></input>
             </div>
           </div>
+          <div className="menu-box">
+            <div className="id-box">
+              <Link to="/#">이메일 찾기</Link>
+            </div>
+            <div className="pw-box">
+              <Link to="/#">비밀번호 찾기</Link>
+            </div>
+          </div>
           <div className="login-btn-box">
             <button className="login-btn" type="submit">
               로그인
             </button>
+          </div>
+          <div className="naver-login-box">
+            <NaverLogin />
           </div>
         </form>
       </div>

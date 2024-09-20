@@ -13,6 +13,7 @@ import { useRecoilState } from "recoil";
 import { loginEmailState, userTypeState } from "./component/utils/RecoilData";
 import { useEffect } from "react";
 import axios from "axios";
+import NaverCallback from "./component/user/NaverCallback";
 
 function App() {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -58,6 +59,7 @@ function App() {
           <Route path="/foreign/*" element={<ForeignMain />}></Route>
           <Route path="/joinUser" element={<JoinUser />}></Route>
           <Route path="/login" element={<Login />} />
+          <Route path="/login/oauth2/code/naver" element={<NaverCallback />} />
           <Route path="/product/*" element={<ProductMain />} />
           <Route path="/Domestic/*" element={<DomesticMain />}></Route>
           <Route path="/city/:cityName" element={<CityDetail />} />
