@@ -14,7 +14,6 @@ const Main = () => {
   const API_KEYS = {
     weather: "a33e108aafd2700b393505935a10c98e", // OpenWeatherMap API 키
     exchange: "fca_live_EeFeNGdxZTuLBGhbi5zT4weOAZk1AgA4ahK7Q0EP", // freecurrency API 키
-    //exchange: "a08f2cb5d24898544c7a1ded", // ExchangeRate API 키
   };
 
   // 지역 이름(name) /  해당 통화(currency) / 지역 설명(description) / 지역 이미지(image)
@@ -69,14 +68,12 @@ const Main = () => {
     };
 
     const fetchExchangeRate = async () => {
-      // const BASE_CURRENCY = "KRW"; // 한국 원화
       try {
-        // const response = await axios.get(
-        //   `https://v6.exchangerate-api.com/v6/${API_KEYS.exchange}/latest/${BASE_CURRENCY}`
-        // );
         const response = await axios.get(
-          `https://api.freecurrencyapi.com/v1/latest?apikey=${API_KEYS.exchange}`
+          `https://api.freecurrencyapi.com/v1/latest?apikey=${API_KEYS.exchange}&base_currency=KRW`
         );
+
+        console.log(response.data);
 
         setExchangeRate(response.data);
       } catch (error) {
@@ -91,7 +88,7 @@ const Main = () => {
   // useEffect(() => {
   //   const interval = setInterval(() => {
   //     setCurrentIndex((prevIndex) => (prevIndex + 1) % locations.length);
-  //   }, 4000); // 4000ms (4초)마다 다음 위치로 이동
+  //   }, 4000); // 4000ms (4초)마다 다음 위치로 이동(환율 조회 제한 문제로 임시 주석처리함)
 
   //   return () => clearInterval(interval); // 컴포넌트 언마운트 시 interval 정리
   // }, []);
@@ -107,100 +104,175 @@ const Main = () => {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>여행지 정보</h1>
-
-      <div
-        style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}
-      >
-        <button onClick={prevLocation}>
-          <span class="material-icons">chevron_left</span>
-        </button>
-        <h2 style={{ margin: "0 20px" }}>{locations[currentIndex].name}</h2>
-        <button onClick={nextLocation}>
-          <span class="material-icons">chevron_right</span>
-        </button>
-      </div>
-
-      <div
+    <div style={{ width: "100%", maxWidth: "1600px", margin: "80px auto" }}>
+      <h1 style={{ textAlign: "center", fontSize: "40px" }}>여행지 정보</h1>
+      <h2
         style={{
-          marginBottom: "20px",
-          border: "1px solid #ccc",
-          padding: "10px",
+          textAlign: "center",
+
+          fontSize: "30px",
+          marginBottom: "50px",
         }}
       >
-        <h2>날씨 정보</h2>
-        {weather ? (
-          <>
-            <p>온도: {weather.main.temp} °C</p>
-            <p>상태: {weather.weather[0].description}</p>
-            <p>습도: {weather.main.humidity}%</p>
-            <p>풍속: {weather.wind.speed} m/s</p>
-          </>
-        ) : (
-          <p>날씨 정보를 불러오는 중입니다...</p>
-        )}
-      </div>
+        {locations[currentIndex].name}
+      </h2>
 
-      <div
-        style={{
-          marginBottom: "20px",
-          border: "1px solid #ccc",
-          padding: "10px",
-        }}
-      >
-        <h2>환율 정보</h2>
-        {exchangeRate ? (
-          <div>
-            <p>기본 통화 : KRW</p>
-            {/* <p>
-              1 {locations[currentIndex].currency} ={" "}
-              {1 /
-                exchangeRate.conversion_rates[
-                  locations[currentIndex].currency
-                ]}{" "}
-              KRW
-            </p> */}
-            <p>
-              1 {locations[currentIndex].currency} ={" "}
-              {exchangeRate[locations[currentIndex].currency]} KRW
-            </p>
-          </div>
-        ) : (
-          <p>환율 정보를 불러오는 중입니다...</p>
-        )}
-      </div>
-
-      <div
-        style={{
-          marginBottom: "20px",
-          border: "1px solid #ccc",
-          padding: "10px",
-        }}
-      >
-        <h2>{locations[currentIndex].name}에 대한 설명</h2>
-        <p>{locations[currentIndex].description}</p>
-      </div>
-
-      <div
-        style={{
-          marginBottom: "20px",
-          border: "1px solid #ccc",
-          padding: "10px",
-        }}
-      >
-        <h2>{locations[currentIndex].name} 이미지</h2>
-
-        <img
-          src={locations[currentIndex].image}
-          alt={locations[currentIndex].name}
+      {/* 설명 + 이미지 */}
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        {/* 설명 + 날씨 + 환율 */}
+        <div
           style={{
-            width: "100%",
-            maxWidth: "500px",
-            height: "auto",
-            objectFit: "cover",
+            // height: "300px",
+            width: "50%",
+
+            padding: "10px",
+            textAlign: "center",
           }}
-        />
+        >
+          {/* 설명 */}
+          <div className="MainPage-info">
+            <h2>{locations[currentIndex].name}</h2>
+            <p>{locations[currentIndex].description}</p>
+          </div>
+
+          {/* 날씨 + 환율 */}
+          <div style={{ marginTop: "20px", display: "flex", gap: "0" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              {/* 날씨 */}
+              <div
+                className="MainPage-weather"
+                style={{
+                  width: "45%",
+                  marginLeft: "200px",
+                  padding: "10px",
+                }}
+              >
+                <h2>날씨 정보</h2>
+                {weather ? (
+                  <>
+                    <p>온도: {weather.main.temp} °C</p>
+                    <p>상태: {weather.weather[0].description}</p>
+                    <p>습도: {weather.main.humidity}%</p>
+                    <p>풍속: {weather.wind.speed} m/s</p>
+                  </>
+                ) : (
+                  <p>날씨 정보를 불러오는 중입니다...</p>
+                )}
+              </div>
+
+              {/* 환율 */}
+              <div
+                className="MainPage-exchangeRate"
+                style={{
+                  width: "45%",
+                  marginRight: "100px",
+                  padding: "10px",
+                }}
+              >
+                <h2>환율 정보</h2>
+                {exchangeRate ? (
+                  <div>
+                    <p>기본 통화 : KRW</p>
+                    <p>
+                      1 {locations[currentIndex].currency} ={" "}
+                      {exchangeRate &&
+                      exchangeRate.data &&
+                      exchangeRate.data[locations[currentIndex].currency]
+                        ? (
+                            1 /
+                            exchangeRate.data[locations[currentIndex].currency]
+                          ).toFixed(2)
+                        : "정보 없음"}{" "}
+                      KRW
+                    </p>
+                    <p>
+                      100 {locations[currentIndex].currency} ={" "}
+                      {exchangeRate &&
+                      exchangeRate.data &&
+                      exchangeRate.data[locations[currentIndex].currency]
+                        ? (
+                            (1 /
+                              exchangeRate.data[
+                                locations[currentIndex].currency
+                              ]) *
+                            100
+                          ).toFixed(2)
+                        : "정보 없음"}{" "}
+                      KRW
+                    </p>
+                  </div>
+                ) : (
+                  <p>환율 정보를 불러오는 중입니다...</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 이미지 */}
+        <div
+          className="MainPage-image"
+          style={{
+            padding: "10px",
+            width: "50%",
+          }}
+        >
+          <img
+            src={locations[currentIndex].image}
+            alt={locations[currentIndex].name}
+            style={{
+              width: "100%",
+              // maxWidth: "500px",
+              height: "400px",
+              objectFit: "cover",
+            }}
+          />
+        </div>
+      </div>
+
+      {/* 화살표 */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          maxWidth: "1800px",
+          margin: "20px 0",
+          position: "absolute",
+          top: "36%",
+          left: "14.5%",
+          gap: "1630px",
+        }}
+      >
+        <button
+          onClick={prevLocation}
+          style={{
+            marginRight: "10px",
+            fontSize: "24px",
+            background: "transparent",
+            color: "#000000",
+          }}
+        >
+          <span className="material-icons">chevron_left</span>
+        </button>
+
+        <button
+          onClick={nextLocation}
+          style={{
+            marginLeft: "10px",
+            fontSize: "24px",
+            background: "transparent",
+            color: "#000000",
+          }}
+        >
+          <span className="material-icons">chevron_right</span>
+        </button>
       </div>
     </div>
   );
