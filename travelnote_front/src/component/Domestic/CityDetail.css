@@ -8,7 +8,7 @@
 }
 
 .detail-content {
-  background-color: #f8fbfc; /* 밝은 배경으로 폼을 강조 */
+  background-color: #f8fbfc; /* 밝은 배경 강조 */
   padding: 40px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -16,7 +16,7 @@
   width: 100%;
 }
 
-/* 도시 이름 타이틀 스타일 */
+/* 도시 이름, 타이틀 */
 .detail-content h1 {
   font-size: 36px;
   text-align: center;
@@ -24,7 +24,7 @@
   margin-bottom: 20px;
 }
 
-/* 이미지 스타일 */
+/* 이미지 */
 .city-detail-image {
   width: 100%;
   height: auto;
@@ -33,7 +33,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* 여행 입력 폼 스타일 */
+/* 여행 제목 입력 */
 .trip-form {
   display: flex;
   flex-direction: column;
@@ -63,7 +63,7 @@
   border-color: #47b5ff;
 }
 
-/* 여행 일정 만들기 버튼 스타일 */
+/* 여행 일정 만들기 버튼*/
 .trip-btn {
   background-color: #1363df;
   color: white;
@@ -97,7 +97,7 @@
 
   .trip-form input[type="text"],
   .trip-form input[type="date"] {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .trip-btn {
