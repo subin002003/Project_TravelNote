@@ -133,6 +133,11 @@ button:hover {
 /* Footer */
 .footer {
   background-color: #dff6ff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: "20px";
 }
 
 .footer > div > p {

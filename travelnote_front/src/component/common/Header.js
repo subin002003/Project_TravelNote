@@ -11,7 +11,7 @@ import axios from "axios";
 const Header = () => {
   return (
     <header className="header">
-      <div header-container>
+      <div>
         <div className="logo">
           <Link to="/">LOGO</Link>
         </div>
