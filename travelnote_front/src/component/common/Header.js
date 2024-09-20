@@ -11,7 +11,8 @@ import axios from "axios";
 const Header = () => {
   return (
     <header className="header">
-      <div>
+      <div data-header-container>
+        {" "}
         <div className="logo">
           <Link to="/">LOGO</Link>
         </div>
@@ -29,7 +30,9 @@ const MainNavi = () => {
         <li>
           <Link to="/foreign/list">해외 여행 메뉴로 이동</Link>
         </li>
-        <li>메뉴2</li>
+        <li>
+          <Link to="/domestic/list">국내 여행 메뉴로 이동</Link>
+        </li>
         <li>메뉴3</li>
         <li>메뉴4</li>
       </ul>
@@ -75,4 +78,5 @@ const HeaderLink = () => {
     </ul>
   );
 };
+
 export default Header;

@@ -1,56 +1,81 @@
+/* CityDetail.css */
 .city-detail {
-  font-family: Arial, sans-serif;
-  height: 1200px;
-  background-color: #dff6ff;
-}
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 20px;
-  background-color: #f5f5f5;
+  text-align: center;
 }
-.detail-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 50px;
-}
-.city-detail-image {
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
+
+.planner-title {
+  font-size: 2rem;
+  font-weight: bold;
   margin-bottom: 20px;
 }
+
+.detail-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  height: 657px;
+}
+
+.city-detail-image {
+  width: 50%;
+  height: 50%;
+  object-fit: cover;
+  border-radius: 30px;
+  margin-bottom: 20px;
+  background-color: #1363df;
+}
+
 .trip-form {
+  width: 100%;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 300px;
-  padding: 20px;
-  border: 1px solid #ccc;
+  gap: 15px;
 }
-.trip-form input[type="text"] {
+
+.trip-form label {
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: left;
+}
+
+.trip-form input[type="text"],
+.trip-form input[type="date"] {
+  width: 100%;
   padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 1rem;
 }
+
 .date-inputs {
   display: flex;
-  flex-direction: column;
-  width: 200px;
-  height: 200px;
-}
-.date-inputs label {
-  display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  gap: 10px;
 }
-.create-trip-btn {
-  padding: 10px;
-  width: 100%;
-  background-color: #3498db;
+
+.trip-btn {
+  padding: 12px 20px;
+  background-color: #1363df;
   color: white;
+  font-size: 1rem;
+  font-weight: bold;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
+  margin-top: 15px;
+}
+
+.trip-btn:hover {
+  background-color: #1363df;
 }
