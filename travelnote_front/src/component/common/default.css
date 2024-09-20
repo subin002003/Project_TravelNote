@@ -109,6 +109,8 @@ button:hover {
   display: flex;
   align-items: center;
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 .nav > ul > li {
   margin: 0px 15px;
@@ -130,33 +132,50 @@ button:hover {
   margin-left: 20px;
 }
 
+/* community menu바 */
+.community-menu {
+  width: 100px;
+  display: none; /* 기본적으로 숨김 */
+  position: absolute;
+  top: 100%; /* 부모 li 아래에 위치 */
+  left: 0;
+  background-color: white; /* 배경색 */
+  border: 1px solid #ccc; /* 테두리 */
+  z-index: 1000; /* 메뉴가 다른 요소 위에 오도록 */
+}
+.nav li:hover .community-menu {
+  display: block; /* hover 시 표시 */
+}
+.community-menu li {
+  padding: 10px;
+}
+.community-menu li:hover {
+  background-color: #f0f0f0; /* hover 시 배경 색 변경 */
+}
+
 /* Footer */
 .footer {
   background-color: #dff6ff;
-  position: fixed;
+  position: relative;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: "20px";
+  padding: 20px;
 }
-
 .footer > div > p {
   margin: 10px 0px;
   font-family: ns-b;
   font-size: 16px;
 }
-
 .footer > div {
   max-width: 1400px;
   padding: 20px 10px;
 }
-
 .footer > div > ul {
   list-style-type: none;
   overflow: hidden;
   margin-bottom: 20px;
 }
-
 .footer > div > ul > li {
   float: left;
   padding-right: 20px;

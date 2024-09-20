@@ -123,7 +123,7 @@ const Main = () => {
         <div
           style={{
             // height: "300px",
-            width: "50%",
+            width: "45%",
 
             padding: "10px",
             textAlign: "center",
@@ -147,8 +147,8 @@ const Main = () => {
               <div
                 className="MainPage-weather"
                 style={{
-                  width: "45%",
-                  marginLeft: "200px",
+                  width: "200px",
+                  marginLeft: "100px",
                   padding: "10px",
                 }}
               >
@@ -169,7 +169,7 @@ const Main = () => {
               <div
                 className="MainPage-exchangeRate"
                 style={{
-                  width: "45%",
+                  width: "300px",
                   marginRight: "100px",
                   padding: "10px",
                 }}
@@ -202,8 +202,8 @@ const Main = () => {
                               ]) *
                             100
                           ).toFixed(2)
-                        : "정보 없음"}{" "}
-                      KRW
+                        : "정보 없음"}
+                      {" KRW"}
                     </p>
                   </div>
                 ) : (

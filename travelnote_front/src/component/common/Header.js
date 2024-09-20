@@ -7,6 +7,7 @@ import {
   userTypeState,
 } from "../utils/RecoilData";
 import axios from "axios";
+import { useState } from "react";
 
 const Header = () => {
   return (
@@ -24,6 +25,13 @@ const Header = () => {
 };
 
 const MainNavi = () => {
+  const [isCommunityOpen, setIsCommunityOpen] = useState(false);
+  const handleMouseEnter = () => {
+    setIsCommunityOpen(true);
+  };
+  const handleMouseLeave = () => {
+    setIsCommunityOpen(false);
+  };
   return (
     <nav className="nav">
       <ul>
@@ -34,7 +42,22 @@ const MainNavi = () => {
           <Link to="/domestic/list">국내 여행 메뉴로 이동</Link>
         </li>
         <li>메뉴3</li>
-        <li>메뉴4</li>
+        <li onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+          Community
+          {isCommunityOpen && (
+            <ul className="community-menu">
+              <li>
+                <Link to="/freeBoard/list">자유게시판</Link>
+              </li>
+              <li>
+                <Link to="/QnaBoard/list">QnA게시판</Link>
+              </li>
+              <li>
+                <Link to="/reviewBoard/list">후기게시판</Link>
+              </li>
+            </ul>
+          )}
+        </li>
       </ul>
     </nav>
   );

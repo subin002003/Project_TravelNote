@@ -52,7 +52,7 @@ function App() {
     <div className="wrap">
       <Header />
 
-      <main className="content">
+      <main className="content" style={{ marginBottom: "100px" }}>
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/foreign/*" element={<ForeignMain />}></Route>
@@ -61,6 +61,7 @@ function App() {
           <Route path="/product/*" element={<ProductMain />} />
           <Route path="/Domestic/*" element={<DomesticMain />}></Route>
           <Route path="/city/:cityName" element={<CityDetail />} />
+          <Route path="/freeBoard/*" element={<freeBoardMain />} />
         </Routes>
       </main>
 
