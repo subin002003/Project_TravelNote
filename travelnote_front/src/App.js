@@ -6,6 +6,7 @@ import Main from "./component/common/Main";
 import ForeignMain from "./component/foreignPlan/ForeignMain";
 import DomesticMain from "./component/Domestic/DomesticMain";
 import CityDetail from "./component/Domestic/CityDetail";
+import Schedule from "./component/Domestic/Schedule";
 import JoinUser from "./component/user/JoinUser";
 import ProductMain from "./component/product/ProductMain";
 import Login from "./component/user/Login";
@@ -15,6 +16,9 @@ import { loginEmailState, userTypeState } from "./component/utils/RecoilData";
 import { useEffect } from "react";
 import axios from "axios";
 import NaverCallback from "./component/user/NaverCallback";
+import FindEmail from "./component/user/FindEmail";
+import FindPw from "./component/user/FindPw";
+import MypageMain from "./component/user/MypageMain";
 
 function App() {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -58,12 +62,16 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/foreign/*" element={<ForeignMain />}></Route>
-          <Route path="/joinUser" element={<JoinUser />}></Route>
+          <Route path="/joinUser" element={<JoinUser />} />
           <Route path="/login" element={<Login />} />
           <Route path="/login/oauth2/code/naver" element={<NaverCallback />} />
+          <Route path="/findEmail" element={<FindEmail />} />
+          <Route path="/findPw" element={<FindPw />} />
+          <Route path="/mypage/*" element={<MypageMain />} />
           <Route path="/product/*" element={<ProductMain />} />
           <Route path="/Domestic/*" element={<DomesticMain />}></Route>
-          <Route path="/city/:cityName" element={<CityDetail />} />
+          <Route path="/city/:cityName/:regionNo" element={<CityDetail />} />
+          <Route path="schedule/:itineraryNo" element={<Schedule />} />
           <Route path="/freeBoard/*" element={<FreeBoardMain />} />
         </Routes>
       </main>

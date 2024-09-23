@@ -16,4 +16,13 @@
 	<insert id="joinSocialUser">
 		insert into user_tbl values(user_seq.nextval, #{userEmail},null, #{userName}, #{userPhone}, #{userNick}, 1, #{socialType})
 	</insert>
+	<select id="findEmail" resultType="java.lang.String">
+		select user_email from user_tbl where user_name = #{userName} and user_phone = #{userPhone} 
+	</select>
+	<update id="changePw">
+		update user_tbl set user_pw = #{userPw} where user_email = #{userEmail}
+	</update>
+	<select id="selectUserInfo" resultType="user">
+		select user_email, user_name, user_nick, user_phone from user_tbl where user_email = #{userEmail}
+	</select>
 </mapper>

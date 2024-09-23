@@ -61,7 +61,7 @@ const JoinUser = () => {
         .post(`${backServer}/user/verifyEmail/${user.userEmail}`)
         .then((res) => {
           Swal.fire({
-            title: "이메일 전송 완료",
+            title: "인증코드 전송 완료",
             icon: "success",
           });
           setVerifyToken(res.data);
@@ -193,7 +193,7 @@ const JoinUser = () => {
   const nickCheck = () => {
     nickRef.current.classList.remove("invalid");
     nickRef.current.classList.remove("valid");
-    const nickReg = /^[가-힣]{1,8}$/;
+    const nickReg = /^([가-힣]{1,8}|[a-zA-Z0-9]{1,12})$/;
     if (!nickReg.test(user.userNick)) {
       setNickState(1);
       nickRef.current.classList.add("invalid");
@@ -214,11 +214,6 @@ const JoinUser = () => {
   };
 
   const join = () => {
-    console.log("이메일체크 : " + emailCheck);
-    console.log("pw체크 : " + pwState);
-    console.log("phonesTATE : " + phoneState);
-    console.log("namestate : " + nameState);
-    console.log("nickstate : " + nickState);
     if (
       emailCheck === 4 &&
       pwState === 3 &&

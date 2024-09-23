@@ -23,31 +23,33 @@ const Login = () => {
     const name = e.target.name;
     setUser({ ...user, [name]: e.target.value });
   };
-
+  const [isSocialLogin, setIsSocialLogin] = useState(false);
   const login = () => {
-    if (user.userEmail === "" || user.userPw === "") {
-      Swal.fire({
-        title: "이메일 혹은 비밀번호를 입력해주세요.",
-        icon: "warning",
-      });
-      return;
-    } else {
-      axios
-        .post(`${backServer}/user/login`, user)
-        .then((res) => {
-          console.log(res);
-          setLoginEmail(res.data.userEmail);
-          setUserType(res.data.userType);
-
-          axios.defaults.headers.common["Authorization"] = res.data.accessToken;
-
-          window.localStorage.setItem("refreshToken", res.data.refreshToken);
-          navigate("/");
-        })
-        .catch((err) => {
-          console.log(err);
+    if (!isSocialLogin) {
+      if (user.userEmail === "" || user.userPw === "") {
+        Swal.fire({
+          title: "이메일 혹은 비밀번호를 입력해주세요.",
+          icon: "warning",
         });
+        return;
+      }
     }
+
+    axios
+      .post(`${backServer}/user/login`, user)
+      .then((res) => {
+        console.log(res);
+        setLoginEmail(res.data.userEmail);
+        setUserType(res.data.userType);
+
+        axios.defaults.headers.common["Authorization"] = res.data.accessToken;
+
+        window.localStorage.setItem("refreshToken", res.data.refreshToken);
+        navigate("/");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -90,10 +92,10 @@ const Login = () => {
           </div>
           <div className="menu-box">
             <div className="id-box">
-              <Link to="/#">이메일 찾기</Link>
+              <Link to="/findEmail">이메일 찾기</Link>
             </div>
             <div className="pw-box">
-              <Link to="/#">비밀번호 찾기</Link>
+              <Link to="/findPw">비밀번호 찾기</Link>
             </div>
           </div>
           <div className="login-btn-box">
@@ -102,7 +104,7 @@ const Login = () => {
             </button>
           </div>
           <div className="naver-login-box">
-            <NaverLogin />
+            <NaverLogin setIsSocialLogin={setIsSocialLogin} />
           </div>
         </form>
       </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "./DomesticMain.css";
 import { Link } from "react-router-dom";
+import "./DomesticMain.css"; // 스타일 파일도 필요에 따라 추가하세요
 
 const DomesticMain = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -10,7 +10,6 @@ const DomesticMain = () => {
   const [filteredRegions, setFilteredRegions] = useState([]);
   const [reqPage, setReqPage] = useState(1);
 
-  // 필터에 맞게 가져오는 코드
   useEffect(() => {
     axios
       .get(`${backServer}/regions/list/${reqPage}`)
@@ -25,7 +24,6 @@ const DomesticMain = () => {
       });
   }, [reqPage, backServer]);
 
-  // 검색창 초기화, 검색
   useEffect(() => {
     if (searchText === "어디로 여행 떠날까요 ?" || searchText === "") {
       setFilteredRegions(regionList);
@@ -39,6 +37,77 @@ const DomesticMain = () => {
 
   const handleSearch = () => {
     setSearchText(searchText.trim());
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  // CityCard 컴포넌트 정의
+  const CityCard = ({ city, country, regionNo }) => {
+    const getImagePath = (city) => {
+      switch (city) {
+        case "서울":
+          return "/images/서울.jpg";
+        case "부산":
+          return "/images/부산.jpg";
+        case "강릉":
+          return "/images/강릉.jpg";
+        case "대전":
+          return "/images/대전.jpg";
+        case "인천":
+          return "/images/인천.jpg";
+        case "제주":
+          return "/images/제주.jpg";
+        case "가평":
+          return "/images/가평.jpg";
+        case "거제 통영":
+          return "/images/거제 통영.jpg";
+        case "경주":
+          return "/images/경주.jpg";
+        case "군산":
+          return "/images/군산.jpg";
+        case "남원":
+          return "/images/남원.jpg";
+        case "목포":
+          return "/images/목포.jpg";
+        case "수원":
+          return "/images/수원.jpg";
+        case "안동":
+          return "/images/안동.jpg";
+        case "여수":
+          return "/images/여수.jpg";
+        case "영월":
+          return "/images/영월.jpg";
+        case "울릉도":
+          return "/images/울릉도.jpg";
+        case "전주":
+          return "/images/전주.jpg";
+        case "제천":
+          return "/images/제천.jpg";
+        case "춘천":
+          return "/images/춘천.jpg";
+        case "포항":
+          return "/images/포항.jpg";
+        default:
+          return "/images/default_img.png"; // 기본 이미지
+      }
+    };
+
+    const imagePath = getImagePath(city);
+
+    return (
+      <div className="city-card" tabIndex={0}>
+        <Link to={`/city/${city}/${regionNo}`}>
+          <img src={imagePath} alt={city} className="city-image" />
+          <div className="city-name">
+            {city} ({country})
+          </div>
+        </Link>
+      </div>
+    );
   };
 
   return (
@@ -55,90 +124,25 @@ const DomesticMain = () => {
             searchText === "" && setSearchText("어디로 여행 떠날까요 ?")
           }
           onChange={(e) => setSearchText(e.target.value)}
+          onKeyDown={handleKeyDown} // Enter 키 입력 감지
         />
         <button className="search-btn" onClick={handleSearch}>
           검색
         </button>
       </div>
-      {/* 목록 조회 */}
       <div className="city-list">
-        {filteredRegions.map((region, index) => (
+        {filteredRegions.map((region) => (
           <CityCard
-            key={index}
+            key={region.regionNo}
             city={region.regionName}
             country={region.countryName}
+            regionNo={region.regionNo}
           />
         ))}
       </div>
       <button className="more-btn" onClick={() => setReqPage(reqPage + 1)}>
         더보기
       </button>
-    </div>
-  );
-};
-
-// 지역 정보에 맞는 이미지 파일 경로 설정
-const CityCard = ({ city, country }) => {
-  const getImagePath = (city) => {
-    switch (city) {
-      case "서울":
-        return "/images/서울.jpg";
-      case "부산":
-        return "/images/부산.jpg";
-      case "강릉":
-        return "/images/강릉.jpg";
-      case "대전":
-        return "/images/대전.jpg";
-      case "인천":
-        return "/images/인천.jpg";
-      case "제주":
-        return "/images/제주.jpg";
-      case "가평":
-        return "/images/가평.jpg";
-      case "거제 통영":
-        return "/images/거제 통영.jpg";
-      case "경주":
-        return "/images/경주.jpg";
-      case "군산":
-        return "/images/군산.jpg";
-      case "남원":
-        return "/images/남원.jpg";
-      case "목포":
-        return "/images/목포.jpg";
-      case "수원":
-        return "/images/수원.jpg";
-      case "안동":
-        return "/images/안동.jpg";
-      case "여수":
-        return "/images/여수.jpg";
-      case "영월":
-        return "/images/영월.jpg";
-      case "울릉도":
-        return "/images/울릉도.jpg";
-      case "전주":
-        return "/images/전주.jpg";
-      case "제천":
-        return "/images/제천.jpg";
-      case "춘천":
-        return "/images/춘천.jpg";
-      case "포항":
-        return "/images/포항.jpg";
-
-      default:
-        return "/image/default_img.png"; // 이미지 없으면 기본 이미지 대체
-    }
-  };
-
-  const imagePath = getImagePath(city);
-
-  return (
-    <div className="city-card" tabIndex={0}>
-      <Link to={`/city/${city}`}>
-        <img src={imagePath} alt={city} className="city-image" />
-        <div className="city-name">
-          {city} ({country})
-        </div>
-      </Link>
     </div>
   );
 };

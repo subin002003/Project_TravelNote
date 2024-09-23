@@ -1,8 +1,9 @@
+import { Switch } from "@mui/material";
 import { useRef, useState } from "react";
-// import Switch from "@mui/material/Switch";
 
 const ProductFrm = (props) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  const loginEmail = props.loginEmail;
   // 상품고유번호
   const productNo = props.productNo;
   const setProductNo = props.setProductNo;
@@ -27,16 +28,16 @@ const ProductFrm = (props) => {
   // 첨부파일
   const productFile = props.productFile;
   const setProductFile = props.setProductFile;
+  // 상품 판매 여부
+  const productStatus = props.productStatus;
+  const setProductStatus = props.setProductStatus;
   // 이미 등록된 상품 수정 시 필요한 데이터
   const productThumb = props.productThumb;
   const setProductThumb = props.setProductThumb;
-  const productStatus = props.productStatus;
-  const setProductStatus = props.setProductStatus;
   const fileList = props.fileList;
   const setFileList = props.setFileList;
   const delProductFileNo = props.delProductFileNo;
-  const setDelBoardFileNo = props.setDelBoardFileNo;
-  const [productList, setProductList] = useState([]);
+  const setDelProductFileNo = props.setDelProductFileNo;
 
   // ref로 썸네일 이미지 클릭 시 숨겨놓은 파일첨부 input과 연결
   const thumbnailRef = useRef(null);
@@ -74,80 +75,179 @@ const ProductFrm = (props) => {
     setProductFile([...productFile, ...fileArr]);
     setShowProductFile([...showProductFile, ...filenameArr]);
   };
-  console.log(productFile);
-  console.log(showProductFile);
+
+  // 상품 판매여부 입력
+  const handleChange = (e) => {
+    setProductStatus(e.target.checked ? 1 : 2); // Switch 값에 따라 상품 상태를 1 또는 2으로 설정
+  };
+  console.log(productStatus);
 
   return (
-    <div style={{ height: "300px", margin: "150px 0" }}>
-      <div className="product-thumb-wrap">
-        {productImg ? (
-          <img
-            src={productImg}
-            onClick={() => {
-              thumbnailRef.current.click();
-            }}
+    <div className="mt">
+      <div className="product-info-wrap1">
+        <div className="product-thumb-wrap">
+          {productImg ? (
+            <img
+              src={productImg}
+              onClick={() => {
+                thumbnailRef.current.click();
+              }}
+            />
+          ) : productThumb ? (
+            <img
+              src={`${backServer}/product/thumb/${productThumb}`}
+              onClick={() => {
+                thumbnailRef.current.click();
+              }}
+            />
+          ) : (
+            <img
+              src="/image/default_img.png"
+              onClick={() => {
+                thumbnailRef.current.click();
+              }}
+            />
+          )}
+          <input
+            style={{ display: "none" }}
+            ref={thumbnailRef}
+            type="file"
+            accept="image/*"
+            onChange={changeThumbnail}
           />
-        ) : productThumb ? (
-          <img
-            src={`${backServer}/product/thumb/${productThumb}`}
-            onClick={() => {
-              thumbnailRef.current.click();
-            }}
-          />
-        ) : (
-          <img
-            src="/image/default_img.png"
-            onClick={() => {
-              thumbnailRef.current.click();
-            }}
-          />
-        )}
-        <input
-          style={{ display: "none" }}
-          ref={thumbnailRef}
-          type="file"
-          accept="image/*"
-          onChange={changeThumbnail}
-        />
-      </div>
+        </div>
 
-      <div className="product-input-wrap">
-        <div className="input-item">
-          <label htmlFor="productSubName">판매 여부</label>
-          <p>{productStatus}</p>
-          {/* <Switch
-              checked={productStatus ? productStatus === 1 : false}
+        <div className="product-input-wrap">
+          <div>
+            <label>여행사</label>
+            <span className="productWriter">{loginEmail}</span>
+          </div>
+
+          <div className="input-item">
+            <label htmlFor="productSubName">판매 여부</label>
+            <p>{productStatus === 1 ? "판매 중" : "판매 중지"}</p>
+            <Switch
+              checked={productStatus === 1}
               onChange={handleChange}
               inputProps={{ "aria-label": "controlled" }}
             />
-         */}
+          </div>
 
-          {/* 
-            <Switch
-              checked={board ? board.boardStatus === 1 : false}
-              onChange={handleChange}
+          <div style={{ margin: "31.5px 0" }} className="input-item">
+            <label htmlFor="productName">상품명</label>
+            <input
+              type="text"
+              name="productName"
+              id="productName"
+              value={productName}
+              onChange={setProductName}
             />
-          */}
+          </div>
+
+          <div className="input-item">
+            <label htmlFor="productSubName">상품 한 줄 소개</label>
+            <input
+              type="text"
+              name="productSubName"
+              id="productSubName"
+              value={productSubName}
+              onChange={setProductSubName}
+            />
+          </div>
         </div>
+      </div>
+
+      <div
+        className="product-file"
+        style={{ width: "90%", margin: "150px auto" }}
+      >
         <div className="input-item">
-          <label htmlFor="productName">상품명</label>
+          <label htmlFor="productFile">
+            첨부파일(상품 대표 이미지 - 여러장 가능)
+          </label>
           <input
-            type="text"
-            name="productName"
-            id="productName"
-            value={productName}
-            onChange={setProductName}
+            type="file"
+            id="productFile"
+            style={{ padding: "5px 10px" }}
+            onChange={addProductFile}
+            multiple
           />
         </div>
 
+        <div className="product-file-wrap">
+          <label>첨부파일 목록</label>
+          <div className="product-file-list">
+            {fileList
+              ? fileList.map((productFile, i) => {
+                  const deleteFile = () => {
+                    const newFileList = fileList.fileList.filter((item) => {
+                      return item !== productFile;
+                    });
+                    setFileList(newFileList);
+                    setDelProductFileNo([
+                      ...delProductFileNo,
+                      productFile.productNo,
+                    ]);
+                  };
+                  return (
+                    <p key={"oldFile-" + i}>
+                      <span className="filename">{productFile.filename}</span>
+                      <span className="det-file-icon" onClick={deleteFile}>
+                        <i className="fa-solid fa-circle-xmark"></i>
+                      </span>
+                    </p>
+                  );
+                })
+              : ""}
+            {showProductFile.map((filename, i) => {
+              const deleteFile = () => {
+                productFile.splice(i, 1);
+                setProductFile([...productFile]);
+                showProductFile.splice(i, 1);
+                setShowProductFile([...showProductFile]);
+              };
+              return (
+                <p key={"newFile-" + i}>
+                  <span className="filename">{filename}</span>
+                  <span className="del-file-icon" onClick={deleteFile}>
+                    <i className="fa-solid fa-circle-xmark"></i>
+                  </span>
+                </p>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div className="product-info">
         <div className="input-item">
-          <label htmlFor="productSubName">상품 한 줄 소개</label>
+          <label htmlFor="productLatitude">위도</label>
           <input
             type="text"
-            name="productSubName"
-            id="productSubName"
-            value={productSubName}
-            onChange={setProductSubName}
+            name="productLatitude"
+            id="productLatitude"
+            value={productLatitude}
+            onChange={setProductLatitude}
+          />
+        </div>
+        <div className="input-item">
+          <label htmlFor="productLongitude">경도</label>
+          <input
+            type="text"
+            name="productLongitude"
+            id="productLongitude"
+            value={productLongitude}
+            onChange={setProductLongitude}
+          />
+        </div>
+        <div className="input-item">
+          <label htmlFor="productPrice">상품 가격</label>
+          <input
+            type="number"
+            name="productPrice"
+            id="productPrice"
+            value={productPrice}
+            onChange={setProductPrice}
           />
         </div>
       </div>

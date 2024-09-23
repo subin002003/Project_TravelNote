@@ -200,6 +200,27 @@ public class UserService {
 	}
 
 
+	public String findUser(UserDTO user) {
+		String findEmail = userDao.findEmail(user);
+		return findEmail;
+	}
+
+	@Transactional
+	public int changePw(UserDTO user) {
+		String encPw = encoder.encode(user.getUserPw());
+		user.setUserPw(encPw);
+		int result = userDao.changePw(user);
+		return result;
+	}
+
+
+	public UserDTO userInfo(String token) {
+		LoginUserDTO loginUser = jwtUtil.checkToken(token);
+		UserDTO userInfo = userDao.selectUserInfo(loginUser.getUserEmail());
+		return userInfo;
+	}
+
+
 	
 
 
