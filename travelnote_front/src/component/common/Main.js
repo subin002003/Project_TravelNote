@@ -109,7 +109,6 @@ const Main = () => {
       <h2
         style={{
           textAlign: "center",
-
           fontSize: "30px",
           marginBottom: "50px",
         }}

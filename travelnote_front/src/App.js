@@ -10,7 +10,7 @@ import Schedule from "./component/Domestic/Schedule";
 import JoinUser from "./component/user/JoinUser";
 import ProductMain from "./component/product/ProductMain";
 import Login from "./component/user/Login";
-import FreeBoardMain from "./component/freeBoard/FreeBoardMain";
+import BoardMain from "./component/board/BoardMain";
 import { useRecoilState } from "recoil";
 import { loginEmailState, userTypeState } from "./component/utils/RecoilData";
 import { useEffect } from "react";
@@ -72,7 +72,7 @@ function App() {
           <Route path="/Domestic/*" element={<DomesticMain />}></Route>
           <Route path="/city/:cityName/:regionNo" element={<CityDetail />} />
           <Route path="schedule/:itineraryNo" element={<Schedule />} />
-          <Route path="/freeBoard/*" element={<FreeBoardMain />} />
+          <Route path="/board/*" element={<BoardMain />} />
         </Routes>
       </main>
 

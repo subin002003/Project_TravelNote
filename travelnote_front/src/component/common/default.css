@@ -1,3 +1,23 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+/* 전체 콘텐츠 영역 */
+.app-container {
+  display: flex;
+  flex-direction: column; /* 세로 방향으로 쌓기 */
+}
+
+/* 주 내용 영역 */
+.main-content {
+  flex: 1; /* 남은 공간을 차지 */
+  overflow-y: auto; /* 세로 스크롤 가능 */
+  /*box-sizing: border-box;  패딩을 포함한 크기 계산 */
+  min-height: 70vh; /* 최소 높이를 뷰포트 높이로 설정 */
+}
+
 :root {
   --main-color: #1363df;
   --sub-color: #47b5ff;
@@ -81,7 +101,8 @@ button:hover {
 
 /* Header(MainNavi) */
 .header {
-  background-color: #eef2f3;
+  /* background-color: #eef2f3; */
+  background-color: white;
   width: 100%;
   position: sticky;
   top: 0;
@@ -89,7 +110,6 @@ button:hover {
   display: flex;
   justify-content: space-between; /* 양쪽 끝으로 정렬 */
   align-items: center;
-  padding: 10px 20px;
 }
 .header > div {
   display: flex;
@@ -99,7 +119,7 @@ button:hover {
 }
 .logo {
   font-size: 60px;
-  margin-right: 60px;
+  margin-right: 20px;
 }
 
 .nav {
@@ -115,6 +135,7 @@ button:hover {
 .nav > ul > li {
   margin: 0px 15px;
   position: relative;
+  font-size: 20px;
 }
 
 /* Header(HeaderLink) */
@@ -129,12 +150,13 @@ button:hover {
   margin: 0;
 }
 .user-menu li {
-  margin-left: 20px;
+  margin-right: 50px;
+  font-size: 20px;
 }
 
-/* community menu바 */
+/* community dropDownMenu */
 .community-menu {
-  width: 100px;
+  width: 125px;
   display: none; /* 기본적으로 숨김 */
   position: absolute;
   top: 100%; /* 부모 li 아래에 위치 */
@@ -156,11 +178,8 @@ button:hover {
 /* Footer */
 .footer {
   background-color: #dff6ff;
-  position: relative;
-  bottom: 0;
-  left: 0;
-  right: 0;
   padding: 20px;
+  width: 100%;
 }
 .footer > div > p {
   margin: 10px 0px;
