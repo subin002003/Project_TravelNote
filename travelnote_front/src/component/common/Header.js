@@ -41,6 +41,9 @@ const MainNavi = () => {
         <li>
           <Link to="/domestic/list">국내 여행</Link>
         </li>
+        <li>
+          <Link to="/product/list">패키지 상품</Link>
+        </li>
         <li>메뉴3</li>
         <li onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
           Community
