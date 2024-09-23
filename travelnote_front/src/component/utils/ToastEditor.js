@@ -5,13 +5,14 @@ import { useRef } from "react";
 
 const ToastEditor = (props) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
-  const boardContent = props.boardContent;
-  const setBoardContent = props.setBoardContent;
+  const productInfo = props.productInfo;
+  const setProductInfo = props.setProductInfo;
   const type = props.type;
   const editorRef = useRef(null);
   const changeValue = () => {
     const editorData = editorRef.current.getInstance().getHTML();
-    setBoardContent(editorData);
+    console.log(editorData); // 확인용 로그
+    setProductInfo(editorData);
   };
 
   const uploadImage = (file, callbackFunc) => {
@@ -19,10 +20,10 @@ const ToastEditor = (props) => {
     const form = new FormData();
     form.append("image", file);
     axios
-      .post(`${backServer}/board/editorImage`, form, {
+      .post(`${backServer}/product/editorImage`, form, {
         headers: {
           contentType: "multipart/form-data",
-          prcessData: false,
+          processData: false,
         },
       })
       .then((res) => {
@@ -33,13 +34,14 @@ const ToastEditor = (props) => {
         console.log(err);
       });
   };
-  //   console.log(boardContent);
+  console.log(productInfo);
+
   return (
     <div style={{ width: "100%", marginTop: "20px" }}>
-      {type === 0 || (type === 1 && boardContent !== "") ? (
+      {type === 0 || (type === 1 && productInfo !== "") ? (
         <Editor
           ref={editorRef}
-          initialValue={boardContent}
+          initialValue={productInfo}
           initialEditType="wysiwyg"
           language="ko-KR"
           height="600px"
