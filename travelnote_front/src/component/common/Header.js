@@ -8,6 +8,7 @@ import {
 } from "../utils/RecoilData";
 import axios from "axios";
 import { useState } from "react";
+import logo from "./images/mainImage/logo2.jpg";
 
 const Header = () => {
   return (
@@ -15,7 +16,16 @@ const Header = () => {
       <div data-header-container>
         {" "}
         <div className="logo">
-          <Link to="/">LOGO</Link>
+          <Link to="/">
+            <img
+              src={logo}
+              alt="logo"
+              style={{
+                width: "250px",
+                height: "150px",
+              }}
+            />
+          </Link>
         </div>
         <MainNavi />
         <HeaderLink />
@@ -50,7 +60,7 @@ const MainNavi = () => {
           {isCommunityOpen && (
             <ul className="community-menu">
               <li>
-                <Link to="/freeBoard/list">자유게시판</Link>
+                <Link to="/board/list">자유게시판</Link>
               </li>
               <li>
                 <Link to="/QnaBoard/list">QnA게시판</Link>
