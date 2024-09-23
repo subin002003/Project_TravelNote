@@ -1,5 +1,7 @@
 package kr.co.iei.user.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -78,5 +80,30 @@ public class UserController {
 		
 	}
 	
+	@PostMapping(value = "/api/naver")
+	public ResponseEntity<LoginUserDTO> naverLogin(@RequestBody Map<String, String> authInfo){
+		LoginUserDTO naverLoginUser = null;
+		String accessToken = userService.getNaverAccessToken(authInfo);
+		
+		UserDTO naverUser = userService.naverUserInfo(accessToken);
+		System.out.println("네이버 로그인 불러온 정보 : "+naverUser);
+		int checkUser = userService.checkEmail(naverUser.getUserEmail());
+		if(checkUser > 0 && naverUser.getSocialType().equals("naver")) {
+			naverLoginUser = userService.socialLogin(naverUser);
+			return ResponseEntity.ok(naverLoginUser);
+		}else if(checkUser > 0 && !naverUser.getSocialType().equals("naver")){
+			//다른 소셜 혹은 이메일로 가입한 회원
+			return ResponseEntity.ok(naverLoginUser);
+		}else {
+			int result = userService.joinSocialUser(naverUser);
+			if(result > 0) {
+				naverLoginUser = userService.socialLogin(naverUser);
+				System.out.println("네이버 로그인 유저 정보 : " + naverLoginUser);
+				return ResponseEntity.ok(naverLoginUser);
+			}
+			return ResponseEntity.ok(naverLoginUser);
+		}
+		
+	}
 	
 }

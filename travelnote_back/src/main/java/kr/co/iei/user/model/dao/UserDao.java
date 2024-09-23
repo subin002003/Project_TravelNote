@@ -15,4 +15,6 @@ public interface UserDao {
 
 	UserDTO selectOneUser(String userEmail);
 
+	int joinSocialUser(UserDTO naverUser);
+
 }

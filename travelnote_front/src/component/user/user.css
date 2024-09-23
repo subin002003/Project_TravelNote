@@ -126,10 +126,20 @@
   margin-bottom: 10px;
   justify-content: space-between;
 }
-
 .naver-login-box {
-  margin-top: 15px;
-  text-align: center;
+  width: 140px;
+  margin: 0 auto;
+}
+
+.naver-login-btn {
+  background-color: transparent;
+}
+.naver-login-btn:hover {
+  background-color: transparent;
+}
+
+.naver-login-img {
+  width: 100px;
 }
 
 .logo {

@@ -13,4 +13,7 @@
 	<select id="selectOneUser" resultType="user">
 		select * from user_tbl where user_email = #{userEmail}
 	</select>
+	<insert id="joinSocialUser">
+		insert into user_tbl values(user_seq.nextval, #{userEmail},null, #{userName}, #{userPhone}, #{userNick}, 1, #{socialType})
+	</insert>
 </mapper>

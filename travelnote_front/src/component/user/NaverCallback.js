@@ -1,27 +1,46 @@
+import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginEmailState, userTypeState } from "../utils/RecoilData";
+import { useRecoilState } from "recoil";
 
 const NaverCallback = () => {
   const navigate = useNavigate();
+  const backServer = process.env.REACT_APP_BACK_SERVER;
+  const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
+  const [userType, setUserType] = useRecoilState(userTypeState);
 
   useEffect(() => {
-    const { naver } = window;
-    const naverLogin = new naver.LoginWithNaverId({
-      clientId: "45MLUJ3s3MNuO6wE4fKq", // 네이버 개발자 콘솔에서 발급받은 Client ID
-      callbackUrl: "http://localhost:3000/login/oauth2/code/naver",
-    });
-    naverLogin.getLoginStatus((status) => {
-      if (status) {
-        const token = naverLogin.accessToken.accessToken; // 액세스 토큰 확인
-        console.log("네이버 로그인 성공, 액세스 토큰: ", token);
-        console.log("액세스 토큰: ", naverLogin.accessToken);
-      } else {
-        console.error("액세스 토큰을 받지 못했습니다.");
-        console.error("로그인 실패: 응답에서 오류 발생");
-        // 오류 응답 로그 확인
-        console.log(naverLogin);
-      }
-    });
+    // URL에서 authorization code와 state 추출
+    const urlParams = new URLSearchParams(window.location.search);
+    const authorizationCode = urlParams.get("code");
+    const state = urlParams.get("state");
+
+    if (authorizationCode && state) {
+      // 콘솔에 authorization code와 state 값을 출력하여 확인
+      console.log("Authorization Code:", authorizationCode);
+      console.log("State:", state);
+      axios
+        .post(`${backServer}/user/api/naver`, {
+          authorizationCode: authorizationCode,
+          state: state,
+        })
+        .then((res) => {
+          console.log(res);
+          setLoginEmail(res.data.userEmail);
+          setUserType(res.data.userType);
+
+          axios.defaults.headers.common["Authorization"] = res.data.accessToken;
+
+          window.localStorage.setItem("refreshToken", res.data.refreshToken);
+          navigate("/");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      console.error("Authorization code 또는 state를 찾을 수 없습니다.");
+    }
   }, [navigate]);
 
   return <div>로그인 처리 중...</div>;
