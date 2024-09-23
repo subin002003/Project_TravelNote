@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const ProductWrite = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  const [productNo, setProductNo] = useState(0);
   const [productName, setProductName] = useState("");
   const [productSubName, setProductSubName] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
@@ -67,6 +68,8 @@ const ProductWrite = () => {
         }}
       >
         <ProductFrm
+          productNo={productNo}
+          setProductNo={setProductNo}
           productName={productName}
           setProductName={setProductName}
           productSubName={productSubName}

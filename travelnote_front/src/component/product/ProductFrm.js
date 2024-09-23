@@ -1,7 +1,11 @@
 import { useRef, useState } from "react";
+// import Switch from "@mui/material/Switch";
 
 const ProductFrm = (props) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  // 상품고유번호
+  const productNo = props.productNo;
+  const setProductNo = props.setProductNo;
   // 상품명
   const productName = props.productName;
   const setProductName = props.setProductName;
@@ -32,6 +36,7 @@ const ProductFrm = (props) => {
   const setFileList = props.setFileList;
   const delProductFileNo = props.delProductFileNo;
   const setDelBoardFileNo = props.setDelBoardFileNo;
+  const [productList, setProductList] = useState([]);
 
   // ref로 썸네일 이미지 클릭 시 숨겨놓은 파일첨부 input과 연결
   const thumbnailRef = useRef(null);
@@ -73,7 +78,7 @@ const ProductFrm = (props) => {
   console.log(showProductFile);
 
   return (
-    <div>
+    <div style={{ height: "300px", margin: "150px 0" }}>
       <div className="product-thumb-wrap">
         {productImg ? (
           <img
@@ -106,7 +111,24 @@ const ProductFrm = (props) => {
         />
       </div>
 
-      <div className="input-wrap">
+      <div className="product-input-wrap">
+        <div className="input-item">
+          <label htmlFor="productSubName">판매 여부</label>
+          <p>{productStatus}</p>
+          {/* <Switch
+              checked={productStatus ? productStatus === 1 : false}
+              onChange={handleChange}
+              inputProps={{ "aria-label": "controlled" }}
+            />
+         */}
+
+          {/* 
+            <Switch
+              checked={board ? board.boardStatus === 1 : false}
+              onChange={handleChange}
+            />
+          */}
+        </div>
         <div className="input-item">
           <label htmlFor="productName">상품명</label>
           <input
@@ -128,18 +150,9 @@ const ProductFrm = (props) => {
             onChange={setProductSubName}
           />
         </div>
-
-        <div className="input-item">
-          <label htmlFor="productSubName">판매 여부</label>
-          <input
-            type="text"
-            name="productSubName"
-            id="productSubName"
-            value={productSubName}
-            onChange={setProductSubName}
-          />
-        </div>
       </div>
+
+      <div className="clear"></div>
     </div>
   );
 };
