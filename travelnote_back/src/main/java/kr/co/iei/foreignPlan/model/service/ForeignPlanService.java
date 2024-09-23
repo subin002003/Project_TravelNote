@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.iei.foreignPlan.model.dao.ForeignPlanDao;
+import kr.co.iei.foreignPlan.model.dto.ForeginItineraryInfoDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignItineraryDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignRegionDTO;
 
@@ -41,6 +42,12 @@ public class ForeignPlanService {
 	public int insertItinerary(ForeignItineraryDTO itinerary) {
 		int result = foreignPlanDao.insertItinerary(itinerary);
 		return itinerary.getItineraryNo();
+	}
+
+	// 여행 일정 조회
+	public ForeginItineraryInfoDTO selectOneItinerary(int itineraryNo) {
+		ForeginItineraryInfoDTO itinerary = foreignPlanDao.selectOneItinerary(itineraryNo);
+		return itinerary;
 	}
 
 }

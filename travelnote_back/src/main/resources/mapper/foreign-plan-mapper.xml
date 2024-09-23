@@ -43,4 +43,10 @@
 			select max(itinerary_no) from itinerary
 		</selectKey>
 	</insert>
+	
+	<select id="selectOneItinerary" resultType="foreginItineraryInfo">
+		select i.*, region_name, country_name from 
+		(select itinerary_no, region_no, itinerary_start_date, itinerary_end_date, itinerary_title from itinerary where itinerary_no = #{itineraryNo})i
+		join (region)r on i.region_no = r.region_no
+	</select>
 </mapper>

@@ -78,7 +78,7 @@
 
 /* ItineraryForm */
 .itinerary-form {
-  width: 75%;
+  width: 850px;
   padding: 50px;
   margin: 20px auto;
   background-color: var(--base-color);
@@ -136,4 +136,33 @@
   height: 50px;
   box-sizing: border-box;
   font-family: "SUITE-Regular";
+}
+
+/* ForeignPlanView */
+.plan-view-wrap {
+  overflow: hidden;
+}
+.plan-view-wrap > div {
+  float: left;
+  text-align: center;
+}
+.plan-view-wrap > div > div {
+  margin: 20px 0;
+}
+.plan-list-wrap {
+  width: 300px;
+}
+.plan-detail-wrap {
+  width: 300px;
+}
+.plan-map-wrap {
+  width: calc(100% - 600px);
+}
+.edit-itinerary-button {
+  color: var(--main-color);
+  background-color: white;
+  border: 1px solid var(--main-color);
+}
+.plan-dates-list {
+  overflow: hidden;
 }

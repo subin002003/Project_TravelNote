@@ -12,8 +12,8 @@ import {
 const ForeignList = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const isLogin = useRecoilValue(isLoginState);
-
   const navigate = useNavigate();
+
   const [regionTotalCount, setRegionTotalCount] = useState(0); // 여행지 개수
   const [isMoreRegionLeft, setIsMoreRegionLeft] = useState(true); // 더보기 버튼 띄울지 여부
   const [regionList, setRegionList] = useState([]); // 현재 띄운 목록

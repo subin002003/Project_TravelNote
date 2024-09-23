@@ -9,12 +9,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Alias(value="foreginItinerary")
-public class ForeignItineraryDTO {
+@Alias(value="foreginItineraryInfo")
+public class ForeginItineraryInfoDTO {
 	private int itineraryNo;
-	private String userEmail; // userNo 대신 userEmail 사s
 	private int regionNo;
+	private String regionName;
+	private String countryName;
 	private String itineraryStartDate;
 	private String itineraryEndDate;
 	private String itineraryTitle;
+
 }

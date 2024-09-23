@@ -85,9 +85,10 @@ const ItineraryForm = () => {
       axios
         .post(`${backServer}/foreign/createItinerary`, form)
         .then((res) => {
+          const itineraryNo = res.data;
           // 성공 시 이동
-          if (res.data > 0) {
-            navigate(`/foreign/viewPlan/${res.data}`);
+          if (itineraryNo > 0) {
+            navigate(`/foreign/viewPlan/${itineraryNo}`);
           } else {
             Swal.fire({
               icon: "error",
