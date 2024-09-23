@@ -27,4 +27,10 @@ public interface ProductDao {
 
 	int deleteProduct(int productNo);
 
+	int updateProduct(ProductDTO product);
+
+	List<ProductFileDTO> selectProductFile(int[] delProductFileNo);
+
+	int deleteProductFile(int[] delProductFileNo);
+
 }

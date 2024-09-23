@@ -6,6 +6,7 @@ import Main from "./component/common/Main";
 import ForeignMain from "./component/foreignPlan/ForeignMain";
 import DomesticMain from "./component/Domestic/DomesticMain";
 import CityDetail from "./component/Domestic/CityDetail";
+import Schedule from "./component/Domestic/Schedule";
 import JoinUser from "./component/user/JoinUser";
 import ProductMain from "./component/product/ProductMain";
 import Login from "./component/user/Login";
@@ -69,7 +70,8 @@ function App() {
           <Route path="/mypage/*" element={<MypageMain />} />
           <Route path="/product/*" element={<ProductMain />} />
           <Route path="/Domestic/*" element={<DomesticMain />}></Route>
-          <Route path="/city/:cityName" element={<CityDetail />} />
+          <Route path="/city/:cityName/:regionNo" element={<CityDetail />} />
+          <Route path="schedule/:itineraryNo" element={<Schedule />} />
           <Route path="/freeBoard/*" element={<FreeBoardMain />} />
         </Routes>
       </main>
