@@ -1,8 +1,9 @@
 import React from "react";
 
-const NaverLogin = () => {
+const NaverLogin = ({ setIsSocialLogin }) => {
   // 네이버 로그인 버튼 클릭 시 네이버 로그인 페이지로 이동
   const handleNaverLogin = () => {
+    setIsSocialLogin(true);
     const clientId = "NumWEDcbCHhbmWrzbpCl"; // 발급받은 Client ID
     const redirectUri = encodeURIComponent(
       "http://localhost:3000/login/oauth2/code/naver"

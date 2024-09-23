@@ -3,9 +3,11 @@ package kr.co.iei.user.controller;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -106,4 +108,25 @@ public class UserController {
 		
 	}
 	
+	@PostMapping(value = "/findEmail")
+	public ResponseEntity<String> findEmail(@RequestBody UserDTO user){
+		String findEmail = userService.findUser(user);
+		if(findEmail == null) {
+			return ResponseEntity.ok("X");
+		}
+		return ResponseEntity.ok(findEmail);
+	}
+	
+	@PatchMapping(value = "/changePw")
+	public ResponseEntity<Integer> changePw(@RequestBody UserDTO user){
+		int result = userService.changePw(user);
+		
+		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping
+	public ResponseEntity<UserDTO> userInfo(@RequestHeader("Authorization") String token){
+		UserDTO userInfo = userService.userInfo(token);
+		return ResponseEntity.ok(userInfo);
+	}
 }

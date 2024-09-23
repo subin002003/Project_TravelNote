@@ -83,7 +83,7 @@ const HeaderLink = () => {
       {isLogin ? (
         <>
           <li>
-            <Link to="/#">{loginEmail}</Link>
+            <Link to="/mypage">{loginEmail}</Link>
           </li>
           <li>
             <Link to="/#" onClick={logout}>

@@ -17,4 +17,10 @@ public interface UserDao {
 
 	int joinSocialUser(UserDTO naverUser);
 
+	String findEmail(UserDTO user);
+
+	int changePw(UserDTO user);
+
+	UserDTO selectUserInfo(String userEmail);
+
 }
