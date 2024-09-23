@@ -23,30 +23,9 @@ const ProductView = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const params = useParams();
   const productNo = params.productNo;
-  const [product, setProduct] = useState({
-    productNo: 1,
-    productName:
-      "[선착순/항공+시내호텔] 마쓰야마 칸데오 자유온천 3박4일 (제주항공)",
-    productSubName: "떠나자!",
-    productThumb: "",
-    productPrice: 48500,
-    productInfo: "본문내용",
-    productLatitude: "string",
-    productLongitude: "string",
-    productWriter: "여행사1",
-    productStatus: 1,
-    enrollDate: "2024-09-19",
-    fileList: [
-      {
-        productFileNo: 1,
-        productNo: 1,
-        filename: "ice6.png",
-        filepath: "C:/Temp/travelNote/product/thumb/ice6.png",
-      },
-    ],
-    delProductFileNo: [0],
-  });
+  const [product, setProduct] = useState({});
   const navigate = useNavigate();
+  const [count, setCount] = useState(1); // 초기 수량을 1로 설정
 
   useEffect(() => {
     axios
@@ -110,6 +89,22 @@ const ProductView = () => {
       });
   };
 
+  const minus = () => {
+    if (count === 1) {
+      alert("최소 주문 수량은 1개 입니다.");
+    } else {
+      setCount((prevCount) => prevCount - 1); // 이전 값을 기반으로 상태 업데이트
+    }
+  };
+
+  const plus = () => {
+    if (count === 10) {
+      alert("최대 주문 수량은 10개 입니다.");
+    } else {
+      setCount((prevCount) => prevCount + 1); // 이전 값을 기반으로 상태 업데이트
+    }
+  };
+
   return (
     <section className="section product-view-wrap">
       <div className="product-view-content">
@@ -132,7 +127,7 @@ const ProductView = () => {
                 product.fileList.map((file, i) => (
                   <SwiperSlide key={"file-" + i} file={file}>
                     <img
-                      src={`${backServer}/${file.filepath}`} // 서버의 URL과 결합
+                      src={`${backServer}/product/${file.filepath}`} // 서버의 URL과 결합
                       alt={`Slide ${i}`}
                       style={{
                         height: "780px", // 원하는 높이 설정
@@ -184,7 +179,27 @@ const ProductView = () => {
             )}
           </div>
 
-          <div className="people">인원 3</div>
+          <div className="people">
+            <button className="btn-primary sm" onClick={minus}>
+              -
+            </button>
+            <input
+              type="number"
+              id="count"
+              value={count}
+              style={{
+                margin: "0 7px",
+                // width: "29px",
+                height: "28px",
+                textAlign: "center",
+                border: "none",
+              }}
+              readOnly
+            />
+            <button className="btn-primary sm" onClick={plus}>
+              +
+            </button>
+          </div>
 
           <div style={{ margin: "50px 0" }}>
             <p>{product.productName}</p>
@@ -196,7 +211,7 @@ const ProductView = () => {
           </div>
 
           <div style={{ padding: "23.5px 0" }} className="btn-primary lg">
-            <button>여행 예약하기</button>
+            여행 예약하기
           </div>
         </div>
 
@@ -234,7 +249,7 @@ const ProductView = () => {
       <div className="clear"></div>
       <div className="line"></div>
 
-      <div className="view-btn-box">
+      <div className="button-box">
         <Link
           className="btn-primary lg"
           to={`/product/update/${product.productNo}`}

@@ -24,3 +24,6 @@ npm install -g react-devtools
 
 2024-09-20 오후 14:54 이수빈
 npm install @toast-ui/react-editor --force
+
+2024-09-23 오전 10:47 이수빈
+npm install @mui/material @emotion/react @emotion/styled --force

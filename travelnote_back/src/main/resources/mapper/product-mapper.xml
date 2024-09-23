@@ -21,7 +21,7 @@
   </select>
   
   <insert id="insertProduct">
-  	insert into product values(product_seq.nextval, #{productName}, #{productSubName}, #{productThumb}, #{productPrice}, #{productInfo}, #{productLatitude}, #{productLongitude}, #{productWriter}, 1, sysdate)
+  	insert into product values(product_seq.nextval, #{productName}, #{productSubName}, #{productThumb}, #{productPrice}, #{productInfo}, #{productLatitude}, #{productLongitude}, #{productWriter}, #{productStatus}, sysdate)
   	<selectKey resultType="int" keyProperty="productNo" order="AFTER">
   		select max(product_no) from product
   	</selectKey>
@@ -75,6 +75,34 @@
   
   <delete id="deleteProduct">
   	delete from product where product_no=#{productNo}
+  </delete>
+  
+  <update id="updateProduct">
+  	update product set
+  		product_name=#{productName},
+  		product_sub_name=#{productSubName},
+  		product_thumb=#{productThumb},
+  		product_price=#{productPrice},
+  		product_info=#{productInfo},
+  		product_latitude=#{productLatitude},
+  		product_longitude=#{productLongitude}
+  	where product_no={productNo}
+  </update>
+  
+  <select id="selectProductFile" resultType="productFile">
+  	select * from product_file
+  	where product_file_no in
+  	<foreach collection="array" item="productFileNo" open="(" close=")" separator=",">
+  		#{productFileNo}
+  	</foreach>
+  </select>
+  
+  <delete id="deleteProductFile">
+  	delete from product_file
+  	where product_file_no in
+  	<foreach collection="array" item="productFileNo" open="(" close=")" separator=",">
+  		#{productFileNo}
+  	</foreach>
   </delete>
   
 </mapper>

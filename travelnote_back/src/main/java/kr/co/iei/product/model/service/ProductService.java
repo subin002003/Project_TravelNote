@@ -1,5 +1,6 @@
 package kr.co.iei.product.model.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,5 +68,29 @@ public class ProductService {
 		}else {			
 			return null;
 		}
+	}
+
+	@Transactional
+	public List<ProductFileDTO> updateProduct(ProductDTO product, List<ProductFileDTO> productFileList) {
+		int result = productDao.updateProduct(product);
+		if(result > 0) {
+			// 삭제한 파일이 있으면 조회 후 삭제
+			List<ProductFileDTO> delFileList = new ArrayList<ProductFileDTO>();
+			if(product.getDelProductFileNo() != null) {
+				delFileList = productDao.selectProductFile(product.getDelProductFileNo());
+				result += productDao.deleteProductFile(product.getDelProductFileNo());
+			}
+			// 새 첨부파일이 있으면 새 첨부파일을 insert
+			for(ProductFileDTO productFile : productFileList) {
+				result += productDao.insertProductFile(productFile);
+			}
+			int updateTotal = product.getDelProductFileNo() == null
+					? 1 + productFileList.size()
+					: 1 + productFileList.size() + product.getDelProductFileNo().length;
+			if(result == updateTotal) {
+				return delFileList;
+			}
+		}
+		return null;
 	}
 }
