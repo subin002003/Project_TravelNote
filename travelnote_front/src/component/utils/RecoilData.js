@@ -1,6 +1,6 @@
 import { atom, selector } from "recoil";
 
-//로그인한 아이디를 저장하는 저장소
+//로그인한 이메일을 저장하는 저장소
 const loginEmailState = atom({
   key: "loginEmailState",
   default: "",
