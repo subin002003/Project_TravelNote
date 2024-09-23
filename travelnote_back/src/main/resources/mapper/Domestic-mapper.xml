@@ -2,29 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.iei.Domestic.model.dao.DomesticDao">
 
-    <!-- 지역 리스트 가져오기 -->
-    <select id="getAllRegions" resultType="region">
-        SELECT reg.*, time_zone, currency_code
-        FROM (SELECT * FROM (SELECT ROWNUM AS rnum, r.* FROM
-              (SELECT * FROM region WHERE country_name != '국가명' ORDER BY region_no DESC) r)
-              WHERE rnum BETWEEN #{startNum} AND #{endNum}) reg
-        LEFT JOIN region_info ON reg.region_no = region_info.region_no
-    </select>
+	<!-- 지역 리스트 가져오기 -->
+	<select id="getAllRegions" resultType="region">
+		SELECT reg.*, time_zone, currency_code
+		FROM (SELECT * FROM (SELECT ROWNUM AS rnum, r.* FROM
+		(SELECT * FROM region WHERE country_name != '국가명' ORDER BY region_no DESC) r)
+		WHERE rnum BETWEEN #{startNum} AND #{endNum}) reg
+		LEFT JOIN region_info ON reg.region_no = region_info.region_no
+	</select>
 
-   <!-- 일정 저장 -->
-    <insert id="insertItinerary" parameterType="Itinerary">
-        INSERT INTO itinerary
-        (itinerary_no, user_no, region_no, itinerary_start_date, itinerary_end_date, itinerary_title)
-        VALUES
-        (itinerary_no_seq.nextval, #{userNo}, #{regionNo}, #{itineraryStartDate}, #{itineraryEndDate}, #{itineraryTitle})
-    </insert>
+	<!-- 일정 저장 -->
+	<insert id="saveItinerary">
+		insert into itinerary values(itinerary_no_seq.nextval, (select user_no from user_tbl where user_email = #{userEmail}), #{regionNo}, #{itineraryStartDate}, #{itineraryEndDate}, #{itineraryTitle})
+		<selectKey resultType="int" keyProperty="itineraryNo" order="AFTER">
+			select max(itinerary_no) from itinerary
+		</selectKey>
+	</insert>
+	 <!-- 여행지 정보 조회 -->
+  <select id="selectRegion" resultType="Region">
+    SELECT r.region_no, r.region_name, r.country_name, r.region_img
+    FROM region r
+    WHERE r.region_no = #{regionNo}
+  </select>
 
-    <!-- 여행지 정보 조회 -->
-    <select id="selectRegion" resultType="Region">
-        SELECT r.*, i.time_zone, i.currency_code 
-        FROM region r
-        LEFT JOIN region_info i ON r.region_no = i.region_no
-        WHERE r.region_no = #{regionNo}
-    </select>
-    
 </mapper>

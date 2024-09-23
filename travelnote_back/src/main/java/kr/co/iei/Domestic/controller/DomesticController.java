@@ -10,6 +10,7 @@ import kr.co.iei.Domestic.model.dto.ItineraryDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
 import kr.co.iei.Domestic.model.service.DomesticService;
 
+
 @CrossOrigin("*")  // CORS 설정
 @RestController
 @RequestMapping("/regions")
@@ -26,31 +27,16 @@ public class DomesticController {
     }
     
     // 여행 일정 저장 메서드
-    @PostMapping("/Schedule")
-    public ResponseEntity<String> createSchedule(@ModelAttribute ItineraryDTO itineraryDTO) {
-        try {
-            domesticService.saveItinerary(itineraryDTO);  // 일정 저장
-            return ResponseEntity.ok("여행 일정이 성공적으로 저장되었습니다.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("여행 일정 저장에 실패했습니다.");
-        }
+    @PostMapping(value="/Schedule")
+    public ResponseEntity<Integer> saveItinerary(@ModelAttribute ItineraryDTO itinerary) {
+          int itineraryNo = domesticService.saveItinerary(itinerary);  // 일정 저장
+           return ResponseEntity.ok(itineraryNo); 
     }
-    
+
     // 여행지 정보 조회 메서드
-    @GetMapping("/{regionNo}")
+    @GetMapping("/view/{regionNo}")
     public ResponseEntity<RegionDTO> view(@PathVariable int regionNo) {
         RegionDTO region = domesticService.selectRegion(regionNo);
-        return ResponseEntity.ok(region);
-    }
-    // 여행 일정 조회 메서드
-    @GetMapping("/schedule/{itineraryNo}")
-    public ResponseEntity<ItineraryDTO> getSchedule(@PathVariable int itineraryNo) {
-        ItineraryDTO itinerary = domesticService.getItinerary(itineraryNo);
-        if (itinerary != null) {
-            return ResponseEntity.ok(itinerary);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+       return ResponseEntity.ok(region);
     }
 }

@@ -12,9 +12,8 @@ public interface DomesticDao {
     List getAllRegions(int startNum, int endNum);
 
     // 일정 저장
-    int insertItinerary(ItineraryDTO itineraryDTO);
+    int saveItinerary(ItineraryDTO itinerary);
 
 	RegionDTO selectRegion(int regionNo);
 
-	ItineraryDTO selectItinerary(int itineraryNo);
 }

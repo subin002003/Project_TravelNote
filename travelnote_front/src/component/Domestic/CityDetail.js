@@ -4,28 +4,22 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { useRecoilState } from "recoil";
-import {
-  loginEmailState, // 로그인 이메일 상태
-} from "../utils/RecoilData"; // Recoil 상태 데이터 불러오기
+import { loginEmailState } from "../utils/RecoilData";
 
 const CityDetail = () => {
-  const backServer = process.env.REACT_APP_BACK_SERVER; // 백엔드 서버 주소 환경 변수
-  const { cityName, regionNo } = useParams(); // URL 파라미터로부터 도시 이름과 지역 번호 가져오기
-  const navigate = useNavigate(); // 페이지 네비게이션을 위한 hook
-  const [loginEmail] = useRecoilState(loginEmailState); // Recoil을 통해 로그인 이메일 상태 가져오기
+  const backServer = process.env.REACT_APP_BACK_SERVER;
+  const { cityName, regionNo } = useParams();
+  const navigate = useNavigate();
+  const [loginEmail] = useRecoilState(loginEmailState);
 
-  // 여행 제목과 날짜 상태 관리
   const [tripTitle, setTripTitle] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-
-  // 도시 정보 상태
   const [cityInfo, setCityInfo] = useState(null);
 
-  // 도시 정보 가져오기
   useEffect(() => {
     axios
-      .get(`${backServer}/regions/${regionNo}`) // 백엔드에서 도시 정보 가져오기
+      .get(`${backServer}/regions/view/${regionNo}`)
       .then((res) => {
         setCityInfo(res.data);
       })
@@ -38,11 +32,9 @@ const CityDetail = () => {
       });
   }, [backServer, regionNo]);
 
-  // 폼 제출 핸들러
   const handleSubmit = (e) => {
-    e.preventDefault(); // 폼 제출 기본 동작 막기
+    e.preventDefault();
 
-    // 날짜가 입력되지 않았을 경우 경고창 표시
     if (!startDate || !endDate) {
       Swal.fire({
         icon: "warning",
@@ -51,27 +43,27 @@ const CityDetail = () => {
       return;
     }
 
-    // FormData 생성 및 데이터 추가
     const form = new FormData();
-    form.append("userEmail", loginEmail); // 로그인 이메일 추가
-    form.append("regionNo", regionNo); // 지역 번호 추가
-    form.append("itineraryStartDate", startDate); // 시작 날짜 추가
-    form.append("itineraryEndDate", endDate); // 종료 날짜 추가
-    form.append("itineraryTitle", tripTitle || `${cityName}으로 떠나는 여행`); // 제목이 비어있으면 기본값 사용
+    form.append("userEmail", loginEmail);
+    form.append("regionNo", regionNo);
+    form.append("itineraryStartDate", startDate);
+    form.append("itineraryEndDate", endDate);
+    form.append(
+      "itineraryTitle",
+      tripTitle.trim() || `${cityName}으로 떠나는 여행`
+    );
 
-    // Axios를 사용해 POST 요청 전송
     axios
-      .post(`${backServer}/regions/Schedule`, form) // 백엔드로 데이터 전송
+      .post(`${backServer}/regions/Schedule`, form)
       .then((res) => {
         Swal.fire({
           icon: "success",
           text: "여행 일정이 성공적으로 저장되었습니다.",
         });
-        // 저장된 일정 번호로 페이지 이동
-        navigate(`/schedule/${res.data.itineraryNo}`);
+        navigate(`/schedule/${res.data}`); // 수정된 부분: itinearyNo 직접 사용
       })
       .catch((err) => {
-        console.error("Error saving itinerary:", err); // 에러 발생 시 콘솔에 출력
+        console.error("Error saving itinerary:", err);
         Swal.fire({
           icon: "error",
           text: "여행 일정 저장에 실패했습니다.",
@@ -86,7 +78,7 @@ const CityDetail = () => {
           <>
             <h1>{cityInfo.regionName}</h1>
             <img
-              src={`/images/${cityInfo.regionName}.jpg`} // 해당 도시 이미지를 public 폴더에서 가져오기
+              src={`/images/${cityInfo.regionName}.jpg`}
               alt={cityInfo.regionName}
               className="city-detail-image"
             />
@@ -97,7 +89,7 @@ const CityDetail = () => {
                   type="text"
                   placeholder="여행 제목을 입력해주세요"
                   value={tripTitle}
-                  onChange={(e) => setTripTitle(e.target.value)} // 입력값 상태 변경
+                  onChange={(e) => setTripTitle(e.target.value)}
                 />
               </label>
               <div className="date-inputs">
@@ -106,7 +98,7 @@ const CityDetail = () => {
                   <input
                     type="date"
                     value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)} // 시작 날짜 상태 변경
+                    onChange={(e) => setStartDate(e.target.value)}
                   />
                 </label>
                 <label>
@@ -114,7 +106,7 @@ const CityDetail = () => {
                   <input
                     type="date"
                     value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)} // 종료 날짜 상태 변경
+                    onChange={(e) => setEndDate(e.target.value)}
                   />
                 </label>
               </div>
@@ -124,7 +116,7 @@ const CityDetail = () => {
             </form>
           </>
         ) : (
-          <p>Loading...</p> // 도시 정보 로딩 중 표시
+          <p>Loading...</p>
         )}
       </div>
     </div>

@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.iei.Domestic.model.dao.DomesticDao;
 import kr.co.iei.Domestic.model.dto.ItineraryDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
+
 
 @Service
 public class DomesticService {
@@ -23,20 +25,18 @@ public class DomesticService {
         List<RegionDTO> list = domesticDao.getAllRegions(startNum, endNum);
         return list;
     }
-
+    @Transactional
     // 여행 일정 저장
-    public void saveItinerary(ItineraryDTO itineraryDTO) {
-        domesticDao.insertItinerary(itineraryDTO);  // 수정된 메서드 호출
+    public int saveItinerary(ItineraryDTO itinerary) {
+        domesticDao.saveItinerary(itinerary);  // 수정된 메서드 호출
+        return itinerary.getItineraryNo();
     }
+
 
     // 여행지 정보 조회
     public RegionDTO selectRegion(int regionNo) {
-        return domesticDao.selectRegion(regionNo);
-    }
-    
-    public ItineraryDTO getItinerary(int itineraryNo) {
-        // DAO를 사용하여 일정 데이터를 가져오는 로직
-        return domesticDao.selectItinerary(itineraryNo);
+        RegionDTO region = domesticDao.selectRegion(regionNo);
+    	return region;
     }
 
 }
