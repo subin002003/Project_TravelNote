@@ -14,7 +14,6 @@ const ProductWrite = () => {
   // 로그인 회원 정보
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
 
-  const [productNo, setProductNo] = useState(0);
   const [productName, setProductName] = useState("");
   const [productSubName, setProductSubName] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
@@ -111,8 +110,6 @@ const ProductWrite = () => {
       >
         <ProductFrm
           loginEmail={loginEmail}
-          productNo={productNo}
-          setProductNo={setProductNo}
           productName={productName}
           setProductName={inputProductName}
           productSubName={productSubName}
