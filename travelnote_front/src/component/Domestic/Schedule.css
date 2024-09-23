@@ -1,0 +1,132 @@
+/* 전체 레이아웃 */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+}
+
+header .logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+header .menu {
+  margin-left: auto;
+}
+
+header .user-info {
+  display: flex;
+  align-items: center;
+}
+
+header .user-info span {
+  margin-right: 15px;
+}
+
+header .user-info button {
+  padding: 5px 10px;
+  background-color: #ff5c5c;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+main {
+  padding: 20px;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 18px;
+  margin: 5px 0;
+}
+
+/* 일정 탭 스타일 */
+.schedule-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.day-tabs {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+}
+
+.day-tabs button {
+  padding: 10px;
+  margin-bottom: 5px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.day-tabs button:hover {
+  background-color: #0056b3;
+}
+
+.location-list {
+  width: 40%;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.location-list h2 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.location-list div {
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.location-list button {
+  padding: 10px;
+  background-color: #28a745;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.location-list button:hover {
+  background-color: #218838;
+}
+
+/* 지도 영역 */
+.map {
+  width: 40%;
+  height: 300px;
+  background-color: #e9ecef;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+}
+
+.map p {
+  font-size: 18px;
+  color: #555;
+}
