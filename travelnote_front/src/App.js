@@ -70,7 +70,7 @@ function App() {
           <Route path="/product/*" element={<ProductMain />} />
           <Route path="/Domestic/*" element={<DomesticMain />}></Route>
           <Route path="/city/:cityName/:regionNo" element={<CityDetail />} />
-          <Route path="schedule/:itineraryNo" element={<Schedule />} />
+          <Route path="/schedule/:itineraryNo" element={<Schedule />} />
           <Route path="/board/*" element={<BoardMain />} />
         </Routes>
       </main>

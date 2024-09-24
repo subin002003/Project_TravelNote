@@ -12,7 +12,7 @@
 }
 
 .itinerary-panel {
-  flex: 0 0 300px; /* 좌측 패널의 너비 고정 */
+  flex: 0 0 100px; /* 좌측 패널의 너비 고정 */
   background-color: #fafafa;
   border-right: 1px solid #ddd;
   padding: 20px;
@@ -68,7 +68,6 @@
   margin-top: auto; /* 버튼들을 하단으로 이동시킴 */
 }
 
-.add-location-btn,
 .save-btn {
   width: 100%;
   padding: 10px;
@@ -80,7 +79,6 @@
   margin-top: 10px;
 }
 
-.add-location-btn:hover,
 .save-btn:hover {
   background-color: #0056b3;
 }
@@ -99,4 +97,18 @@
   height: 100%;
   border: 1px solid #ddd;
   border-radius: 8px;
+}
+.itinerary-btn,
+.air-btn {
+  margin: 0 20px;
+}
+
+.search > input {
+  padding: 10px;
+  color: #837979;
+  margin: 50px 0;
+  border-radius: 30px;
+}
+.search-btn1 {
+  margin: 10px;
 }

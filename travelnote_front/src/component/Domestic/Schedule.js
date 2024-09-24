@@ -1,53 +1,33 @@
 import React, { useEffect, useState } from "react";
 import "./Schedule.css";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const Schedule = () => {
+  const backServer = process.env.REACT_APP_BACK_SERVER;
+  const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+
   const [selectedDay, setSelectedDay] = useState(1);
   const [currentRange, setCurrentRange] = useState([1, 3]);
   const [map, setMap] = useState(null);
+  const [itinerary, setItinerary] = useState({});
+  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
+  const [searchResults, setSearchResults] = useState([]); // 검색 결과 상태
+  const { itineraryNo } = useParams();
 
-  // 각 날짜에 대한 일정 저장
-  const itineraries = {
-    1: {
-      date: "2024.09.12",
-      places: [
-        { name: "장소 1", lat: 37.5665, lng: 126.978 },
-        { name: "장소 2", lat: 37.565, lng: 126.976 },
-      ],
-    },
-    2: {
-      date: "2024.09.13",
-      places: [
-        { name: "장소 3", lat: 37.564, lng: 126.975 },
-        { name: "장소 4", lat: 37.563, lng: 126.974 },
-      ],
-    },
-    3: {
-      date: "2024.09.14",
-      places: [
-        { name: "장소 5", lat: 37.562, lng: 126.973 },
-        { name: "장소 6", lat: 37.561, lng: 126.972 },
-      ],
-    },
-    4: {
-      date: "2024.09.15",
-      places: [
-        { name: "장소 7", lat: 37.56, lng: 126.971 },
-        { name: "장소 8", lat: 37.559, lng: 126.97 },
-      ],
-    },
-    5: {
-      date: "2024.09.16",
-      places: [
-        { name: "장소 9", lat: 37.558, lng: 126.969 },
-        { name: "장소 10", lat: 37.557, lng: 126.968 },
-      ],
-    },
-    // 필요에 따라 계속 추가
-  };
+  useEffect(() => {
+    axios
+      .get(`${backServer}/schedule/getItinerary/${itineraryNo}`)
+      .then((res) => {
+        console.log(res);
+        setItinerary(res.data);
+      })
+      .catch((error) => {
+        console.error("일정을 불러오는 데 실패했습니다:", error);
+      });
+  }, [backServer, itineraryNo]);
 
-  // 날짜 배열 생성
-  const days = Object.keys(itineraries).map(Number);
+  const days = Object.keys(itinerary).map(Number);
 
   useEffect(() => {
     const initMap = () => {
@@ -55,16 +35,14 @@ const Schedule = () => {
         document.getElementById("map"),
         {
           center: { lat: 37.5665, lng: 126.978 },
-          zoom: 10,
+          zoom: 15,
         }
       );
-
-      setMap(mapInstance); // 맵 인스턴스를 상태에 저장
+      setMap(mapInstance);
     };
 
-    // Google Maps API 스크립트를 동적으로 추가
     const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}`;
     script.async = true;
     script.onload = initMap;
     document.body.appendChild(script);
@@ -72,21 +50,18 @@ const Schedule = () => {
     return () => {
       document.body.removeChild(script);
     };
-  }, []);
+  }, [googleMapsApiKey]);
 
   useEffect(() => {
-    if (map && itineraries[selectedDay]) {
-      const { places } = itineraries[selectedDay];
+    if (map && itinerary[selectedDay]) {
+      const { places } = itinerary[selectedDay];
 
-      // 지도와 마커 업데이트
       map.setCenter({ lat: 37.5665, lng: 126.978 });
 
-      // 이전 마커 제거
       if (map.markers) {
         map.markers.forEach((marker) => marker.setMap(null));
       }
 
-      // 새 마커 추가
       map.markers = [];
       places.forEach((place) => {
         const marker = new window.google.maps.Marker({
@@ -97,7 +72,7 @@ const Schedule = () => {
         map.markers.push(marker);
       });
     }
-  }, [map, selectedDay]);
+  }, [map, selectedDay, itinerary]);
 
   const handleDayClick = (day) => {
     setSelectedDay(day);
@@ -119,10 +94,51 @@ const Schedule = () => {
     });
   };
 
+  const handleSearch = () => {
+    axios
+      .get(`https://maps.googleapis.com/maps/api/place/textsearch/json`, {
+        params: {
+          query: searchTerm,
+          key: googleMapsApiKey,
+        },
+      })
+      .then((response) => {
+        const results = response.data.results;
+        setSearchResults(results);
+
+        // 지도와 마커 업데이트
+        if (map) {
+          map.setCenter({
+            lat: results[0].geometry.location.lat,
+            lng: results[0].geometry.location.lng,
+          });
+
+          if (map.markers) {
+            map.markers.forEach((marker) => marker.setMap(null));
+          }
+
+          map.markers = [];
+          results.forEach((place) => {
+            const marker = new window.google.maps.Marker({
+              position: {
+                lat: place.geometry.location.lat,
+                lng: place.geometry.location.lng,
+              },
+              map: map,
+              title: place.name,
+            });
+            map.markers.push(marker);
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("장소 검색에 실패했습니다:", error);
+      });
+  };
+
   return (
     <div className="schedule-wrap">
       <div className="content">
-        {/* 좌측 일정 패널 */}
         <div className="itinerary-panel">
           <div className="day-selector">
             <button
@@ -149,23 +165,35 @@ const Schedule = () => {
               &gt;
             </button>
           </div>
-          {itineraries[selectedDay] && (
+          {itinerary[selectedDay] && (
             <div className="selected-day-itinerary">
-              <h2>{itineraries[selectedDay].date}</h2>
+              <h2>{itinerary[selectedDay].date}</h2>
               <ul>
-                {itineraries[selectedDay].places.map((place, index) => (
+                {itinerary[selectedDay].places.map((place, index) => (
                   <li key={index}>{place.name}</li>
                 ))}
               </ul>
             </div>
           )}
           <div className="button-container">
-            <button className="add-location-btn">장소 추가</button>
             <button className="save-btn">일정 저장</button>
           </div>
         </div>
-
-        {/* 우측 지도 패널 */}
+        <div className="right-itinerary">
+          <button className="air-btn">항공편 추가</button>
+          <button className="itinerary-btn">일정 추가</button>
+          <div className="search">
+            <input
+              type="text"
+              placeholder="장소 검색"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button onClick={handleSearch} className="search-btn1">
+              검색
+            </button>
+          </div>
+        </div>
         <div className="map-container">
           <div
             id="map"
