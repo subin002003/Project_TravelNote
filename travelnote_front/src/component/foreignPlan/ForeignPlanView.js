@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { getDate, getDay, getMonth, getYear } from "date-fns";
+import ForeignPlanDaysButton from "./ForeignPlanDaysButton";
 
 const ForeignPlanView = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -20,7 +21,7 @@ const ForeignPlanView = () => {
   const [totalPlanDates, setTotalPlanDates] = useState([]); // 여행 일정표 용 날짜 배열
   const [planDays, setPlanDays] = useState([]); // 현재 조회 중인 날 기준으로 보여주는 날짜 배열
   const [planList, setPlanList] = useState([]); // 해당 날짜의 일정 배열
-  const [selectedDay, setSelectedDay] = useState(1); // 현재 조회 중인 날
+  const [selectedDay, setSelectedDay] = useState(10); // 현재 조회 중인 날
 
   // 일정 정보 조회
   useEffect(() => {
@@ -53,34 +54,6 @@ const ForeignPlanView = () => {
     navigate(`/foreign/editItinerary/${itineraryNo}`);
   };
 
-  // planDays 세팅
-  useEffect(() => {
-    if (selectedDay === 1) {
-      console.log(1);
-      console.log(selectedDay);
-
-      for (
-        let i = 0;
-        i < (totalPlanDates.length > 3 ? 3 : totalPlanDates.length);
-        i++
-      ) {
-        console.log(i);
-        planDays.push(i + 1);
-      }
-      console.log(planDays);
-    } else if (selectedDay === totalPlanDates.length) {
-      console.log(2);
-      for (let i = 2; i >= 0; i++) {
-        planDays.push(selectedDay - 1);
-      }
-    } else {
-      console.log(3);
-      for (let i = 0; i < 3; i++) {
-        planDays.push(selectedDay + i - 1);
-      }
-    }
-  }, [selectedDay]);
-
   return (
     <div className="plan-view-wrap">
       {/* 첫 번째 세로 칸 */}
@@ -101,14 +74,13 @@ const ForeignPlanView = () => {
           </button>
         </div>
         <div className="daily-plan-box">
-          <ul className="plan-dates-list">
-            {planDays.length > 0
-              ? planDays.map((day, index) => {
-                  console.log(planDays);
-                  return <li key={"plan-date-" + day}>Day{day}</li>;
-                })
-              : ""}
-          </ul>
+          <ForeignPlanDaysButton
+            planDays={planDays}
+            selectedDay={selectedDay}
+            setSelectedDay={setSelectedDay}
+            totalPlanDates={totalPlanDates}
+          />
+          <ul className="plan-dates-list"></ul>
         </div>
       </div>
 
