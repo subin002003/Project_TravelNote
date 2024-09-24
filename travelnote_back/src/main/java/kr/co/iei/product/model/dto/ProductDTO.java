@@ -26,4 +26,6 @@ public class ProductDTO {
 	private String enrollDate;
 	private List<ProductFileDTO> fileList;
 	private int[] delProductFileNo;
+	// 리뷰 추가
+	private List<ReviewDTO> reviews;
 }

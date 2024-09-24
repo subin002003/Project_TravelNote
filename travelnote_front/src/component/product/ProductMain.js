@@ -9,7 +9,7 @@ const ProductMain = () => {
   return (
     <Routes>
       <Route path="list" element={<ProductList />} />
-      <Route path="view/:productNo/*" element={<ProductView />} />
+      <Route path="view/:productNo" element={<ProductView />} />
       <Route path="write" element={<ProductWrite />} />
       <Route path="update/:productNo" element={<ProductUpdate />} />
     </Routes>
