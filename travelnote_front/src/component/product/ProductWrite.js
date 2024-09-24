@@ -80,7 +80,7 @@ const ProductWrite = () => {
             navigate("/product/list");
           } else {
             Swal.fire({
-              title: "상품 등록중 에러가 발생했습니다.",
+              title: "상품 등록에 실패하였습니다.",
               text: "입력값을 확인하세요.",
               icon: "error",
             });
