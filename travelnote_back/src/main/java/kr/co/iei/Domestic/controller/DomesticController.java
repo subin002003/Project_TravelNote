@@ -25,18 +25,26 @@ public class DomesticController {
         List<RegionDTO> list = domesticService.getAllRegions(reqPage);
         return ResponseEntity.ok(list);
     }
-    
+
     // 여행 일정 저장 메서드
-    @PostMapping(value="/Schedule")
-    public ResponseEntity<Integer> saveItinerary(@ModelAttribute ItineraryDTO itinerary) {
-          int itineraryNo = domesticService.saveItinerary(itinerary);  // 일정 저장
-           return ResponseEntity.ok(itineraryNo); 
+    @PostMapping("/schedule")
+    public ResponseEntity<Integer> saveItinerary(@RequestBody ItineraryDTO itinerary) {
+        int itineraryNo = domesticService.saveItinerary(itinerary);  // 일정 저장
+        return ResponseEntity.ok(itineraryNo);
     }
+
+ // 여행 일정 조회 메서드
+    @GetMapping("/schedule/{itineraryNo}")
+    public ResponseEntity<ItineraryDTO> getItinerary(@PathVariable int itineraryNo) {
+        ItineraryDTO itinerary = domesticService.getItinerary(itineraryNo);
+        return ResponseEntity.ok(itinerary);
+    }
+
 
     // 여행지 정보 조회 메서드
     @GetMapping("/view/{regionNo}")
     public ResponseEntity<RegionDTO> view(@PathVariable int regionNo) {
         RegionDTO region = domesticService.selectRegion(regionNo);
-       return ResponseEntity.ok(region);
+        return ResponseEntity.ok(region);
     }
 }
