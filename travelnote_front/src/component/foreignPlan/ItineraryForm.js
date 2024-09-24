@@ -13,6 +13,7 @@ import {
   userTypeState,
 } from "../utils/RecoilData";
 
+// path: foreign/createItinerary/:regionNo
 const ItineraryForm = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
@@ -42,7 +43,7 @@ const ItineraryForm = () => {
   // 여행 제목 변경 핸들러
   const changeInput = (e) => {
     const userInput = e.target.value.trim();
-    if (userInput == "") {
+    if (userInput === "") {
       setItineraryTitle("");
     } else {
       setItineraryTitle(e.target.value);
@@ -86,9 +87,9 @@ const ItineraryForm = () => {
         .post(`${backServer}/foreign/createItinerary`, form)
         .then((res) => {
           const itineraryNo = res.data;
-          // 성공 시 이동
+          // 성공 시 조회 화면으로 이동
           if (itineraryNo > 0) {
-            navigate(`/foreign/viewPlan/${itineraryNo}`);
+            navigate(`/foreign/plan/${itineraryNo}/view`);
           } else {
             Swal.fire({
               icon: "error",

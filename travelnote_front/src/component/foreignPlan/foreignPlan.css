@@ -46,7 +46,7 @@
   text-align: center;
   margin: 0 auto;
 }
-.foreign-search-box > input {
+.foreign-search-input {
   width: 500px;
   outline: none;
   border: none;
@@ -138,7 +138,7 @@
   font-family: "SUITE-Regular";
 }
 
-/* ForeignPlanView */
+/* ForeignPlanMain */
 .plan-view-wrap {
   overflow: hidden;
 }
@@ -149,20 +149,68 @@
 .plan-view-wrap > div > div {
   margin: 20px 0;
 }
+
+/* ForeignPlanList */
 .plan-list-wrap {
-  width: 300px;
-}
-.plan-detail-wrap {
-  width: 300px;
+  width: 350px;
 }
 .plan-map-wrap {
-  width: calc(100% - 600px);
+  width: calc(100% - 700px);
 }
 .edit-itinerary-button {
   color: var(--main-color);
   background-color: white;
   border: 1px solid var(--main-color);
 }
+.daily-plan-list-box > h5 {
+  text-align: center;
+  color: var(--main-color);
+}
+
+/* ForeignRegionInfo */
+.plan-region-wrap {
+  width: 350px;
+}
+
+/* ForeignPlanSearch */
+.plan-search-wrap {
+  width: 350px;
+}
+
+/* ForeignPlanDaysButton */
 .plan-dates-list {
-  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.plan-dates-list > li {
+  border: 1px solid var(--main-color);
+  width: 80px;
+  padding: 10px;
+}
+.plan-dates-list > li:nth-child(2) {
+  border-right: none;
+}
+.plan-dates-list > li:nth-child(4) {
+  border-left: none;
+}
+.plan-dates-list .selected-day {
+  background-color: var(--main-color);
+  color: white;
+}
+.plan-dates-list > li:first-child {
+  border: none;
+  padding: 0;
+  width: 30px;
+}
+.plan-dates-list > li:last-child {
+  border: none;
+  padding: 0;
+  width: 30px;
+}
+.plan-dates-list .day-item {
+  color: var(--background-color);
+}
+.plan-dates-list .active {
+  color: var(--main-color);
 }

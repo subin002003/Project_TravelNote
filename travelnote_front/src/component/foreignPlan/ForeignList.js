@@ -9,6 +9,7 @@ import {
   userTypeState,
 } from "../utils/RecoilData";
 
+// path: foreign/list
 const ForeignList = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const isLogin = useRecoilValue(isLoginState);
@@ -98,6 +99,7 @@ const ForeignList = () => {
       </div>
       <div className="foreign-search-box">
         <input
+          className="foreign-search-input"
           placeholder="어디로 갈까요?"
           value={searchInput}
           onChange={(e) => {
@@ -109,7 +111,7 @@ const ForeignList = () => {
           검색
         </button>
       </div>
-      {regionList.length != 0 ? (
+      {regionList.length !== 0 ? (
         <RegionList
           regionList={regionList}
           backServer={backServer}
