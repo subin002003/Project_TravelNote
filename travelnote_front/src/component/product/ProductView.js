@@ -193,6 +193,7 @@ const ProductView = () => {
                 height: "28px",
                 textAlign: "center",
                 border: "none",
+                backgroundColor: "transparent",
               }}
               readOnly
             />

@@ -1,5 +1,4 @@
 import { Route, Routes } from "react-router-dom";
-
 import Footer from "./component/common/Footer";
 import Header from "./component/common/Header";
 import Main from "./component/common/Main";
@@ -55,10 +54,10 @@ function App() {
     }
   };
   return (
-    <div className="wrap">
+    <div className="app-container">
       <Header />
 
-      <main className="content" style={{ marginBottom: "500px" }}>
+      <main className="main-content">
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/foreign/*" element={<ForeignMain />}></Route>
