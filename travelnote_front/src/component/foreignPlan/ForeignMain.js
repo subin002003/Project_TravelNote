@@ -2,8 +2,9 @@ import { Route, Routes } from "react-router-dom";
 import "./foreignPlan.css";
 import ForeignList from "./ForeignList";
 import ItineraryForm from "./ItineraryForm";
-import ForeignPlanView from "./ForeignPlanView";
+import ForeignPlanMain from "./ForeignPlanMain";
 
+// path: foreign
 const ForeignMain = () => {
   return (
     <Routes>
@@ -12,7 +13,7 @@ const ForeignMain = () => {
         path="createItinerary/:regionNo"
         element={<ItineraryForm />}
       ></Route>
-      <Route path="viewPlan/:itineraryNo" element={<ForeignPlanView />}></Route>
+      <Route path="plan/:itineraryNo/*" element={<ForeignPlanMain />}></Route>
     </Routes>
   );
 };

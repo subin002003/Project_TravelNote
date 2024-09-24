@@ -8,6 +8,7 @@
   --black: #000;
   --white: #fff;
   --gray: #ddd;
+  --gray2: #777;
 }
 
 .clear {
@@ -35,6 +36,10 @@ a:hover {
 
 .content {
   margin: 30px 0;
+}
+.section-title {
+  text-align: left;
+  margin-bottom: 65px;
 }
 
 .button-box {
@@ -89,15 +94,32 @@ a:hover {
   background-color: var(--main-color);
   color: #fff;
 }
+.posting-item {
+  margin-bottom: 20px;
+}
 .posting-info-left {
-  display: grid;
-  justify-content: flex-start;
+  width: 87%;
   cursor: pointer;
+  float: left;
 }
 .posting-info-right {
-  display: grid;
-  justify-content: flex-end;
+  width: 13%;
   position: relative;
+  float: left;
+}
+.posting-img {
+  box-sizing: border-box;
+  margin: 0 auto;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.posting-img > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .like-icon {
   position: absolute;
@@ -112,8 +134,9 @@ a:hover {
   color: #ff1a51;
 }
 .price {
-  text-align: right;
+  float: right;
   color: var(--main-color);
+  margin-top: 5px;
 }
 
 /* ProductView */
@@ -123,7 +146,9 @@ a:hover {
 .line {
   border: 1px solid var(--gray);
 }
-
+.product-thumbnail-swiper {
+  margin-bottom: 20px;
+}
 .view-btn-box {
   margin-top: 150px;
   display: flex;
@@ -144,32 +169,35 @@ a:hover {
 .date-picker {
   margin-right: 40px;
   float: left;
+  color: var(--main-color);
 }
 /* .input-item > label {
   margin-bottom: 20px;
 } */
 .input-item > input {
+  padding-left: 10px;
   width: 100%;
   height: 35px;
   border: 1px solid var(--gray);
   border-radius: 10px;
+  background-color: var(--white);
   margin-top: 20px;
+  transition: all 0.3s;
+}
+.input-item > input:focus {
+  border-color: var(--main-color);
 }
 
 /* write */
-/* .product-thumb-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30%;
-  height: 100%;
-  border: 1px solid var(--gray);
-  border-radius: 10px;
-  float: left;
-  margin-right: 2%;
-} */
+.product-content-wrap {
+  width: 90%;
+  margin: 0 auto;
+}
 .mt {
-  margin-top: 150px;
+  margin-top: 150px !important;
+}
+.mb {
+  margin-bottom: 150px !important;
 }
 .product-write-frm .product-info-wrap1 {
   width: 90%;
@@ -192,9 +220,6 @@ a:hover {
   align-items: center;
   justify-content: center;
 }
-/* .product-thumb-wrap img {
-  height: 350px;
-} */
 .product-thumb-wrap > img {
   width: 100%;
   height: 100%;
