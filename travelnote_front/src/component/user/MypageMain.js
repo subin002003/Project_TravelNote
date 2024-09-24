@@ -33,7 +33,7 @@ const MypageMain = () => {
   }, [userType]);
 
   return (
-    <div className="my-page-wrap">
+    <div className="mypage-wrap">
       <div className="page-title">
         <h1>마이페이지</h1>
       </div>
