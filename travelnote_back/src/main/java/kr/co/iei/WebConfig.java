@@ -22,6 +22,10 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry
+		.addResourceHandler("/product/**")
+		.addResourceLocations("file:///"+root+"/product/");
+		
+		registry
 			.addResourceHandler("/product/editor/**")
 			.addResourceLocations("file:///"+root+"/product/editor/");
 		
