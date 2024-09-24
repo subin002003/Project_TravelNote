@@ -56,6 +56,10 @@
   	select * from product_file where product_no=#{productNo}
   </select>
   
+  <select id="selectOneProductReviews">
+  	select * from review where product_no=#{productNo}
+  </select>
+  
   <resultMap type="product" id="getProduct">
   	<result column="product_no" property="productNo" />
   	<result column="product_name" property="productName" />
@@ -72,6 +76,12 @@
   				column="product_no"
   				javaType="java.util.List"
   				ofType="productFile"
+  	 />
+  	 <collection property="reviews"
+  	 			 select="selectOneProductReviews"
+  	 			 column="product_no"
+  	 			 javaType="java.util.List"
+  	 			 ofType="productReview"
   	 />
   </resultMap>
   
@@ -112,5 +122,13 @@
   		#{productFileNo}
   	</foreach>
   </delete>
+  
+  <!-- 리뷰 -->
+  <insert id="insertReview">
+  	insert into review values(review_seq.nextval, #{productNo}, #{revieWriter}, #{reviewScore}, #{reviewContent}, sysdate, review_seq.currval)
+  	<selectKey resultType="int" keyProperty="productNo" order="BEFORE">
+  		select max(product_no) from product
+  	</selectKey>
+  </insert>
   
 </mapper>

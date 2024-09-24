@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.iei.product.model.dto.ProductDTO;
 import kr.co.iei.product.model.dto.ProductFileDTO;
+import kr.co.iei.product.model.dto.ReviewDTO;
 import kr.co.iei.util.PageInfo;
 
 @Mapper
@@ -23,6 +24,8 @@ public interface ProductDao {
 
 	List<ProductFileDTO> selectOneProductFileList(int productNo);
 
+	List<ReviewDTO> selectOneProductReviews(int productNo);
+
 	ProductFileDTO getProductFile(int productFileNo);
 
 	int deleteProduct(int productNo);
@@ -32,5 +35,7 @@ public interface ProductDao {
 	List<ProductFileDTO> selectProductFile(int[] delProductFileNo);
 
 	int deleteProductFile(int[] delProductFileNo);
+
+	int insertReview(ReviewDTO review);
 
 }

@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.iei.product.model.dto.ProductDTO;
 import kr.co.iei.product.model.dto.ProductFileDTO;
+import kr.co.iei.product.model.dto.ReviewDTO;
 import kr.co.iei.product.model.service.ProductService;
 import kr.co.iei.util.FileUtils;
 
@@ -60,7 +61,7 @@ public class ProductController {
 		return ResponseEntity.ok("/product/editor/" + filepath);
 	}
 	
-	// 상품 대표 이미지
+	// 패키지 상품 대표 이미지 처리
 	@GetMapping("/{filename}")
 	public ResponseEntity<Resource> getProductImage(@PathVariable String filename) throws FileNotFoundException {
 	    // 이미지 파일의 저장 경로
@@ -89,7 +90,7 @@ public class ProductController {
 	    headers.setContentType(MediaType.parseMediaType(mimeType));  // 파일의 MIME 타입을 설정
 	    headers.setContentLength(file.length());
 
-	    return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+	    return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
 	}
 
 	
@@ -117,12 +118,14 @@ public class ProductController {
 		return ResponseEntity.ok(result == 1 + productFileList.size());
 	}
 	
+	// 패키지 상품 상세페이지
 	@GetMapping(value="/productNo/{productNo}")
 	public ResponseEntity<ProductDTO> selectOneProduct(@PathVariable int productNo) {
 		ProductDTO product = productService.selectOneProduct(productNo);
 		return ResponseEntity.ok(product);
 	}
 	
+	// 패키지 상품 삭제
 	@DeleteMapping(value="/{productNo}")
 	public ResponseEntity<Integer> deleteProduct(@PathVariable int productNo) {
 		List<ProductFileDTO> delFileList = productService.deleteProduct(productNo);
@@ -138,6 +141,7 @@ public class ProductController {
 		}
 	}
 	
+	// 패키지 상품 수정
 	@PatchMapping
 	public ResponseEntity<Boolean> updateProduct(@ModelAttribute ProductDTO product, @ModelAttribute MultipartFile thumbnail, @ModelAttribute MultipartFile[] productFile){
 	    System.out.println("Updated Status: " + product.getProductStatus());
@@ -172,4 +176,10 @@ public class ProductController {
 		}
 	}
 	
+	// 패키지 상품 리뷰
+	@PostMapping(value="/insertReview")
+	public ResponseEntity<Integer> insertReview(@ModelAttribute ReviewDTO review) {
+		int result = productService.insertReview(review);
+		return ResponseEntity.ok(result);
+	}
 }

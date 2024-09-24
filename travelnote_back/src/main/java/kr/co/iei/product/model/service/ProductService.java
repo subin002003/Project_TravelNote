@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.co.iei.product.model.dao.ProductDao;
 import kr.co.iei.product.model.dto.ProductDTO;
 import kr.co.iei.product.model.dto.ProductFileDTO;
+import kr.co.iei.product.model.dto.ReviewDTO;
 import kr.co.iei.util.PageInfo;
 import kr.co.iei.util.PageUtil;
 
@@ -50,7 +51,9 @@ public class ProductService {
 	public ProductDTO selectOneProduct(int productNo) {
 		ProductDTO product = productDao.selectOneProduct(productNo);
 		List<ProductFileDTO> fileList = productDao.selectOneProductFileList(productNo);
+		List<ReviewDTO> reviews = productDao.selectOneProductReviews(productNo);
 		product.setFileList(fileList);
+		product.setReviews(reviews);
 		return product;
 	}
 
@@ -92,5 +95,11 @@ public class ProductService {
 			}
 		}
 		return null;
+	}
+
+	@Transactional
+	public int insertReview(ReviewDTO review) {
+		int result = productDao.insertReview(review);
+		return result;
 	}
 }
