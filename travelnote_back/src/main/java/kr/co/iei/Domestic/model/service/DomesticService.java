@@ -22,7 +22,12 @@ public class DomesticService {
         int itemNum = 8; // 첫 페이지 사진 갯수
         int endNum = reqPage * itemNum;
         int startNum = endNum - itemNum + 1;
-        return domesticDao.getAllRegions(startNum, endNum);
+        List list = domesticDao.getAllRegions(startNum, endNum);
+        return list;
+    }
+    // 여행지 정보 조회
+    public RegionDTO selectRegion(int regionNo) {
+    	return domesticDao.selectRegion(regionNo);
     }
 
     @Transactional
@@ -37,8 +42,4 @@ public class DomesticService {
         return domesticDao.selectItinerary(itineraryNo);  // DAO에서 일정 조회
     }
 
-    // 여행지 정보 조회
-    public RegionDTO selectRegion(int regionNo) {
-        return domesticDao.selectRegion(regionNo);
-    }
 }

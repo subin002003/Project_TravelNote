@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Alias(value = "foreignItineraryInfo")
+@Alias(value = "foreignItinerary")
 public class ForeignItineraryDTO {
 	private int itineraryNo;
 	private String userEmail; // userNo 대신 userEmail 사s
