@@ -22,9 +22,9 @@ public class DomesticService {
         int itemNum = 8; // 첫 페이지 사진 갯수
         int endNum = reqPage * itemNum;
         int startNum = endNum - itemNum + 1;
-        List<RegionDTO> list = domesticDao.getAllRegions(startNum, endNum);
-        return list;
+        return domesticDao.getAllRegions(startNum, endNum);
     }
+
     @Transactional
     // 여행 일정 저장
     public int saveItinerary(ItineraryDTO itinerary) {
@@ -32,11 +32,13 @@ public class DomesticService {
         return itinerary.getItineraryNo();
     }
 
+    // 일정 조회 메서드 (추가된 기능)
+    public ItineraryDTO getItinerary(int itineraryNo) {
+        return domesticDao.selectItinerary(itineraryNo);  // DAO에서 일정 조회
+    }
 
     // 여행지 정보 조회
     public RegionDTO selectRegion(int regionNo) {
-        RegionDTO region = domesticDao.selectRegion(regionNo);
-    	return region;
+        return domesticDao.selectRegion(regionNo);
     }
-
 }
