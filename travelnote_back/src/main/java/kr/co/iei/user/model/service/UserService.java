@@ -81,6 +81,11 @@ public class UserService {
 		int result = userDao.checkNick(userNick);
 		return result;
 	}
+	
+	public int checkPhone(String userPhone) {
+		int result = userDao.checkPhone(userPhone);
+		return result;
+	}
 
 	@Transactional
 	public int joinUser(UserDTO user) {
@@ -219,6 +224,22 @@ public class UserService {
 		UserDTO userInfo = userDao.selectUserInfo(loginUser.getUserEmail());
 		return userInfo;
 	}
+
+	@Transactional
+	public int updateUser(UserDTO user) {
+		int result = userDao.updateUser(user);
+		return result;
+	}
+
+	@Transactional
+	public int deleteUser(String token) {
+		LoginUserDTO loginUser = jwtUtil.checkToken(token);
+		int result = userDao.deleteUser(loginUser.getUserEmail());
+		return result;
+	}
+
+
+	
 
 
 	

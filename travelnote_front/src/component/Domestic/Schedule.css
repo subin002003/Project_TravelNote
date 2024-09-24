@@ -106,9 +106,6 @@
 .search > input {
   padding: 10px;
   color: #837979;
-  margin: 50px 0;
+  margin: 50px 10px;
   border-radius: 30px;
-}
-.search-btn1 {
-  margin: 10px;
 }

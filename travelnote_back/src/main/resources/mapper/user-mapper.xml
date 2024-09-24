@@ -7,6 +7,9 @@
 	<select id="checkNick" resultType="int">
 		select count(*) from user_tbl where user_nick = #{userNick}
 	</select>
+	<select id="checkPhone" resultType="int">
+		select count(*) from user_tbl where user_phone = #{userPhone}
+	</select>
 	<insert id="joinUser">
 		insert into user_tbl values(user_seq.nextval, #{userEmail}, #{userPw}, #{userName}, #{userPhone}, #{userNick}, 1, null)
 	</insert>
@@ -23,6 +26,12 @@
 		update user_tbl set user_pw = #{userPw} where user_email = #{userEmail}
 	</update>
 	<select id="selectUserInfo" resultType="user">
-		select user_email, user_name, user_nick, user_phone from user_tbl where user_email = #{userEmail}
+		select user_email, user_name, user_nick, user_phone,social_type from user_tbl where user_email = #{userEmail}
 	</select>
+	<update id="updateUser">
+		update user_tbl set user_name = #{userName}, user_nick = #{userNick}, user_phone = #{userPhone} where user_email = #{userEmail}
+	</update>
+	<delete id="deleteUser">
+		delete from user_tbl where user_email = #{userEmail}
+	</delete>
 </mapper>

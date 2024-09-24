@@ -25,7 +25,7 @@ public class EmailSender {
 			//언제 보냈는지
 			helper.setSentDate(new Date());
 			//누가
-			helper.setFrom(new InternetAddress("travelnote0919@gmail.com", "TravelNote 회원가입 인증 메일"));
+			helper.setFrom(new InternetAddress("travelnote0919@gmail.com", "TravelNote 인증 메일"));
 			//누구에게
 			helper.setTo(receiver);
 			//제목

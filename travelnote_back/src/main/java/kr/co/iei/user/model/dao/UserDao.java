@@ -23,4 +23,10 @@ public interface UserDao {
 
 	UserDTO selectUserInfo(String userEmail);
 
+	int checkPhone(String userPhone);
+
+	int updateUser(UserDTO user);
+
+	int deleteUser(String userEmail);
+
 }
