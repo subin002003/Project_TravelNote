@@ -107,6 +107,7 @@ public class ProductController {
 	
 	@PatchMapping
 	public ResponseEntity<Boolean> updateProduct(@ModelAttribute ProductDTO product, @ModelAttribute MultipartFile thumbnail, @ModelAttribute MultipartFile[] productFile){
+		System.out.println(product.getProductStatus());
 		if(thumbnail != null) {
 			String savepath = root + "/product/thumb/";
 			String filepath = fileUtils.upload(savepath, thumbnail);

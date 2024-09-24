@@ -107,6 +107,8 @@ const ProductUpdate = () => {
         })
         .then((res) => {
           console.log(res);
+          setProductStatus(res.data.productStatus);
+          console.log(res.data.productStatus);
           if (res.data) {
             navigate(`/product/view/${productNo}`);
           } else {
