@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +53,12 @@ public class UserController {
 	@GetMapping(value = "/checkNick/{userNick}")
 	public ResponseEntity<Integer> checkNick(@PathVariable String userNick){
 		int result = userService.checkNick(userNick);
+		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping(value = "/checkPhone/{userPhone}")
+	public ResponseEntity<Integer> checkPhone(@PathVariable String userPhone){
+		int result = userService.checkPhone(userPhone);
 		return ResponseEntity.ok(result);
 	}
 	
@@ -129,4 +136,17 @@ public class UserController {
 		UserDTO userInfo = userService.userInfo(token);
 		return ResponseEntity.ok(userInfo);
 	}
+
+	@PatchMapping
+	public ResponseEntity<Integer> updateUser(@RequestBody UserDTO user){
+		int result = userService.updateUser(user);
+		return ResponseEntity.ok(result);
+	}
+	
+	@DeleteMapping
+	public ResponseEntity<Integer> deleteUser(@RequestHeader("Authorization") String token){
+		int result = userService.deleteUser(token);
+		return ResponseEntity.ok(result);
+	}
+	
 }

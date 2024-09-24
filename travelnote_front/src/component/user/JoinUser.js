@@ -149,7 +149,7 @@ const JoinUser = () => {
 
   /////////////////////////////전화번호 양식 체크//////////////////////////////////////////////
 
-  // 0 -> 아무것도 입력 x / 1 -> 양식에 올바르지 않음 / 2 -> 사용 가능
+  // 0 -> 아무것도 입력 x / 1 -> 양식에 올바르지 않음 / 2 -> 중복된 전화번호 / 3 -> 사용 가능
   const phoneRef = useRef(null);
   const [phoneState, setPhoneState] = useState(0);
   const phoneCheck = () => {
@@ -161,9 +161,23 @@ const JoinUser = () => {
       phoneRef.current.classList.add("invalid");
       phoneRef.current.innerText = "양식에 맞춰 입력해주세요.";
     } else {
-      setPhoneState(2);
-      phoneRef.current.classList.add("valid");
-      phoneRef.current.innerText = "사용가능한 전화번호 입니다.";
+      axios
+        .get(`${backServer}/user/checkPhone/${user.userPhone}`)
+        .then((res) => {
+          console.log(res);
+          if (res.data === 0) {
+            setPhoneState(3);
+            phoneRef.current.classList.add("valid");
+            phoneRef.current.innerText = "사용가능한 전화번호 입니다.";
+          } else {
+            setPhoneState(2);
+            phoneRef.current.classList.add("invalid");
+            phoneRef.current.innerText = "중복된 전화번호 입니다.";
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
@@ -193,7 +207,7 @@ const JoinUser = () => {
   const nickCheck = () => {
     nickRef.current.classList.remove("invalid");
     nickRef.current.classList.remove("valid");
-    const nickReg = /^([가-힣]{1,8}|[a-zA-Z0-9]{1,12})$/;
+    const nickReg = /^[가-힣a-zA-Z0-9]{1,8}$/;
     if (!nickReg.test(user.userNick)) {
       setNickState(1);
       nickRef.current.classList.add("invalid");
@@ -215,9 +229,9 @@ const JoinUser = () => {
 
   const join = () => {
     if (
-      emailCheck === 4 &&
+      //emailCheck === 4 &&
       pwState === 3 &&
-      phoneState === 2 &&
+      phoneState === 3 &&
       nameState === 2 &&
       nickState === 3
     ) {

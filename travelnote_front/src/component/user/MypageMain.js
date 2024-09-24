@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { isLoginState, userTypeState } from "../utils/RecoilData";
 import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
@@ -8,14 +8,8 @@ import MyInfo from "./MyInfo";
 
 const MypageMain = () => {
   const navigate = useNavigate();
-  const [userType, setUserType] = useRecoilState(userTypeState);
+  const userType = useRecoilValue(userTypeState);
   const isLogin = useRecoilValue(isLoginState);
-  if (!isLogin) {
-    Swal.fire({
-      title: "로그인 후 이용해주세요!",
-      icon: "info",
-    });
-  }
 
   const [menus, setMenus] = useState([
     { url: "info", text: "내 정보 수정" },
@@ -27,8 +21,24 @@ const MypageMain = () => {
   ]);
 
   useEffect(() => {
+    console.log(isLogin);
+    if (!isLogin) {
+      Swal.fire({
+        title: "로그인 후 이용 가능합니다",
+        icon: "warning",
+      }).then(() => {
+        navigate("/login"); // 경고 후 로그인 페이지로 리다이렉트
+      });
+    } else {
+      navigate("info"); // 로그인 상태면 기본 페이지로 이동
+    }
+  }, [isLogin, navigate]);
+
+  useEffect(() => {
     if (userType === 3) {
       setMenus([...menus, { url: "/admin", text: "관리자 페이지" }]);
+    } else if (userType === 2) {
+      setMenus([...menus, { url: "/", text: "여행사 페이지" }]);
     }
   }, [userType]);
 

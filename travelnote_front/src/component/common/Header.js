@@ -54,7 +54,9 @@ const MainNavi = () => {
         <li>
           <Link to="/product/list">패키지 상품</Link>
         </li>
-        <li>메뉴3</li>
+        <li>
+          <Link to="/customerService">고객센터</Link>
+        </li>
         <li onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
           Community
           {isCommunityOpen && (

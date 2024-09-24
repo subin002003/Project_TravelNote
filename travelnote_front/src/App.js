@@ -19,6 +19,7 @@ import NaverCallback from "./component/user/NaverCallback";
 import FindEmail from "./component/user/FindEmail";
 import FindPw from "./component/user/FindPw";
 import MypageMain from "./component/user/MypageMain";
+import CustomerServiceMain from "./component/customerService/CustomerServiceMain";
 
 function App() {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -68,6 +69,7 @@ function App() {
           <Route path="/findEmail" element={<FindEmail />} />
           <Route path="/findPw" element={<FindPw />} />
           <Route path="/mypage/*" element={<MypageMain />} />
+          <Route path="/customerService/*" element={<CustomerServiceMain />} />
           <Route path="/product/*" element={<ProductMain />} />
           <Route path="/Domestic/*" element={<DomesticMain />}></Route>
           <Route path="/city/:cityName/:regionNo" element={<CityDetail />} />
