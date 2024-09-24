@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import ForeignPlanDaysButton from "./ForeignPlanDaysButton";
+import { useEffect, useState } from "react";
+import PlanItem from "./PlanItem";
+import axios from "axios";
 
 const ForeignPlanList = (props) => {
   const {
@@ -12,9 +15,29 @@ const ForeignPlanList = (props) => {
     setPlanPageOption,
   } = props;
 
+  const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
   const selectedDate = totalPlanDates[selectedDay - 1];
-  console.log(itinerary);
+  const [planList, setPlanList] = useState([]); // 조회 중인 일정 목록 배열
+
+  useEffect(() => {
+    if (itinerary.itineraryNo > 0) {
+      axios
+        .get(`${backServer}/foreign/getPlanList`, {
+          params: {
+            itineraryNo: itinerary.itineraryNo,
+            planDay: selectedDay,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          setPlanList(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [itinerary]);
 
   return (
     <div className="plan-list-wrap">
@@ -40,7 +63,16 @@ const ForeignPlanList = (props) => {
       </div>
       <div className="daily-plan-list-box">
         <h5>{selectedDate}</h5>
+        <div className="daily-plan-list">
+          <PlanItem
+            itineraryNo={itinerary.itineraryNo}
+            selectedDay={selectedDay}
+            planList={planList}
+            setPlanList={setPlanList}
+          />
+        </div>
       </div>
+      {/* planPageOption에 따라 저장인지, 수정인지 버튼 */}
     </div>
   );
 };
