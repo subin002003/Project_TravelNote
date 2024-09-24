@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
+	
 	@Value("${file.root}")
 	public String root;
 
@@ -32,5 +34,14 @@ public class WebConfig implements WebMvcConfigurer {
 		registry
 			.addResourceHandler("/product/thumb/**")
 			.addResourceLocations("file:///"+root+"/product/thumb/");
+		
+		// board 설정
+		registry
+		.addResourceHandler("/editor/**")
+		.addResourceLocations("file:///"+root+"/editor/");
+		registry
+		.addResourceHandler("/board/thumb/**")
+		.addResourceLocations("file:///"+root+"/board/thumb/");
+	
 	}
 }

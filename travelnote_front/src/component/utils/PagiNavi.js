@@ -24,6 +24,7 @@ const PageNavi = (props) => {
         onClick={() => {
           if (reqPage !== 1) {
             setReqPage(reqPage - 1);
+            console.log(reqPage);
           }
         }}
         className="material-icons page-item"

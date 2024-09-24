@@ -28,7 +28,7 @@ public class BoardController {
 	@Value("${file.root}")
 	public String root;
 	
-	@GetMapping(value = "/list{reqPage}")
+	@GetMapping(value = "/list/{reqPage}")
 	public ResponseEntity<Map> list(@PathVariable int reqPage){
 		//조회결과는 게시물목록, pageNavi생성 시 필요한 데이터들
 		Map map = boardService.selectBoardList(reqPage);

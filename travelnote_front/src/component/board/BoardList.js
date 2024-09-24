@@ -36,7 +36,7 @@ const BoardList = () => {
           })}
         </ul>
         <div>
-          <PagiNavi pi={pi} regPage={reqPage} setReqPage={setReqPage} />
+          <PagiNavi pi={pi} reqPage={reqPage} setReqPage={setReqPage} />
         </div>
       </div>
     </section>
@@ -49,16 +49,16 @@ const BoardItem = (props) => {
   return (
     <li
       onClick={() => {
-        navigate(`/board/view/${board.BoardNo}`);
+        navigate(`/board/view/${board.boardNo}`);
       }}
     >
       <div>
-        <span>{board.BoardNo}</span>
-        <span>{board.BoardTitle}</span>
-        <span>{board.BoardWriter}</span>
-        <span>{board.BoardDate}</span>
-        <span>{board.BoardReadCount}</span>
-        <span>{board.BoardLike}</span>
+        <span>{board.boardNo}</span>
+        <span>{board.boardTitle}</span>
+        <span>{board.boardWriter}</span>
+        <span>{board.boardDate}</span>
+        <span>{board.boardReadCount}</span>
+        <span>{board.boardLike}</span>
       </div>
     </li>
   );
