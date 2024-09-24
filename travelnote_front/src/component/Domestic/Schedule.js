@@ -13,6 +13,7 @@ const Schedule = () => {
   const [itinerary, setItinerary] = useState({});
   const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
   const [searchResults, setSearchResults] = useState([]); // 검색 결과 상태
+  const [showItineraryForm, setShowItineraryForm] = useState(false); // 일정 추가 폼 표시 상태
   const { itineraryNo } = useParams();
 
   useEffect(() => {
@@ -42,7 +43,7 @@ const Schedule = () => {
     };
 
     const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places`;
     script.async = true;
     script.onload = initMap;
     document.body.appendChild(script);
@@ -136,6 +137,10 @@ const Schedule = () => {
       });
   };
 
+  const handleItineraryButtonClick = () => {
+    setShowItineraryForm((prevShow) => !prevShow); // 일정 추가 폼을 토글
+  };
+
   return (
     <div className="schedule-wrap">
       <div className="content">
@@ -179,9 +184,15 @@ const Schedule = () => {
             <button className="save-btn">일정 저장</button>
           </div>
         </div>
+        {/* 가운데 패널 */}
         <div className="right-itinerary">
           <button className="air-btn">항공편 추가</button>
-          <button className="itinerary-btn">일정 추가</button>
+          <button
+            className="itinerary-btn"
+            onClick={handleItineraryButtonClick}
+          >
+            일정 추가
+          </button>
           <div className="search">
             <input
               type="text"
@@ -193,6 +204,14 @@ const Schedule = () => {
               검색
             </button>
           </div>
+
+          {showItineraryForm && (
+            <div className="itinerary">
+              <h3>새로운 일정 추가</h3>
+              <input type="text" placeholder="관광지 이름" />
+              <button className="add-itinerary-btn">추가</button>
+            </div>
+          )}
         </div>
         <div className="map-container">
           <div
