@@ -15,6 +15,11 @@
 	              product_sub_name,
 	              product_thumb,
 	              product_price,
+	              product_info,
+			      product_latitude,
+			      product_longitude,
+	              product_writer,
+	              product_status,
 	              to_char(enroll_date, 'yyyy-mm-dd') as enroll_date
 	         from product where product_status=1 order by product_no desc) p)
 	where rnum between #{start} and #{end}
@@ -42,6 +47,7 @@
         product_latitude,
         product_longitude,
         product_writer,
+        product_status,
   		to_char(enroll_date, 'yyyy-mm-dd') as enroll_date
   	from product where product_no=#{productNo}
   </select>
@@ -78,15 +84,17 @@
   </delete>
   
   <update id="updateProduct">
-  	update product set
+  	update product
+  	set
   		product_name=#{productName},
   		product_sub_name=#{productSubName},
   		product_thumb=#{productThumb},
   		product_price=#{productPrice},
   		product_info=#{productInfo},
   		product_latitude=#{productLatitude},
-  		product_longitude=#{productLongitude}
-  	where product_no={productNo}
+  		product_longitude=#{productLongitude},
+  		product_status=#{productStatus}
+  	where product_no=#{productNo}
   </update>
   
   <select id="selectProductFile" resultType="productFile">

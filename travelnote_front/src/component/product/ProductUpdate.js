@@ -5,6 +5,7 @@ import { loginEmailState } from "../utils/RecoilData";
 import axios from "axios";
 import ProductFrm from "./ProductFrm";
 import ToastEditor from "../utils/ToastEditor";
+import Swal from "sweetalert2";
 
 const ProductUpdate = () => {
   const params = useParams();
@@ -112,11 +113,24 @@ const ProductUpdate = () => {
           if (res.data) {
             navigate(`/product/view/${productNo}`);
           } else {
-            // 실패 시 로직
+            Swal.fire({
+              title: "상품 수정에 실패했습니다.",
+              text: "다시 시도하세요.",
+              icon: "error",
+            });
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.log("Axios Error:", err);
+          if (err.response) {
+            console.log("Response data:", err.response.data);
+            console.log("Response status:", err.response.status);
+            console.log("Response headers:", err.response.headers);
+          } else if (err.request) {
+            console.log("Request data:", err.request);
+          } else {
+            console.log("Error message:", err.message);
+          }
         });
     }
   };

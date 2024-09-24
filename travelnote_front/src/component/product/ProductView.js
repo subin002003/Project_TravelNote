@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { createPortal } from "react-dom";
-import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import Swal from "sweetalert2";
 import { Viewer } from "@toast-ui/react-editor";
 import axios from "axios";
 import "./product.css";
@@ -18,6 +15,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
+import DateRangePickerComponent from "./DatePickerComponent ";
 
 const ProductView = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -26,52 +24,36 @@ const ProductView = () => {
   const [product, setProduct] = useState({});
   const navigate = useNavigate();
   const [count, setCount] = useState(1); // 초기 수량을 1로 설정
+  const [dateRange, setDateRange] = useState("날짜 범위 선택"); // 선택된 날짜 범위를 상태로 관리
 
   useEffect(() => {
     axios
       .get(`${backServer}/product/productNo/${productNo}`)
       .then((res) => {
-        console.log(res);
         setProduct(res.data);
       })
       .catch((err) => {
         console.log(err);
+        alert("상품 정보를 불러오는 데 실패했습니다.");
       });
-  }, []);
+  }, [backServer, productNo]);
 
-  // 날짜 선택
-  const [range, setRange] = useState({ from: null, to: null });
-  const [swalShown, setSwalShown] = useState(false);
+  const handleDateRangeChange = (startDate, endDate) => {
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
 
-  const showSwalWithReactDayPicker = () => {
-    Swal.fire({
-      title: "날짜를 선택하세요!",
-      html: "<div id='swal-datepicker'></div>",
-      showCancelButton: true,
-      confirmButtonText: "확인",
-      cancelButtonText: "취소",
-      preConfirm: () => {
-        if (!range.from || !range.to) {
-          Swal.showValidationMessage("날짜를 모두 선택해주세요.");
-          return false; // 오류가 있을 경우 false 반환
-        }
-        return true; // 날짜가 모두 선택되었을 경우 true 반환
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire(
-          `선택된 날짜: 시작 ${range.from?.toLocaleDateString()} - 종료 ${range.to?.toLocaleDateString()}`
-        );
-      }
-    });
+      const options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      const startFormatted = start.toLocaleDateString("ko-KR", options);
+      const endFormatted = end.toLocaleDateString("ko-KR", options);
 
-    // 날짜 선택 모달을 보여줍니다.
-    setSwalShown(true);
-  };
-
-  // 날짜 선택 시 상태 업데이트
-  const handleDaySelect = (selectedRange) => {
-    setRange(selectedRange);
+      setDateRange(`선택된 날짜: ${startFormatted} ~ ${endFormatted}`);
+    }
   };
 
   // 패키지 상품 삭제
@@ -140,6 +122,11 @@ const ProductView = () => {
               ) : (
                 <img src="/image/default_img.png" />
               )}
+              {/* Navigation 버튼 추가 */}
+              <div className="swiper-button-next"></div>
+              <div className="swiper-button-prev"></div>
+              {/* Pagination 추가 */}
+              <div className="swiper-pagination"></div>
             </Swiper>
           </div>
           <div className="product-view-preview">
@@ -156,28 +143,7 @@ const ProductView = () => {
         <div className="sec product-view-reservation">
           <h3 className="section-title">여행 예약</h3>
 
-          {swalShown &&
-            createPortal(
-              <DayPicker
-                mode="range"
-                selected={range}
-                onSelect={handleDaySelect} // 상태 업데이트
-                style={{ display: "inline-block" }}
-              />,
-              Swal.getHtmlContainer()
-            )}
-
-          <div className="date-picker" onClick={showSwalWithReactDayPicker}>
-            {!range?.from && !range?.to ? (
-              "여행 날짜를 선택하세요!"
-            ) : (
-              <>
-                {range?.from &&
-                  `시작 날짜: ${range.from?.toLocaleDateString()} `}
-                {range?.to && `종료 날짜: ${range.to?.toLocaleDateString()}`}
-              </>
-            )}
-          </div>
+          <DateRangePickerComponent onDateRangeChange={handleDateRangeChange} />
 
           <div className="people">
             <button className="btn-primary sm" onClick={minus}>
@@ -204,11 +170,12 @@ const ProductView = () => {
 
           <div style={{ margin: "50px 0" }}>
             <p>{product.productName}</p>
-            <p>
-              {range?.from && `시작 날짜: ${range.from?.toLocaleDateString()} `}
-              {range?.to && `종료 날짜: ${range.to?.toLocaleDateString()}`}
+            <p>{dateRange}</p>
+            <p className="price">
+              {product.productPrice
+                ? `${product.productPrice.toLocaleString()} 원`
+                : "가격 정보 없음"}
             </p>
-            <p className="price">{product.productPrice}</p>
           </div>
 
           <div style={{ padding: "23.5px 0" }} className="btn-primary lg">
