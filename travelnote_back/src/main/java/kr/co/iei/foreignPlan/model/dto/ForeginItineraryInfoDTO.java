@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Alias(value="foreginItineraryInfo")
+@Alias(value="foreignItineraryInfo")
 public class ForeginItineraryInfoDTO {
 	private int itineraryNo;
 	private int regionNo;

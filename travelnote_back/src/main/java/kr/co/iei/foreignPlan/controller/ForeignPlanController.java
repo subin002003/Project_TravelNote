@@ -56,17 +56,20 @@ public class ForeignPlanController {
 	// 여행 일정 조회
 	@GetMapping(value="/getItineraryInfo/{itineraryNo}")
 	public ResponseEntity<ForeginItineraryInfoDTO> getItineraryInfo(@PathVariable int itineraryNo) {
+		System.out.println(itineraryNo);
 		ForeginItineraryInfoDTO itinerary = foreignPlanService.selectOneItinerary(itineraryNo);
 		return ResponseEntity.ok(itinerary);
 	}
 	
-	// 일정 번호, Day 번호로 해당 날짜의 계획 조회
-	@GetMapping(value="/getPlanList")
-	public ResponseEntity<List> getPlanList(@RequestParam int itineraryNo, int day){
-		System.out.println(itineraryNo);
-		System.out.println(day);
-		List list = foreignPlanService.selectPlanList(itineraryNo, day);
-		return ResponseEntity.ok(list);
-	}
+//	// 일정 번호, Day 번호로 해당 날짜의 계획 조회
+//	@GetMapping(value="/getPlanList")
+//	public ResponseEntity<List> getPlanList(@RequestParam int itineraryNo, int day){
+//		System.out.println(itineraryNo);
+//		System.out.println(day);
+//		List list = foreignPlanService.selectPlanList(itineraryNo, day);
+//		return ResponseEntity.ok(list);
+//	}
+//	
+	//
 	
 }

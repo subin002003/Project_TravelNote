@@ -14,6 +14,7 @@ const ForeignPlanList = (props) => {
 
   const navigate = useNavigate();
   const selectedDate = totalPlanDates[selectedDay - 1];
+  console.log(itinerary);
 
   return (
     <div className="plan-list-wrap">
