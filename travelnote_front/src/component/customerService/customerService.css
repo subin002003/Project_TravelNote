@@ -4,7 +4,7 @@
 }
 .main-content {
   min-height: 300px;
-  background-color: var(--background-color);
+  /* background-color: var(--background-color); */
   border-radius: 15px;
   padding: 30px;
 }
