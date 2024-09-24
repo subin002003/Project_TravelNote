@@ -10,6 +10,13 @@
         WHERE rnum BETWEEN #{startNum} AND #{endNum}) reg
         LEFT JOIN region_info ON reg.region_no = region_info.region_no
     </select>
+    
+    <!-- 여행지 정보 조회 -->
+    <select id="selectRegion" resultType="Region">
+        SELECT r.region_no, r.region_name, r.country_name, r.region_img
+        FROM region r
+        WHERE r.region_no = #{regionNo}
+    </select>
 
     <!-- 일정 저장 -->
     <insert id="saveItinerary">

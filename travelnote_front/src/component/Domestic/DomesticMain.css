@@ -6,6 +6,7 @@
 }
 .domestic-wrap > h1 {
   margin-top: 30px;
+  margin-left: 200px;
 }
 .search-bar {
   display: flex;
@@ -20,7 +21,7 @@
   border-radius: 30px;
   color: #837979;
   margin-right: 20px;
-  margin-left: 200px;
+  margin-left: 300px;
 }
 .search-btn {
   padding: 10px;
@@ -34,7 +35,7 @@
   grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개의 열을 표시 */
   gap: 100px; /* 열 사이의 간격을 조금 좁게 조정 */
   padding: 40px;
-  margin-left: 200px;
+  margin-left: 170px;
 }
 
 .city-card {
@@ -65,4 +66,5 @@
 .more-btn {
   margin: 40px;
   border-radius: 30px;
+  margin-left: 200px;
 }

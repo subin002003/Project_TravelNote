@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import kr.co.iei.foreignPlan.model.dto.ForeginItineraryInfoDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignItineraryDTO;
+import kr.co.iei.foreignPlan.model.dto.ForeignItineraryInfoDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignRegionDTO;
 import kr.co.iei.foreignPlan.model.service.ForeignPlanService;
 
@@ -55,9 +54,8 @@ public class ForeignPlanController {
 	
 	// 여행 일정 조회
 	@GetMapping(value="/getItineraryInfo/{itineraryNo}")
-	public ResponseEntity<ForeginItineraryInfoDTO> getItineraryInfo(@PathVariable int itineraryNo) {
-		System.out.println(itineraryNo);
-		ForeginItineraryInfoDTO itinerary = foreignPlanService.selectOneItinerary(itineraryNo);
+	public ResponseEntity<ForeignItineraryInfoDTO> getItineraryInfo(@PathVariable int itineraryNo) {
+		ForeignItineraryInfoDTO itinerary = foreignPlanService.selectOneItinerary(itineraryNo);
 		return ResponseEntity.ok(itinerary);
 	}
 	

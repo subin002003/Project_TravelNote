@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.co.iei.foreignPlan.model.dto.ForeginItineraryInfoDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignItineraryDTO;
+import kr.co.iei.foreignPlan.model.dto.ForeignItineraryInfoDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignRegionDTO;
 
 @Mapper
@@ -19,7 +19,7 @@ public interface ForeignPlanDao {
 
 	int insertItinerary(ForeignItineraryDTO itinerary);
 
-	ForeginItineraryInfoDTO selectOneItinerary(int itineraryNo);
+	ForeignItineraryInfoDTO selectOneItinerary(int itineraryNo);
 
 
 }

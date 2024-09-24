@@ -118,10 +118,10 @@ const ProductFrm = (props) => {
         </div>
 
         <div className="product-input-wrap">
-          <div>
+          {/* <div>
             <label>여행사</label>
             <span className="productWriter">{loginEmail}</span>
-          </div>
+          </div> */}
 
           <div className="input-item">
             <label htmlFor="productSubName">판매 여부</label>
@@ -168,7 +168,7 @@ const ProductFrm = (props) => {
           <input
             type="file"
             id="productFile"
-            style={{ padding: "5px 10px" }}
+            style={{ padding: "5px 10px", height: "40px" }}
             onChange={addProductFile}
             multiple
           />
@@ -219,7 +219,7 @@ const ProductFrm = (props) => {
         </div>
       </div>
 
-      <div className="product-info">
+      <div className="mb product-info">
         <div className="input-item">
           <label htmlFor="productLatitude">위도</label>
           <input
