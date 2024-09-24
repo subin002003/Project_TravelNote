@@ -60,6 +60,39 @@ public class ProductController {
 		return ResponseEntity.ok("/product/editor/" + filepath);
 	}
 	
+	// 상품 대표 이미지
+	@GetMapping("/{filename}")
+	public ResponseEntity<Resource> getProductImage(@PathVariable String filename) throws FileNotFoundException {
+	    // 이미지 파일의 저장 경로
+	    String filePath = root + "/product/" + filename;
+	    File file = new File(filePath);
+
+	    if (!file.exists()) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	    }
+
+	    // 파일 확장자를 추출하여 MIME 타입을 설정
+	    String mimeType = null;
+	    if (filename.endsWith(".jpeg") || filename.endsWith(".jpg")) {
+	        mimeType = MediaType.IMAGE_JPEG_VALUE;
+	    } else if (filename.endsWith(".png")) {
+	        mimeType = MediaType.IMAGE_PNG_VALUE;
+	    } else {
+	        // 그 외 확장자는 지원하지 않음
+	        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
+	    }
+
+	    // 파일을 읽어와서 InputStreamResource로 반환
+	    InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.parseMediaType(mimeType));  // 파일의 MIME 타입을 설정
+	    headers.setContentLength(file.length());
+
+	    return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+	}
+
+	
 	// 상품 등록
 	@PostMapping
 	public ResponseEntity<Boolean> insertProduct(@ModelAttribute ProductDTO product, @ModelAttribute MultipartFile thumbnail, @ModelAttribute MultipartFile[] productFile){
@@ -85,7 +118,7 @@ public class ProductController {
 	}
 	
 	@GetMapping(value="/productNo/{productNo}")
-	public ResponseEntity<ProductDTO> selectOneProduct(@PathVariable int productNo){
+	public ResponseEntity<ProductDTO> selectOneProduct(@PathVariable int productNo) {
 		ProductDTO product = productService.selectOneProduct(productNo);
 		return ResponseEntity.ok(product);
 	}
