@@ -92,15 +92,32 @@ a:hover {
   background-color: var(--main-color);
   color: #fff;
 }
+.posting-item {
+  margin-bottom: 20px;
+}
 .posting-info-left {
-  display: grid;
-  justify-content: flex-start;
+  width: 87%;
   cursor: pointer;
+  float: left;
 }
 .posting-info-right {
-  display: grid;
-  justify-content: flex-end;
+  width: 13%;
   position: relative;
+  float: left;
+}
+.posting-img {
+  box-sizing: border-box;
+  margin: 0 auto;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.posting-img > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .like-icon {
   position: absolute;
@@ -115,8 +132,9 @@ a:hover {
   color: #ff1a51;
 }
 .price {
-  text-align: right;
+  float: right;
   color: var(--main-color);
+  margin-top: 5px;
 }
 
 /* ProductView */
@@ -195,9 +213,6 @@ a:hover {
   align-items: center;
   justify-content: center;
 }
-/* .product-thumb-wrap img {
-  height: 350px;
-} */
 .product-thumb-wrap > img {
   width: 100%;
   height: 100%;

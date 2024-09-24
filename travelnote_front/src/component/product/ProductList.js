@@ -90,6 +90,7 @@ const ProductItem = (props) => {
         </div>
         <span className="price">{product.productPrice}</span>
       </div>
+      <div className="clear"></div>
     </li>
   );
 };
