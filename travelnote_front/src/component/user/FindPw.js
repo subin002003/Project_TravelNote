@@ -181,6 +181,7 @@ const FindPw = () => {
             </div>
             <div className="input-box">
               <input
+                className="user-input"
                 type="text"
                 name="userEmail"
                 id="userEmail"
@@ -196,6 +197,7 @@ const FindPw = () => {
             </div>
             <div className="input-box">
               <input
+                className="user-input"
                 type="text"
                 name="verificationCode"
                 id="verificationCode"
@@ -222,6 +224,7 @@ const FindPw = () => {
             </div>
             <div className="input-box">
               <input
+                className="user-input"
                 type="password"
                 name="userPw"
                 id="userPw"
@@ -237,6 +240,7 @@ const FindPw = () => {
             </div>
             <div className="input-box">
               <input
+                className="user-input"
                 type="password"
                 name="userNewPwRe"
                 id="userNewPwRe"

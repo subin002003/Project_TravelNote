@@ -193,6 +193,7 @@ const MyInfo = () => {
           </div>
           <div className="input-box">
             <input
+              className="user-input"
               type="text"
               name="userEmail"
               id="userEmail"
@@ -208,6 +209,7 @@ const MyInfo = () => {
           <div className="input-box">
             {user.socialType === null ? (
               <input
+                className="user-input"
                 type="text"
                 name="userName"
                 id="userName"
@@ -218,6 +220,7 @@ const MyInfo = () => {
             ) : (
               <>
                 <input
+                  className="user-input"
                   type="text"
                   name="userName"
                   id="userName"
@@ -238,6 +241,7 @@ const MyInfo = () => {
           <div className="input-box">
             {user.socialType === null ? (
               <input
+                className="user-input"
                 type="text"
                 name="userNick"
                 id="userNick"
@@ -248,6 +252,7 @@ const MyInfo = () => {
             ) : (
               <>
                 <input
+                  className="user-input"
                   type="text"
                   name="userNick"
                   id="userNick"
@@ -267,6 +272,7 @@ const MyInfo = () => {
           <div className="input-box">
             {user.socialType === null ? (
               <input
+                className="user-input"
                 type="text"
                 name="userPhone"
                 id="userPhone"
@@ -277,6 +283,7 @@ const MyInfo = () => {
             ) : (
               <>
                 <input
+                  className="user-input"
                   type="text"
                   name="userPhone"
                   id="userPhone"

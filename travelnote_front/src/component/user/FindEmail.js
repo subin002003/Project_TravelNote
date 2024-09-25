@@ -55,6 +55,7 @@ const FindEmail = () => {
             </div>
             <div className="input-box">
               <input
+                className="user-input"
                 type="text"
                 name="userName"
                 id="userName"
@@ -68,6 +69,7 @@ const FindEmail = () => {
             </div>
             <div className="input-box">
               <input
+                className="user-input"
                 type="text"
                 name="userPhone"
                 id="userPhone"

@@ -72,6 +72,7 @@ const Login = () => {
             </div>
             <div className="input-box">
               <input
+                className="user-input"
                 type="text"
                 name="userEmail"
                 id="userEmail"
@@ -85,6 +86,7 @@ const Login = () => {
             </div>
             <div className="input-box">
               <input
+                className="user-input"
                 type="password"
                 name="userPw"
                 id="userPw"
