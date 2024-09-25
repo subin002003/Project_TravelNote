@@ -11,6 +11,7 @@ const CustomerBoardList = () => {
   const [pi, setPi] = useState({});
   const [faqBoardList, setFaqBoardList] = useState([]);
   const [reqPage, setReqPage] = useState(1);
+  const navigate = useNavigate();
   useEffect(() => {
     axios
       .get(`${backServer}/faqBoard/list/${reqPage}`)
@@ -23,6 +24,10 @@ const CustomerBoardList = () => {
         console.log(err);
       });
   }, [reqPage]);
+
+  const navigatePersonalBoardWrite = () => {
+    navigate("/customerService/personalBoardWrite");
+  };
   return (
     <div className="customer-content">
       <div className="faqboard-wrap content-wrap">
@@ -61,6 +66,14 @@ const CustomerBoardList = () => {
       <div className="personalboard-wrap content-wrap">
         <div className="mypage-title">
           <h3>1대1 문의</h3>
+        </div>
+        <div className="personalboard-section">
+          <div className="personalboard-write-btn">
+            <button onClick={navigatePersonalBoardWrite}>
+              1대1 문의 작성하기
+            </button>
+          </div>
+          <div className="personalboard-list"></div>
         </div>
       </div>
     </div>

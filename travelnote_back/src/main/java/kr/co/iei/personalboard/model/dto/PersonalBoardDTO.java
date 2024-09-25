@@ -1,5 +1,7 @@
 package kr.co.iei.personalboard.model.dto;
 
+import java.util.List;
+
 import org.apache.ibatis.type.Alias;
 
 import lombok.AllArgsConstructor;
@@ -18,4 +20,6 @@ public class PersonalBoardDTO {
 	private String personalBoardWriteDate;
 	private String personalBoardAnswerDate;
 	private String personalBoardStatus;
+	private List<PersonalBoardFileDTO> personalBoardFileList;
+	private int[] delPersonalBoardFileNo;
 }
