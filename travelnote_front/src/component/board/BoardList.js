@@ -32,7 +32,7 @@ const BoardList = () => {
       <div>
         <ul>
           {boardList.map((board, i) => {
-            return <BoardItem key={"board" + i} board={board} />;
+            return <BoardItem key={"board-" + i} board={board} />;
           })}
         </ul>
         <div>
@@ -58,7 +58,7 @@ const BoardItem = (props) => {
         <span>{board.boardWriter}</span>
         <span>{board.boardDate}</span>
         <span>{board.boardReadCount}</span>
-        <span>{board.boardLike}</span>
+        {/* <span>{board.boardLike}</span> */}
       </div>
     </li>
   );

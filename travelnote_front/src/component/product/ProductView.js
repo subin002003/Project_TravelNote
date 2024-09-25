@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import "react-day-picker/dist/style.css";
 import { Viewer } from "@toast-ui/react-editor";
+import "react-day-picker/dist/style.css";
 import axios from "axios";
 import "./product.css";
 
@@ -28,15 +28,20 @@ import "swiper/css/autoplay";
 import DateRangePickerComponent from "./DatePickerComponent ";
 import Review from "./review/ReviewWrite";
 import Swal from "sweetalert2";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { isLoginState, userTypeState } from "../utils/RecoilData";
 
 const ProductView = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  // 로그인 회원 정보
+  const isLogin = useRecoilValue(isLoginState);
+  const [userType, setUserType] = useRecoilState(userTypeState);
   const params = useParams();
   const productNo = params.productNo;
   const [product, setProduct] = useState({ fileList: [], reviews: [] });
   const navigate = useNavigate();
   const [count, setCount] = useState(1); // 초기 수량을 1로 설정
-  const [dateRange, setDateRange] = useState("날짜 범위 선택"); // 선택된 날짜 범위를 상태로 관리
+  const [dateRange, setDateRange] = useState("여행 날짜를 선택하세요."); // 선택된 날짜 범위를 상태로 관리
   const [openReviewDialog, setOpenReviewDialog] = useState(false); // 다이얼로그 상태
 
   useEffect(() => {
@@ -53,7 +58,7 @@ const ProductView = () => {
           icon: "error",
         });
       });
-  }, [backServer, productNo]);
+  }, [backServer, productNo, product.reviews]);
 
   const handleDateRangeChange = (startDate, endDate) => {
     if (startDate && endDate) {
@@ -80,6 +85,10 @@ const ProductView = () => {
       .then((res) => {
         console.log(res);
         if (res.data === 1) {
+          Swal.fire({
+            title: "상품이 삭제되었습니다.",
+            icon: "success",
+          });
           navigate("/product/list");
         }
       })
@@ -215,7 +224,7 @@ const ProductView = () => {
 
         <div className="line"></div>
 
-        <div className="sec">
+        <div className="sec product-content">
           <h3 className="section-title">여행지 소개</h3>
           <div>
             {product.productInfo ? (
@@ -230,9 +239,13 @@ const ProductView = () => {
       <div className="clear"></div>
       <div className="line"></div>
 
-      <div className="sec comment">
+      <div className="sec review">
         <div
-          style={{ display: "flex", justifyContent: "space-between" }}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: "0px",
+          }}
           className="section-title"
         >
           <span style={{ fontSize: "20px" }}>
@@ -255,35 +268,47 @@ const ProductView = () => {
           </button>
         </div>
 
+        <div className="line" style={{ margin: "30px 0" }}></div>
+
         {/* 리뷰 출력 */}
         <div className="commentBox">
           <div className="posting-review-wrap">
             <ul>
               {product.reviews.map((review, i) => {
-                return <ReviewItem key={"review-" + i} review={review} />;
+                return (
+                  <ReviewItem
+                    key={"review-" + i}
+                    product={product}
+                    review={review}
+                  />
+                );
               })}
             </ul>
           </div>
+          {/* 리뷰 전체보기 */}
         </div>
       </div>
 
       <div className="clear"></div>
-      <div className="line"></div>
 
       {/* 리뷰 작성 다이얼로그 */}
-      <div className="inputCommentBox">
+      <div className="input-review-popup">
         <Dialog
           open={openReviewDialog}
           onClose={handleCloseReviewDialog}
           PaperProps={{
-            style: { width: "800px" }, // 다이얼로그의 가로 크기를 800px로 설정
+            style: { width: "800px", zIndex: "10" }, // 다이얼로그의 가로 크기를 800px로 설정
           }}
           maxWidth={false} // maxWidth 기본값을 사용하지 않도록 설정
           fullWidth={true} // 다이얼로그가 지정된 너비를 채우도록 설정
         >
           <DialogTitle>리뷰 작성</DialogTitle>
           <DialogContent>
-            <Review />
+            <Review
+              productNo={productNo}
+              open={openReviewDialog}
+              handleClose={handleCloseReviewDialog}
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseReviewDialog} color="primary">
@@ -293,35 +318,117 @@ const ProductView = () => {
         </Dialog>
       </div>
 
-      <div className="button-box">
-        <Link
-          className="btn-primary lg"
-          to={`/product/update/${product.productNo}`}
-        >
-          수정
-        </Link>
-        <button
-          type="button"
-          className="btn-secondary lg"
-          onClick={deleteProduct}
-        >
-          삭제
-        </button>
-      </div>
+      {isLogin && userType === 2 ? (
+        <div className="button-box">
+          <Link
+            className="btn-primary lg"
+            to={`/product/update/${product.productNo}`}
+          >
+            수정
+          </Link>
+          <button
+            type="button"
+            className="btn-secondary lg"
+            onClick={deleteProduct}
+          >
+            삭제
+          </button>
+        </div>
+      ) : (
+        ""
+      )}
     </section>
   );
 };
 
 const ReviewItem = (props) => {
+  const backServer = process.env.REACT_APP_BACK_SERVER;
+  const navigate = useNavigate();
+  const product = props.product;
   const review = props.review;
-  console.log(props.review);
-  console.log(props.review.reviewScore);
+  const [isLike, setIsLike] = useState(product.isLike === 1); // 좋아요 상태 (1: 좋아요, 0: 비활성화)
+  const [likeCount, setLikeCount] = useState(product.likeCount); // 좋아요 수
+  const [openReviewDialog, setOpenReviewDialog] = useState(false); // 다이얼로그 상태
+  // console.log(props.review);
+  // console.log(props.review.reviewScore);
+
+  // 리뷰 작성 팝업 열기
+  const handleOpenReviewDialog = () => {
+    setOpenReviewDialog(true);
+  };
+
+  // 리뷰 작성 팝업 닫기
+  const handleCloseReviewDialog = () => {
+    setOpenReviewDialog(false);
+  };
+
+  // 리뷰 수정
+  const updateReview = () => {
+    setOpenReviewDialog(true);
+
+    axios
+      .patch(`${backServer}/product/updateReview/${review.reviewNo}`)
+      .then((res) => {
+        console.log(res);
+        if (res.data === 1) {
+          Swal.fire({
+            title: "리뷰가 수정되었습니다.",
+            icon: "success",
+          });
+          navigate(`/product/view/${product.productNo}`);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // 리뷰 삭제
+  const deleteReview = () => {
+    axios
+      .delete(`${backServer}/product/deleteReview/${review.reviewNo}`)
+      .then((res) => {
+        console.log(res);
+        if (res.data === 1) {
+          Swal.fire({
+            title: "리뷰가 삭제되었습니다.",
+            icon: "success",
+          });
+          navigate(`/product/view/${product.productNo}`);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <li className="posting-item">
       <div className="posting-review">
-        <div>
-          <span>{review.reviewWriter}</span>
-          <span>{review.reviewDate}</span>
+        <div className="posting-review-info">
+          <div className="review-info-left">
+            <span style={{ display: "none" }}>{review.reviewNo}</span>
+            <span className="reviewWriter">{review.reviewWriter}</span>
+            <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+            <span className="reviewDate">{review.reviewDate}</span>
+          </div>
+          <div className="review-info-right">
+            {/* <Link className="btn-secondary sm" to={`/product/updateReview`}>
+              수정
+            </Link> */}
+            <button
+              className="btn-secondary sm review-update-btn"
+              onClick={handleOpenReviewDialog}
+            >
+              수정
+            </button>
+            <button
+              className="btn-secondary sm review-delete-btn"
+              onClick={deleteReview}
+            >
+              삭제
+            </button>
+          </div>
         </div>
         {/* <div>{review.reviewScore}</div> */}
         <Rating
@@ -329,7 +436,51 @@ const ReviewItem = (props) => {
           value={review.reviewScore} // 리뷰 점수
           readOnly // 읽기 전용
         />
-        <div>{review.reviewContent}</div>
+        <div className="posting-review-content">{review.reviewContent}</div>
+        <div className="review-link-box">
+          <span className="reviewLike">
+            <i
+              className={
+                isLike ? "fa-solid fa-thumbs-up" : "fa-regular fa-thumbs-up"
+              }
+            ></i>
+            <span className="reviewLikeCount">0</span>
+          </span>
+          <span className="reviewReComment-btn">
+            <i className="fa-solid fa-comment-dots"></i>
+            {/* <a className="recShow" href="javascript:void(0)">
+              답글
+            </a> */}
+            <span className="reviewReCommentCount">0</span>
+          </span>
+        </div>
+      </div>
+      <div style={{ margin: "30px 0" }} className="line"></div>
+      {/* 리뷰 작성 다이얼로그 */}
+      <div className="inputCommentBox">
+        <Dialog
+          open={openReviewDialog}
+          onClose={handleCloseReviewDialog}
+          PaperProps={{
+            style: { width: "800px", zIndex: "10" }, // 다이얼로그의 가로 크기를 800px로 설정
+          }}
+          maxWidth={false} // maxWidth 기본값을 사용하지 않도록 설정
+          fullWidth={true} // 다이얼로그가 지정된 너비를 채우도록 설정
+        >
+          <DialogTitle>리뷰 작성</DialogTitle>
+          <DialogContent>
+            <Review
+              productNo={product.productNo}
+              open={openReviewDialog}
+              handleClose={handleCloseReviewDialog}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseReviewDialog} color="primary">
+              닫기
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </li>
   );

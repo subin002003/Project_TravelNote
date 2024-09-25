@@ -1,5 +1,7 @@
 package kr.co.iei.board.model.dto;
 
+import java.util.List;
+
 import org.apache.ibatis.type.Alias;
 
 import lombok.AllArgsConstructor;
@@ -20,4 +22,6 @@ public class BoardDTO {
 	private int boardReadCount;
 	private int boardStatus;
 	private int boardType;
+	private List<BoardFileDTO> fileList;
+	private int[] delBoardFileNo;
 }
