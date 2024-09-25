@@ -37,15 +37,15 @@ const ForeignPlanList = (props) => {
           console.log(err);
         });
     }
-  }, [itinerary]);
+  }, [itinerary, selectedDate]);
 
   return (
     <div className="plan-list-wrap">
       <div className="itinerary-info-box">
         <h4>{itinerary.itineraryTitle}</h4>
-        <h4>
+        <h5>
           {itinerary.countryName} {itinerary.regionName}
-        </h4>
+        </h5>
         <h5>
           {itinerary.itineraryStartDate} ~ {itinerary.itineraryEndDate}
         </h5>

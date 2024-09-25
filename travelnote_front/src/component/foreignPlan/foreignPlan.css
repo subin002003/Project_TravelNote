@@ -171,6 +171,7 @@
 .daily-plan-list-box > h5 {
   text-align: center;
   color: var(--main-color);
+  margin: 0;
 }
 
 /* ForeignRegionInfo */
@@ -226,15 +227,55 @@
 
 /* PlanItem */
 .plan-item-list {
-  height: 700px;
+  height: 500px;
   overflow: auto;
-}
-.plan-item-list::-webkit-scrollbar {
-  display: none; /* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
-}
-.plan-item-list {
+  background-color: var(--base-color);
+  border-radius: 10px;
+  padding: 10px;
+
+  /* 스크롤바 제거 */
   -ms-overflow-style: none; /* 인터넷 익스플로러 */
   scrollbar-width: none; /* 파이어폭스 */
 }
+.plan-item-list::-webkit-scrollbar {
+  display: none; /* 스크롤바 제거 ( 크롬, 사파리, 오페라, 엣지 ) */
+}
 .plan-item {
+  display: flex;
+  justify-content: space-around;
+  margin: 15px 0;
+  border: 1px solid black;
+}
+.plan-seq-info-box {
+  justify-content: center;
+  align-items: center;
+  height: 70px;
+  width: 48px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.plan-seq-icon {
+  border: 1px solid var(--text-color);
+  width: 40px;
+  line-height: 40px;
+  border-radius: 20px;
+}
+.plan-time {
+  font-size: 13px;
+  color: rgb(90, 90, 90);
+}
+.plan-name {
+  text-align: left;
+  line-height: 40px;
+}
+.plan-image-box {
+  width: 70px;
+  height: 70px;
+}
+.plan-image-box > img {
+  width: 100%;
+  height: 100%;
+}
+.plan-item-list > h5 {
+  margin: 30px auto;
 }

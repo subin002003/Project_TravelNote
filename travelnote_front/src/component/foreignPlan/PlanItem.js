@@ -8,37 +8,41 @@ const PlanItem = (props) => {
 
   return (
     <div className="plan-item-list">
-      {planList.map((plan, index) => {
-        return (
-          <div className="plan-item" key={"plan-item-" + index}>
-            <div className="plan-seq-info-box">
-              <div className="plan-seq-icon">{plan.planSeq}</div>
-              <div className="plan-time">
-                {plan.planTime ? plan.planTime : "시간 미정"}
+      {planList.length > 0 ? (
+        planList.map((plan, index) => {
+          return (
+            <div className="plan-item" key={"plan-item-" + index}>
+              <div className="plan-seq-info-box">
+                <div className="plan-seq-icon">{plan.planSeq}</div>
+                <div className="plan-time">
+                  {plan.planTime ? plan.planTime : "시간 미정"}
+                </div>
               </div>
-            </div>
-            <div className="plan-info-box">
-              <div className="plan-name">{plan.planName}</div>
-              <div className="plan-memo">
-                <input
-                  placeholder={
-                    plan.planMemo ? plan.planMemo : "메모를 입력해 주세요."
+              <div className="plan-info-box">
+                <div className="plan-name">{plan.planName}</div>
+                <div className="plan-memo">
+                  <input
+                    placeholder={
+                      plan.planMemo ? plan.planMemo : "메모를 입력해 주세요."
+                    }
+                  ></input>
+                </div>
+              </div>
+              <div className="plan-image-box">
+                <img
+                  src={
+                    plan.planImg
+                      ? `${backServer}/foreign/${plan.planImg}`
+                      : "/image/default_img.png"
                   }
-                ></input>
+                ></img>
               </div>
             </div>
-            <div className="plan-image-box">
-              <img
-                src={
-                  plan.planImg
-                    ? `${backServer}/foreign/${plan.planImg}`
-                    : "/image/default_img.png"
-                }
-              ></img>
-            </div>
-          </div>
-        );
-      })}
+          );
+        })
+      ) : (
+        <h5>아직 일정이 없어요.</h5>
+      )}
     </div>
   );
 };
