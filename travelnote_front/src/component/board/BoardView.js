@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { loginEmailState } from "../utils/RecoilData";
+import { loginEmailState, userNickState } from "../utils/RecoilData";
 import Swal from "sweetalert2";
 
 const BoardView = () => {
@@ -12,7 +12,7 @@ const BoardView = () => {
   const params = useParams();
   const boardNo = params.boardNo;
   const [board, setBoard] = useState({});
-  const [loginEmail, setloginEmail] = useRecoilState(loginEmailState);
+  const [userNick, setUserNick] = useRecoilState(userNickState);
   useEffect(() => {
     axios
       .get(`${backServer}/board/boardNo/${boardNo}`)
@@ -86,7 +86,7 @@ const BoardView = () => {
             ""
           )}
         </div>
-        {loginEmail === board.boardWriter ? (
+        {userNick === board.boardWriter ? (
           <div>
             <Link to={`/board/update/${board.boardNo}`}>수정</Link>
             <button type="button" onClick={deleteBoard}>
