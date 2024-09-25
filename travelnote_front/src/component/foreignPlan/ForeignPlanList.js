@@ -93,12 +93,16 @@ const ForeignPlanList = (props) => {
         <Link className="edit-itinerary-button">이 여행 수정하기</Link>
       </div>
       <div className="daily-plan-box">
-        <ForeignPlanDaysButton
-          planDays={planDays}
-          selectedDay={selectedDay}
-          setSelectedDay={setSelectedDay}
-          totalPlanDates={totalPlanDates}
-        />
+        {totalPlanDates.length > 0 ? (
+          <ForeignPlanDaysButton
+            planDays={planDays}
+            selectedDay={selectedDay}
+            setSelectedDay={setSelectedDay}
+            totalPlanDates={totalPlanDates}
+          />
+        ) : (
+          ""
+        )}
       </div>
       <div className="daily-plan-list-box">
         <h5>{selectedDate}</h5>
