@@ -20,4 +20,6 @@ public interface DomesticDao {
     // 일정 조회 메서드 (추가된 기능)
     ItineraryDTO selectItinerary(int itineraryNo);
 
+	List selectPlan(int itineraryNo, int planDay);
+
 }

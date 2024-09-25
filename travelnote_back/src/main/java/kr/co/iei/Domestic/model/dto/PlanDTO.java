@@ -14,7 +14,7 @@ public class PlanDTO {
 	
 	private int planNo;
 	private int itineraryNo;
-	private String planDay;
+	private int planDay;
 	private String planDate;
 	private	int planSeq;
 	private String planAddress;
@@ -23,6 +23,6 @@ public class PlanDTO {
 	private String planTime;
 	private String planMemo;
 	private String planImage;
-	private String planType;
+	private int planType;
 	private String planName;
 }

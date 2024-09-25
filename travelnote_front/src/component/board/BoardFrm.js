@@ -1,8 +1,6 @@
 import { useState } from "react";
 
 const BoardFrm = (props) => {
-  const backServer = process.env.REACT_APP_BACK_SERVER;
-  const loginId = props.loginId;
   const boardTitle = props.boardTitle;
   const setBoardTitle = props.setBoardTitle;
   const boardFile = props.boardFile;
@@ -47,10 +45,7 @@ const BoardFrm = (props) => {
                 </div>
               </td>
             </tr>
-            <tr>
-              <th>작성자</th>
-              <td>{loginId}</td>
-            </tr>
+
             <tr>
               <th>
                 <label htmlFor="boardFile">첨부파일</label>
@@ -62,6 +57,7 @@ const BoardFrm = (props) => {
                   id="boardFile"
                   style={{ display: "none" }}
                   onChange={addBoardFile}
+                  multiple
                 ></input>
               </td>
             </tr>

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.iei.board.model.dao.BoardDao;
 import kr.co.iei.board.model.dto.BoardDTO;
@@ -34,7 +35,7 @@ public class BoardService {
 		map.put("pi",pi);
 		return map;
 	}
-
+	@Transactional
 	public int insertBoard(BoardDTO board, List<BoardFileDTO> boardFileList) {
 		int result = boardDao.insertBoard(board);
 		
@@ -54,9 +55,10 @@ public class BoardService {
 
 	public BoardFileDTO getBoardFile(int boardFileNo) {
 		BoardFileDTO board = boardDao.getBoardFile(boardFileNo);
+		System.out.println(board);
 		return board;
 	}
-
+	@Transactional
 	public List<BoardFileDTO> deleteBoard(int boardNo) {
 		List<BoardFileDTO> fileList = boardDao.selectOneBoardFileList(boardNo);
 		int result = boardDao.deleteBoard(boardNo);
@@ -66,7 +68,7 @@ public class BoardService {
 			return null;
 		}
 	}
-
+	@Transactional
 	public List<BoardFileDTO> updateBoard(BoardDTO board, List<BoardFileDTO> boardFileList) {
 		int result = boardDao.updateBoard(board);
 		if(result > 0) {

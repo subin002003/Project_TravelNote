@@ -33,13 +33,17 @@ public class DomesticService {
     @Transactional
     // 여행 일정 저장
     public int saveItinerary(ItineraryDTO itinerary) {
-        domesticDao.saveItinerary(itinerary);  // 수정된 메서드 호출
+        domesticDao.saveItinerary(itinerary);
         return itinerary.getItineraryNo();
     }
 
-    // 일정 조회 메서드 (추가된 기능)
+    // 일정 조회 메서드
     public ItineraryDTO getItinerary(int itineraryNo) {
-        return domesticDao.selectItinerary(itineraryNo);  // DAO에서 일정 조회
+    	ItineraryDTO itinerary = domesticDao.selectItinerary(itineraryNo);
+    	return itinerary;
     }
-
-}
+	public List selectPlan(int itineraryNo, int planDay) {
+			List list = domesticDao.selectPlan(itineraryNo, planDay);
+			return list;
+		}
+	}

@@ -26,9 +26,20 @@
 
     <!-- 일정 조회 메서드 (추가된 기능) -->
     <select id="selectItinerary" resultType="itinerary">
-        SELECT itinerary_no, region_no, itinerary_start_date, itinerary_end_date, itinerary_title
-        FROM itinerary
-        WHERE itinerary_no = #{itineraryNo}
+      select i.*, region_name, country_name from 
+		(select itinerary_no, region_no, itinerary_start_date, itinerary_end_date, itinerary_title from itinerary where itinerary_no = #{itineraryNo})i
+		join (region)r on i.region_no = r.region_no
     </select>
 
+    <!-- 여행지 정보 조회 -->
+    <select id="selectRegion" resultType="Region">
+        SELECT r.region_no, r.region_name, r.country_name, r.region_img
+        FROM region r
+        WHERE r.region_no = #{regionNo}
+    </select>
+    
+    <select id="selectPlan" resultType="Plan">
+		select * from plan where itinerary_no = #{itineraryNo} and plan_day = #{planDay}
+	</select>
+	
 </mapper>

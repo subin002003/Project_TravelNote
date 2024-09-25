@@ -35,8 +35,8 @@ const Schedule = () => {
       const mapInstance = new window.google.maps.Map(
         document.getElementById("map"),
         {
-          center: { lat: 37.5665, lng: 126.978 },
-          zoom: 15,
+          center: { lat: 37.53381, lng: 126.896904 },
+          zoom: 18,
         }
       );
       setMap(mapInstance);
@@ -186,7 +186,7 @@ const Schedule = () => {
         </div>
         {/* 가운데 패널 */}
         <div className="right-itinerary">
-          <button className="air-btn">항공편 추가</button>
+          <button className="air-btn">기차편 추가</button>
           <button
             className="itinerary-btn"
             onClick={handleItineraryButtonClick}

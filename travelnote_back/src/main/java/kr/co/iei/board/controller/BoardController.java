@@ -86,6 +86,7 @@ public class BoardController {
 	@GetMapping(value="/file/{boardFileNo}")
 	public ResponseEntity<Resource> filedown(@PathVariable int boardFileNo) throws FileNotFoundException{
 		BoardFileDTO boardFile = boardService.getBoardFile(boardFileNo);
+		System.out.println(boardFile);
 		String savepath = root+"/board/";
 		File file = new File(savepath+boardFile.getFilepath());
 		

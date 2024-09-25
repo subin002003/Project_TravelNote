@@ -1,0 +1,18 @@
+.board-wrap {
+  margin: 100px 400px;
+}
+.boardList-table-no-border {
+  border-collapse: collapse;
+  border: none;
+}
+.boardList-table-no-border th,
+.boardList-table-no-border td {
+  border: none;
+}
+.boardList-table-no-border tr > th {
+  padding: 10px;
+  text-align: center;
+}
+.boardlist-content {
+  text-align: center;
+}

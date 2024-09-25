@@ -5,23 +5,41 @@ import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { useRecoilState } from "recoil";
 import { loginEmailState } from "../utils/RecoilData";
+import WeatherDescKo from "./WeatherDescKo";
 
 const CityDetail = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  const API_KEY = process.env.REACT_APP_API_KEY;
   const { cityName, regionNo } = useParams();
   const navigate = useNavigate();
   const [loginEmail] = useRecoilState(loginEmailState);
-
+  const [weather, setWeather] = useState(null);
   const [tripTitle, setTripTitle] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [cityInfo, setCityInfo] = useState(null);
 
+  // 도시 정보 가져오기
   useEffect(() => {
     axios
       .get(`${backServer}/regions/view/${regionNo}`)
       .then((res) => {
         setCityInfo(res.data);
+        // 현재 위치를 가져와서 날씨 정보를 가져오는 함수 호출
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            getWeather(lat, lon);
+          },
+          (error) => {
+            console.error("Error getting location:", error);
+            Swal.fire({
+              icon: "error",
+              text: "위치를 가져오는 데 실패했습니다.",
+            });
+          }
+        );
       })
       .catch((err) => {
         console.error("Error fetching city info:", err);
@@ -31,6 +49,31 @@ const CityDetail = () => {
         });
       });
   }, [backServer, regionNo]);
+
+  // 날씨 정보를 가져오는 함수
+  const getWeather = async (lat, lon) => {
+    try {
+      const res = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+      );
+      const weatherId = res.data.weather[0].id;
+      const weatherKo = WeatherDescKo[weatherId];
+      // 날씨 아이콘 가져오기
+      const weatherIcon = res.data.weather[0].icon;
+      const weatherIconAdrs = `http://openweathermap.org/img/wn/${weatherIcon}@2x.png`;
+      // 소수점 버리기
+      const temp = Math.round(res.data.main.temp);
+
+      setWeather({
+        description: weatherKo,
+        name: cityName,
+        temp: temp,
+        icon: weatherIconAdrs,
+      });
+    } catch (err) {
+      console.error("Error fetching weather data:", err);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -48,10 +91,7 @@ const CityDetail = () => {
     form.append("regionNo", regionNo);
     form.append("itineraryStartDate", startDate);
     form.append("itineraryEndDate", endDate);
-    form.append(
-      "itineraryTitle",
-      tripTitle.trim() || `${cityName}으로 떠나는 여행`
-    );
+    form.append("itineraryTitle", tripTitle.trim() || `${cityName}여행 `);
 
     axios
       .post(`${backServer}/regions/Schedule`, form)
@@ -60,7 +100,7 @@ const CityDetail = () => {
           icon: "success",
           text: "여행 일정이 성공적으로 저장되었습니다.",
         });
-        navigate(`/schedule/${res.data}`); // 수정된 부분: itinearyNo 직접 사용
+        navigate(`/schedule/${res.data}`);
       })
       .catch((err) => {
         console.error("Error saving itinerary:", err);
@@ -82,6 +122,17 @@ const CityDetail = () => {
               alt={cityInfo.regionName}
               className="city-detail-image"
             />
+            {weather ? (
+              <div className="weather-info">
+                <div className="weather-temp">{weather.temp}°C</div>
+                <div className="weather-description">
+                  <img src={weather.icon} alt={weather.description} />
+                  <p>{weather.description}</p>
+                </div>
+              </div>
+            ) : (
+              <p>Loading weather...</p>
+            )}
             <form className="trip-form" onSubmit={handleSubmit}>
               <label>
                 여행 제목 입력:
