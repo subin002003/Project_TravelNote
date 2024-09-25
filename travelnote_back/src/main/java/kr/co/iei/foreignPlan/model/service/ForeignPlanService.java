@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.co.iei.foreignPlan.model.dao.ForeignPlanDao;
 import kr.co.iei.foreignPlan.model.dto.ForeignItineraryDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignItineraryInfoDTO;
+import kr.co.iei.foreignPlan.model.dto.ForeignPlanDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignRegionDTO;
 
 @Service
@@ -49,5 +50,12 @@ public class ForeignPlanService {
 		ForeignItineraryInfoDTO itinerary = foreignPlanDao.selectOneItinerary(itineraryNo);
 		return itinerary;
 	}
+
+	// 일정 목록 조회
+	public List selectPlanList(int itineraryNo, int planDay) {
+		List list = foreignPlanDao.selectPlanList(itineraryNo, planDay);
+		return list;
+	}
+
 
 }

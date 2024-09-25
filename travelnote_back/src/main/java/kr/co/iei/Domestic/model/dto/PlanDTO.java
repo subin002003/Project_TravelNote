@@ -24,4 +24,5 @@ public class PlanDTO {
 	private String planMemo;
 	private String planImage;
 	private String planType;
+	private String planName;
 }

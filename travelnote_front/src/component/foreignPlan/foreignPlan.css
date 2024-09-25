@@ -1,7 +1,7 @@
 /* 임시 */
 .section {
   /* background-color: var(--background-color); */
-  margin: 50px auto;
+  /* margin: 50px auto; */
 }
 
 /* ForeignList */
@@ -50,12 +50,18 @@
   width: 500px;
   outline: none;
   border: none;
+  border-radius: 0px;
   border-bottom: 2px solid var(--main-color);
   background-color: transparent;
   line-height: 45px;
   font-size: 15px;
   padding-left: 15px;
   font-family: "SUITE-Regular";
+}
+.foreign-search-input:focus {
+  border-color: var(--main-color);
+  background-color: transparent;
+  box-shadow: none;
 }
 .foreign-search-box > button {
   margin-left: 20px;
@@ -188,6 +194,9 @@
   width: 80px;
   padding: 10px;
 }
+.plan-dates-list > li:hover {
+  cursor: pointer;
+}
 .plan-dates-list > li:nth-child(2) {
   border-right: none;
 }
@@ -213,4 +222,11 @@
 }
 .plan-dates-list .active {
   color: var(--main-color);
+}
+
+/* PlanItem */
+.plan-item-list {
+  height: 700px;
+}
+.plan-item {
 }
