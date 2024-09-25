@@ -29,12 +29,7 @@
         </selectKey>
     </insert>
 
-    <!-- 여행지 정보 조회 -->
-    <select id="selectRegion" resultType="region">
-        SELECT r.region_no, r.region_name, r.country_name, r.region_img
-        FROM region r
-        WHERE r.region_no = #{regionNo}
-    </select>
+   
 
     <!-- 일정 조회 메서드 (추가된 기능) -->
     <select id="selectItinerary" resultType="itinerary">
