@@ -26,15 +26,40 @@ const BoardList = () => {
       });
   }, [reqPage]);
   return (
-    <section>
-      <div>자유게시판</div>
-      {isLogin ? <Link to="/board/write">글쓰기</Link> : ""}
+    <section className="board-wrap">
+      <h1 style={{ fontSize: "50px", margin: "5px", padding: "0px" }}>
+        자유게시판
+      </h1>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <h5 style={{ fontSize: "20px", marginLeft: "5px" }}>
+          자유로운 주제로 이야기할 수 있습니다.
+        </h5>
+        {isLogin ? (
+          <Link to="/board/write" style={{ marginRight: "300px" }}>
+            글쓰기
+          </Link>
+        ) : (
+          ""
+        )}
+      </div>
       <div>
-        <ul>
-          {boardList.map((board, i) => {
-            return <BoardItem key={"board-" + i} board={board} />;
-          })}
-        </ul>
+        <table className="boardList-table-no-border">
+          <thead>
+            <tr>
+              <th style={{ width: "5%" }}>글번호</th>
+              <th style={{ width: "65%" }}>제목</th>
+              <th style={{ width: "10%" }}>작성자</th>
+              <th style={{ width: "10%" }}>작성일</th>
+              <th style={{ width: "5%" }}>조회수</th>
+              <th style={{ width: "5%" }}>좋아요</th>
+            </tr>
+          </thead>
+          <tbody>
+            {boardList.map((board, i) => {
+              return <BoardItem key={"board-" + i} board={board} />;
+            })}
+          </tbody>
+        </table>
         <div>
           <PagiNavi pi={pi} reqPage={reqPage} setReqPage={setReqPage} />
         </div>
@@ -47,20 +72,20 @@ const BoardItem = (props) => {
   const board = props.board;
   const navigate = useNavigate();
   return (
-    <li
-      onClick={() => {
-        navigate(`/board/view/${board.boardNo}`);
-      }}
-    >
-      <div>
-        <span>{board.boardNo}</span>
-        <span>{board.boardTitle}</span>
-        <span>{board.boardWriter}</span>
-        <span>{board.boardDate}</span>
-        <span>{board.boardReadCount}</span>
-        {/* <span>{board.boardLike}</span> */}
-      </div>
-    </li>
+    <tr className="boardlist-content">
+      <td>{board.boardNo}</td>
+      <td
+        onClick={() => {
+          navigate(`/board/view/${board.boardNo}`);
+        }}
+      >
+        {board.boardTitle}
+      </td>
+      <td>{board.boardWriter}</td>
+      <td>{board.boardDate}</td>
+      <td>{board.boardReadCount}</td>
+      <td>{board.boardLike}</td>
+    </tr>
   );
 };
 export default BoardList;
