@@ -1,83 +1,76 @@
-import axios from "axios";
-import { createElement, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const PlanItem = (props) => {
-  const backServer = process.env.REACT_APP_BACK_SERVER;
-  const { itineraryNo, selectedDay, planList, setPlanList } = props;
-  const [timeOptionsArr, setTimeOptionsArr] = useState([]);
+  const {
+    plan,
+    timeOptionsArr,
+    backServer,
+    setEdited,
+    editPlanList,
+    setEditPlanList,
+  } = props;
+  const [editPlan, setEditPlan] = useState({}); // 수정할 정보 저장
 
   useEffect(() => {
-    if (timeOptionsArr.length === 0) {
-      for (let i = 0; i < 24; i++) {
-        let time = "";
-        if (i < 10) {
-          time = "0" + i;
-        } else {
-          time = "" + i;
-        }
-        for (let j = 0; j < 60; j += 30) {
-          let timeOption = "";
-          if (j === 0) {
-            timeOption += time + ":0" + j;
-          } else {
-            timeOption += time + ":" + j;
-          }
-          timeOptionsArr.push(timeOption);
-          setTimeOptionsArr([...timeOptionsArr]);
-        }
-      }
-    }
-  }, []);
+    setEditPlan({
+      planNo: plan.planNo,
+      planMemo: plan.planMemo,
+      planTime: plan.planTime,
+    }); // 수정할 정보 저장
+  }, [plan]);
 
-  const changeMemo = (e) => {
-    console.log(e.target.value);
+  // 시간, 메모 변경 시 editPlanList 배열에 저장
+  const changeInput = (e) => {
+    setEditPlan({ ...editPlan, [e.target.id]: e.target.value });
+    setEdited(true);
+    const newPlanList = editPlanList.filter((item) => {
+      return item.planNo !== editPlan.planNo;
+    });
+    newPlanList.push(editPlan);
+    setEditPlanList([...newPlanList]);
   };
 
   return (
-    <div className="plan-item-list">
-      {planList.length > 0 ? (
-        planList.map((plan, index) => {
-          return (
-            <div className="plan-item" key={"plan-item-" + index}>
-              <div className="plan-seq-info-box">
-                <div className="plan-seq-icon">{plan.planSeq}</div>
-                <div className="plan-time">
-                  <select
-                    selected={plan.planTime ? plan.planTime : ""}
-                    id="planTimeSelector"
-                  >
-                    <option>시간 미정</option>
-                    {timeOptionsArr.map((time, index) => {
-                      return (
-                        <option key={"time-option-" + index} value={time}>
-                          {time}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-              </div>
-              <div className="plan-info-box">
-                <div className="plan-name">{plan.planName}</div>
-                <div className="plan-memo">
-                  <input value={plan.planMemo}></input>
-                </div>
-              </div>
-              <div className="plan-image-box">
-                <img
-                  src={
-                    plan.planImg
-                      ? `${backServer}/foreign/${plan.planImg}`
-                      : "/image/default_img.png"
-                  }
-                ></img>
-              </div>
-            </div>
-          );
-        })
-      ) : (
-        <h5>아직 일정이 없어요.</h5>
-      )}
+    <div className="plan-item">
+      <div className="plan-seq-info-box">
+        <div className="plan-seq-icon">{plan.planSeq}</div>
+        <div className="plan-time">
+          <select
+            id="planTime"
+            onChange={changeInput}
+            defaultValue={plan.planTime}
+          >
+            <option>시간 미정</option>
+            {timeOptionsArr.map((time, index) => {
+              return (
+                <option key={"time-option-" + index} value={time}>
+                  {time}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      </div>
+      <div className="plan-info-box">
+        <div className="plan-name">{plan.planName}</div>
+        <div className="plan-memo">
+          <input
+            id="planMemo"
+            value={editPlan.planMemo ? editPlan.planMemo : ""}
+            placeholder="메모를 입력해 주세요."
+            onChange={changeInput}
+          ></input>
+        </div>
+      </div>
+      <div className="plan-image-box">
+        <img
+          src={
+            plan.planImg
+              ? `${backServer}/foreign/${plan.planImg}`
+              : "/image/default_img.png"
+          }
+        ></img>
+      </div>
     </div>
   );
 };

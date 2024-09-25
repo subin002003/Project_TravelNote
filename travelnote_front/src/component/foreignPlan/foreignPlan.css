@@ -176,9 +176,36 @@
 .daily-plan-list-box > h5 {
   text-align: center;
   color: var(--main-color);
+  margin: 20px 0;
 }
 .daily-plan-list {
   padding: 0 10px;
+}
+.plan-item-list {
+  height: 400px;
+  overflow: auto;
+  background-color: var(--base-color);
+  border-radius: 10px;
+  padding: 0 10px;
+
+  /* 스크롤바 제거 */
+  -ms-overflow-style: none; /* 인터넷 익스플로러 */
+  scrollbar-width: none; /* 파이어폭스 */
+}
+.plan-item-list::-webkit-scrollbar {
+  display: none; /* 스크롤바 제거 ( 크롬, 사파리, 오페라, 엣지 ) */
+}
+.edit-button {
+  margin: 20px auto;
+  background-color: var(--background-color);
+  color: black;
+}
+.edit-button:hover {
+  background-color: var(--background-color);
+  cursor: default;
+}
+.edit-button-active {
+  margin: 20px auto;
 }
 
 /* ForeignRegionInfo */
@@ -233,20 +260,6 @@
 }
 
 /* PlanItem */
-.plan-item-list {
-  height: 400px;
-  overflow: auto;
-  background-color: var(--base-color);
-  border-radius: 10px;
-  padding: 0 10px;
-
-  /* 스크롤바 제거 */
-  -ms-overflow-style: none; /* 인터넷 익스플로러 */
-  scrollbar-width: none; /* 파이어폭스 */
-}
-.plan-item-list::-webkit-scrollbar {
-  display: none; /* 스크롤바 제거 ( 크롬, 사파리, 오페라, 엣지 ) */
-}
 .plan-item {
   display: flex;
   justify-content: space-around;
