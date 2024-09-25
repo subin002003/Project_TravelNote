@@ -36,9 +36,16 @@
   font-size: 18px;
 }
 .faqboard-tbl {
-  border-top: 1px solid var(--main-color);
+  border: 2px solid var(--main-color);
+  border-radius: 8px;
   width: 100%;
   border-spacing: 0;
+  padding: 10px;
+}
+.faqboard-tbl > th {
+  padding: 10px;
+}
+.faqboard-tbl > td {
   padding: 10px;
 }
 .faqboard-input {
@@ -52,4 +59,8 @@
   border: none;
   border-bottom: 1px solid var(--background-color);
   padding: 8px 0px;
+}
+.faqBoard-content {
+  min-width: 100%;
+  min-height: 300px;
 }

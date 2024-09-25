@@ -286,6 +286,7 @@ const JoinUser = () => {
             </div>
             <div className="input-box">
               <input
+                className="user-input"
                 type="text"
                 name="userEmail"
                 id="userEmail"
@@ -302,6 +303,7 @@ const JoinUser = () => {
             </div>
             <div className="input-box">
               <input
+                className="user-input"
                 type="text"
                 placeholder="인증 번호를 입력해주세요."
                 onChange={changeVerificationCode}
@@ -333,6 +335,7 @@ const JoinUser = () => {
             </div>
             <div className="input-box">
               <input
+                className="user-input"
                 type="password"
                 name="userPw"
                 id="userPw"
@@ -350,6 +353,7 @@ const JoinUser = () => {
             </div>
             <div className="input-box">
               <input
+                className="user-input"
                 type="password"
                 name="userPwRe"
                 id="userPwRe"
@@ -367,6 +371,7 @@ const JoinUser = () => {
             </div>
             <div className="input-box">
               <input
+                className="user-input"
                 type="text"
                 placeholder="ex)010-0000-0000"
                 id="userPhone"
@@ -385,6 +390,7 @@ const JoinUser = () => {
             </div>
             <div className="input-box">
               <input
+                className="user-input"
                 type="text"
                 id="userName"
                 name="userName"
@@ -402,6 +408,7 @@ const JoinUser = () => {
             </div>
             <div className="input-box">
               <input
+                className="user-input"
                 type="text"
                 id="userNick"
                 name="userNick"
