@@ -36,8 +36,10 @@ public interface ProductDao {
 
 	int deleteProductFile(int[] delProductFileNo);
 
-	int insertWish(int productNo, String userEmail);
-	int checkExistingWish(int productNo, String userEmail);
+	int selectOneUser(String userEmail);
+	int insertWish(int productNo, int userNo);
+	int deleteWish(int productNo, int userNo);
+	int checkExistingWish(int productNo, int userNo);
 
 	int insertReview(ReviewDTO review);
 

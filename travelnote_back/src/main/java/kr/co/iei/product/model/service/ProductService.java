@@ -99,17 +99,37 @@ public class ProductService {
 	}
 
 	// 상품 좋아요
-	@Transactional
-	public int insertWish(int productNo, String userEmail) {
-        // 중복 찜 방지 로직 (이미 찜한 상품인지 확인)
-        int existingWish = productDao.checkExistingWish(productNo, userEmail);
-        if (existingWish > 0) {
-            return 0; // 이미 찜한 경우 0을 리턴
-        }
+//	@Transactional
+//	public int insertWish(int productNo, String userEmail) {
+//		int userNo = productDao.selectOneUser(userEmail);
+//        int result = productDao.insertWish(productNo, userNo);
+//		return result;
+//    }
 
-        // 새로운 찜 추가
-        return productDao.insertWish(productNo, userEmail);
-    }
+	// 상품 좋아요 취소
+//	@Transactional
+//	public int deleteWish(int productNo, String userEmail) {
+//		int userNo = productDao.selectOneUser(userEmail);
+//		int result = productDao.deleteWish(productNo, userNo);
+//		return result;
+//	}
+	
+	@Transactional
+	public int toggleWish(int productNo, String userEmail) {
+	    // 사용자 번호 조회
+	    int userNo = productDao.selectOneUser(userEmail);
+	    
+	    // 찜 상태 확인
+	    int existingWish = productDao.checkExistingWish(productNo, userNo);
+	    
+	    if (existingWish > 0) {
+	        // 이미 찜한 경우, 찜 취소
+	        return productDao.deleteWish(productNo, userNo); // 성공적으로 삭제된 경우 1을 리턴
+	    } else {
+	        // 찜하지 않은 경우, 찜 추가
+	        return productDao.insertWish(productNo, userNo); // 성공적으로 추가된 경우 1을 리턴
+	    }
+	}
 
 	// 리뷰 등록
 	@Transactional

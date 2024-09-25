@@ -131,20 +131,28 @@
   	</selectKey>
   </insert> -->
   
+  <select id="selectOneUser" resultType="userNo">
+  	select * from user_tbl where user_email=#{userEmail}
+  </select>
+  
   <!-- 상품 찜 -->
   <insert id="insertWish">
-   insert into wish (wish_no, user_no, product_no)
+   insert into wish
    values (wish_seq.nextval, 
-           (select user_no from user_tbl where user_email = #{userEmail}), 
+           (select user_no from user_tbl where user_email=#{userEmail}), 
            #{productNo})
   </insert>
+  
+  <!-- 상품 찜 취소 -->
+  <delete id="deleteWish">
+  	delete from wish where product_no=#{productNo} and user_no=#{userNo}
+  </delete>
   
   <!-- 상품 찜 여부 확인 -->
   <select id="checkExistingWish" resultType="int">
     select count(*) 
     from wish 
-    where user_no = (select user_no from user_tbl where user_email = #{userEmail}) 
-    and product_no = #{productNo}
+    where product_no = #{productNo} and user_no = #{userNo}
   </select>
   
   <!-- 리뷰 등록 -->
