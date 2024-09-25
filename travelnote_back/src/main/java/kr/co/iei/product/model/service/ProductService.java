@@ -13,6 +13,7 @@ import kr.co.iei.product.model.dao.ProductDao;
 import kr.co.iei.product.model.dto.ProductDTO;
 import kr.co.iei.product.model.dto.ProductFileDTO;
 import kr.co.iei.product.model.dto.ReviewDTO;
+import kr.co.iei.product.model.dto.WishDTO;
 import kr.co.iei.util.PageInfo;
 import kr.co.iei.util.PageUtil;
 
@@ -26,7 +27,7 @@ public class ProductService {
 
 	public Map selectProductList(int reqPage) {
 		// 게시물 조회 및 페이징에 필요한 데이터를 모두 취합
-		int numPerPage = 12;						// 한 페이지당 출력할 상품 갯수
+		int numPerPage = 4;						// 한 페이지당 출력할 상품 갯수
 		int pageNaviSize = 7;						// 페이지네비 길이
 		int totalCount = productDao.totalCount();	// 전체 상품 수
 		// 페이징에 필요한 값들을 연산해서 객체로 리턴받음
@@ -97,9 +98,37 @@ public class ProductService {
 		return null;
 	}
 
+	// 상품 좋아요
+	@Transactional
+	public int insertWish(int productNo, String userEmail) {
+        // 중복 찜 방지 로직 (이미 찜한 상품인지 확인)
+        int existingWish = productDao.checkExistingWish(productNo, userEmail);
+        if (existingWish > 0) {
+            return 0; // 이미 찜한 경우 0을 리턴
+        }
+
+        // 새로운 찜 추가
+        return productDao.insertWish(productNo, userEmail);
+    }
+
+	// 리뷰 등록
 	@Transactional
 	public int insertReview(ReviewDTO review) {
 		int result = productDao.insertReview(review);
+		return result;
+	}
+	
+	// 리뷰 수정
+	@Transactional
+	public int updateReview(ReviewDTO review) {
+		int result = productDao.updateReview(review);
+		return result;
+	}
+
+	// 리뷰 삭제
+	@Transactional
+	public int deleteReview(ReviewDTO review) {
+		int result = productDao.deleteReview(review);
 		return result;
 	}
 }
