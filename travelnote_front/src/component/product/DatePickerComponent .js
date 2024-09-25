@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 
 const DateRangePickerComponent = ({ onDateRangeChange }) => {
-  const [dateRangeText, setDateRangeText] = useState("날짜 범위 선택");
+  const [dateRangeText, setDateRangeText] = useState("여행 날짜 선택");
 
   const showDateRangePicker = async () => {
     const { value: dates } = await Swal.fire({
