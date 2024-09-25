@@ -11,6 +11,8 @@ import {
 import CustomerBoardList from "./CustomerBoardList";
 import { useEffect } from "react";
 import CustomerBoardWrite from "./CustomerBoardWrite";
+import CustomerBoardView from "./CustomerBoardView";
+import CustomerBoardUpdate from "./CustmerBoardUpdate";
 
 const CustomerServiceMain = () => {
   const navigate = useNavigate();
@@ -30,6 +32,14 @@ const CustomerServiceMain = () => {
       </div>
       <Routes>
         <Route path="customerBoard" element={<CustomerBoardList />} />
+        <Route
+          path="customerBoard/View/:faqBoardNo"
+          element={<CustomerBoardView />}
+        />
+        <Route
+          path="customerBoard/update/:faqBoardNo"
+          element={<CustomerBoardUpdate />}
+        />
         <Route path="customerBoardWrite" element={<CustomerBoardWrite />} />
       </Routes>
     </section>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.iei.faqboard.model.dao.FaqBoardDao">
+	<insert id="writeFaqBoard">
+		insert into faq_board values(faq_board_seq.nextval, #{faqBoardTitle}, #{faqBoardContent}, #{faqBoardWriter}, sysdate)
+	</insert>
+	<select id="totalCount" resultType="int">
+		select count(*) from faq_board
+	</select>
+	<select id="selectBoardList" parameterType="map" resultType="faqBoard">
+		select * from
+			(select rownum as rnum, b.* from
+				(select 
+				faq_board_no, 
+				faq_board_title,  
+				faq_board_writer,
+				faq_write_date
+				from faq_board order by faq_board_no desc) b) where rnum between #{start} and #{end}
+	</select>
+	<select id="view" resultType="faqBoard">
+		select faq_board_title,faq_board_writer,faq_write_date,faq_board_content from faq_board where faq_board_no = #{faqBoardNo} 
+	</select>
+	<delete id="deleteFaqBoard">
+		delete from faq_board where faq_board_no = #{faqBoardNo}	
+	</delete>
+	<update id="updateFaqBoard">
+		update faq_board set faq_board_title = #{faqBoardTitle}, faq_board_content = #{faqBoardContent} where faq_board_no = #{faqBoardNo}
+	</update>
+</mapper>
