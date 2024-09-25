@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import kr.co.iei.product.model.dto.ProductDTO;
 import kr.co.iei.product.model.dto.ProductFileDTO;
 import kr.co.iei.product.model.dto.ReviewDTO;
+import kr.co.iei.product.model.dto.WishDTO;
 import kr.co.iei.product.model.service.ProductService;
 import kr.co.iei.util.FileUtils;
 
@@ -144,7 +145,6 @@ public class ProductController {
 	// 패키지 상품 수정
 	@PatchMapping
 	public ResponseEntity<Boolean> updateProduct(@ModelAttribute ProductDTO product, @ModelAttribute MultipartFile thumbnail, @ModelAttribute MultipartFile[] productFile){
-	    System.out.println("Updated Status: " + product.getProductStatus());
 		if(thumbnail != null) {
 			String savepath = root + "/product/thumb/";
 			String filepath = fileUtils.upload(savepath, thumbnail);
@@ -176,10 +176,34 @@ public class ProductController {
 		}
 	}
 	
-	// 패키지 상품 리뷰
+	// 상품 좋아요
+	@PostMapping(value="/{productNo}/like/{userEmail}")
+	public ResponseEntity<Integer> insertWish(@PathVariable int productNo, @PathVariable String userEmail){
+		int result = productService.insertWish(productNo, userEmail);
+		
+	    System.out.println(result);
+	    
+		return ResponseEntity.ok(result);
+	}
+	
+	// 리뷰 등록
 	@PostMapping(value="/insertReview")
 	public ResponseEntity<Integer> insertReview(@ModelAttribute ReviewDTO review) {
 		int result = productService.insertReview(review);
+		return ResponseEntity.ok(result);
+	}
+	
+	// 리뷰 수정
+	@PatchMapping(value="/updateReview/{reviewNo}")
+	public ResponseEntity<Integer> updateReview(@ModelAttribute ReviewDTO review) {
+		int result = productService.updateReview(review);
+		return ResponseEntity.ok(result);
+	}
+	
+	// 리뷰 삭제
+	@DeleteMapping(value="/deleteReview/{reviewNo}")
+	public ResponseEntity<Integer> deleteReview(@ModelAttribute ReviewDTO review) {
+		int result = productService.deleteReview(review);
 		return ResponseEntity.ok(result);
 	}
 }

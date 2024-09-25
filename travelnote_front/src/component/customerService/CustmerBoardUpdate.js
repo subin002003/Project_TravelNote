@@ -1,40 +1,54 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { userNickState } from "../utils/RecoilData";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
 
-const CustomerBoardWrite = () => {
-  const [userNick, setUserNick] = useRecoilState(userNickState);
-  const [currentDate, setCurrentDate] = useState("");
+const CustomerBoardUpdate = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  const params = useParams();
+  const [userNick, setUserNick] = useRecoilState(userNickState);
+  const faqBoardNo = params.faqBoardNo;
+  const [currentDate, setCurrentDate] = useState("");
   const navigate = useNavigate();
+  useEffect(() => {
+    axios
+      .get(`${backServer}/faqBoard/view/${faqBoardNo}`)
+      .then((res) => {
+        console.log(res);
+        setFaqBoard(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   useEffect(() => {
     const today = new Date();
     const formattedDate = today.toISOString().split("T")[0]; // YYYY-MM-DD 형식으로 변환
     setCurrentDate(formattedDate);
   }, []);
-  const [faqBoard, setFaqBoard] = useState({
-    faqBoardTitle: "",
-    faqBoardContent: "",
-    faqBoardWriter: userNick,
-  });
+  const [faqBoard, setFaqBoard] = useState({});
   const changeFaqBoard = (e) => {
     const name = e.target.name;
     setFaqBoard({ ...faqBoard, [name]: e.target.value });
   };
-  const writeFaqBoard = () => {
+  const updateBoard = () => {
     axios
-      .post(`${backServer}/faqBoard/writeFaqBoard`, faqBoard)
+      .patch(`${backServer}/faqBoard/${faqBoardNo}`, faqBoard)
       .then((res) => {
-        console.log(res);
         if (res.data === 1) {
           Swal.fire({
-            title: "글 작성 완료",
+            title: "수정 성공",
             icon: "success",
           });
-          navigate("/customerService/customerBoard");
+          navigate(`/customerService/customerBoard/view/${faqBoardNo}`);
+        } else {
+          Swal.fire({
+            title: "수정 실패",
+            text: "잠시 후 다시 시도해주세요",
+            icon: "warning",
+          });
         }
       })
       .catch((err) => {
@@ -44,12 +58,12 @@ const CustomerBoardWrite = () => {
   return (
     <div className="write-section">
       <div className="page-small-title">
-        <h2>자주묻는 질문 작성하기</h2>
+        <h2>자주묻는 질문 수정하기</h2>
       </div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          writeFaqBoard();
+          updateBoard();
         }}
       >
         <table className="faqboard-tbl">
@@ -64,6 +78,7 @@ const CustomerBoardWrite = () => {
                     type="text"
                     id="faqBoardTitle"
                     name="faqBoardTitle"
+                    value={faqBoard.faqBoardTitle}
                     onChange={changeFaqBoard}
                   ></input>
                 </div>
@@ -103,13 +118,14 @@ const CustomerBoardWrite = () => {
                     id="faqBoardContent"
                     name="faqBoardContent"
                     onChange={changeFaqBoard}
+                    value={faqBoard.faqBoardContent}
                   ></textarea>
                 </div>
               </td>
             </tr>
             <tr className="btn-box">
               <td colSpan={4}>
-                <button type="submit">작성하기</button>
+                <button type="submit">수정하기</button>
               </td>
             </tr>
           </tbody>
@@ -119,4 +135,4 @@ const CustomerBoardWrite = () => {
   );
 };
 
-export default CustomerBoardWrite;
+export default CustomerBoardUpdate;

@@ -17,4 +17,104 @@
 	  				from board where board_status = 1 and board_type = 1 order by board_no desc)b) 
 	  				where rnum between #{start} and #{end}
   	</select>
+  	
+  	<insert id="insertBoard">
+  		insert into board values(board_seq.nextval,#{boardWriter},#{boardTitle},#{boardContent},sysdate,#{boardCategory},0,1,1)
+		<selectKey resultType="int" keyProperty="boardNo" order="AFTER" >
+			select max(board_no) from board
+		</selectKey>
+  	</insert>
+  	<insert id="insertBoardFile">
+  		insert into board_file values(board_file_seq.nextval,#{boardNo},#{filename},#{filepath})
+  	</insert>
+  	
+  	<select id="selectOneBoard" resultMap="getBoard">
+		select 
+			board_no,
+			board_title,
+			board_thumb,
+			board_content,
+			board_writer,
+			board_status,
+			board_readCount,
+			board_category,
+			to_char(board_date,'yyyy-mm-dd') as board_date
+		from board where board_no=#{boardNo}
+	</select>
+  	<select id="selectOneBoardFileList">
+  		select * from board_file where board_no=#{boardNo}
+  	</select>
+  	
+  	<resultMap type="board" id="getBoard">
+	<result column="board_no" property="boardNo"/>
+	<result column="board_title" property="boardTitle" />
+	<result column="board_content" property="boardContent" />
+	<result column="board_writer" property="boardWriter"/>
+	<result column="board_status" property="boardStatus"/>
+	<result column="board_date" property="boardDate"/>
+	<result column="board_readCount" property="boardReadCount"/>
+	<result column="board_category" property="boardCategory"/>
+	<collection property="fileList"
+		 select="selectOneBoardFileList"
+		 column="board_no"
+		 javaType="java.util.List"
+		 ofType="boardFile"
+		></collection>
+	</resultMap>
+	
+	<select id="getBoardFile" resultType="boardFile">
+		select * from board_file where board_file_no=#{boardFileNo}
+	</select>
+	
+	<delete id="deleteBoard">
+		delete from board where board_no=#{boardNo}
+	</delete>
+	
+	<update id="updateBoard">
+		update board set 
+			board_title=#{boardTitle},
+			board_content=#{boardContent},
+			board_category=#{boardCategory}
+			where board_no=#{boardNo}
+	</update>
+	
+	<select id="selectBoardFile" resultType="boardFile">
+		select * from board_file
+		where board_file_no in
+		<foreach collection="array" item="boardFileNo" open="(" close=")" separator=",">
+			#{boardFileNo}
+		</foreach>
+	</select>
+	
+	<delete id="deleteBoarFile">
+		delete from board_file
+		where board_file_no in
+		<foreach collection="array" item="boardFileNo" open="(" close=")" separator=",">
+			#{boardFileNo}
+		</foreach>
+	</delete>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
