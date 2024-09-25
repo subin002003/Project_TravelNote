@@ -5,7 +5,7 @@ import { userTypeState } from "../utils/RecoilData";
 const CustomerBoardList = () => {
   const [userType, setUserType] = useRecoilState(userTypeState);
   return (
-    <div className="main-content">
+    <div className="customer-content">
       <div className="faqboard-wrap content-wrap">
         <div className="mypage-title">
           <h3>자주 묻는 질문</h3>
