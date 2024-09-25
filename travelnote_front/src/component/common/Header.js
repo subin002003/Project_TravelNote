@@ -4,6 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   isLoginState,
   loginEmailState,
+  userNickState,
   userTypeState,
 } from "../utils/RecoilData";
 import axios from "axios";
@@ -81,11 +82,12 @@ const MainNavi = () => {
 const HeaderLink = () => {
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
   const [userType, setUserType] = useRecoilState(userTypeState);
-
+  const [userNick, setUserNick] = useRecoilState(userNickState);
   const isLogin = useRecoilValue(isLoginState);
   const logout = () => {
     setLoginEmail("");
     setUserType(0);
+    setUserNick("");
     delete axios.defaults.headers.common["Authorization"];
     window.localStorage.removeItem("refreshToken");
   };
@@ -95,7 +97,7 @@ const HeaderLink = () => {
       {isLogin ? (
         <>
           <li>
-            <Link to="/mypage">{loginEmail}</Link>
+            <Link to="/mypage">{userNick}</Link>
           </li>
           <li>
             <Link to="/#" onClick={logout}>

@@ -98,9 +98,9 @@ public class UserService {
 	public LoginUserDTO login(UserDTO user) {
 		UserDTO u = userDao.selectOneUser(user.getUserEmail());
 		if(u != null && encoder.matches(user.getUserPw(), u.getUserPw())) {
-			String accessToken = jwtUtil.createAccessToken(u.getUserEmail(), u.getUserType());
-			String refreshToken = jwtUtil.createRefreshToken(u.getUserEmail(), u.getUserType());
-			LoginUserDTO loginUser = new LoginUserDTO(accessToken, refreshToken, u.getUserEmail(), u.getUserType());
+			String accessToken = jwtUtil.createAccessToken(u.getUserEmail(), u.getUserType(), u.getUserNick());
+			String refreshToken = jwtUtil.createRefreshToken(u.getUserEmail(), u.getUserType(), u.getUserNick());
+			LoginUserDTO loginUser = new LoginUserDTO(accessToken, refreshToken, u.getUserEmail(), u.getUserNick(), u.getUserType());
 			return loginUser;
 		}else {
 			return null;
@@ -110,8 +110,8 @@ public class UserService {
 	public LoginUserDTO refresh(String token) {
 		try {
 			LoginUserDTO loginUser = jwtUtil.checkToken(token);
-			String accessToken = jwtUtil.createAccessToken(loginUser.getUserEmail(), loginUser.getUserType());
-			String refreshToken = jwtUtil.createAccessToken(loginUser.getUserEmail(), loginUser.getUserType());
+			String accessToken = jwtUtil.createAccessToken(loginUser.getUserEmail(), loginUser.getUserType(), loginUser.getUserNick());
+			String refreshToken = jwtUtil.createAccessToken(loginUser.getUserEmail(), loginUser.getUserType(), loginUser.getUserNick());
 			loginUser.setAccessToken(accessToken);
 			loginUser.setRefreshToken(refreshToken);
 			return loginUser;
@@ -195,9 +195,9 @@ public class UserService {
 	public LoginUserDTO socialLogin(UserDTO naverUser) {
 		UserDTO u = userDao.selectOneUser(naverUser.getUserEmail());
 		if(u != null) {
-			String accessToken = jwtUtil.createAccessToken(u.getUserEmail(), u.getUserType());
-			String refreshToken = jwtUtil.createRefreshToken(u.getUserEmail(), u.getUserType());
-			LoginUserDTO loginUser = new LoginUserDTO(accessToken, refreshToken, u.getUserEmail(), u.getUserType());
+			String accessToken = jwtUtil.createAccessToken(u.getUserEmail(), u.getUserType(), u.getUserNick());
+			String refreshToken = jwtUtil.createRefreshToken(u.getUserEmail(), u.getUserType(), u.getUserNick());
+			LoginUserDTO loginUser = new LoginUserDTO(accessToken, refreshToken, u.getUserEmail(), u.getUserNick() ,u.getUserType() );
 			return loginUser;
 		}else {
 			return null;

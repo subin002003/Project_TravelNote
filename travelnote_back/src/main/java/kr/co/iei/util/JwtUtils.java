@@ -27,7 +27,7 @@ public class JwtUtils {
     public int expireHourRefresh;
 
     // 1시간 토큰 생성 (로그인 유지)
-    public String createAccessToken(String userEmail, int userType) {
+    public String createAccessToken(String userEmail, int userType, String userNick) {
         SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
         Calendar c = Calendar.getInstance();
         Date startTime = c.getTime();
@@ -40,11 +40,12 @@ public class JwtUtils {
                 .signWith(key)             // 암호화 서명
                 .claim("userEmail", userEmail) // 사용자 이메일 정보
                 .claim("userType", userType) // 사용자 타입 정보
+                .claim("userNick", userNick) //사용자 닉네임 정보
                 .compact();
     }
 
     // 8760시간(1년) 토큰 생성 (RefreshToken)
-    public String createRefreshToken(String userEmail, int userType) {
+    public String createRefreshToken(String userEmail, int userType, String userNick) {
         SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
         Calendar c = Calendar.getInstance();
         Date startTime = c.getTime();
@@ -57,6 +58,7 @@ public class JwtUtils {
                 .signWith(key)             // 암호화 서명
                 .claim("userEmail", userEmail) // 사용자 이메일 정보
                 .claim("userType", userType) // 사용자 타입 정보
+                .claim("userNick", userNick) // 사용자 닉네임 정보
                 .compact();
     }
 
@@ -114,10 +116,12 @@ public class JwtUtils {
                 .getBody(); 
 		
 		String userEmail = (String)claims.get("userEmail");
+		String userNick = (String)claims.get("userNick");
 		int userType = (int)claims.get("userType");
 		LoginUserDTO loginUser = new LoginUserDTO();
 		loginUser.setUserEmail(userEmail);
-		loginUser.setUserType(userType);;
+		loginUser.setUserType(userType);
+		loginUser.setUserNick(userNick);
 		return loginUser;
 	}
     

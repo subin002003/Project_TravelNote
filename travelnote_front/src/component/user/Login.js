@@ -2,6 +2,7 @@ import { useRecoilState } from "recoil";
 import {
   loginEmailState,
   loginIdState,
+  userNickState,
   userTypeState,
 } from "../utils/RecoilData";
 import { useState } from "react";
@@ -13,6 +14,7 @@ import NaverLogin from "./NaverLogin";
 const Login = () => {
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
   const [userType, setUserType] = useRecoilState(userTypeState);
+  const [userNick, setUserNick] = useRecoilState(userNickState);
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
   const [user, setUser] = useState({
@@ -41,7 +43,7 @@ const Login = () => {
         console.log(res);
         setLoginEmail(res.data.userEmail);
         setUserType(res.data.userType);
-
+        setUserNick(res.data.userNick);
         axios.defaults.headers.common["Authorization"] = res.data.accessToken;
 
         window.localStorage.setItem("refreshToken", res.data.refreshToken);

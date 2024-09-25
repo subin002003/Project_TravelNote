@@ -11,7 +11,11 @@ import ProductMain from "./component/product/ProductMain";
 import Login from "./component/user/Login";
 import BoardMain from "./component/board/BoardMain";
 import { useRecoilState } from "recoil";
-import { loginEmailState, userTypeState } from "./component/utils/RecoilData";
+import {
+  loginEmailState,
+  userNickState,
+  userTypeState,
+} from "./component/utils/RecoilData";
 import { useEffect } from "react";
 import axios from "axios";
 import NaverCallback from "./component/user/NaverCallback";
@@ -24,6 +28,7 @@ function App() {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
   const [userType, setUserType] = useRecoilState(userTypeState);
+  const [userNick, setUserNick] = useRecoilState(userNickState);
   useEffect(() => {
     refreshLogin();
     window.setInterval(refreshLogin, 30 * 60 * 1000); //30분마다 로그인 정보 자동 refresh
@@ -42,6 +47,7 @@ function App() {
           console.log(res);
           setLoginEmail(res.data.userEmail);
           setUserType(res.data.userType);
+          setUserNick(res.data.userNick);
           axios.defaults.headers.common["Authorization"] = res.data.accessToken;
           window.localStorage.setItem("refreshToken", res.data.refreshToken);
         })
@@ -49,6 +55,7 @@ function App() {
           console.log(err);
           setLoginEmail("");
           setUserType(0);
+          setUserNick("");
           delete axios.defaults.headers.common["Authorization"];
           window.localStorage.removeItem("refreshToken");
         });

@@ -35,3 +35,21 @@
   text-align: center;
   font-size: 18px;
 }
+.faqboard-tbl {
+  border-top: 1px solid var(--main-color);
+  width: 100%;
+  border-spacing: 0;
+  padding: 10px;
+}
+.faqboard-input {
+  display: flex;
+  gap: 10px;
+}
+.faqboard-input > input {
+  flex: 1;
+  font-size: 16px;
+  line-height: 1.5;
+  border: none;
+  border-bottom: 1px solid var(--background-color);
+  padding: 8px 0px;
+}
