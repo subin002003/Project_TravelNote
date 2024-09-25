@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ForeignPlanDaysButton from "./ForeignPlanDaysButton";
 import { useEffect, useState } from "react";
 import PlanItem from "./PlanItem";
@@ -49,9 +49,7 @@ const ForeignPlanList = (props) => {
         <h5>
           {itinerary.itineraryStartDate} ~ {itinerary.itineraryEndDate}
         </h5>
-        <button className="edit-itinerary-button" type="button">
-          이 여행 관리
-        </button>
+        <Link className="edit-itinerary-button">이 여행 수정하기</Link>
       </div>
       <div className="daily-plan-box">
         <ForeignPlanDaysButton

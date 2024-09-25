@@ -160,18 +160,25 @@
 .plan-list-wrap {
   width: 350px;
 }
+.itinerary-info-box > h5 {
+  margin-bottom: 5px;
+}
 .plan-map-wrap {
   width: calc(100% - 700px);
 }
 .edit-itinerary-button {
   color: var(--main-color);
-  background-color: white;
-  border: 1px solid var(--main-color);
+  font-size: 13px;
+}
+.edit-itinerary-button:hover {
+  text-decoration: underline;
 }
 .daily-plan-list-box > h5 {
   text-align: center;
   color: var(--main-color);
-  margin: 0;
+}
+.daily-plan-list {
+  padding: 0 10px;
 }
 
 /* ForeignRegionInfo */
@@ -227,11 +234,11 @@
 
 /* PlanItem */
 .plan-item-list {
-  height: 500px;
+  height: 400px;
   overflow: auto;
   background-color: var(--base-color);
   border-radius: 10px;
-  padding: 10px;
+  padding: 0 10px;
 
   /* 스크롤바 제거 */
   -ms-overflow-style: none; /* 인터넷 익스플로러 */
@@ -244,29 +251,50 @@
   display: flex;
   justify-content: space-around;
   margin: 15px 0;
-  border: 1px solid black;
 }
-.plan-seq-info-box {
+.plan-item > div {
   justify-content: center;
   align-items: center;
   height: 70px;
-  width: 48px;
   display: flex;
   flex-wrap: wrap;
+}
+.plan-seq-info-box {
+  width: 70px;
 }
 .plan-seq-icon {
   border: 1px solid var(--text-color);
   width: 40px;
+  height: 40px;
   line-height: 40px;
   border-radius: 20px;
 }
-.plan-time {
-  font-size: 13px;
-  color: rgb(90, 90, 90);
+.plan-time > select {
+  width: 70px;
+  font-size: 11px;
+  color: rgb(115, 115, 115);
+  border: none;
+  outline: none;
+  background-color: transparent;
+  text-align: center;
+}
+.plan-info-box {
+  width: 160px;
 }
 .plan-name {
   text-align: left;
   line-height: 40px;
+  width: 100%;
+}
+.plan-memo {
+  width: 100%;
+}
+.plan-memo > input {
+  outline: none;
+  border: none;
+  background-color: transparent;
+  font-family: "SUITE-Regular";
+  width: 100%;
 }
 .plan-image-box {
   width: 70px;
