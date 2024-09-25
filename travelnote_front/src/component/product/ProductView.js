@@ -29,7 +29,11 @@ import DateRangePickerComponent from "./DatePickerComponent ";
 import Review from "./review/ReviewWrite";
 import Swal from "sweetalert2";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { isLoginState, userTypeState } from "../utils/RecoilData";
+import {
+  isLoginState,
+  loginEmailState,
+  userTypeState,
+} from "../utils/RecoilData";
 
 const ProductView = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -346,6 +350,10 @@ const ReviewItem = (props) => {
   const navigate = useNavigate();
   const product = props.product;
   const review = props.review;
+  // 로그인 회원 정보
+  const isLogin = useRecoilValue(isLoginState);
+  const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
+  const userEmail = loginEmail;
   const [isLike, setIsLike] = useState(product.isLike === 1); // 좋아요 상태 (1: 좋아요, 0: 비활성화)
   const [likeCount, setLikeCount] = useState(product.likeCount); // 좋아요 수
   const [openReviewDialog, setOpenReviewDialog] = useState(false); // 다이얼로그 상태
@@ -402,6 +410,27 @@ const ReviewItem = (props) => {
       });
   };
 
+  // 리뷰 좋아요
+  const handleLikeToggle = () => {
+    if (isLogin === true && review.reviewWriter === loginEmail) {
+      const newLikeStatus = !isLike;
+      setIsLike(newLikeStatus); // 좋아요 상태 토글
+      setLikeCount(likeCount + (newLikeStatus ? 1 : -1)); // 좋아요 수 증가/감소
+
+      // 서버에 좋아요/취소 요청
+      // axios
+      //   .post(`${backServer}/product/${review.reviewNo}/like/${userEmail}`, {
+      //     like: newLikeStatus ? 1 : 0, // 1: 좋아요, 0: 취소
+      //   })
+      //   .then((res) => {
+      //     console.log(res.data);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+    }
+  };
+
   return (
     <li className="posting-item">
       <div className="posting-review">
@@ -438,7 +467,7 @@ const ReviewItem = (props) => {
         />
         <div className="posting-review-content">{review.reviewContent}</div>
         <div className="review-link-box">
-          <span className="reviewLike">
+          <span className="reviewLike" onClick={handleLikeToggle}>
             <i
               className={
                 isLike ? "fa-solid fa-thumbs-up" : "fa-regular fa-thumbs-up"

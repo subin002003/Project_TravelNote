@@ -80,10 +80,14 @@ const ProductItem = (props) => {
       // 서버에 좋아요/취소 요청
       axios
         .post(`${backServer}/product/${productNo}/like/${userEmail}`, {
-          like: newLikeStatus ? 1 : 0, // 1: 좋아요, 0: 취소
+          like: newLikeStatus ? 1 : 0,
         })
         .then((res) => {
-          console.log(res.data);
+          if (res.data) {
+            // 서버 응답에 따라 UI 상태 업데이트
+            setIsLike(newLikeStatus);
+            setLikeCount(likeCount + (newLikeStatus ? 1 : -1));
+          }
         })
         .catch((err) => {
           console.log(err);

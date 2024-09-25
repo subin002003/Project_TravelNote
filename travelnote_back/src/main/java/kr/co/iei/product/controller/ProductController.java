@@ -177,13 +177,32 @@ public class ProductController {
 	}
 	
 	// 상품 좋아요
+//	@PostMapping(value="/{productNo}/like/{userEmail}")
+//	public ResponseEntity<Integer> insertWish(@PathVariable int productNo, @PathVariable String userEmail){
+//		int result = productService.insertWish(productNo, userEmail);
+//		
+//	    System.out.println("insertWish : " + result); // 좋아요 추가되면 result=1
+//	    
+//		return ResponseEntity.ok(result);
+//	}
+	
+	// 상품 좋아요 취소
+//	@DeleteMapping(value="/{productNo}/like/{userEmail}")
+//	public ResponseEntity<Integer> deleteWish(@PathVariable int productNo, @PathVariable String userEmail){
+//		int result = productService.deleteWish(productNo, userEmail);
+//		
+//	    System.out.println("deleteWish : " + result);
+//	    
+//		return ResponseEntity.ok(result);
+//	}
+	
 	@PostMapping(value="/{productNo}/like/{userEmail}")
-	public ResponseEntity<Integer> insertWish(@PathVariable int productNo, @PathVariable String userEmail){
-		int result = productService.insertWish(productNo, userEmail);
-		
-	    System.out.println(result);
+	public ResponseEntity<Integer> toggleWish(@PathVariable int productNo, @PathVariable String userEmail){
+	    int result = productService.toggleWish(productNo, userEmail);
 	    
-		return ResponseEntity.ok(result);
+	    System.out.println("toggleWish : " + result); // 1이면 추가되었고, -1이면 삭제된 경우
+	    
+	    return ResponseEntity.ok(result);
 	}
 	
 	// 리뷰 등록
