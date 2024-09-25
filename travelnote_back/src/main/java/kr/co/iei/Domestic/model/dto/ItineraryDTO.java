@@ -13,8 +13,7 @@ import lombok.NoArgsConstructor;
 public class ItineraryDTO {
 
 	private int itineraryNo;
-	private int userNo;
-	private String userEmail;
+	private String userEmail;// userNo대신 이메일로 받아옴
 	private int regionNo;
 	private String itineraryStartDate;
 	private String itineraryEndDate;

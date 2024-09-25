@@ -39,10 +39,16 @@ public class DomesticController {
         return ResponseEntity.ok(itineraryNo);
     }
 
- // 여행 일정 조회 
+ // 여행 상세일정 조회 
     @GetMapping("/getItinerary/{itineraryNo}")
     public ResponseEntity<ItineraryDTO> getItinerary(@PathVariable int itineraryNo) {
         ItineraryDTO itinerary = domesticService.getItinerary(itineraryNo);
         return ResponseEntity.ok(itinerary);
     }
+    
+    @GetMapping(value="/plan")
+	public ResponseEntity<List> plan(@RequestParam int itineraryNo, int planDay){
+		List list = domesticService.selectPlan(itineraryNo, planDay);
+		return ResponseEntity.ok(list);
+	}
 }
