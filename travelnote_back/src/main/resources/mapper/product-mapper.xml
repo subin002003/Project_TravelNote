@@ -123,12 +123,43 @@
   	</foreach>
   </delete>
   
-  <!-- 리뷰 -->
-  <insert id="insertReview">
-  	insert into review values(review_seq.nextval, #{productNo}, #{revieWriter}, #{reviewScore}, #{reviewContent}, sysdate, review_seq.currval)
-  	<selectKey resultType="int" keyProperty="productNo" order="BEFORE">
-  		select max(product_no) from product
+  <!-- 상품 좋아요
+  <insert id="insertWish">
+  	insert into wish values(wish_seq.nextval, #{userNo}, #{productNo})
+  	<selectKey resultType="int" keyProperty="userNo" order="BEFORE">
+  		select * from user_tbl where user_email=#{userEmail}
   	</selectKey>
+  </insert> -->
+  
+  <!-- 상품 찜 -->
+  <insert id="insertWish">
+   insert into wish (wish_no, user_no, product_no)
+   values (wish_seq.nextval, 
+           (select user_no from user_tbl where user_email = #{userEmail}), 
+           #{productNo})
   </insert>
+  
+  <!-- 상품 찜 여부 확인 -->
+  <select id="checkExistingWish" resultType="int">
+    select count(*) 
+    from wish 
+    where user_no = (select user_no from user_tbl where user_email = #{userEmail}) 
+    and product_no = #{productNo}
+  </select>
+  
+  <!-- 리뷰 등록 -->
+  <insert id="insertReview">
+  	insert into review values(review_seq.nextval, #{productNo}, #{reviewWriter}, #{reviewScore}, #{reviewContent}, sysdate, review_seq.currval)
+  </insert>
+  
+  <!-- 리뷰 수정 -->
+  <update id="updateReview">
+  	update review set review_content=#{reviewContent} where review_no=#{reviewNo}
+  </update>
+  
+  <!-- 리뷰 삭제 -->
+  <delete id="deleteReview">
+  	delete from review where review_no=#{reviewNo}
+  </delete>
   
 </mapper>

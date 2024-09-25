@@ -1,161 +1,141 @@
-import { useState } from "react";
-import { useRecoilState } from "recoil";
-import { loginEmailState } from "../utils/RecoilData";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
-import ProductFrm from "./ProductFrm";
-import ToastEditor from "../utils/ToastEditor";
 import Swal from "sweetalert2";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { isLoginState, userTypeState } from "../utils/RecoilData";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Rating,
+} from "@mui/material";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import DateRangePickerComponent from "./DatePickerComponent";
+import Review from "./review/ReviewWrite";
 
-const ProductWrite = () => {
+const ProductView = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
-  const navigate = useNavigate();
+  const isLogin = useRecoilValue(isLoginState);
+  const [userType] = useRecoilState(userTypeState);
+  const params = useParams();
+  const productNo = params.productNo;
+  const [product, setProduct] = useState({ fileList: [], reviews: [] });
+  const [openReviewDialog, setOpenReviewDialog] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [currentReview, setCurrentReview] = useState(null);
 
-  // 로그인 회원 정보
-  const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
-
-  const [productName, setProductName] = useState("");
-  const [productSubName, setProductSubName] = useState("");
-  const [thumbnail, setThumbnail] = useState(null);
-  const [productPrice, setProductPrice] = useState(0);
-  const [productInfo, setProductInfo] = useState("");
-  const [productLatitude, setProductLatitude] = useState("");
-  const [productLongitude, setProductLongitude] = useState("");
-  const [productStatus, setProductStatus] = useState(1);
-  const [productFile, setProductFile] = useState([]);
-  const [imagePath, setImagePath] = useState(""); // 이미지 경로 상태 추가
-
-  // 상품명 입력
-  const inputProductName = (e) => {
-    setProductName(e.target.value);
-  };
-
-  // 상품 서브명 입력
-  const inputProductSubName = (e) => {
-    setProductSubName(e.target.value);
-  };
-
-  // 가격 입력
-  const inputProductPrice = (e) => {
-    setProductPrice(e.target.value);
-  };
-
-  // 위도 입력
-  const inputProductLatitude = (e) => {
-    setProductLatitude(e.target.value);
-  };
-
-  // 경도 입력
-  const inputProductLongitude = (e) => {
-    setProductLongitude(e.target.value);
-  };
-
-  const writeProduct = () => {
-    if (productName !== "" && productSubName !== "" && productInfo !== "") {
-      const form = new FormData();
-      form.append("productName", productName);
-      form.append("productSubName", productSubName);
-      form.append("productPrice", productPrice);
-      form.append("productInfo", productInfo);
-      form.append("productLatitude", productLatitude);
-      form.append("productLongitude", productLongitude);
-      form.append("productWriter", loginEmail);
-      form.append("productStatus", productStatus);
-      // 썸네일 있는 경우에만 추가
-      if (thumbnail !== null) {
-        form.append("thumbnail", thumbnail);
-      }
-      // 첨부파일도 있는 경우에만 추가
-      for (let i = 0; i < productFile.length; i++) {
-        form.append("productFile", productFile[i]);
-      }
-      axios
-        .post(`${backServer}/product`, form, {
-          headers: {
-            contentType: "multipart/form-data",
-            processData: false,
-          },
-        })
-        .then((res) => {
-          const imagePath = res.data.imagePath; // 서버에서 반환된 이미지 경로
-          setImagePath(imagePath); // 이미지 경로 상태 업데이트
-          if (res.data.success) {
-            Swal.fire({
-              title: "상품 등록 성공",
-              text: "상품이 성공적으로 등록되었습니다.",
-              icon: "success",
-            });
-            navigate("/product/list");
-          } else {
-            Swal.fire({
-              title: "상품 등록 중 오류 발생",
-              text: "입력값을 확인하세요.",
-              icon: "error",
-            });
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-          if (err.response) {
-            console.log("Response data:", err.response.data);
-            console.log("Response status:", err.response.status);
-            console.log("Response headers:", err.response.headers);
-          }
+  useEffect(() => {
+    axios
+      .get(`${backServer}/product/productNo/${productNo}`)
+      .then((res) => {
+        setProduct(res.data);
+      })
+      .catch((err) => {
+        Swal.fire({
+          title: "상품 정보를 불러오는 데 실패했습니다.",
+          icon: "error",
         });
-    }
+      });
+  }, [backServer, productNo]);
+
+  // 리뷰 작성 다이얼로그 열기
+  const handleOpenReviewDialog = () => {
+    setIsEdit(false); // 작성 모드로 설정
+    setCurrentReview(null); // 빈 리뷰 데이터
+    setOpenReviewDialog(true);
+  };
+
+  // 리뷰 수정 다이얼로그 열기
+  const handleEditReviewDialog = (review) => {
+    setIsEdit(true); // 수정 모드로 설정
+    setCurrentReview(review); // 수정할 리뷰 데이터 설정
+    setOpenReviewDialog(true);
+  };
+
+  const handleCloseReviewDialog = () => {
+    setOpenReviewDialog(false);
   };
 
   return (
-    <section className="section product-content-wrap">
-      <div style={{ textAlign: "center" }} className="section-title">
-        상품 등록
-      </div>
-      <form
-        className="product-write-frm"
-        onSubmit={(e) => {
-          e.preventDefault();
-          writeProduct();
-        }}
-      >
-        <ProductFrm
-          loginEmail={loginEmail}
-          productName={productName}
-          setProductName={inputProductName}
-          productSubName={productSubName}
-          setProductSubName={inputProductSubName}
-          thumbnail={thumbnail}
-          setThumbnail={setThumbnail}
-          productPrice={productPrice}
-          setProductPrice={inputProductPrice}
-          productLatitude={productLatitude}
-          setProductLatitude={inputProductLatitude}
-          productLongitude={productLongitude}
-          setProductLongitude={inputProductLongitude}
-          productStatus={productStatus}
-          setProductStatus={setProductStatus}
-          productFile={productFile}
-          setProductFile={setProductFile}
-        />
+    <section className="section product-view-wrap">
+      <div className="product-view-content">
+        {/* 상품 정보 출력, Swiper 슬라이드 생략 */}
+        <div className="sec comment">
+          <div className="section-title">
+            <span>
+              <strong>리뷰({product.reviews.length}개)</strong>
+            </span>
+            <button
+              className="btn-secondary lg"
+              onClick={handleOpenReviewDialog}
+            >
+              리뷰 작성
+            </button>
+          </div>
 
-        <div
-          style={{ width: "90%", margin: "150px auto", marginBottom: "0" }}
-          className="product-info-wrap"
+          <div className="line"></div>
+
+          <div className="commentBox">
+            <ul>
+              {product.reviews.map((review, i) => (
+                <ReviewItem
+                  key={"review-" + i}
+                  review={review}
+                  onEdit={() => handleEditReviewDialog(review)}
+                />
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* 리뷰 작성/수정 다이얼로그 */}
+        <Dialog
+          open={openReviewDialog}
+          onClose={handleCloseReviewDialog}
+          fullWidth
         >
-          <label>본문 내용</label>
-          <ToastEditor
-            productInfo={productInfo}
-            setProductInfo={setProductInfo}
-            type={0}
-          />
-        </div>
-        <div className="button-box">
-          <button type="submit" className="btn-primary lg">
-            등록
-          </button>
-        </div>
-      </form>
+          <DialogTitle>{isEdit ? "리뷰 수정" : "리뷰 작성"}</DialogTitle>
+          <DialogContent>
+            <Review
+              productNo={productNo}
+              isEdit={isEdit}
+              review={currentReview}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseReviewDialog}>닫기</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </section>
   );
 };
 
-export default ProductWrite;
+const ReviewItem = ({ review, onEdit }) => {
+  return (
+    <li className="posting-item">
+      <div className="posting-review">
+        <div className="posting-review-info">
+          <div className="review-info-left">
+            <span>{review.reviewWriter}</span>
+            <span>{review.reviewDate}</span>
+          </div>
+          <div className="review-info-right">
+            <button className="btn-secondary sm" onClick={onEdit}>
+              수정
+            </button>
+          </div>
+        </div>
+        <Rating value={review.reviewScore} readOnly />
+        <div className="posting-review-content">{review.reviewContent}</div>
+      </div>
+      <div className="line"></div>
+    </li>
+  );
+};
+
+export default ProductView;

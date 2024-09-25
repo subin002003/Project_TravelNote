@@ -36,6 +36,13 @@ public interface ProductDao {
 
 	int deleteProductFile(int[] delProductFileNo);
 
+	int insertWish(int productNo, String userEmail);
+	int checkExistingWish(int productNo, String userEmail);
+
 	int insertReview(ReviewDTO review);
+
+	int updateReview(ReviewDTO review);
+
+	int deleteReview(ReviewDTO review);
 
 }

@@ -3,7 +3,11 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PageNavi from "../utils/PagiNavi";
-import { isLoginState, userTypeState } from "../utils/RecoilData";
+import {
+  isLoginState,
+  loginEmailState,
+  userTypeState,
+} from "../utils/RecoilData";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 const ProductList = () => {
@@ -30,8 +34,8 @@ const ProductList = () => {
 
   return (
     <section className="section product-list">
-      {isLogin && userType === 2 ? (
-        <Link to="/product/write" className="btn-primary">
+      {isLogin === true && userType === 2 ? (
+        <Link to="/product/write" className="btn-primary writeBtn">
           상품 등록
         </Link>
       ) : (
@@ -54,11 +58,42 @@ const ProductList = () => {
 
 const ProductItem = (props) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  // 로그인 회원 정보
+  const isLogin = useRecoilValue(isLoginState);
+  const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
   const product = props.product;
+  const productNo = product.productNo;
+  const userEmail = loginEmail;
   const navigate = useNavigate();
+  const [isLike, setIsLike] = useState(product.isLike === 1); // 좋아요 상태 (1: 좋아요, 0: 비활성화)
+  const [likeCount, setLikeCount] = useState(product.likeCount); // 좋아요 수
+
+  // console.log(isLogin);
+  // console.log(loginEmail);
+
+  const handleLikeToggle = () => {
+    if (isLogin === true) {
+      const newLikeStatus = !isLike;
+      setIsLike(newLikeStatus); // 좋아요 상태 토글
+      setLikeCount(likeCount + (newLikeStatus ? 1 : -1)); // 좋아요 수 증가/감소
+
+      // 서버에 좋아요/취소 요청
+      axios
+        .post(`${backServer}/product/${productNo}/like/${userEmail}`, {
+          like: newLikeStatus ? 1 : 0, // 1: 좋아요, 0: 취소
+        })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+  // console.log(product.productNo, isLike);
 
   return (
-    <li className="posting-item">
+    <li style={{ marginBottom: "20px" }} className="posting-item">
       <div
         className="posting-info-left"
         onClick={() => {
@@ -83,12 +118,18 @@ const ProductItem = (props) => {
             }
           />
         </div>
-        <div className="like-icon">
-          <span className="like-checked">
-            <i className="fa-heart fa-regular"></i>
+        <div className="like-icon" onClick={handleLikeToggle}>
+          <span className={isLike ? "like-checked" : "like-unchecked"}>
+            <i
+              className={isLike ? "fa-solid fa-heart" : "fa-regular fa-heart"}
+            ></i>
           </span>
+          {/* 좋아요 수 출력 */}
+          {/* <span className="like-count">{likeCount}</span> */}
         </div>
-        <span className="price">{product.productPrice}</span>
+        <span className="price">
+          {product.productPrice.toLocaleString()} 원
+        </span>
       </div>
       <div className="clear"></div>
     </li>
