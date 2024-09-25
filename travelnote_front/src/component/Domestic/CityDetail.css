@@ -1,10 +1,9 @@
 .city-detail {
-  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
-  margin: auto;
+  margin-bottom: 20px;
+  flex: 3;
 }
 
 .detail-content {
@@ -30,7 +29,9 @@
   height: auto;
   border-radius: 10px;
   margin-bottom: 20px;
+  margin-left: 110px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 500px; /* 필요에 따라 조정 */
 }
 
 /* 여행 제목 입력 */
@@ -103,4 +104,38 @@
   .trip-btn {
     font-size: 16px;
   }
+}
+
+.city-detail-wrapper {
+  display: flex;
+}
+
+.weather-container {
+  flex: 1;
+  margin-right: 20px; /* 날씨 컴포넌트와 도시 정보 간의 간격 */
+}
+.weather-info {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  justify-content: center;
+}
+
+.weather-temp {
+  font-size: 2rem;
+  margin-right: 30px;
+}
+
+.weather-description {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.weather-description img {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  background-color: #47b5ff;
 }
