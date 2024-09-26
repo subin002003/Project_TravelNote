@@ -325,7 +325,7 @@
 /* ForeignPlanSearch */
 .plan-search-wrap {
   /* 임시 */
-  background-color: gainsboro;
+  /* background-color: gainsboro; */
 }
 .category-button-ul {
   display: flex;
