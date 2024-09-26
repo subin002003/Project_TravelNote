@@ -58,11 +58,6 @@
   padding-left: 15px;
   font-family: "SUITE-Regular";
 }
-.foreign-search-input:focus {
-  border-color: var(--main-color);
-  background-color: transparent;
-  box-shadow: none;
-}
 .foreign-search-box > button {
   margin-left: 20px;
   width: 100px;
@@ -201,7 +196,9 @@
   color: black;
 }
 .edit-button:hover {
-  cursor: default;
+  cursor: pointer;
+  background-color: var(--base-color);
+  color: black;
 }
 .edit-button-active {
   margin: 20px auto;
@@ -227,6 +224,8 @@
   border: 1px solid var(--main-color);
   width: 80px;
   padding: 10px;
+  color: var(--main-color);
+  font-weight: 600;
 }
 .plan-dates-list > li:hover {
   cursor: pointer;
@@ -321,4 +320,62 @@
 }
 .plan-item-list > h5 {
   margin: 30px auto;
+}
+
+/* ForeignPlanSearch */
+.plan-search-wrap {
+  /* 임시 */
+  background-color: gainsboro;
+}
+.category-button-ul {
+  display: flex;
+  justify-content: center;
+}
+.category-button-ul > li {
+  text-align: center;
+  width: 130px;
+  border: 1px solid var(--main-color);
+  color: var(--main-color);
+  padding: 10px;
+  font-weight: 600;
+  box-sizing: border-box;
+}
+.category-button-ul > .selected {
+  color: white;
+  background-color: var(--main-color);
+}
+.place-list {
+  height: 500px;
+  background-color: var(--base-color);
+  overflow: auto;
+  border-radius: 10px;
+  padding: 0 10px;
+  margin: 0 10px;
+
+  /* 스크롤바 제거 */
+  -ms-overflow-style: none; /* 인터넷 익스플로러 */
+  scrollbar-width: none; /* 파이어폭스 */
+}
+.place-list::-webkit-scrollbar {
+  display: none; /* 스크롤바 제거 ( 크롬, 사파리, 오페라, 엣지 ) */
+}
+.place-list > h5 {
+  margin: 30px auto;
+}
+.plan-search-box > input {
+  width: 200px;
+  outline: none;
+  border: none;
+  border-bottom: 2px solid var(--main-color);
+  background-color: transparent;
+  line-height: 45px;
+  font-size: 15px;
+  padding-left: 15px;
+  font-family: "SUITE-Regular";
+  margin-right: 15px;
+}
+.plan-search-box > button {
+  width: 65px;
+  height: 40px;
+  box-sizing: border-box;
 }
