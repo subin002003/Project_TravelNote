@@ -7,13 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import kr.co.iei.Domestic.model.dto.ItineraryDTO;
+import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
 import kr.co.iei.Domestic.model.service.DomesticService;
 
 
 @CrossOrigin("*")  // CORS 설정
 @RestController
-@RequestMapping("/regions")
+@RequestMapping("/domestic")
 public class DomesticController {
 
     @Autowired
@@ -40,13 +41,13 @@ public class DomesticController {
     }
 
  // 여행 상세일정 조회 
-    @GetMapping("/getItinerary/{itineraryNo}")
-    public ResponseEntity<ItineraryDTO> getItinerary(@PathVariable int itineraryNo) {
-        ItineraryDTO itinerary = domesticService.getItinerary(itineraryNo);
+    @GetMapping(value="/getItinerary/{itineraryNo}")
+    public ResponseEntity<ItineraryInfoDTO> getItinerary(@PathVariable int itineraryNo) {
+        ItineraryInfoDTO itinerary = domesticService.getItinerary(itineraryNo);
         return ResponseEntity.ok(itinerary);
     }
     
-    @GetMapping(value="/plan")
+    @GetMapping(value="/Plan")
 	public ResponseEntity<List> plan(@RequestParam int itineraryNo, int planDay){
 		List list = domesticService.selectPlan(itineraryNo, planDay);
 		return ResponseEntity.ok(list);

@@ -22,10 +22,8 @@
         </selectKey>
     </insert>
 
-   
-
-    <!-- 일정 조회 메서드 (추가된 기능) -->
-    <select id="selectItinerary" resultType="itinerary">
+    <!-- 일정 상세조회 메서드  -->
+    <select id="getItinerary" resultType="itineraryInfo">
       select i.*, region_name, country_name from 
 		(select itinerary_no, region_no, itinerary_start_date, itinerary_end_date, itinerary_title from itinerary where itinerary_no = #{itineraryNo})i
 		join (region)r on i.region_no = r.region_no

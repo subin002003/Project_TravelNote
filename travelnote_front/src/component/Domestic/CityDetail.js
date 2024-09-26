@@ -19,27 +19,16 @@ const CityDetail = () => {
   const [endDate, setEndDate] = useState("");
   const [cityInfo, setCityInfo] = useState(null);
 
-  // 도시 정보 가져오기
+  // 도시 정보와 날씨 정보를 가져오는 useEffect
   useEffect(() => {
+    // 도시 정보 가져오기
     axios
-      .get(`${backServer}/regions/view/${regionNo}`)
+      .get(`${backServer}/domestic/view/${regionNo}`)
       .then((res) => {
         setCityInfo(res.data);
-        // 현재 위치를 가져와서 날씨 정보를 가져오는 함수 호출
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            getWeather(lat, lon);
-          },
-          (error) => {
-            console.error("Error getting location:", error);
-            Swal.fire({
-              icon: "error",
-              text: "위치를 가져오는 데 실패했습니다.",
-            });
-          }
-        );
+
+        // 도시 정보를 기반으로 날씨를 가져오는 함수 호출
+        getWeatherForCity(res.data.regionName);
       })
       .catch((err) => {
         console.error("Error fetching city info:", err);
@@ -50,11 +39,12 @@ const CityDetail = () => {
       });
   }, [backServer, regionNo]);
 
-  // 날씨 정보를 가져오는 함수
-  const getWeather = async (lat, lon) => {
+  // 도시 이름을 기반으로 날씨 정보를 가져오는 함수
+  const getWeatherForCity = async (cityName) => {
     try {
+      // 도시 이름으로 날씨를 가져오는 API 호출
       const res = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+        `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric`
       );
       const weatherId = res.data.weather[0].id;
       const weatherKo = WeatherDescKo[weatherId];
@@ -94,7 +84,7 @@ const CityDetail = () => {
     form.append("itineraryTitle", tripTitle.trim() || `${cityName}여행 `);
 
     axios
-      .post(`${backServer}/regions/Schedule`, form)
+      .post(`${backServer}/domestic/Schedule`, form)
       .then((res) => {
         Swal.fire({
           icon: "success",

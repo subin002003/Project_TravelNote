@@ -12,7 +12,7 @@ const DomesticMain = () => {
 
   useEffect(() => {
     axios
-      .get(`${backServer}/regions/list/${reqPage}`)
+      .get(`${backServer}/domestic/list/${reqPage}`)
       .then((res) => {
         const koreanRegions = res.data.filter(
           (region) => region.countryName === "대한민국"
@@ -81,8 +81,6 @@ const DomesticMain = () => {
           return "/images/여수.jpg";
         case "영월":
           return "/images/영월.jpg";
-        case "울릉도":
-          return "/images/울릉도.jpg";
         case "전주":
           return "/images/전주.jpg";
         case "제천":
