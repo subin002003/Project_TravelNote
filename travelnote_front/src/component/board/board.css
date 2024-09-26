@@ -16,3 +16,21 @@
 .boardlist-content {
   text-align: center;
 }
+.boardTitle-mouse-on:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+.board-button-link {
+  margin-right: 330px;
+  margin-bottom: 10px;
+  background-color: #47b5ff; /* 버튼 배경색 */
+  color: #fff; /* 글자색 */
+  text-decoration: none; /* 텍스트 장식 제거 */
+  border-radius: 5px; /* 모서리 둥글게 */
+  transition: background-color 0.3s; /* 배경색 변화 애니메이션 */
+  padding: 10px 20px;
+  font-size: 30px;
+}
+.board-button-link:hover {
+  background-color: #1363df; /* hover 시 색상 변경 */
+}
