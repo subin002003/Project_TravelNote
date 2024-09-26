@@ -27,27 +27,40 @@ const BoardList = () => {
   }, [reqPage]);
   return (
     <section className="board-wrap">
-      <h1 style={{ fontSize: "50px", margin: "5px", padding: "0px" }}>
+      <h1 className="board-title" style={{ marginBottom: "15px" }}>
         자유게시판
       </h1>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h5 style={{ fontSize: "20px", marginLeft: "5px" }}>
+      <div className="board-horizontal-between-space">
+        <h4 style={{ marginLeft: "5px" }}>
           자유로운 주제로 이야기할 수 있습니다.
-        </h5>
+        </h4>
         {isLogin ? (
-          <Link to="/board/write" className="board-button-link">
+          <Link
+            to="/board/write"
+            className="board-button-link-write"
+            style={{ marginLeft: "auto", marginRight: "20px" }}
+          >
             글쓰기
           </Link>
         ) : (
           ""
         )}
       </div>
+      <div
+        style={{
+          borderTop: "1px solid black",
+          // 상단, 우측, 하단, 좌측 여백
+          margin: "20px 0px 40px 0px",
+          width: "100%",
+        }}
+      ></div>
       <div>
-        <table className="boardList-table-no-border">
+        <table className="boardList-table-no-border" style={{ width: "100%" }}>
           <thead>
             <tr>
               <th style={{ width: "5%" }}>글번호</th>
-              <th style={{ width: "65%" }}>제목</th>
+              <th style={{ width: "55%" }}>제목</th>
+              <th style={{ width: "10%" }}>카테고리</th>
               <th style={{ width: "10%" }}>작성자</th>
               <th style={{ width: "10%" }}>작성일</th>
               <th style={{ width: "5%" }}>조회수</th>
@@ -82,6 +95,7 @@ const BoardItem = (props) => {
       >
         {board.boardTitle}
       </td>
+      <td>{board.boardCategory}</td>
       <td>{board.boardWriter}</td>
       <td>{board.boardDate}</td>
       <td>{board.boardReadCount}</td>

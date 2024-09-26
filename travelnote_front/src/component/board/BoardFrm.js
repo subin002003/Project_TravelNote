@@ -3,6 +3,8 @@ import { useState } from "react";
 const BoardFrm = (props) => {
   const boardTitle = props.boardTitle;
   const setBoardTitle = props.setBoardTitle;
+  const boardCategory = props.boardCategory;
+  const setBoardCategory = props.setBoardCategory;
   const boardFile = props.boardFile;
   const setBoardFile = props.setBoardFile;
   //수정인 경우에 추가로 전송되는 데이터
@@ -27,35 +29,46 @@ const BoardFrm = (props) => {
   return (
     <div>
       <div>
-        <table>
+        <table className="boardList-table-no-border">
           <tbody>
             <tr>
               <th>
                 <label htmlFor="boardTitle">제목</label>
               </th>
               <td>
-                <div>
-                  <input
-                    type="text"
-                    id="boardTitle"
-                    name="boardTitle"
-                    value={boardTitle}
-                    onChange={setBoardTitle}
-                  />
-                </div>
+                <input
+                  type="text"
+                  id="boardTitle"
+                  name="boardTitle"
+                  value={boardTitle}
+                  onChange={setBoardTitle}
+                  style={{ height: "30px", width: "1400px" }}
+                />
               </td>
             </tr>
-
+            <tr>
+              <th>
+                <label htmlFor="boardCategory">카테고리</label>
+              </th>
+              <td>
+                <input
+                  type="text"
+                  id="boardCategory"
+                  name="boardCategory"
+                  value={boardCategory}
+                  onChange={setBoardCategory}
+                  style={{ height: "30px", width: "100px" }}
+                />
+              </td>
+            </tr>
             <tr>
               <th>
                 <label htmlFor="boardFile">첨부파일</label>
               </th>
               <td>
-                <label htmlFor="boardFile">파일첨부</label>
                 <input
                   type="file"
                   id="boardFile"
-                  style={{ display: "none" }}
                   onChange={addBoardFile}
                   multiple
                 ></input>
