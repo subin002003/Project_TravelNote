@@ -64,13 +64,6 @@ const ForeignPlanMain = () => {
         planPageOption={planPageOption}
         setPlanPageOption={setPlanPageOption}
       />
-      <Routes>
-        {/*planPageOption == 1 (조회일 때) */}
-        <Route path="view" element={<ForeignRegionInfo />}></Route>
-        <Route path="edit" element={<ForeignPlanSearch />}></Route>
-      </Routes>
-
-      <div className="plan-map-wrap">3</div>
     </div>
   );
 };

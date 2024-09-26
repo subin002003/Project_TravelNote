@@ -3,6 +3,7 @@ package kr.co.iei.Domestic.model.dao;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import kr.co.iei.Domestic.model.dto.ItineraryDTO;
+import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
 
 @Mapper
@@ -18,7 +19,7 @@ public interface DomesticDao {
     int saveItinerary(ItineraryDTO itinerary);
 
     // 일정 조회 메서드 (추가된 기능)
-    ItineraryDTO selectItinerary(int itineraryNo);
+    ItineraryInfoDTO getItinerary(int itineraryNo);
 
 	List selectPlan(int itineraryNo, int planDay);
 

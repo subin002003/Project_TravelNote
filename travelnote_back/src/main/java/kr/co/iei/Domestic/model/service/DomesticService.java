@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.iei.Domestic.model.dao.DomesticDao;
 import kr.co.iei.Domestic.model.dto.ItineraryDTO;
+import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
 
 
@@ -38,8 +39,8 @@ public class DomesticService {
     }
 
     // 일정 조회 메서드
-    public ItineraryDTO getItinerary(int itineraryNo) {
-    	ItineraryDTO itinerary = domesticDao.selectItinerary(itineraryNo);
+    public ItineraryInfoDTO getItinerary(int itineraryNo) {
+    	ItineraryInfoDTO itinerary = domesticDao.getItinerary(itineraryNo);
     	return itinerary;
     }
 	public List selectPlan(int itineraryNo, int planDay) {
