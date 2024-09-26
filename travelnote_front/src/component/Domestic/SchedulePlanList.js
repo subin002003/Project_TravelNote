@@ -80,13 +80,13 @@ const SchedulePlanList = (props) => {
   return (
     <div className="schedule-plan-wrap">
       <div className="schedule-list">
-        <h4>{itinerary.itineraryTitle}</h4>
-        <h5>
+        <h3>{itinerary.itineraryTitle}</h3>
+        <h4>
           {itinerary.countryName} {itinerary.regionName}
-        </h5>
-        <h5>
+        </h4>
+        <h3>
           {itinerary.itineraryStartDate} {itinerary.itineraryEndDate}
-        </h5>
+        </h3>
       </div>
       <div className="schedule-box">
         {totalPlanDates.length > 0 ? (
@@ -101,7 +101,7 @@ const SchedulePlanList = (props) => {
         )}
       </div>
       <div className="schedule-plan-list">
-        <h5>{selectedDate}</h5>
+        <h3>{selectedDate}</h3>
         <div className="schedule-content">
           <div className="schedule-itinerary">
             {planList.length > 0 ? (
