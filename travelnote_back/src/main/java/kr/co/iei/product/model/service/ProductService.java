@@ -13,7 +13,6 @@ import kr.co.iei.product.model.dao.ProductDao;
 import kr.co.iei.product.model.dto.ProductDTO;
 import kr.co.iei.product.model.dto.ProductFileDTO;
 import kr.co.iei.product.model.dto.ReviewDTO;
-import kr.co.iei.product.model.dto.WishDTO;
 import kr.co.iei.util.PageInfo;
 import kr.co.iei.util.PageUtil;
 
@@ -25,6 +24,7 @@ public class ProductService {
 	@Autowired
 	private PageUtil pageUtil;
 
+	// 패키지 상품 목록 조회
 	public Map selectProductList(int reqPage) {
 		// 게시물 조회 및 페이징에 필요한 데이터를 모두 취합
 		int numPerPage = 4;						// 한 페이지당 출력할 상품 갯수
@@ -39,6 +39,7 @@ public class ProductService {
 		return map;
 	}
 
+	// 패키지 상품 등록
 	@Transactional
 	public int insertProduct(ProductDTO product, List<ProductFileDTO> productFileList) {
 		int result = productDao.insertProduct(product);
@@ -49,20 +50,33 @@ public class ProductService {
 		return result;
 	}
 
-	public ProductDTO selectOneProduct(int productNo) {
-		ProductDTO product = productDao.selectOneProduct(productNo);
-		List<ProductFileDTO> fileList = productDao.selectOneProductFileList(productNo);
-		List<ReviewDTO> reviews = productDao.selectOneProductReviews(productNo);
-		product.setFileList(fileList);
-		product.setReviews(reviews);
-		return product;
+	// 패키지 상품 상세페이지
+//	public ProductDTO selectOneProduct(int productNo) {
+//		ProductDTO product = productDao.selectOneProduct(productNo);
+//		List<ProductFileDTO> fileList = productDao.selectOneProductFileList(productNo);
+//		List<ReviewDTO> reviews = productDao.selectOneProductReviews(productNo);
+//		product.setFileList(fileList);
+//		product.setReviews(reviews);
+//		return product;
+//	}
+	
+	public ProductDTO selectOneProduct(int productNo, String userEmail) {
+	    ProductDTO product = productDao.selectOneProduct(productNo);
+	    List<ProductFileDTO> fileList = productDao.selectOneProductFileList(productNo);
+	    int userNo = productDao.selectOneUser(userEmail);
+	    List<ReviewDTO> reviews = productDao.selectOneProductReviews(productNo, userNo); // userNo 추가
+	    product.setFileList(fileList);
+	    product.setReviews(reviews);
+	    return product;
 	}
 
+	// 패키지 상품의 첨부파일(대표이미지) 조회
 	public ProductFileDTO getProductFile(int productFileNo) {
 		ProductFileDTO productFile = productDao.getProductFile(productFileNo);
 		return productFile;
 	}
 
+	// 패키지 상품 삭제
 	@Transactional
 	public List<ProductFileDTO> deleteProduct(int productNo) {
 		List<ProductFileDTO> fileList = productDao.selectOneProductFileList(productNo);
@@ -74,6 +88,7 @@ public class ProductService {
 		}
 	}
 
+	// 패키지 상품 수정
 	@Transactional
 	public List<ProductFileDTO> updateProduct(ProductDTO product, List<ProductFileDTO> productFileList) {
 		int result = productDao.updateProduct(product);
@@ -98,37 +113,10 @@ public class ProductService {
 		return null;
 	}
 
-	// 상품 좋아요
-//	@Transactional
-//	public int insertWish(int productNo, String userEmail) {
-//		int userNo = productDao.selectOneUser(userEmail);
-//        int result = productDao.insertWish(productNo, userNo);
-//		return result;
-//    }
-
-	// 상품 좋아요 취소
-//	@Transactional
-//	public int deleteWish(int productNo, String userEmail) {
-//		int userNo = productDao.selectOneUser(userEmail);
-//		int result = productDao.deleteWish(productNo, userNo);
-//		return result;
-//	}
-	
-	@Transactional
-	public int toggleWish(int productNo, String userEmail) {
-	    // 사용자 번호 조회
-	    int userNo = productDao.selectOneUser(userEmail);
-	    
-	    // 찜 상태 확인
-	    int existingWish = productDao.checkExistingWish(productNo, userNo);
-	    
-	    if (existingWish > 0) {
-	        // 이미 찜한 경우, 찜 취소
-	        return productDao.deleteWish(productNo, userNo); // 성공적으로 삭제된 경우 1을 리턴
-	    } else {
-	        // 찜하지 않은 경우, 찜 추가
-	        return productDao.insertWish(productNo, userNo); // 성공적으로 추가된 경우 1을 리턴
-	    }
+	// email로 유저 조회
+	public int selectOneUser(String userEmail) {
+		int userNo = productDao.selectOneUser(userEmail);
+		return userNo;
 	}
 
 	// 리뷰 등록
@@ -150,5 +138,79 @@ public class ProductService {
 	public int deleteReview(ReviewDTO review) {
 		int result = productDao.deleteReview(review);
 		return result;
+	}
+
+	// 리뷰 좋아요 추가
+	@Transactional
+	public int insertReviewLike(int reviewNo, Integer reviewLike, int userNo) {
+		int result = 0;
+		if (reviewLike == null || reviewLike == 0) {
+			// 좋아요를 누르지 않은 상태에서 클릭 -> 좋아요 추가 -> insert
+			result = productDao.insertReviewLike(reviewNo, userNo);
+		}
+		if(result > 0) {
+			// 좋아요 추가, 좋아요 취소 로직 수행 후 현재 좋아요 수 조회해서 리턴
+			int reviewLikeCount = productDao.selectReviewLikeCount(reviewNo);
+			return reviewLikeCount;
+		}else {
+			return -1;
+		}
+	}
+
+	// 리뷰 좋아요 취소
+	@Transactional
+	public int deleteReviewLike(int reviewNo, Integer reviewLike, int userNo) {
+		int result = 0;
+		if(reviewLike != null && reviewLike == 1) {
+			// 좋아요를 누른 상태에서 클릭 -> 좋아요 취소 -> delete
+			result = productDao.deleteReviewLike(reviewNo, userNo);
+		}
+		if(result > 0) {
+			// 좋아요 추가, 좋아요 취소 로직 수행 후 현재 좋아요 수 조회해서 리턴
+			int reviewLikeCount = productDao.selectReviewLikeCount(reviewNo);
+			return reviewLikeCount;
+		}else {
+			return -1;
+		}
+	}
+
+	// 리뷰 좋아요의 상태가 바뀔 때 마다 리뷰 좋아요 수 조회
+	public int selectReviewLikeCount(int reviewNo) {
+		int reviewLikeCount = productDao.selectReviewLikeCount(reviewNo);
+		return reviewLikeCount;
+	}
+
+	// 상품 찜
+	@Transactional
+	public int insertWishLike(int productNo, Integer productLike, int userNo) {
+		int result = 0;
+		if(productLike == null || productLike == 0) {
+			// 좋아요를 누르지 않은 상태에서 클릭 -> 좋아요 추가 -> insert
+			result = productDao.insertWishLike(productNo, userNo);
+		}
+		if(result > 0) {
+			// 좋아요 추가, 좋아요 취소 로직 수행 후 현재 좋아요 수 조회해서 리턴
+			int productLikeCount = productDao.selectProductLikeCount(productNo);
+			return productLikeCount;
+		}else {
+			return -1;
+		}
+	}
+
+	// 상품 찜 취소
+	@Transactional
+	public int deleteWishLike(int productNo, Integer productLike, int userNo) {
+		int result = 0;
+		if(productLike == null || productLike == 0) {
+			// 좋아요를 누르지 않은 상태에서 클릭 -> 좋아요 추가 -> insert
+			result = productDao.deleteWishLike(productNo, userNo);
+		}
+		if(result > 0) {
+			// 좋아요 추가, 좋아요 취소 로직 수행 후 현재 좋아요 수 조회해서 리턴
+			int productLikeCount = productDao.selectProductLikeCount(productNo);
+			return productLikeCount;
+		}else {
+			return -1;
+		}
 	}
 }

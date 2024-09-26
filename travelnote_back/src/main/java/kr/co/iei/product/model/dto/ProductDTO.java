@@ -27,10 +27,8 @@ public class ProductDTO {
 	private List<ProductFileDTO> fileList;
 	private int[] delProductFileNo;
 	// 위시 상품
-	private int likeCount;
-	private int isLike;
-	// 리뷰 추가
+	private int productLike;
+	private int productLikeCount;
+	// 리뷰
 	private List<ReviewDTO> reviews;
-	private int reviewLike;
-	private int reviewLikeCount;
 }

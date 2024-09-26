@@ -44,7 +44,7 @@ function App() {
         .post(`${backServer}/user/refresh`)
         .then((res) => {
           //refresh토큰을 전송해서 로그인 정보를 새로 갱신해옴
-          console.log(res);
+          // console.log(res);
           setLoginEmail(res.data.userEmail);
           setUserType(res.data.userType);
           setUserNick(res.data.userNick);
