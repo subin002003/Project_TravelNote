@@ -19,14 +19,16 @@ const PlanItem = (props) => {
     }); // 수정할 정보 저장
   }, [plan]);
 
-  // 시간, 메모 변경 시 editPlanList 배열에 저장
+  // 시간, 메모 변경 적용
   const changeInput = (e) => {
     setEditPlan({ ...editPlan, [e.target.id]: e.target.value });
     setEdited(true);
+
+    // editPlanList 배열에 저장
     const newPlanList = editPlanList.filter((item) => {
       return item.planNo !== editPlan.planNo;
     });
-    newPlanList.push(editPlan);
+    newPlanList.push({ ...editPlan, [e.target.id]: e.target.value });
     setEditPlanList([...newPlanList]);
   };
 
@@ -37,8 +39,9 @@ const PlanItem = (props) => {
         <div className="plan-time">
           <select
             id="planTime"
-            onChange={changeInput}
-            defaultValue={plan.planTime}
+            onClick={changeInput}
+            key={editPlan.planTime}
+            defaultValue={editPlan.planTime}
           >
             <option>시간 미정</option>
             {timeOptionsArr.map((time, index) => {

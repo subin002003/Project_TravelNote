@@ -67,6 +67,13 @@ public class ForeignPlanController {
 		return ResponseEntity.ok(list);
 	}
 	
+	// 배열 받아 메모, 시간 수정
+//	@PostMapping(value="/editPlanInfo")
+//	public ResponseEntity<Boolean> editPlanInfo(@ModelAttribute ForeignPlanDTO[] editPlanList) {
+//		System.out.println(editPlanList);
+//		boolean result = foreignPlanService.updatePlanInfo(editPlanList);
+//		return ResponseEntity.ok(result);
+//	}
 	
 	
 }

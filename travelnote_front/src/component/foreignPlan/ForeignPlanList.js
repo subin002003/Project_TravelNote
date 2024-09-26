@@ -74,9 +74,13 @@ const ForeignPlanList = (props) => {
       const form = new FormData();
       form.append("editPlanList", editPlanList);
       axios
-        .post(`${backServer}/foreign/editPlan`, form)
-        .then(() => {})
-        .catch(() => {});
+        .post(`${backServer}/foreign/editPlanInfo`, form)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
