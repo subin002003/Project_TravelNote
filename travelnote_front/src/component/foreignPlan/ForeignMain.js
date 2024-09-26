@@ -3,6 +3,7 @@ import "./foreignPlan.css";
 import ForeignList from "./ForeignList";
 import ItineraryForm from "./ItineraryForm";
 import ForeignPlanMain from "./ForeignPlanMain";
+import ForeignEditItinerary from "./ForeignEditItinerary";
 
 // path: foreign
 const ForeignMain = () => {
@@ -13,7 +14,11 @@ const ForeignMain = () => {
         path="createItinerary/:regionNo"
         element={<ItineraryForm />}
       ></Route>
-      <Route path="plan/:itineraryNo/*" element={<ForeignPlanMain />}></Route>
+      <Route path="plan/:itineraryNo" element={<ForeignPlanMain />}></Route>
+      <Route
+        path="editItinerary/:itineraryNo"
+        element={<ForeignEditItinerary />}
+      ></Route>
     </Routes>
   );
 };

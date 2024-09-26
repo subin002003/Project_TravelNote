@@ -35,7 +35,7 @@ const BoardList = () => {
           자유로운 주제로 이야기할 수 있습니다.
         </h5>
         {isLogin ? (
-          <Link to="/board/write" style={{ marginRight: "300px" }}>
+          <Link to="/board/write" className="board-button-link">
             글쓰기
           </Link>
         ) : (
@@ -78,6 +78,7 @@ const BoardItem = (props) => {
         onClick={() => {
           navigate(`/board/view/${board.boardNo}`);
         }}
+        className="boardTitle-mouse-on"
       >
         {board.boardTitle}
       </td>

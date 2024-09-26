@@ -3,6 +3,7 @@ import ForeignPlanDaysButton from "./ForeignPlanDaysButton";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import PlanItem from "./PlanItem";
+import Swal from "sweetalert2";
 
 const ForeignPlanList = (props) => {
   const {
@@ -11,7 +12,7 @@ const ForeignPlanList = (props) => {
     selectedDay,
     setSelectedDay,
     totalPlanDates,
-    planPageOption,
+    planPageOption, // planPageOption이 1이면 조회, 2면 수정
     setPlanPageOption,
   } = props;
 
@@ -22,6 +23,10 @@ const ForeignPlanList = (props) => {
   const [timeOptionsArr, setTimeOptionsArr] = useState([]); // 시간 선택 옵션 용 배열
   const [edited, setEdited] = useState(false);
   const [editPlanList, setEditPlanList] = useState([]); // 수정할 일정 목록
+
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // 로그인한 아이디 조회 중인 여정 번호의 주인이 맞는지 확인해야 함
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   // 일정 목록 조회
   useEffect(() => {
@@ -35,7 +40,6 @@ const ForeignPlanList = (props) => {
           },
         })
         .then((res) => {
-          console.log(res);
           setPlanList(res.data);
         })
         .catch((err) => {
@@ -68,16 +72,43 @@ const ForeignPlanList = (props) => {
     }
   }, []);
 
-  // 일정 수정 버튼
+  // 일정 수정 버튼 클릭 시 일정 수정 적용
   const editPlan = () => {
     if (edited) {
-      const form = new FormData();
-      form.append("editPlanList", editPlanList);
+      const planListStr = JSON.stringify(editPlanList);
       axios
-        .post(`${backServer}/foreign/editPlan`, form)
-        .then(() => {})
-        .catch(() => {});
+        .patch(`${backServer}/foreign/editPlanInfo`, planListStr, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((res) => {
+          // 수정 성공 시 true로 받아옴
+          if (res.data) {
+            Swal.fire({
+              icon: "success",
+              text: "메모와 시간이 저장되었습니다.",
+            });
+            setEditPlanList([]);
+            setEdited(false);
+          } else {
+            Swal.fire({
+              icon: "error",
+              text: "처리 중 오류가 발생했습니다.",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setPlanPageOption(1);
     }
+  };
+
+  // 조회에서 버튼 클릭 시 수정으로 전환
+  const moveToEdit = () => {
+    setPlanPageOption(2);
   };
 
   return (
@@ -90,7 +121,12 @@ const ForeignPlanList = (props) => {
         <h5>
           {itinerary.itineraryStartDate} ~ {itinerary.itineraryEndDate}
         </h5>
-        <Link className="edit-itinerary-button">이 여행 수정하기</Link>
+        <Link
+          to={"/foreign/editItinerary/" + itinerary.itineraryNo}
+          className="edit-itinerary-button"
+        >
+          이 여행 정보 수정
+        </Link>
       </div>
       <div className="daily-plan-box">
         {totalPlanDates.length > 0 ? (
@@ -119,6 +155,8 @@ const ForeignPlanList = (props) => {
                     setEdited={setEdited}
                     editPlanList={editPlanList}
                     setEditPlanList={setEditPlanList}
+                    planPageOption={planPageOption}
+                    setPlanPageOption={setPlanPageOption}
                   />
                 );
               })
@@ -127,12 +165,18 @@ const ForeignPlanList = (props) => {
             )}
           </div>
           <div className="edit-button-box">
-            <button
-              className={"edit-button" + (edited ? "-active" : "")}
-              onClick={editPlan}
-            >
-              일정 저장
-            </button>
+            {planPageOption == 1 ? (
+              <button className={"edit-button-active"} onClick={moveToEdit}>
+                일정 수정하기
+              </button>
+            ) : (
+              <button
+                className={"edit-button" + (edited ? "-active" : "")}
+                onClick={editPlan}
+              >
+                {edited ? "메모/시간 저장" : "수정 끝내기"}
+              </button>
+            )}
           </div>
         </div>
       </div>
