@@ -1,15 +1,20 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginEmailState, userTypeState } from "../utils/RecoilData";
-import { useRecoilState } from "recoil";
+import {
+  isLoginState,
+  loginEmailState,
+  userNickState,
+  userTypeState,
+} from "../utils/RecoilData";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 const NaverCallback = () => {
   const navigate = useNavigate();
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
   const [userType, setUserType] = useRecoilState(userTypeState);
-
+  const [userNick, setUserNick] = useRecoilState(userNickState);
   useEffect(() => {
     // URL에서 authorization code와 state 추출
     const urlParams = new URLSearchParams(window.location.search);
@@ -29,7 +34,7 @@ const NaverCallback = () => {
           console.log(res);
           setLoginEmail(res.data.userEmail);
           setUserType(res.data.userType);
-
+          setUserNick(res.data.userNick);
           axios.defaults.headers.common["Authorization"] = res.data.accessToken;
 
           window.localStorage.setItem("refreshToken", res.data.refreshToken);

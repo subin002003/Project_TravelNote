@@ -1,6 +1,6 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import "./customerService.css";
-import { userTypeState } from "../utils/RecoilData";
+import { isLoginState, userTypeState } from "../utils/RecoilData";
 import {
   Link,
   Route,
@@ -14,10 +14,12 @@ import CustomerBoardWrite from "./CustomerBoardWrite";
 import CustomerBoardView from "./CustomerBoardView";
 import CustomerBoardUpdate from "./CustmerBoardUpdate";
 import PersonalBoardWrite from "./PersonalBoardWrite";
+import ChannelTalk from "./ChannelTalk";
 
 const CustomerServiceMain = () => {
   const navigate = useNavigate();
   const location = useLocation(); // 현재 경로를 가져옴
+  const isLogin = useRecoilValue(isLoginState);
 
   useEffect(() => {
     // 현재 경로가 정확히 "/customerService"일 때만 "customerBoard"로 이동
@@ -44,6 +46,14 @@ const CustomerServiceMain = () => {
         <Route path="customerBoardWrite" element={<CustomerBoardWrite />} />
         <Route path="personalBoardWrite" element={<PersonalBoardWrite />} />
       </Routes>
+      <ChannelTalk />
+      {isLogin ? (
+        <button className="channelTalk-btn">
+          <img src="/image/logo1.png"></img>
+        </button>
+      ) : (
+        <></>
+      )}
     </section>
   );
 };
