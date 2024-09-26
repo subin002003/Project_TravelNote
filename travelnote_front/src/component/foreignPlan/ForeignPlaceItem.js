@@ -1,4 +1,5 @@
-const ForeignPlaceItem = () => {
+const ForeignPlaceItem = (props) => {
+  const { itineraryNo } = props;
   return;
 };
 

@@ -1,10 +1,14 @@
 import { useState } from "react";
 import ForeignPlaceItem from "./ForeignPlaceItem";
+import axios from "axios";
 
-const ForeignPlanSearch = () => {
+const ForeignPlanSearch = (props) => {
+  const { itineraryNo } = props;
   const [category, setCategory] = useState(2); // 1이면 항공편, 2면 장소
   const [searchInput, setSearchInput] = useState();
   const [placeList, setPlaceList] = useState([]);
+
+  // 목록 조회
 
   // 버튼 클릭 시 검색
   const searchKeyword = () => {};

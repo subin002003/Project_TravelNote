@@ -340,6 +340,9 @@
   font-weight: 600;
   box-sizing: border-box;
 }
+.category-button-ul > li:hover {
+  cursor: pointer;
+}
 .category-button-ul > .selected {
   color: white;
   background-color: var(--main-color);

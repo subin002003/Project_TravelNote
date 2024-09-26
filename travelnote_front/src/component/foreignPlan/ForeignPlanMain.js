@@ -64,7 +64,11 @@ const ForeignPlanMain = () => {
         planPageOption={planPageOption}
         setPlanPageOption={setPlanPageOption}
       />
-      {planPageOption === 1 ? <ForeignRegionInfo /> : <ForeignPlanSearch />}
+      {planPageOption === 1 ? (
+        <ForeignRegionInfo itineraryNo={itineraryNo} />
+      ) : (
+        <ForeignPlanSearch itineraryNo={itineraryNo} />
+      )}
 
       <div className="plan-map-wrap">3</div>
     </div>
