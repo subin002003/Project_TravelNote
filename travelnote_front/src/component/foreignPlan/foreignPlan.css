@@ -197,11 +197,10 @@
 }
 .edit-button {
   margin: 20px auto;
-  background-color: var(--background-color);
+  background-color: var(--base-color);
   color: black;
 }
 .edit-button:hover {
-  background-color: var(--background-color);
   cursor: default;
 }
 .edit-button-active {
@@ -290,6 +289,9 @@
   outline: none;
   background-color: transparent;
   text-align: center;
+}
+.plan-time > select:hover {
+  cursor: pointer;
 }
 .plan-info-box {
   width: 160px;
