@@ -78,6 +78,7 @@ const BoardItem = (props) => {
         onClick={() => {
           navigate(`/board/view/${board.boardNo}`);
         }}
+        style={{ cursor: "pointer", textDecoration: "underline" }}
       >
         {board.boardTitle}
       </td>
