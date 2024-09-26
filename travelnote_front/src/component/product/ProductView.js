@@ -39,6 +39,8 @@ const ProductView = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   // 로그인 회원 정보
   const isLogin = useRecoilValue(isLoginState);
+  const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
+  const userEmail = loginEmail;
   const [userType, setUserType] = useRecoilState(userTypeState);
   const params = useParams();
   const productNo = params.productNo;
@@ -49,20 +51,26 @@ const ProductView = () => {
   const [openReviewDialog, setOpenReviewDialog] = useState(false); // 다이얼로그 상태
 
   useEffect(() => {
+    if (!productNo || !userEmail) {
+      // console.error("productNo 또는 userEmail이 유효하지 않습니다.");
+      return;
+    }
+
     axios
-      .get(`${backServer}/product/productNo/${productNo}`)
+      .get(`${backServer}/product/productNo/${productNo}/${userEmail}`)
       .then((res) => {
+        console.log(res.data);
         setProduct(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        console.log("Error:", err.response ? err.response.data : err.message);
         Swal.fire({
           title: "상품 정보를 불러오는 데 실패했습니다.",
           text: "다시 시도하세요.",
           icon: "error",
         });
       });
-  }, [backServer, productNo, product.reviews]);
+  }, [backServer, productNo, userEmail]);
 
   const handleDateRangeChange = (startDate, endDate) => {
     if (startDate && endDate) {
@@ -216,7 +224,7 @@ const ProductView = () => {
             <p>{dateRange}</p>
             <p className="price">
               {typeof product.productPrice === "number"
-                ? `${product.productPrice.toLocaleString()} 원`
+                ? `${product.productPrice.toLocaleString()}원`
                 : "가격 정보 없음"}
             </p>
           </div>
@@ -350,15 +358,23 @@ const ReviewItem = (props) => {
   const navigate = useNavigate();
   const product = props.product;
   const review = props.review;
+
   // 로그인 회원 정보
   const isLogin = useRecoilValue(isLoginState);
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
   const userEmail = loginEmail;
-  const [isLike, setIsLike] = useState(product.isLike === 1); // 좋아요 상태 (1: 좋아요, 0: 비활성화)
-  const [likeCount, setLikeCount] = useState(product.likeCount); // 좋아요 수
+
+  // 리뷰의 좋아요 상태와 좋아요 수
+  const [reviewLike, setReviewLike] = useState(review.reviewLike === 1); // 좋아요 상태 (1: 좋아요, 0: 비활성화)
+  const [reviewLikeCount, setReviewLikeCount] = useState(
+    review.reviewLikeCount
+  ); // 좋아요 수
+
+  const newLikeState = reviewLike ? 0 : 1; // 좋아요 상태를 토글
+  const newCount = reviewLike ? reviewLikeCount - 1 : reviewLikeCount + 1; // 좋아요 수 업데이트
+
+  // 리뷰 작성 다이얼로그
   const [openReviewDialog, setOpenReviewDialog] = useState(false); // 다이얼로그 상태
-  // console.log(props.review);
-  // console.log(props.review.reviewScore);
 
   // 리뷰 작성 팝업 열기
   const handleOpenReviewDialog = () => {
@@ -410,24 +426,63 @@ const ReviewItem = (props) => {
       });
   };
 
-  // 리뷰 좋아요
-  const handleLikeToggle = () => {
-    if (isLogin === true && review.reviewWriter === loginEmail) {
-      const newLikeStatus = !isLike;
-      setIsLike(newLikeStatus); // 좋아요 상태 토글
-      setLikeCount(likeCount + (newLikeStatus ? 1 : -1)); // 좋아요 수 증가/감소
+  // 리뷰 좋아요 상태가 변경될 때 리뷰 좋아요 수 다시 조회 함수
+  // useEffect(() => {
+  //   axios
+  //     .get(`${backServer}/product/${review.reviewNo}/likeCount`)
+  //     .then((res) => {
+  //       setReviewLikeCount(res.data.likeCount); // 최신 좋아요 수로 업데이트
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       Swal.fire({
+  //         title: "좋아요 수를 가져오는 데 실패했습니다.",
+  //         text: err.message,
+  //         icon: "error",
+  //       });
+  //     });
+  // }, [reviewLike]);
 
-      // 서버에 좋아요/취소 요청
-      // axios
-      //   .post(`${backServer}/product/${review.reviewNo}/like/${userEmail}`, {
-      //     like: newLikeStatus ? 1 : 0, // 1: 좋아요, 0: 취소
-      //   })
-      //   .then((res) => {
-      //     console.log(res.data);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
+  const handleLikeToggle = () => {
+    if (!isLogin) {
+      Swal.fire({
+        title: "로그인 후 이용이 가능합니다.",
+        icon: "info",
+      });
+      return;
+    }
+
+    if (isLogin && review.reviewWriter === loginEmail) {
+      const newLikeStatus = !reviewLike; // 좋아요 상태 토글
+      const request = newLikeStatus
+        ? axios.post(
+            // 리뷰 좋아요
+            `${backServer}/product/${review.reviewNo}/insertReviewLike/${userEmail}`,
+            { reviewLike: 1 }
+          )
+        : axios.delete(
+            // 리뷰 좋아요 취소
+            `${backServer}/product/${review.reviewNo}/deleteReviewLike/${userEmail}?reviewLike=1`
+          );
+
+      request
+        .then((res) => {
+          console.log(res.data);
+          setReviewLike(newLikeStatus); // 좋아요 상태 업데이트
+          setReviewLikeCount((prevCount) =>
+            newLikeStatus ? prevCount + 1 : prevCount - 1
+          ); // 좋아요 수 업데이트
+        })
+        .catch((err) => {
+          console.log(err);
+          Swal.fire({
+            title: newLikeStatus
+              ? "좋아요 추가에 실패했습니다."
+              : "좋아요 취소에 실패했습니다.",
+            text: err.message,
+            icon: "error",
+          });
+        });
     }
   };
 
@@ -467,13 +522,27 @@ const ReviewItem = (props) => {
         />
         <div className="posting-review-content">{review.reviewContent}</div>
         <div className="review-link-box">
-          <span className="reviewLike" onClick={handleLikeToggle}>
+          <span
+            className={
+              reviewLike && review.reviewWriter === loginEmail
+                ? "review-like-checked"
+                : "review-like-unchecked"
+            }
+            onClick={handleLikeToggle}
+          >
             <i
               className={
-                isLike ? "fa-solid fa-thumbs-up" : "fa-regular fa-thumbs-up"
+                reviewLike && review.reviewWriter === loginEmail
+                  ? "fa-solid fa-thumbs-up"
+                  : "fa-regular fa-thumbs-up"
               }
             ></i>
-            <span className="reviewLikeCount">0</span>
+            <span
+              style={{ width: "12px", display: "inline-block" }}
+              className="reviewLikeCount"
+            >
+              {reviewLikeCount}
+            </span>
           </span>
           <span className="reviewReComment-btn">
             <i className="fa-solid fa-comment-dots"></i>
