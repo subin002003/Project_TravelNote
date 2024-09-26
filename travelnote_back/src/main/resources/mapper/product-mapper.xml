@@ -131,9 +131,17 @@
   	</selectKey>
   </insert> -->
   
+  
+  <!-- 
   <select id="selectOneUser" resultType="userNo">
   	select * from user_tbl where user_email=#{userEmail}
   </select>
+   -->
+  
+  
+  
+  
+  
   
   <!-- 상품 찜 -->
   <insert id="insertWish">

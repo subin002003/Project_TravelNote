@@ -9,10 +9,9 @@ const PersonalBoardWrite = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState("");
-  const [fileList, setFileList] = useState([]);
-  const [delBoardFileNo, setDelBoardFileNo] = useState([]);
   const [personalBoardFile, setPersonalBoardFile] = useState([]);
   const [showPersonalBoardFile, setShowPersonalBoardFile] = useState([]);
+
   useEffect(() => {
     const today = new Date();
     const formattedDate = today.toISOString().split("T")[0]; // YYYY-MM-DD 형식으로 변환
@@ -25,25 +24,28 @@ const PersonalBoardWrite = () => {
   };
 
   const addPersonalBoardFile = (e) => {
-    const files = e.currentTarget.files;
-    const fileArr = new Array(); // 글작성 시 전송할 파일 배열
-    const filenameArr = new Array(); //화면에 노출시킬 파일이름 배열
-    for (let i = 0; i < files.length; i++) {
-      fileArr.push(files[i]);
-      filenameArr.push(files[i].name);
-    }
-    setPersonalBoardFile([...personalBoardFile, ...fileArr]);
-    setShowPersonalBoardFile([...showPersonalBoardFile, ...filenameArr]);
+    const files = Array.from(e.currentTarget.files); // files를 배열로 변환
+    const fileArr = [];
+    const filenameArr = [];
+    files.forEach((file) => {
+      fileArr.push(file);
+      filenameArr.push(file.name);
+    });
+    setPersonalBoardFile((prevFiles) => [...prevFiles, ...fileArr]);
+    setShowPersonalBoardFile((prevFilenames) => [
+      ...prevFilenames,
+      ...filenameArr,
+    ]);
   };
+
   const [personalBoard, setPersonalBoard] = useState({
     personalBoardTitle: "",
     personalBoardContent: "",
     personalBoardWriter: userNick,
-    personalBoardFile: personalBoardFile,
   });
+
   const writePersonalBoard = () => {
     const formData = new FormData();
-
     formData.append("personalBoardTitle", personalBoard.personalBoardTitle);
     formData.append("personalBoardContent", personalBoard.personalBoardContent);
     formData.append("personalBoardWriter", personalBoard.personalBoardWriter);
@@ -55,17 +57,18 @@ const PersonalBoardWrite = () => {
     axios
       .post(`${backServer}/personalBoard/write`, formData, {
         headers: {
-          contentType: "multipart/form-data",
           processData: false,
         },
       })
       .then((res) => {
         console.log(res);
+        navigate("/personalBoard"); // 게시글 작성 후 게시판으로 이동
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
   return (
     <div className="write-section">
       <div className="page-title">1대1문의 작성하기</div>
@@ -86,7 +89,7 @@ const PersonalBoardWrite = () => {
                 <div className="personalBoard-input">
                   <input
                     type="text"
-                    id="personaBoardTitle"
+                    id="personalBoardTitle"
                     name="personalBoardTitle"
                     onChange={changePersonalBoard}
                   ></input>
@@ -137,39 +140,15 @@ const PersonalBoardWrite = () => {
               <th style={{ height: "48px" }}>첨부파일목록</th>
               <td colSpan={3} style={{ textAlign: "center" }}>
                 <div className="board-file-wrap">
-                  {fileList
-                    ? fileList.map((boardFile, i) => {
-                        const deleteFile = () => {
-                          const newFileList = fileList.filter((item) => {
-                            return item !== boardFile;
-                          });
-                          setFileList(newFileList);
-                          setDelBoardFileNo([
-                            ...delBoardFileNo,
-                            boardFile.boardFileNo,
-                          ]);
-                        };
-                        return (
-                          <p key={"oldFile-" + i}>
-                            <span className="filename">
-                              {boardFile.filename}
-                            </span>
-                            <span
-                              className="material-icons del-file-icon"
-                              onClick={deleteFile}
-                            >
-                              delete
-                            </span>
-                          </p>
-                        );
-                      })
-                    : ""}
                   {showPersonalBoardFile.map((filename, i) => {
                     const deleteFile = () => {
-                      personalBoardFile.splice(i, 1);
-                      setPersonalBoardFile([...personalBoardFile]);
-                      showPersonalBoardFile.splice(i, 1);
-                      setShowPersonalBoardFile([...showPersonalBoardFile]);
+                      const updatedFiles = [...personalBoardFile];
+                      updatedFiles.splice(i, 1);
+                      setPersonalBoardFile(updatedFiles);
+
+                      const updatedFilenames = [...showPersonalBoardFile];
+                      updatedFilenames.splice(i, 1);
+                      setShowPersonalBoardFile(updatedFilenames);
                     };
                     return (
                       <p key={"newFile" + i}>
