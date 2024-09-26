@@ -59,7 +59,7 @@ public class BoardController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Boolean> insertBoard(@ModelAttribute BoardDTO board,@ModelAttribute MultipartFile[] boardFile){
+	public ResponseEntity<Boolean> insertBoard(@ModelAttribute BoardDTO board, @ModelAttribute MultipartFile[] boardFile){
 		
 		List<BoardFileDTO> boardFileList = new ArrayList<BoardFileDTO>();
 		if(boardFile != null) {
@@ -86,7 +86,6 @@ public class BoardController {
 	@GetMapping(value="/file/{boardFileNo}")
 	public ResponseEntity<Resource> filedown(@PathVariable int boardFileNo) throws FileNotFoundException{
 		BoardFileDTO boardFile = boardService.getBoardFile(boardFileNo);
-		System.out.println(boardFile);
 		String savepath = root+"/board/";
 		File file = new File(savepath+boardFile.getFilepath());
 		

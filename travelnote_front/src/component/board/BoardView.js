@@ -49,53 +49,116 @@ const BoardView = () => {
       });
   };
   return (
-    <section>
-      <div>게시글</div>
+    <section className="board-wrap">
+      <h1
+        className="board-title"
+        style={{ textAlign: "center", margin: "30px" }}
+      >
+        {board.boardTitle}
+      </h1>
       <div>
-        <div>
-          <div>
-            <table>
-              <tbody>
-                <tr>
-                  <td>{board.boardTitle}</td>
-                </tr>
-                <tr>
-                  <th>조회수</th>
-                  <td>{board.boardReadCount}</td>
-                  <th>작성일</th>
-                  <td>{board.boardDate}</td>
-                  <th>작성자</th>
-                  <td>{board.boardWriter}</td>
-                </tr>
-              </tbody>
-            </table>
-            <p>첨부파일</p>
-            <div>
-              {board.fileList
-                ? board.fileList.map((file, i) => {
-                    return <FileItem key={"file-" + i} file={file} />;
-                  })
-                : ""}
+        <div className="board-horizontal-between-space">
+          {userNick === board.boardWriter ? (
+            <div style={{ marginTop: "50px" }}>
+              <Link
+                to={`/board/update/${board.boardNo}`}
+                className="board-button-link-view-update"
+              >
+                수정
+              </Link>
+              <button
+                type="button"
+                onClick={deleteBoard}
+                className="board-button-link-view-delete"
+              >
+                삭제
+              </button>
+            </div>
+          ) : (
+            ""
+          )}
+
+          <table
+            className="board-table-bordor-none"
+            style={{ marginLeft: "auto" }}
+          >
+            <tbody>
+              <tr>
+                <th>조회수</th>
+                <td>{board.boardReadCount}</td>
+              </tr>
+              <tr>
+                <th>작성일자</th>
+                <td>{board.boardDate}</td>
+              </tr>
+              <tr>
+                <th>작성자</th>
+                <td>{board.boardWriter}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div
+          style={{
+            borderTop: "1px solid black",
+            // 상단, 우측, 하단, 좌측 여백
+            margin: "20px 0px 40px 0px",
+            width: "100%",
+          }}
+        ></div>
+        <div className="board-horizontal-between-space">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "20px",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "20px",
+                fontWeight: "bolder",
+                paddingRight: "20px",
+              }}
+            >
+              {/* 숫자 임시 부여 */}
+              <span className="material-icons">favorite_border</span> 11
+            </p>
+            <div className="board-center">
+              <p style={{ fontSize: "20px", fontWeight: "bolder" }}>카테고리</p>
+              <p>{board.boardCategory}</p>
+              <div className="board-horizontal-between-space">
+                <p
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: "bolder",
+                    paddingLeft: "20px",
+                  }}
+                >
+                  첨부파일
+                </p>
+                {board.fileList
+                  ? board.fileList.map((file, i) => {
+                      return <FileItem key={"file-" + i} file={file} />;
+                    })
+                  : ""}
+              </div>
             </div>
           </div>
+          <p
+            className="board-button-link-report"
+            style={{ marginLeft: "auto" }}
+          >
+            신고하기
+          </p>
         </div>
-        <div>
+        <div style={{ marginTop: "50px" }}>
           {board.boardContent ? (
             <Viewer initialValue={board.boardContent} /> //토스트 editor에서 기본적으로 제공하는 viewer
           ) : (
             ""
           )}
         </div>
-        {userNick === board.boardWriter ? (
-          <div>
-            <Link to={`/board/update/${board.boardNo}`}>수정</Link>
-            <button type="button" onClick={deleteBoard}>
-              삭제
-            </button>
-          </div>
-        ) : (
-          ""
-        )}
       </div>
     </section>
   );

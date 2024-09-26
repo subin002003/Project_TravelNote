@@ -55,7 +55,6 @@ public class BoardService {
 
 	public BoardFileDTO getBoardFile(int boardFileNo) {
 		BoardFileDTO board = boardDao.getBoardFile(boardFileNo);
-		System.out.println(board);
 		return board;
 	}
 	@Transactional
