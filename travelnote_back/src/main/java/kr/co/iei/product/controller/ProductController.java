@@ -23,13 +23,12 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.web.multipart.MultipartFile;import io.swagger.models.auth.In;
 import kr.co.iei.product.model.dto.ProductDTO;
 import kr.co.iei.product.model.dto.ProductFileDTO;
 import kr.co.iei.product.model.dto.ReviewDTO;
-import kr.co.iei.product.model.dto.WishDTO;
 import kr.co.iei.product.model.service.ProductService;
 import kr.co.iei.util.FileUtils;
 
@@ -120,10 +119,16 @@ public class ProductController {
 	}
 	
 	// 패키지 상품 상세페이지
-	@GetMapping(value="/productNo/{productNo}")
-	public ResponseEntity<ProductDTO> selectOneProduct(@PathVariable int productNo) {
-		ProductDTO product = productService.selectOneProduct(productNo);
-		return ResponseEntity.ok(product);
+//	@GetMapping(value="/productNo/{productNo}")
+//	public ResponseEntity<ProductDTO> selectOneProduct(@PathVariable int productNo) {
+//		ProductDTO product = productService.selectOneProduct(productNo);
+//		return ResponseEntity.ok(product);
+//	}
+	
+	@GetMapping(value="/productNo/{productNo}/{userEmail}")
+	public ResponseEntity<ProductDTO> selectOneProduct(@PathVariable int productNo, @PathVariable String userEmail) {
+	    ProductDTO product = productService.selectOneProduct(productNo, userEmail);
+	    return ResponseEntity.ok(product);
 	}
 	
 	// 패키지 상품 삭제
@@ -176,35 +181,6 @@ public class ProductController {
 		}
 	}
 	
-	// 상품 좋아요
-//	@PostMapping(value="/{productNo}/like/{userEmail}")
-//	public ResponseEntity<Integer> insertWish(@PathVariable int productNo, @PathVariable String userEmail){
-//		int result = productService.insertWish(productNo, userEmail);
-//		
-//	    System.out.println("insertWish : " + result); // 좋아요 추가되면 result=1
-//	    
-//		return ResponseEntity.ok(result);
-//	}
-	
-	// 상품 좋아요 취소
-//	@DeleteMapping(value="/{productNo}/like/{userEmail}")
-//	public ResponseEntity<Integer> deleteWish(@PathVariable int productNo, @PathVariable String userEmail){
-//		int result = productService.deleteWish(productNo, userEmail);
-//		
-//	    System.out.println("deleteWish : " + result);
-//	    
-//		return ResponseEntity.ok(result);
-//	}
-	
-	@PostMapping(value="/{productNo}/like/{userEmail}")
-	public ResponseEntity<Integer> toggleWish(@PathVariable int productNo, @PathVariable String userEmail){
-	    int result = productService.toggleWish(productNo, userEmail);
-	    
-	    System.out.println("toggleWish : " + result); // 1이면 추가되었고, -1이면 삭제된 경우
-	    
-	    return ResponseEntity.ok(result);
-	}
-	
 	// 리뷰 등록
 	@PostMapping(value="/insertReview")
 	public ResponseEntity<Integer> insertReview(@ModelAttribute ReviewDTO review) {
@@ -223,6 +199,45 @@ public class ProductController {
 	@DeleteMapping(value="/deleteReview/{reviewNo}")
 	public ResponseEntity<Integer> deleteReview(@ModelAttribute ReviewDTO review) {
 		int result = productService.deleteReview(review);
+		return ResponseEntity.ok(result);
+	}
+	
+	// 리뷰 좋아요 추가
+	@PostMapping(value="/{reviewNo}/insertReviewLike/{userEmail}")
+	public ResponseEntity<Integer> insertReviewLike(@PathVariable int reviewNo, @RequestParam(required = false) Integer reviewLike, @PathVariable String userEmail) {
+		int userNo = productService.selectOneUser(userEmail);
+		int result = productService.insertReviewLike(reviewNo, reviewLike, userNo);
+		return ResponseEntity.ok(result);
+	}
+	
+	// 리뷰 좋아요 취소
+	@DeleteMapping(value="/{reviewNo}/deleteReviewLike/{userEmail}")
+	public ResponseEntity<Integer> deleteReviewLike(@PathVariable int reviewNo, @RequestParam(required = true) Integer reviewLike, @PathVariable String userEmail) {
+		int userNo = productService.selectOneUser(userEmail);
+		int result = productService.deleteReviewLike(reviewNo, reviewLike, userNo);
+		return ResponseEntity.ok(result);
+	}
+	
+	// 리뷰 좋아요의 상태가 바뀔 때 마다 리뷰 좋아요 수 조회
+	@GetMapping(value="/{reviewNo}/likeCount")
+	public ResponseEntity<Integer> selectReviewLikeCount(@PathVariable int reviewNo) {
+		int reviewLikeCount = productService.selectReviewLikeCount(reviewNo);
+		return ResponseEntity.ok(reviewLikeCount);
+	}
+	
+	// 상품 좋아요
+	@PostMapping(value="/{productNo}/insertWishLike/{userEmail}")
+	public ResponseEntity<Integer> insertWishLike(@PathVariable int productNo, @RequestParam(required = false) Integer productLike , @PathVariable String userEmail){
+		int userNo = productService.selectOneUser(userEmail);
+		int result = productService.insertWishLike(productNo, productLike, userNo);	    
+		return ResponseEntity.ok(result);
+	}
+	
+	// 상품 좋아요 취소
+	@DeleteMapping(value="/{productNo}/deleteWishLike/{userEmail}")
+	public ResponseEntity<Integer> deleteWishLike(@PathVariable int productNo, @RequestParam(required = false) Integer productLike , @PathVariable String userEmail){
+		int userNo = productService.selectOneUser(userEmail);
+		int result = productService.deleteWishLike(productNo, productLike, userNo);	    
 		return ResponseEntity.ok(result);
 	}
 }
