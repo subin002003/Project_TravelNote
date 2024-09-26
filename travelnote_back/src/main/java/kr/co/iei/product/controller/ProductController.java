@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;import io.swagger.models.auth.In;
+import org.springframework.web.multipart.MultipartFile;
 import kr.co.iei.product.model.dto.ProductDTO;
 import kr.co.iei.product.model.dto.ProductFileDTO;
 import kr.co.iei.product.model.dto.ReviewDTO;
@@ -46,10 +46,10 @@ public class ProductController {
 	public String root;
 	
 	// 패키지 상품 목록
-	@GetMapping(value="/list/{reqPage}")
-	public ResponseEntity<Map> list(@PathVariable int reqPage){
+	@GetMapping(value="/list/{reqPage}/{userEmail}")
+	public ResponseEntity<Map> list(@PathVariable int reqPage, @PathVariable String userEmail){
 		// 조회 결과는 게시물목록, pageNavi생성 시 필요한 데이터들
-		Map map = productService.selectProductList(reqPage);
+		Map map = productService.selectProductList(reqPage, userEmail);
 		return ResponseEntity.ok(map);
 	}
 	
@@ -235,9 +235,16 @@ public class ProductController {
 	
 	// 상품 좋아요 취소
 	@DeleteMapping(value="/{productNo}/deleteWishLike/{userEmail}")
-	public ResponseEntity<Integer> deleteWishLike(@PathVariable int productNo, @RequestParam(required = false) Integer productLike , @PathVariable String userEmail){
+	public ResponseEntity<Integer> deleteWishLike(@PathVariable int productNo, @RequestParam(required = true) Integer productLike , @PathVariable String userEmail){
 		int userNo = productService.selectOneUser(userEmail);
 		int result = productService.deleteWishLike(productNo, productLike, userNo);	    
 		return ResponseEntity.ok(result);
+	}
+	
+	// 상품 좋아요의 상태가 바뀔 때 마다 상품 좋아요 수 조회
+	@GetMapping(value="/{productNo}/likeCount")
+	public ResponseEntity<Integer> selectProductLikeCount(@PathVariable int productNo) {
+		int productLikeCount = productService.selectProductLikeCount(productNo);
+		return ResponseEntity.ok(productLikeCount);
 	}
 }

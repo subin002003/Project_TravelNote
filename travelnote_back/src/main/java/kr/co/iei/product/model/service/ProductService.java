@@ -25,14 +25,15 @@ public class ProductService {
 	private PageUtil pageUtil;
 
 	// 패키지 상품 목록 조회
-	public Map selectProductList(int reqPage) {
+	public Map selectProductList(int reqPage, String userEmail) {
+		int userNo = productDao.selectOneUser(userEmail);
 		// 게시물 조회 및 페이징에 필요한 데이터를 모두 취합
 		int numPerPage = 4;						// 한 페이지당 출력할 상품 갯수
 		int pageNaviSize = 7;						// 페이지네비 길이
 		int totalCount = productDao.totalCount();	// 전체 상품 수
 		// 페이징에 필요한 값들을 연산해서 객체로 리턴받음
 		PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
-		List list = productDao.selectProductList(pi);
+		List list = productDao.selectProductList(pi, userNo);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list);
 		map.put("pi", pi);
@@ -50,7 +51,6 @@ public class ProductService {
 		return result;
 	}
 
-	// 패키지 상품 상세페이지
 //	public ProductDTO selectOneProduct(int productNo) {
 //		ProductDTO product = productDao.selectOneProduct(productNo);
 //		List<ProductFileDTO> fileList = productDao.selectOneProductFileList(productNo);
@@ -59,7 +59,8 @@ public class ProductService {
 //		product.setReviews(reviews);
 //		return product;
 //	}
-	
+
+	// 패키지 상품 상세페이지
 	public ProductDTO selectOneProduct(int productNo, String userEmail) {
 	    ProductDTO product = productDao.selectOneProduct(productNo);
 	    List<ProductFileDTO> fileList = productDao.selectOneProductFileList(productNo);
@@ -201,7 +202,7 @@ public class ProductService {
 	@Transactional
 	public int deleteWishLike(int productNo, Integer productLike, int userNo) {
 		int result = 0;
-		if(productLike == null || productLike == 0) {
+		if(productLike != null && productLike == 1) {
 			// 좋아요를 누르지 않은 상태에서 클릭 -> 좋아요 추가 -> insert
 			result = productDao.deleteWishLike(productNo, userNo);
 		}
@@ -212,5 +213,11 @@ public class ProductService {
 		}else {
 			return -1;
 		}
+	}
+
+	// 상품 좋아요의 상태가 바뀔 때 마다 상품 좋아요 수 조회
+	public int selectProductLikeCount(int productNo) {
+		int productLikeCount = productDao.selectProductLikeCount(productNo);
+		return productLikeCount;
 	}
 }

@@ -15,7 +15,7 @@ public interface ProductDao {
 
 	int totalCount();
 
-	List selectProductList(PageInfo pi);
+	List selectProductList(PageInfo pi, int userNo);
 
 	int insertProduct(ProductDTO product);
 
