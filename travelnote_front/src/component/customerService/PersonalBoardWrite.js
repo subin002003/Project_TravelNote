@@ -50,13 +50,17 @@ const PersonalBoardWrite = () => {
     formData.append("personalBoardContent", personalBoard.personalBoardContent);
     formData.append("personalBoardWriter", personalBoard.personalBoardWriter);
 
-    personalBoardFile.forEach((file) => {
-      formData.append("personalBoardFileList", file);
-    });
+    for (let i = 0; i < personalBoardFile.length; i++) {
+      formData.append("personalBoardFileList", personalBoardFile[i]);
+    }
 
+    console.log(personalBoardFile);
+    console.log(personalBoard.personalBoardTitle);
+    console.log(personalBoard.personalBoardContent);
     axios
-      .post(`${backServer}/personalBoard/write`, formData, {
+      .post(`${backServer}/personalBoard`, formData, {
         headers: {
+          contentType: "multipart/form-data",
           processData: false,
         },
       })
@@ -73,7 +77,6 @@ const PersonalBoardWrite = () => {
     <div className="write-section">
       <div className="page-title">1대1문의 작성하기</div>
       <form
-        encType="multipart/form-data"
         onSubmit={(e) => {
           e.preventDefault();
           writePersonalBoard();

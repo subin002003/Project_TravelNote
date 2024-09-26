@@ -6,7 +6,7 @@ npm install recoil
 2024-09-19 16:40 채예원
 npm install react-datepicker date-fns
 
-2024-09-10 오후 03:19 - 오건하
+2024-09-10 15:19 - 오건하
 npm install sweetalert2
 
 
@@ -27,3 +27,7 @@ npm install @toast-ui/react-editor --force
 
 2024-09-23 오전 10:47 이수빈
 npm install @mui/material @emotion/react @emotion/styled --force
+
+2024-09-26 13:35 오건하
+npm install --% @channel.io/channel-web-sdk-loader --force
+npm install --% @channel.io/channel-web-sdk-loader --legacy-peer-deps

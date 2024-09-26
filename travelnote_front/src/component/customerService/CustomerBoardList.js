@@ -1,16 +1,24 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { userTypeState } from "../utils/RecoilData";
+import {
+  loginEmailState,
+  userNickState,
+  userTypeState,
+} from "../utils/RecoilData";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import PageNavi from "../utils/PagiNavi";
 
 const CustomerBoardList = () => {
   const [userType, setUserType] = useRecoilState(userTypeState);
+  const [userNick, setUserNick] = useRecoilState(userNickState);
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const [pi, setPi] = useState({});
+  const [personalBoardPi, setPersonalBoardPi] = useState({});
   const [faqBoardList, setFaqBoardList] = useState([]);
   const [reqPage, setReqPage] = useState(1);
+  const [personalBoardReqPage, setPerosnalBoardReqPage] = useState(1);
+  const [personalBoardList, setPersonaBoardList] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
     axios
@@ -23,7 +31,17 @@ const CustomerBoardList = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [reqPage]);
+    axios
+      .get(`${backServer}/personalBoard/list${personalBoardReqPage}`, userNick)
+      .then((res) => {
+        console.log(res);
+        setPersonaBoardList(res.data.list);
+        setPersonalBoardPi(res.data.pi);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [reqPage, personalBoardReqPage]);
 
   const navigatePersonalBoardWrite = () => {
     navigate("/customerService/personalBoardWrite");

@@ -8,7 +8,7 @@ import {
   userTypeState,
 } from "../utils/RecoilData";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "./images/mainImage/logo2.jpg";
 
 const Header = () => {
@@ -84,6 +84,14 @@ const HeaderLink = () => {
   const [userType, setUserType] = useRecoilState(userTypeState);
   const [userNick, setUserNick] = useRecoilState(userNickState);
   const isLogin = useRecoilValue(isLoginState);
+
+  const [isRendered, setIsRendered] = useState(false); // 렌더링 여부
+
+  useEffect(() => {
+    if (isLogin) {
+      setIsRendered(true);
+    }
+  }, [isLogin]);
   const logout = () => {
     setLoginEmail("");
     setUserType(0);

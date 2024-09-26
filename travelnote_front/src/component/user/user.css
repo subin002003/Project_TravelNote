@@ -26,6 +26,7 @@
 
 .page-title {
   text-align: center;
+  margin: 0 auto;
   font-family: "TTLaundryGothicB";
 }
 .join-frm {
@@ -202,6 +203,7 @@
   display: flex;
   align-items: center;
   height: 100%;
+  margin-bottom: 30px;
 }
 
 .mypage-side-menu {

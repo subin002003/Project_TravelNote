@@ -1,13 +1,23 @@
 package kr.co.iei.personalboard.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,28 +43,18 @@ public class PersonalBoardController {
 	@Value("${file.root}")
 	public String root;
 	
-	@PostMapping(value = "/write", consumes = "multipart/form-data")
-	public ResponseEntity<Integer> writePersonalBoard(
-	        @ModelAttribute PersonalBoardDTO personalBoard, 
-	        @RequestParam("personalBoardFileList") MultipartFile[] personalBoardFile) {
-
-	    List<PersonalBoardFileDTO> personalBoardFileList = new ArrayList<>();
-	    if (personalBoardFile != null && personalBoardFile.length > 0) {
-	        String savepath = root + "/board/";
-	        for (MultipartFile file : personalBoardFile) {
-	            if (!file.isEmpty()) {
-	                PersonalBoardFileDTO personalBoardFileDTO = new PersonalBoardFileDTO();
-	                String filename = file.getOriginalFilename();
-	                String filepath = fileUtil.upload(savepath, file);
-	                personalBoardFileDTO.setPersonalBoardFilename(filename);
-	                personalBoardFileDTO.setPersonalBoardFilepath(filepath);
-	                personalBoardFileList.add(personalBoardFileDTO);
-	            }
-	        }
-	    }
-
-	    int result = personalBoardService.insertPersonalBoard(personalBoard, personalBoardFileList);
-	    return ResponseEntity.ok(result);
+	@PostMapping
+	public ResponseEntity<Boolean> insertBoard(@ModelAttribute PersonalBoardDTO board, 
+	                                           @ModelAttribute MultipartFile[] personalBoardFileList) {
+		System.out.println(board);
+		System.out.println(personalBoardFileList);
+	    return ResponseEntity.ok(true);
+	}
+	
+	@GetMapping(value = "/list/{personalBoardReqPage}")
+	public ResponseEntity<Map> list(@PathVariable int personalBoardReqPage, @RequestBody String userEmail){
+		Map map = personalBoardService.selectBoardList(personalBoardReqPage, userEmail);
+		return ResponseEntity.ok(map);
 	}
 
 }
