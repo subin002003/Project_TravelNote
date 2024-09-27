@@ -369,7 +369,6 @@ const ReviewItem = (props) => {
   const [reviewLikeCount, setReviewLikeCount] = useState(
     review.reviewLikeCount
   ); // 좋아요 수
-
   const newLikeState = reviewLike ? 0 : 1; // 좋아요 상태를 토글
   const newCount = reviewLike ? reviewLikeCount - 1 : reviewLikeCount + 1; // 좋아요 수 업데이트
 

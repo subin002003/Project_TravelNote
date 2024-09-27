@@ -1,6 +1,16 @@
 .board-wrap {
   margin: 100px 400px;
 }
+.board-title {
+  font-size: 50px;
+  margin: 5px;
+  padding: 0px;
+}
+.board-horizontal-between-space {
+  display: flex;
+  justify-content: space-between; /* 첫 요소와 끝 요소를 양쪽 끝으로 배치 */
+  align-items: center; /* 수직 정렬 */
+}
 .boardList-table-no-border {
   border-collapse: collapse;
   border: none;
@@ -20,8 +30,22 @@
   cursor: pointer;
   text-decoration: underline;
 }
-.board-button-link {
+.board-button-link-write {
   margin-right: 330px;
+  margin-bottom: 10px;
+  background-color: #47b5ff; /* 버튼 배경색 */
+  color: #fff; /* 글자색 */
+  text-decoration: none; /* 텍스트 장식 제거 */
+  border-radius: 5px; /* 모서리 둥글게 */
+  transition: background-color 0.3s; /* 배경색 변화 애니메이션 */
+  padding: 10px 20px;
+  font-size: 20px;
+}
+.board-button-link-write:hover {
+  background-color: #1363df; /* hover 시 색상 변경 */
+}
+.board-button-link-view-update {
+  margin-right: 10px;
   margin-bottom: 10px;
   background-color: #47b5ff; /* 버튼 배경색 */
   color: #fff; /* 글자색 */
@@ -31,6 +55,76 @@
   padding: 10px 20px;
   font-size: 30px;
 }
-.board-button-link:hover {
+.board-button-link-view-update:hover {
   background-color: #1363df; /* hover 시 색상 변경 */
+}
+.board-button-link-view-delete {
+  margin-bottom: 10px;
+  background-color: #47b5ff; /* 버튼 배경색 */
+  color: #fff; /* 글자색 */
+  text-decoration: none; /* 텍스트 장식 제거 */
+  border-radius: 5px; /* 모서리 둥글게 */
+  transition: background-color 0.3s; /* 배경색 변화 애니메이션 */
+  padding: 10px 20px;
+  font-size: 30px;
+}
+.board-button-link-view-delete:hover {
+  background-color: #1363df; /* hover 시 색상 변경 */
+}
+.board-button-link-report {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  background-color: #47b5ff; /* 버튼 배경색 */
+  color: #fff; /* 글자색 */
+  text-decoration: none; /* 텍스트 장식 제거 */
+  border-radius: 5px; /* 모서리 둥글게 */
+  transition: background-color 0.3s; /* 배경색 변화 애니메이션 */
+  padding: 10px 20px;
+  font-size: 30px;
+}
+.board-button-link-report:hover {
+  background-color: #1363df; /* hover 시 색상 변경 */
+}
+.board-button-link-regist {
+  margin: 30px auto;
+  background-color: #47b5ff; /* 버튼 배경색 */
+  color: #fff; /* 글자색 */
+  text-decoration: none; /* 텍스트 장식 제거 */
+  border-radius: 5px; /* 모서리 둥글게 */
+  transition: background-color 0.3s; /* 배경색 변화 애니메이션 */
+  padding: 20px 40px;
+  font-size: 25px;
+}
+.board-button-link-regist:hover {
+  background-color: #1363df; /* hover 시 색상 변경 */
+}
+.board-button-link-update {
+  margin: 30px auto;
+  background-color: #47b5ff; /* 버튼 배경색 */
+  color: #fff; /* 글자색 */
+  text-decoration: none; /* 텍스트 장식 제거 */
+  border-radius: 5px; /* 모서리 둥글게 */
+  transition: background-color 0.3s; /* 배경색 변화 애니메이션 */
+  padding: 20px 40px;
+  font-size: 25px;
+}
+.board-button-link-update:hover {
+  background-color: #1363df; /* hover 시 색상 변경 */
+}
+.board-table-bordor-none {
+  border-collapse: collapse; /* 셀 간의 간격을 없앰 */
+  text-align: right;
+}
+
+.board-table-bordor-none th,
+.board-table-bordor-none td {
+  border: none;
+  padding: 5px;
+}
+.board-center {
+  display: flex;
+  align-items: center; /* 수직 정렬 */
+}
+.board-center p {
+  margin: 0 10px; /* 카테고리와 첨부파일 간의 간격 */
 }

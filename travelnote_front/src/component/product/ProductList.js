@@ -18,11 +18,13 @@ const ProductList = () => {
   const [pi, setPi] = useState({});
   // 로그인 회원 정보
   const isLogin = useRecoilValue(isLoginState);
+  const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
+  const userEmail = loginEmail;
   const [userType, setUserType] = useRecoilState(userTypeState);
 
   useEffect(() => {
     axios
-      .get(`${backServer}/product/list/${reqPage}`)
+      .get(`${backServer}/product/list/${reqPage}/${userEmail}`)
       .then((res) => {
         console.log(res.data);
         setProductList(res.data.list);
@@ -66,10 +68,14 @@ const ProductItem = (props) => {
   const productNo = product.productNo;
   const userEmail = loginEmail;
   const navigate = useNavigate();
+
+  // 상품의 좋아요 상태와 좋아요 수
   const [productLike, setProductLike] = useState(product.productLike === 1); // 좋아요 상태 (1: 좋아요, 0: 비활성화)
   const [productLikeCount, setProductLikeCount] = useState(
     product.productLikeCount
   ); // 좋아요 수
+  const newLikeState = productLike ? 0 : 1; // 좋아요 상태를 토글
+  const newCount = productLike ? productLikeCount - 1 : productLikeCount + 1; // 좋아요 수 업데이트
 
   // console.log(isLogin);
   // console.log(loginEmail);
@@ -143,8 +149,12 @@ const ProductItem = (props) => {
             }
           />
         </div>
-        <div className="like-icon" onClick={handleLikeToggle}>
-          <span className={productLike ? "like-checked" : "like-unchecked"}>
+        <div className="like-icon-box" onClick={handleLikeToggle}>
+          <span
+            className={
+              productLike ? "product-like-checked" : "product-like-unchecked"
+            }
+          >
             <i
               className={
                 productLike ? "fa-solid fa-heart" : "fa-regular fa-heart"
@@ -154,9 +164,7 @@ const ProductItem = (props) => {
           {/* 좋아요 수 출력 */}
           <span className="productLikeCount">{productLikeCount}</span>
         </div>
-        <span className="price">
-          {product.productPrice.toLocaleString()} 원
-        </span>
+        <span className="price">{product.productPrice.toLocaleString()}원</span>
       </div>
       <div className="clear"></div>
     </li>

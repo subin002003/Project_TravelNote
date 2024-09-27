@@ -59,8 +59,9 @@ const Main = () => {
     const fetchWeather = async () => {
       try {
         const response = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${locations[currentIndex].name}&appid=${API_KEYS.weather}&units=metric`
+          `/api/data/2.5/weather?q=${locations[currentIndex].name}&appid=${API_KEYS.weather}&units=metric`
         );
+
         setWeather(response.data);
       } catch (error) {
         console.error("날씨 정보를 가져오는 중 오류 발생:", error);

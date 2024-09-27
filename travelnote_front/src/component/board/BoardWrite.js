@@ -13,16 +13,21 @@ const BoardWrite = () => {
   //글 작성 시 전송할 데이터 선언
   const [userNick, setUserNick] = useRecoilState(userNickState); // 로그인한 회원 이메일 값(입력할게 아니기때문에 state 사용 x , 변수로만 사용);
   const [boardTitle, setBoardTitle] = useState(""); //사용자가 입력할 제목
+  const [boardCategory, setBoardCategory] = useState(""); // 사용자가 입력할 카테고리
   const [boardContent, setBoardContent] = useState(""); //사용자가 입력할 내용
   const [boardFile, setBoardFile] = useState([]); //첨부파일(여러개일수 있으므로 배열로 처리)
   const inputTitle = (e) => {
     setBoardTitle(e.target.value);
+  };
+  const inputCategory = (e) => {
+    setBoardCategory(e.target.value);
   };
 
   const writeBoard = () => {
     if (boardTitle !== "" && boardContent !== "") {
       const form = new FormData();
       form.append("boardTitle", boardTitle);
+      form.append("boardCategory", boardCategory);
       form.append("boardContent", boardContent);
       form.append("boardWriter", userNick);
       //첨부파일도 추가한 경우에만 등록(첨부파일은 여러개가 같은 name으로 전송)
@@ -55,8 +60,10 @@ const BoardWrite = () => {
   };
 
   return (
-    <section>
-      <div>자유게시판 작성페이지</div>
+    <section className="board-wrap">
+      <div className="board-title" style={{ padding: "10px" }}>
+        자유게시판 작성
+      </div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -67,6 +74,8 @@ const BoardWrite = () => {
           userNick={userNick}
           boardTitle={boardTitle}
           setBoardTitle={inputTitle}
+          boardCategory={boardCategory}
+          setBoardCategory={inputCategory}
           boardFile={boardFile}
           setBoardFile={setBoardFile}
         />
@@ -77,8 +86,10 @@ const BoardWrite = () => {
             type={0}
           />
         </div>
-        <div>
-          <button type="submit">등록하기</button>
+        <div style={{ textAlign: "center" }}>
+          <button type="submit" className="board-button-link-regist">
+            등록
+          </button>
         </div>
       </form>
     </section>
