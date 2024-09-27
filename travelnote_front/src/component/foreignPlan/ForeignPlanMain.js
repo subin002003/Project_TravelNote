@@ -11,6 +11,7 @@ import { getDate, getMonth, getYear } from "date-fns";
 import ForeignPlanList from "./ForeignPlanList";
 import ForeignPlanSearch from "./ForeignPlanSearch";
 import ForeignRegionInfo from "./ForeignRegionInfo";
+import ForeignPlanMap from "./ForeignPlanMap";
 
 // path: foreign/plan/:itineraryNo
 const ForeignPlanMain = () => {
@@ -64,13 +65,8 @@ const ForeignPlanMain = () => {
         planPageOption={planPageOption}
         setPlanPageOption={setPlanPageOption}
       />
-      {planPageOption === 1 ? (
-        <ForeignRegionInfo itineraryNo={itineraryNo} />
-      ) : (
-        <ForeignPlanSearch itineraryNo={itineraryNo} />
-      )}
-
-      <div className="plan-map-wrap">3</div>
+      {planPageOption === 1 ? <ForeignRegionInfo /> : <ForeignPlanSearch />}
+      <ForeignPlanMap />
     </div>
   );
 };

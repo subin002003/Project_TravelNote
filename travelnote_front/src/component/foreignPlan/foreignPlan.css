@@ -382,3 +382,14 @@
   height: 40px;
   box-sizing: border-box;
 }
+
+/* ForeignPlanMap */
+.plan-map-wrap {
+  height: 700px;
+  padding: 0 10px;
+}
+.foreign-map {
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+}
