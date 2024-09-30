@@ -159,6 +159,68 @@ const BoardView = () => {
             ""
           )}
         </div>
+        <div
+          style={{
+            borderTop: "1px solid black",
+            // 상단, 우측, 하단, 좌측 여백
+            margin: "20px 0px 40px 0px",
+            width: "100%",
+          }}
+        ></div>
+        <h1 style={{ margin: "0" }}>댓글</h1>
+        <div>
+          <input
+            type="text"
+            id="input"
+            placeholder="댓글을 작성해주세요."
+            style={{
+              padding: "20px",
+              width: "1000px",
+              border: "none",
+              outline: "none",
+              borderBottom: "1px solid black",
+            }}
+          ></input>
+          <button
+            type="button"
+            onClick={deleteBoard}
+            className="board-button-link-view-delete"
+            style={{ margin: "15px", width: "100px" }}
+          >
+            등록
+          </button>
+        </div>
+        {/* 댓글 추가 등록 시 */}
+        <div>
+          <div style={{ display: "flex", margin: "20px" }}>
+            <p style={{ marginRight: "15px", fontWeight: "bold" }}>닉네임1</p>
+            <p>2024-09-30</p>
+          </div>
+          <div style={{ display: "flex", margin: "20px" }}>
+            <input
+              type="text"
+              id="input"
+              placeholder="댓글 내용"
+              style={{
+                padding: "20px",
+                width: "1400px",
+                border: "none",
+                outline: "none",
+              }}
+            ></input>
+            <p style={{ margin: "20px", fontWeight: "bold" }}>수정</p>
+            <p style={{ margin: "20px", fontWeight: "bold" }}>삭제</p>
+          </div>
+
+          <div
+            style={{
+              borderTop: "1px solid black",
+              // 상단, 우측, 하단, 좌측 여백
+              margin: "20px 0px 40px 0px",
+              width: "100%",
+            }}
+          ></div>
+        </div>
       </div>
     </section>
   );
