@@ -26,7 +26,12 @@ const ForeignPlanMain = () => {
   const [planDays, setPlanDays] = useState([]); // 현재 조회 중인 날 기준으로 보여주는 날짜 배열
   const [planList, setPlanList] = useState([]); // 해당 날짜의 일정 배열
   const [selectedDay, setSelectedDay] = useState(1); // 현재 조회 중인 날 (기본 1로 세팅)
-  const [planPageOption, setPlanPageOption] = useState(1); // 조회 페이지 옵션 (1 조회, 2 수정)
+  const [planPageOption, setPlanPageOption] = useState(2); // 조회 페이지 옵션 (1 조회, 2 수정)
+  const [searchInput, setSearchInput] = useState("");
+  const [map, setMap] = useState();
+  const [regionInfo, setRegionInfo] = useState({});
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchPlaceList, setSearchPlaceList] = useState([]);
 
   // 일정 정보 조회
   useEffect(() => {
@@ -54,6 +59,20 @@ const ForeignPlanMain = () => {
       });
   }, []);
 
+  // 지역 정보 조회
+  useEffect(() => {
+    if (itinerary.regionNo > 0) {
+      axios
+        .get(`${backServer}/foreign/regionInfo/${itinerary.regionNo}`)
+        .then((res) => {
+          setRegionInfo(res.data);
+          setSearchKeyword("");
+          setSearchInput("");
+        })
+        .catch((err) => {});
+    }
+  }, [itinerary]);
+
   return (
     <div className="plan-view-wrap">
       <ForeignPlanList
@@ -65,8 +84,24 @@ const ForeignPlanMain = () => {
         planPageOption={planPageOption}
         setPlanPageOption={setPlanPageOption}
       />
-      {planPageOption === 1 ? <ForeignRegionInfo /> : <ForeignPlanSearch />}
-      <ForeignPlanMap />
+      {planPageOption === 1 ? (
+        <ForeignRegionInfo />
+      ) : (
+        <ForeignPlanSearch
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
+          searchKeyword={searchKeyword}
+          setSearchKeyword={setSearchKeyword}
+          searchPlaceList={searchPlaceList}
+        />
+      )}
+      <ForeignPlanMap
+        map={map}
+        setMap={setMap}
+        regionInfo={regionInfo}
+        searchKeyword={searchKeyword}
+        setSearchPlaceList={setSearchPlaceList}
+      />
     </div>
   );
 };

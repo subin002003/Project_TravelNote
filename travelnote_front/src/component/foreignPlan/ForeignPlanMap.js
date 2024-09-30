@@ -1,20 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-const ForeignPlanMap = () => {
+const ForeignPlanMap = (props) => {
+  const { map, setMap, regionInfo, searchKeyword, setSearchPlaceList } = props;
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-  const [map, setMap] = useState();
+  const mapRef = useRef(null);
 
-  const setGoogleMap = () => {
-    const googleMap = new window.google.maps.Map(
-      document.getElementById("google-map"),
-      {
-        center: { lat: -34.397, lng: 150.644 }, // 초기 중심 좌표
-        zoom: 12,
-      }
-    );
-    setMap(googleMap);
-  };
-
+  // 구글 지도 스크립트 추가
   useEffect(() => {
     const script = document.createElement("script");
     script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places`;
@@ -27,46 +18,68 @@ const ForeignPlanMap = () => {
     };
   }, [googleMapsApiKey]);
 
-  // 장소 검색
-  const searchPlaces = (searchInput) => {
-    if (!map) return;
+  // 지도 세팅
+  const setGoogleMap = () => {
+    const googleMap = new window.google.maps.Map(mapRef.current, {
+      center: {
+        lat: Number(regionInfo.regionLatitude),
+        lng: Number(regionInfo.regionLongitude),
+      },
+      zoom: 13,
+    });
+    setMap(googleMap);
+  };
 
-    const placeService = new window.google.maps.places.PlacesService(map);
+  // 지역 정보 조회되면 지도 중심 설정
+  useEffect(() => {
+    if (!map) return;
+    map.setCenter({
+      lat: Number(regionInfo.regionLatitude),
+      lng: Number(regionInfo.regionLongitude),
+    });
+  }, [regionInfo]);
+
+  // 장소 검색
+  useEffect(() => {
+    if (!map || !searchKeyword) return;
+    // 서비스 객체
+    const mapService = new window.google.maps.places.PlacesService(map);
+
+    // 요청 객체
     const request = {
-      query: searchInput,
-      fields: ["name", "geometry"],
+      location: {
+        lat: Number(regionInfo.regionLatitude),
+        lng: Number(regionInfo.regionLongitude),
+      },
+      radius: 500,
+      query: searchKeyword,
+      fields: ["name", "geometry", "place_id", "formatted_address", "photos"],
+      language: "ko",
     };
 
-    placeService.findPlaceFromQuery(request, (results, status) => {
+    mapService.textSearch(request, (resultList, status) => {
       if (
         status === window.google.maps.places.PlacesServiceStatus.OK &&
-        results
+        resultList
       ) {
-        // 결과가 있을 때
-        results.forEach((place) => {
+        resultList.forEach((place) => {
           new window.google.maps.Marker({
             position: place.geometry.location,
             map: map,
-            title: place.name,
           });
         });
-        // 첫 번째 장소로 지도를 이동
-        map.setCenter(results[0].geometry.location);
+
+        map.setCenter(resultList[0].geometry.location);
+        map.setZoom(15);
+        console.log(resultList.length);
+        setSearchPlaceList(resultList);
       }
     });
-  };
-
-  // 마커 추가하는 방법
-  // const addMarker = (lat, lng) => {
-  //   const marker = new window.google.maps.Marker({
-  //     position: { lat, lng },
-  //     map: map,
-  //   });
-  // };
+  }, [searchKeyword]);
 
   return (
     <div className="plan-map-wrap">
-      <div id="google-map" className="foreign-map" />
+      <div className="foreign-map" ref={mapRef} />
     </div>
   );
 };

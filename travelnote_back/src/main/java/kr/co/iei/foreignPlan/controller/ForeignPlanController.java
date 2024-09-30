@@ -42,8 +42,8 @@ public class ForeignPlanController {
 	}
 	
 	// 여행지 정보 조회
-	@GetMapping(value="/view/{regionNo}")
-	public ResponseEntity<ForeignRegionDTO> view(@PathVariable int regionNo) {
+	@GetMapping(value="/regionInfo/{regionNo}")
+	public ResponseEntity<ForeignRegionDTO> regionInfo(@PathVariable int regionNo) {
 		ForeignRegionDTO region = foreignPlanService.selectOneRegion(regionNo);
 		return ResponseEntity.ok(region);
 	}
@@ -51,7 +51,6 @@ public class ForeignPlanController {
 	// 여행 일정 생성
 	@PostMapping(value="/createItinerary")
 	public ResponseEntity<Integer> createItinerary(@RequestBody ForeignItineraryDTO itinerary) {
-		System.out.println(itinerary);
 		int itineraryNo = foreignPlanService.insertItinerary(itinerary);
 		return ResponseEntity.ok(itineraryNo);
 	}
@@ -73,11 +72,10 @@ public class ForeignPlanController {
 	// 배열 받아 메모, 시간 수정
 	@PatchMapping(value="/editPlanInfo")
 	public ResponseEntity<Boolean> editPlanInfo(@RequestBody String planListStr) {
-		System.out.println(planListStr);
 		boolean result = foreignPlanService.updatePlanInfo(planListStr);
-		System.out.println(result);
 		return ResponseEntity.ok(result);
 	}
 	
+
 	
 }

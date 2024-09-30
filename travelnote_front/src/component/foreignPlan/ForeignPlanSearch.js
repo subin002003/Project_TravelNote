@@ -3,15 +3,30 @@ import ForeignPlaceItem from "./ForeignPlaceItem";
 import axios from "axios";
 
 const ForeignPlanSearch = (props) => {
-  const { itineraryNo } = props;
+  const {
+    itineraryNo,
+    searchInput,
+    setSearchInput,
+    searchKeyword,
+    setSearchKeyword,
+    searchPlaceList,
+  } = props;
   const [category, setCategory] = useState(2); // 1이면 항공편, 2면 장소
-  const [searchInput, setSearchInput] = useState();
-  const [placeList, setPlaceList] = useState([]);
 
   // 목록 조회
 
+  const changeSearchInput = (e) => {
+    setSearchInput(e.target.value);
+    if (e.keyCode === 13) {
+      document.getElementById("search-button").click();
+    }
+  };
+
   // 버튼 클릭 시 검색
-  const searchKeyword = () => {};
+  const search = () => {
+    if (searchInput.trim() === "") return;
+    setSearchKeyword(searchInput.trim());
+  };
 
   return (
     <div className="plan-search-wrap">
@@ -39,17 +54,24 @@ const ForeignPlanSearch = (props) => {
         <input
           placeholder="검색어를 입력해 주세요."
           value={searchInput}
-          onChange={(e) => {
-            setSearchInput(e.target.value);
-          }}
+          onChange={changeSearchInput}
+          onKeyUp={changeSearchInput}
         ></input>
-        <button onClick={searchKeyword}>검색</button>
+        <button onClick={search} id="search-button">
+          검색
+        </button>
       </div>
       <div className="place-list-box">
         <div className="place-list">
-          {placeList.length > 0 ? (
-            placeList.map((place, index) => {
-              return <ForeignPlaceItem place={place} index={index} />;
+          {searchPlaceList.length > 0 ? (
+            searchPlaceList.map((place, index) => {
+              return (
+                <ForeignPlaceItem
+                  key={"foreign-place-item-" + index}
+                  place={place}
+                  index={index}
+                />
+              );
             })
           ) : (
             <h5>등록된 추천 장소가 없어요.</h5>

@@ -31,7 +31,7 @@ const ItineraryForm = () => {
   // 지역 정보 조회
   useEffect(() => {
     axios
-      .get(`${backServer}/foreign/view/${regionNo}`)
+      .get(`${backServer}/foreign/regionInfo/${regionNo}`)
       .then((res) => {
         setRegion(res.data);
       })
@@ -79,7 +79,7 @@ const ItineraryForm = () => {
       obj.itineraryStartDate = itineraryStartDate;
       obj.itineraryEndDate = itineraryEndDate;
       if (itineraryTitle === "") {
-        obj.itineraryTitle = `${region.regionName}으로 떠나는 여행`;
+        obj.itineraryTitle = `${region.regionName}에 갑니다!`;
       } else {
         obj.itineraryTitle = itineraryTitle.trim();
       }
@@ -150,7 +150,7 @@ const ItineraryForm = () => {
                 name="itineraryTitle"
                 value={itineraryTitle}
                 onChange={changeInput}
-                placeholder={region.regionName + "로 떠나는 여행"}
+                placeholder={region.regionName + "에 갑니다!"}
               ></input>
             </div>
             <div className="itinerary-input-item">

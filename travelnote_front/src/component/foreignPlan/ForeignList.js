@@ -180,7 +180,6 @@ const Region = (props) => {
 
   // 클릭 시 여행 일정 생성으로 이동
   const createItinerary = () => {
-    console.log(isLogin);
     if (isLogin) {
       navigate(`/foreign/createItinerary/${region.regionNo}`);
     } else {
