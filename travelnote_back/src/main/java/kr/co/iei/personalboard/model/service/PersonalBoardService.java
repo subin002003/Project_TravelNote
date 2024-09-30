@@ -18,8 +18,12 @@ public class PersonalBoardService {
 	
 	@Transactional
 	public int insertPersonalBoard(PersonalBoardDTO personalBoard, List<PersonalBoardFileDTO> personalBoardFileList) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = personalBoardDao.insertPersonalBoard(personalBoard);
+		for(PersonalBoardFileDTO personalBoardFile : personalBoardFileList) {
+			personalBoardFile.setPersonalBoardNo(personalBoard.getPersonalBoardNo());
+			result += personalBoardDao.insertPersonalBoardFile(personalBoardFile);
+		}
+		return result;
 	}
 
 	public Map selectBoardList(int personalBoardReqPage, String userNick) {

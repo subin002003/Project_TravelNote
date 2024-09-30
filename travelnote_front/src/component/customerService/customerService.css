@@ -64,7 +64,7 @@
   width: 100%;
   min-height: 600px;
   padding: 10px;
-  font-size: 16px;
+  font-size: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   resize: vertical; /* 세로로만 크기 조정 가능 */
@@ -137,14 +137,14 @@ td {
   justify-content: space-between;
 }
 .personalboard-write-btn {
-  width: 40%;
+  width: 45%;
   height: 250px;
   background-color: var(--sub-color);
   border-radius: 10px;
   line-height: 250px;
 }
 .personalboard-list {
-  width: 40%;
+  width: 45%;
   height: 250px;
   background-color: var(--sub-color);
   border-radius: 10px;
@@ -217,4 +217,8 @@ td {
   image-rendering: auto;
   image-rendering: crisp-edges;
   image-rendering: pixelated;
+}
+
+.personalboard-list > table {
+  width: 100%;
 }

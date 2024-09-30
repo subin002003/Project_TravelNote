@@ -91,7 +91,17 @@ const CustomerBoardList = () => {
               1대1 문의 작성하기
             </button>
           </div>
-          <div className="personalboard-list"></div>
+          <div className="personalboard-list">
+            <table>
+              <tbody>
+                <tr style={{ height: "50px" }}>
+                  <th style={{ width: "55%" }}>제목</th>
+                  <th style={{ width: "20%" }}>작성일</th>
+                  <th style={{ width: "25%" }}>답변여부</th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

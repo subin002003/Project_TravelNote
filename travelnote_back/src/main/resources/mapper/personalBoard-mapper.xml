@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.iei.personalboard.model.dao.PersonalBoardDao">
+	<insert id="insertPersonalBoard">
+		insert into personal_board values(personal_board_seq.nextval, #{personalBoardTitle}, #{personalBoardContent}, #{personalBoardWriter},sysdate,null,'N' )
+		<selectKey resultType="int" keyProperty="personalBoardNo" order="AFTER">
+			select max(personal_board_no) from personal_board
+		</selectKey>
+	</insert>
+	<insert id="insertPersonalBoardFile">
+		insert into personal_board_file values(personal_board_file_seq.nextval, #{personalBoardNo}, #{personalBoardFilename}, #{personalBoardFilepath})
+	</insert>
+</mapper>

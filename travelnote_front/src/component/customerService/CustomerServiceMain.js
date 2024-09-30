@@ -13,8 +13,8 @@ import { useEffect } from "react";
 import CustomerBoardWrite from "./CustomerBoardWrite";
 import CustomerBoardView from "./CustomerBoardView";
 import CustomerBoardUpdate from "./CustmerBoardUpdate";
-import PersonalBoardWrite from "./PersonalBoardWrite";
 import ChannelTalk from "./ChannelTalk";
+import PersonalBoardWrite from "./PersonalBoardWrite";
 
 const CustomerServiceMain = () => {
   const navigate = useNavigate();
