@@ -22,6 +22,7 @@ public class BoardDTO {
 	private int boardReadCount;
 	private int boardStatus;
 	private int boardType;
+	private int likeCount;
 	private List<BoardFileDTO> fileList;
 	private int[] delBoardFileNo;
 }

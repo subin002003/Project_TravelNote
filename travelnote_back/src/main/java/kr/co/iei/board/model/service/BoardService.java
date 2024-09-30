@@ -93,8 +93,30 @@ public class BoardService {
 		return null;
 	}
 	
+	public boolean addLike(String userNick, int boardNo) {
+        // 좋아요 추가 로직
+        int result = boardDao.insertLike(userNick, boardNo);
+        // 좋아요 수 증가
+        if (result > 0) {
+            boardDao.incrementLikeCount(boardNo);
+            return true;
+        }
+        return false;
+    }
+	
+	public boolean removeLike(String userNick, int boardNo) {
+        // 좋아요 제거 로직
+        int result = boardDao.deleteLike(userNick, boardNo);
+        // 좋아요 수 감소
+        if (result > 0) {
+            boardDao.decrementLikeCount(boardNo);
+            return true;
+        }
+        return false;
+	}
+	
+	
 }
-
 
 
 

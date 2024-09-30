@@ -14,7 +14,8 @@
 	  				board_title,
 	  				board_category,
 	  				to_char(board_date,'yyyy-mm-dd') as board_date,
-	  				board_readCount 
+	  				board_readCount,
+	  				like_count
 	  				from board where board_status = 1 and board_type = 1 order by board_no desc)b) 
 	  				where rnum between #{start} and #{end}
   	</select>
@@ -38,6 +39,7 @@
 			board_status,
 			board_readCount,
 			board_category,
+			like_count,
 			to_char(board_date,'yyyy-mm-dd') as board_date
 		from board where board_no=#{boardNo}
 	</select>
@@ -54,6 +56,7 @@
 	<result column="board_date" property="boardDate"/>
 	<result column="board_readCount" property="boardReadCount"/>
 	<result column="board_category" property="boardCategory"/>
+	<result column="like_count" property="likeCount"/>
 	<collection property="fileList"
 		 select="selectOneBoardFileList"
 		 column="board_no"
@@ -93,6 +96,32 @@
 			#{boardFileNo}
 		</foreach>
 	</delete>
+	
+	<!-- 좋아요 -->
+	<insert id="insertLike">
+        INSERT INTO board_like (user_nick, board_no)
+        VALUES (#{userNick}, #{boardNo})
+    </insert>
+
+    <delete id="deleteLike">
+        DELETE FROM board_like
+        WHERE user_nick = #{userNick} AND board_no = #{boardNo}
+    </delete>
+
+    <update id="incrementLikeCount">
+        UPDATE board
+        SET like_count = like_count + 1
+        WHERE board_no = #{boardNo}
+    </update>
+
+    <update id="decrementLikeCount">
+        UPDATE board
+        SET like_count = like_count - 1
+        WHERE board_no = #{boardNo}
+    </update>
+	
+	
+	
 </mapper>
 
 

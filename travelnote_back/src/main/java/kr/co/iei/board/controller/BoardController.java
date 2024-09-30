@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,12 +24,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.iei.board.model.dto.BoardDTO;
 import kr.co.iei.board.model.dto.BoardFileDTO;
+
 import kr.co.iei.board.model.service.BoardService;
 import kr.co.iei.util.FileUtils;
 
@@ -44,6 +48,8 @@ public class BoardController {
 	
 	@Value("${file.root}")
 	public String root;
+	
+	
 	
 	@GetMapping(value = "/list/{reqPage}")
 	public ResponseEntity<Map> list(@PathVariable int reqPage){
@@ -147,6 +153,31 @@ public class BoardController {
 			return ResponseEntity.ok(false);
 		}
 	}
+	
+	@PostMapping("/like/{boardNo}")
+    public ResponseEntity<Map<String, Object>> toggleLike(
+        @RequestParam("userNick") String userNick,
+        @PathVariable int boardNo,
+        @RequestParam("action") String action) {
+        System.out.println(userNick);
+        System.out.println(boardNo);
+        boolean success = false;
+        String message = "";
+
+        if ("add".equals(action)) {
+            success = boardService.addLike(userNick, boardNo);
+            message = success ? "좋아요 추가 성공" : "좋아요 추가 실패";
+        } else if ("remove".equals(action)) {
+            success = boardService.removeLike(userNick, boardNo);
+            message = success ? "좋아요 제거 성공" : "좋아요 제거 실패";
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        response.put("message", message);
+
+        return ResponseEntity.ok(response);
+    }
 }
 
 
