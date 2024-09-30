@@ -154,6 +154,7 @@ public class BoardController {
 		}
 	}
 	
+	//좋아요
 	@PostMapping("/like/{boardNo}")
     public ResponseEntity<Map<String, Object>> toggleLike(
     	@PathVariable int boardNo,
@@ -174,6 +175,19 @@ public class BoardController {
         response.put("message", message);
         return ResponseEntity.ok(response);
     }
+	
+	//조회수
+	@GetMapping("/view/{boardNo}")
+	public BoardDTO getBoard(@PathVariable int boardNo) {
+		// 조회수를 증가시키고 게시판 정보를 반환
+		boardService.incrementViewCount(boardNo);
+		return boardService.getBoardById(boardNo);
+	}
+	
+	    
+
+	
+	
 }
 
 

@@ -99,26 +99,37 @@
 	
 	<!-- 좋아요 -->
 	<insert id="insertLike">
-        INSERT INTO board_like (user_nick, board_no)
-        VALUES (#{userNick}, #{boardNo})
+        insert into board_like (user_nick, board_no)
+        values (#{userNick}, #{boardNo})
     </insert>
 
     <delete id="deleteLike">
-        DELETE FROM board_like
-        WHERE user_nick = #{userNick} AND board_no = #{boardNo}
+        delete FROM board_like
+        where user_nick = #{userNick} and board_no = #{boardNo}
     </delete>
 
     <update id="incrementLikeCount">
-        UPDATE board
-        SET like_count = like_count + 1
-        WHERE board_no = #{boardNo}
+        update board
+        set like_count = like_count + 1
+        where board_no = #{boardNo}
     </update>
 
     <update id="decrementLikeCount">
-        UPDATE board
-        SET like_count = like_count - 1
-        WHERE board_no = #{boardNo}
+        update board
+        set like_count = like_count - 1
+        where board_no = #{boardNo}
     </update>
+	
+	<update id="updateViewCount">
+		update board
+		set board_readCount = board_readCount + 1
+		where board_no = #{boardNo}
+	</update>
+	
+	<select id="selectBoardById" resultType="board">
+		select * from board where board_no = #{boardNo}
+	</select>
+	
 	
 	
 	

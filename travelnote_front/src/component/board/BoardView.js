@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { userNickState } from "../utils/RecoilData";
+import { isLoginState, userNickState } from "../utils/RecoilData";
 
 import Swal from "sweetalert2";
 
@@ -29,8 +29,18 @@ const BoardView = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [boardNo]);
+  }, [boardNo]); //boardNo가 바뀔때마다 데이터 가져옴
   const toggleLike = () => {
+    // 로그인 여부 확인
+    if (!isLoginState) {
+      Swal.fire({
+        title: "로그인 필요",
+        text: "좋아요 기능을 사용하려면 로그인하세요.",
+        icon: "warning",
+      });
+      return;
+    }
+
     const action = liked ? "remove" : "add"; // 좋아요 추가 또는 제거
 
     console.log("userNick : ", userNick);
