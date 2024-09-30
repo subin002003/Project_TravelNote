@@ -34,6 +34,7 @@ import {
   loginEmailState,
   userTypeState,
 } from "../utils/RecoilData";
+import Payment from "../pay/TravelReservation";
 
 const ProductView = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -46,7 +47,7 @@ const ProductView = () => {
   const productNo = params.productNo;
   const [product, setProduct] = useState({ fileList: [], reviews: [] });
   const navigate = useNavigate();
-  const [count, setCount] = useState(1); // 초기 수량을 1로 설정
+  const [people, setPeople] = useState(1); // 초기 수량을 1로 설정
   const [dateRange, setDateRange] = useState("여행 날짜를 선택하세요."); // 선택된 날짜 범위를 상태로 관리
   const [openReviewDialog, setOpenReviewDialog] = useState(false); // 다이얼로그 상태
 
@@ -72,6 +73,11 @@ const ProductView = () => {
       });
   }, [backServer, productNo, userEmail, product.reviews]);
 
+  // 날짜 범위 상태
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+  // DatePicker로 선택된 날짜 처리
   const handleDateRangeChange = (startDate, endDate) => {
     if (startDate && endDate) {
       const options = {
@@ -84,12 +90,14 @@ const ProductView = () => {
         "ko-KR",
         options
       );
-      const endFormatted = new Date(startDate).toLocaleDateString(
+      const endFormatted = new Date(endDate).toLocaleDateString(
         "ko-KR",
         options
       );
 
       setDateRange(`선택된 날짜: ${startFormatted} ~ ${endFormatted}`);
+      setStartDate(startDate); // startDate 상태 업데이트
+      setEndDate(endDate); // endDate 상태 업데이트
     }
   };
 
@@ -138,18 +146,18 @@ const ProductView = () => {
   };
 
   const minus = () => {
-    if (count === 1) {
+    if (people === 1) {
       alert("최소 구매 수량은 1개 입니다.");
     } else {
-      setCount((prevCount) => prevCount - 1); // 이전 값을 기반으로 상태 업데이트
+      setPeople((prevCount) => prevCount - 1); // 이전 값을 기반으로 상태 업데이트
     }
   };
 
   const plus = () => {
-    if (count === 10) {
+    if (people === 10) {
       alert("최대 구매 수량은 10개 입니다.");
     } else {
-      setCount((prevCount) => prevCount + 1); // 이전 값을 기반으로 상태 업데이트
+      setPeople((prevCount) => prevCount + 1); // 이전 값을 기반으로 상태 업데이트
     }
   };
 
@@ -230,8 +238,8 @@ const ProductView = () => {
             </button>
             <input
               type="number"
-              id="count"
-              value={count}
+              id="people"
+              value={people}
               style={{
                 margin: "0 7px",
                 // width: "29px",
@@ -257,8 +265,21 @@ const ProductView = () => {
             </p>
           </div>
 
-          <div style={{ padding: "23.5px 0" }} className="btn-primary lg">
-            여행 예약하기
+          <div>
+            <Link
+              to="/travelReservation"
+              onClick={() => {
+                localStorage.setItem("productName", product.productName);
+                localStorage.setItem("startDate", startDate);
+                localStorage.setItem("endDate", endDate);
+                localStorage.setItem("people", people);
+                localStorage.setItem("productPrice", product.productPrice);
+              }}
+              style={{ padding: "23.5px 0", width: "100%", display: "block" }}
+              className="btn-primary lg"
+            >
+              여행 예약하기
+            </Link>
           </div>
         </div>
 
