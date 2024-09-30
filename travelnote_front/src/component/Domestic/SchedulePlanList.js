@@ -112,11 +112,11 @@ const SchedulePlanList = (props) => {
         <h4>
           {itinerary.itineraryStartDate} {itinerary.itineraryEndDate}
         </h4>
+        <h4>{selectedDate}</h4>
       </div>
       <div className="schedule-box">
         {totalPlanDates.length > 0 ? (
           <>
-            <h4>{selectedDate}</h4>
             <SchedulePlanButton
               planDays={planDays}
               selectedDay={selectedDay}
@@ -146,7 +146,7 @@ const SchedulePlanList = (props) => {
                 />
               ))
             ) : (
-              <h3>일정 언젠가는 나오겠지</h3>
+              <h3>일정 </h3>
             )}
           </div>
 

@@ -70,13 +70,17 @@ const Schedule = () => {
     return () => {
       document.body.removeChild(script);
     };
-  }, [googleMapsApiKey, cityCoordinates]);
+  }, [googleMapsApiKey, cityCoordinates]); // cityCoordinates를 의존성에 추가
+
+  useEffect(() => {
+    if (map) {
+      map.setCenter(cityCoordinates); // cityCoordinates가 변경될 때마다 지도 중심 업데이트
+    }
+  }, [map, cityCoordinates]);
 
   useEffect(() => {
     if (map && itinerary[selectedDay]) {
       const { places } = itinerary[selectedDay];
-      map.setCenter(cityCoordinates); // 도시 중심 좌표로 이동
-
       if (map.markers) {
         map.markers.forEach((marker) => marker.setMap(null));
       }
@@ -91,35 +95,35 @@ const Schedule = () => {
         map.markers.push(marker);
       });
     }
-  }, [map, selectedDay, itinerary, cityCoordinates]);
+  }, [map, selectedDay, itinerary]);
 
   useEffect(() => {
     // 도시 이름에 따라 좌표를 설정합니다.
     const cityCoordinatesMap = {
       서울: { lat: 37.5665, lng: 126.978 },
       부산: { lat: 35.1796, lng: 129.0756 },
-      포항: { lat: 129.3434808, lng: 36.0190178 },
-      제주: { lat: 126.5125556, lng: 33.25235 },
-      인천: { lat: 126.7052062, lng: 37.4562557 },
-      강릉: { lat: 128.8784972, lng: 37.74913611 },
-      춘천: { lat: 127.7323111, lng: 37.87854167 },
-      가평: { lat: 127.5117778, lng: 37.82883056 },
-      군산: { lat: 126.7388444, lng: 35.96464167 },
-      경주: { lat: 129.2270222, lng: 35.85316944 },
-      통영: { lat: 128.4352778, lng: 34.85125833 },
-      수원: { lat: 127.0122222, lng: 37.30101111 },
-      목포: { lat: 126.3944194, lng: 34.80878889 },
-      대전: { lat: 127.4548596, lng: 36.31204028 },
-      남원: { lat: 127.3925, lng: 35.41325556 },
-      영월: { lat: 128.4640194, lng: 37.18086111 },
-      여수: { lat: 127.6643861, lng: 34.75731111 },
-      안동: { lat: 128.7316222, lng: 36.56546389 },
-      전주: { lat: 127.1219194, lng: 35.80918889 },
-      제천: { lat: 128.1931528, lng: 37.12976944 },
+      포항: { lat: 36.0190178, lng: 129.3434808 },
+      제주: { lat: 33.25235, lng: 126.5125556 },
+      인천: { lat: 37.4562557, lng: 126.7052062 },
+      강릉: { lat: 37.74913611, lng: 128.8784972 },
+      춘천: { lat: 37.87854167, lng: 127.7323111 },
+      가평: { lat: 37.82883056, lng: 127.5117778 },
+      군산: { lat: 35.96464167, lng: 126.7388444 },
+      경주: { lat: 35.85316944, lng: 129.2270222 },
+      통영: { lat: 34.85125833, lng: 128.4352778 },
+      수원: { lat: 37.30101111, lng: 127.0122222 },
+      목포: { lat: 34.80878889, lng: 126.3944194 },
+      대전: { lat: 36.31204028, lng: 127.4548596 },
+      남원: { lat: 35.41325556, lng: 127.3925 },
+      영월: { lat: 37.18086111, lng: 128.4640194 },
+      여수: { lat: 34.75731111, lng: 127.6643861 },
+      안동: { lat: 36.56546389, lng: 128.7316222 },
+      전주: { lat: 35.80918889, lng: 127.1219194 },
+      제천: { lat: 37.12976944, lng: 128.1931528 },
     };
 
     if (city && cityCoordinatesMap[city]) {
-      setCityCoordinates(cityCoordinatesMap[city]);
+      setCityCoordinates(cityCoordinatesMap[city]); // city에 따라 좌표 설정
     }
   }, [city]);
 
@@ -170,6 +174,7 @@ const Schedule = () => {
         </div>
         <div className="store-list">
           <h4>기차편 일정</h4>
+          <h4>일정 추가</h4>
           <ul>
             {trainSchedules.map((schedule, index) => (
               <li key={index}>
