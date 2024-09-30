@@ -35,7 +35,7 @@ public class DomesticController {
 
     // 여행 일정 저장 
     @PostMapping("/Schedule")
-    public ResponseEntity<Integer> saveItinerary(@ModelAttribute ItineraryDTO itinerary) {
+    public ResponseEntity<Integer> saveItinerary(@RequestBody ItineraryDTO itinerary) {
         int itineraryNo = domesticService.saveItinerary(itinerary);  // 일정 저장
         return ResponseEntity.ok(itineraryNo);
     }
@@ -52,4 +52,10 @@ public class DomesticController {
 		List list = domesticService.selectPlan(itineraryNo, planDay);
 		return ResponseEntity.ok(list);
 	}
+    
+    @PatchMapping(value="/updatePlan")
+    public ResponseEntity<Boolean> updatePlan(@RequestBody String updateList){
+    	boolean result = DomesticService.updatePlan(updateList);
+		return ResponseEntity.ok(result);
+    }
 }
