@@ -113,12 +113,12 @@
   color: var(--main-color);
 }
 .schedule-itinerary {
-  margin: 30px;
-  background-color: #007bff;
+  margin: 20px;
+  border: 2px solid #ccc;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* 상단과 하단의 요소들을 양쪽에 배치 */
-  height: 400px; /* 부모 요소의 전체 높이를 차지 */
+  justify-content: space-between;
+  height: 400px;
 }
 
 .schedule-container {
@@ -173,6 +173,6 @@
   background-color: #0056b3; /* 수정 버튼에 hover 상태 적용 */
 }
 .store-list {
-  flex: 1;
+  flex: 0.5;
   margin-left: 20px;
 }
