@@ -13,4 +13,5 @@ public class PageUtil {
 		PageInfo pi = new PageInfo(start, end, pageNo, pageNaviSize, totalPage);
 		return pi;
 	}
+	
 }

@@ -149,4 +149,12 @@ public class UserController {
 		return ResponseEntity.ok(result);
 	}
 	
+	@GetMapping(value = "/getNick")
+	public ResponseEntity<String> getNick(@RequestHeader("Authorization") String token){
+		System.out.println("유저닉네임 가져오기 실행");
+		System.out.println("토큰" + token);
+		String userNick = userService.getNick(token);
+		System.out.println("userNick 출력 : "+userNick);
+		return ResponseEntity.ok(userNick);
+	}
 }

@@ -11,7 +11,9 @@ import lombok.NoArgsConstructor;
 @Data
 @Alias(value = "personalBoardAnswer")
 public class PersonalBoardAnswerDTO {
+	private int personalBoardAnswerNo;
 	private int personalBoardNo;
 	private String personalBoardAnswerContent;
 	private String personalBoardAnswerWriter;
+	
 }
