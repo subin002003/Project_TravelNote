@@ -61,9 +61,10 @@ const BoardWrite = () => {
 
   return (
     <section className="board-wrap">
-      <div className="board-title" style={{ padding: "10px" }}>
+      <div className="board-title" style={{ marginBottom: "40px" }}>
         자유게시판 작성
       </div>
+
       <form
         onSubmit={(e) => {
           e.preventDefault();

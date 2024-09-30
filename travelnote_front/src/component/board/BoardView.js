@@ -40,7 +40,6 @@ const BoardView = () => {
     axios
       .post(`${backServer}/board/like/${boardNo}`, {
         userNick: userNick,
-
         action: action,
       })
       .then((res) => {

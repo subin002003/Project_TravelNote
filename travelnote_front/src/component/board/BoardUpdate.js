@@ -82,15 +82,10 @@ const BoardUpdate = () => {
   };
   return (
     <section className="board-wrap">
-      <h1 className="board-title">자유게시판 수정</h1>
-      <div
-        style={{
-          borderTop: "1px solid black",
-          // 상단, 우측, 하단, 좌측 여백
-          margin: "20px 0px 40px 0px",
-          width: "100%",
-        }}
-      ></div>
+      <h1 className="board-title" style={{ marginBottom: "40px" }}>
+        자유게시판 수정
+      </h1>
+
       <form
         onSubmit={(e) => {
           e.preventDefault();

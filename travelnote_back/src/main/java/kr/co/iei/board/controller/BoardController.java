@@ -156,14 +156,12 @@ public class BoardController {
 	
 	@PostMapping("/like/{boardNo}")
     public ResponseEntity<Map<String, Object>> toggleLike(
-        @RequestParam("userNick") String userNick,
-        @PathVariable int boardNo,
-        @RequestParam("action") String action) {
-        System.out.println(userNick);
-        System.out.println(boardNo);
+    	@PathVariable int boardNo,
+    	@RequestBody Map<String, String> requestBody){
+		String userNick = requestBody.get("userNick");
+		String action = requestBody.get("action");         
         boolean success = false;
         String message = "";
-
         if ("add".equals(action)) {
             success = boardService.addLike(userNick, boardNo);
             message = success ? "좋아요 추가 성공" : "좋아요 추가 실패";
@@ -171,11 +169,9 @@ public class BoardController {
             success = boardService.removeLike(userNick, boardNo);
             message = success ? "좋아요 제거 성공" : "좋아요 제거 실패";
         }
-
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
         response.put("message", message);
-
         return ResponseEntity.ok(response);
     }
 }
