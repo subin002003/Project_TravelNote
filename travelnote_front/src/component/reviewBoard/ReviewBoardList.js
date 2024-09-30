@@ -22,17 +22,6 @@ const ReviewBoardList = () => {
         ) : (
           ""
         )}
-        <div>
-          <ul>
-            {reviewBoardList.map((reviewBoard, i) => {
-              return;
-              <reviewBoardItem
-                key={"reviewBoard-" + i}
-                reviewBoard={reviewBoard}
-              />;
-            })}
-          </ul>
-        </div>
       </div>
     </section>
   );
