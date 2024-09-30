@@ -6,7 +6,6 @@
   	select count(*) from product where product_status=1
   </select>
   
-  <!-- 
   <select id="selectProductList" resultType="product">
   	select * from
 	    (select rownum as rnum, p.*  from
@@ -24,12 +23,12 @@
 	              to_char(enroll_date, 'yyyy-mm-dd') as enroll_date
 	         from product where product_status=1 order by product_no desc) p)
 	where rnum between #{start} and #{end}
-  </select> -->
+  </select>
   
 
-  <select id="selectProductList" resultType="product">
+  <select id="selectProductListEmail" resultType="product">
     SELECT p.*, 
-           COALESCE(w.product_like, 0) AS productLike,  -- 좋아요 여부 (0 또는 1)
+           COALESCE(w.product_like, 0) AS productLike,         -- 좋아요 여부 (0 또는 1)
            COALESCE(likeCount.total_like_count, 0) AS productLikeCount  -- 좋아요 수
     FROM (
         SELECT rownum AS rnum, 
@@ -51,20 +50,24 @@
             WHERE product_status = 1 
             ORDER BY product_no DESC
         ) p
-    ) 
+    ) p
     LEFT JOIN (
         SELECT product_no, user_no, 1 AS product_like 
         FROM wish 
-        WHERE user_no = #{userNo}  -- 로그인한 사용자의 user_no를 기준으로
+        WHERE user_no = (SELECT user_no FROM user_tbl WHERE user_email = #{userEmail})
     ) w ON p.product_no = w.product_no
     LEFT JOIN (
         SELECT product_no, COUNT(*) AS total_like_count 
         FROM wish 
         GROUP BY product_no
     ) likeCount ON p.product_no = likeCount.product_no
-    WHERE rnum BETWEEN #{start} AND #{end}
+    WHERE rnum BETWEEN #{pi.start} AND #{pi.end}
+    <!-- userEmail이 null이 아닐 때만 이 조건을 추가 -->
+    <!-- 
+    <if test="userEmail != null">
+        AND w.product_no IS NOT NULL  
+    </if> -->
   </select>
-
   
   <insert id="insertProduct">
   	insert into product values(product_seq.nextval, #{productName}, #{productSubName}, #{productThumb}, #{productPrice}, #{productInfo}, #{productLatitude}, #{productLongitude}, #{productWriter}, #{productStatus}, sysdate)
@@ -96,11 +99,6 @@
   <select id="selectOneProductFileList">
   	select * from product_file where product_no=#{productNo}
   </select>
-
-  <!-- 
-  <select id="selectOneProductReviews" resultType="review">
-  	select * from review where product_no=#{productNo}
-  </select> -->
   
   <select id="selectOneUser" resultType="int">
   	select user_no from user_tbl where user_email=#{userEmail}
@@ -108,23 +106,23 @@
   
   <select id="selectOneProductReviews" resultType="review">
   	SELECT r.* ,
-	(SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO) AS LIKE_COUNT,
-	(SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO AND USER_NO = #{userNo}) AS IS_LIKE
+	(SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO) AS REVIEW_LIKE_COUNT,
+	(SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO AND USER_NO = #{userNo}) AS REVIEW_LIKE
 	FROM REVIEW r
-	WHERE REVIEW_REF = #{productNo} AND REVIEW_COMMENT_REF IS NULL
+	WHERE PRODUCT_NO = #{productNo} AND REVIEW_COMMENT_REF IS NULL
 	ORDER BY 1
   </select>
   
   <!-- 
   <select id="selectOneProductReviews" resultType="review">
     SELECT
-        r.review_no AS reviewNo,
-        r.product_no AS productNo,
-        r.review_writer AS reviewWriter,
-        r.review_score AS reviewScore,
-        r.review_content AS reviewContent,
-        to_char(r.review_date, 'yyyy-mm-dd') AS reviewDate,
-        r.review_ref AS reviewRef,
+        r.review_no,
+        r.product_no,
+        r.review_writer,
+        r.review_score,
+        r.review_content,
+        to_char(r.review_date, 'yyyy-mm-dd') AS review_date,
+        r.review_comment_ref AS reviewCommentRef,
         NVL(rl.like_count, 0) AS reviewLikeCount,          각 리뷰에 대한 좋아요 수
         NVL(ul.user_like, 0) AS reviewLike                 로그인한 사용자의 좋아요 여부
     FROM
@@ -212,21 +210,8 @@
    -->
   <!-- 리뷰 등록 -->
   <insert id="insertReview">
-  	insert into review values(
-  							review_seq.nextval,
-  							#{productNo},
-  							#{reviewWriter},
-  							#{reviewScore},
-  							#{reviewContent},
-  							to_char(sysdate, 'yyyy-mm-dd'),
-  							<if test="reviewCommentRef == 0">
-  								NULL
-  							</if>
-  							<if test="reviewCommentRef != 0">
-  								#{reviewCommentRef}
-  							</if>  							      
-  							)
-  </insert>  
+  	insert into review values(review_seq.nextval, #{productNo}, #{reviewWriter}, #{reviewScore}, #{reviewContent}, sysdate, null)
+  </insert>
   
   <!-- 리뷰 수정 -->
   <update id="updateReview">
