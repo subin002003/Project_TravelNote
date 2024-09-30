@@ -74,8 +74,6 @@ const ProductView = () => {
 
   const handleDateRangeChange = (startDate, endDate) => {
     if (startDate && endDate) {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
 
       const options = {
         weekday: "long",
@@ -83,8 +81,8 @@ const ProductView = () => {
         month: "long",
         day: "numeric",
       };
-      const startFormatted = start.toLocaleDateString("ko-KR", options);
-      const endFormatted = end.toLocaleDateString("ko-KR", options);
+      const startFormatted = new Date(startDate).toLocaleDateString("ko-KR", options);
+      const endFormatted = new Date(startDate).toLocaleDateString("ko-KR", options);
 
       setDateRange(`선택된 날짜: ${startFormatted} ~ ${endFormatted}`);
     }
@@ -286,7 +284,7 @@ const ProductView = () => {
         <div className="commentBox">
           <div className="posting-review-wrap">
             <ul>
-              {product.reviews.map((review, i) => {
+              {/* {product.reviews.map((review, i) => {
                 return (
                   <ReviewItem
                     key={"review-" + i}
@@ -294,7 +292,15 @@ const ProductView = () => {
                     review={review}
                   />
                 );
-              })}
+              })} */}
+
+              {product.reviews.length > 0 ? (
+                product.reviews.map((review, i) => (
+                  <ReviewItem key={`review-${i}`} product={product} review={review} />
+                ))
+              ) : (
+                <li style={{ textAlign: "center", color: "gray" }}>등록된 리뷰가 없습니다.</li>
+              )}
             </ul>
           </div>
           {/* 리뷰 전체보기 */}
@@ -357,6 +363,7 @@ const ReviewItem = (props) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
   const product = props.product;
+  const productNo = product.productNo;
   const review = props.review;
 
   // 로그인 회원 정보
@@ -369,6 +376,7 @@ const ReviewItem = (props) => {
   const [reviewLikeCount, setReviewLikeCount] = useState(
     review.reviewLikeCount
   ); // 좋아요 수
+
   const newLikeState = reviewLike ? 0 : 1; // 좋아요 상태를 토글
   const newCount = reviewLike ? reviewLikeCount - 1 : reviewLikeCount + 1; // 좋아요 수 업데이트
 
@@ -386,43 +394,61 @@ const ReviewItem = (props) => {
   };
 
   // 리뷰 수정
-  const updateReview = () => {
-    setOpenReviewDialog(true);
+  // const updateReview = () => {
+  //   setOpenReviewDialog(true);
 
-    axios
-      .patch(`${backServer}/product/updateReview/${review.reviewNo}`)
-      .then((res) => {
-        console.log(res);
-        if (res.data === 1) {
-          Swal.fire({
-            title: "리뷰가 수정되었습니다.",
-            icon: "success",
-          });
-          navigate(`/product/view/${product.productNo}`);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  //   axios
+  //     .patch(`${backServer}/product/updateReview/${review.reviewNo}`)
+  //     .then((res) => {
+  //       console.log(res);
+  //       if (res.data === 1) {
+  //         Swal.fire({
+  //           title: "리뷰가 수정되었습니다.",
+  //           icon: "success",
+  //         });
+  //         navigate(`/product/view/${product.productNo}`);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
   // 리뷰 삭제
   const deleteReview = () => {
-    axios
-      .delete(`${backServer}/product/deleteReview/${review.reviewNo}`)
-      .then((res) => {
-        console.log(res);
-        if (res.data === 1) {
-          Swal.fire({
-            title: "리뷰가 삭제되었습니다.",
-            icon: "success",
+    Swal.fire({
+      title: "리뷰를 삭제하시겠습니까?",
+      text: "삭제 후 복구할 수 없습니다.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`${backServer}/product/deleteReview/${review.reviewNo}`)
+          .then((res) => {
+            console.log(res);
+            if (res.data === 1) {
+              Swal.fire({
+                title: "리뷰가 삭제되었습니다.",
+                icon: "success",
+              });
+              navigate(`/product/view/${productNo}`);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            Swal.fire({
+              title: "서버와의 통신 중 오류가 발생하였습니다.",
+              text: err.message,
+              icon: "error",
+            });
           });
-          navigate(`/product/view/${product.productNo}`);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      }
+    });
   };
 
   // 리뷰 좋아요 상태가 변경될 때 리뷰 좋아요 수 다시 조회 함수
@@ -451,18 +477,18 @@ const ReviewItem = (props) => {
       return;
     }
 
-    if (isLogin && review.reviewWriter === loginEmail) {
+    if (isLogin) {
       const newLikeStatus = !reviewLike; // 좋아요 상태 토글
       const request = newLikeStatus
         ? axios.post(
-            // 리뷰 좋아요
-            `${backServer}/product/${review.reviewNo}/insertReviewLike/${userEmail}`,
-            { reviewLike: 1 }
-          )
+          // 리뷰 좋아요
+          `${backServer}/product/${review.reviewNo}/insertReviewLike/${userEmail}`,
+          { reviewLike: 1 }
+        )
         : axios.delete(
-            // 리뷰 좋아요 취소
-            `${backServer}/product/${review.reviewNo}/deleteReviewLike/${userEmail}?reviewLike=1`
-          );
+          // 리뷰 좋아요 취소
+          `${backServer}/product/${review.reviewNo}/deleteReviewLike/${userEmail}?reviewLike=1`
+        );
 
       request
         .then((res) => {
@@ -564,12 +590,13 @@ const ReviewItem = (props) => {
           maxWidth={false} // maxWidth 기본값을 사용하지 않도록 설정
           fullWidth={true} // 다이얼로그가 지정된 너비를 채우도록 설정
         >
-          <DialogTitle>리뷰 작성</DialogTitle>
+          <DialogTitle>리뷰 수정</DialogTitle>
           <DialogContent>
             <Review
-              productNo={product.productNo}
+              productNo={productNo}
               open={openReviewDialog}
               handleClose={handleCloseReviewDialog}
+              review={review}
             />
           </DialogContent>
           <DialogActions>

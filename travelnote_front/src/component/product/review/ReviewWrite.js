@@ -1,4 +1,4 @@
-import { Rating, Stack, TextField, Button } from "@mui/material";
+import { Rating, Stack, TextField, Button, CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { loginEmailState } from "../../utils/RecoilData";
@@ -6,52 +6,71 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const Review = ({ open, handleClose }) => {
+const Review = ({ productNo, open, handleClose, review }) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
-  const { productNo } = useParams();
+  // const { productNo } = useParams();
 
-  const [reviewWriter, setReviewWriter] = useState("");
-  const [reviewScore, setReviewScore] = useState(0.5);
-  const [reviewContent, setReviewContent] = useState("");
+  const [reviewWriter, setReviewWriter] = useState(loginEmail || "");
+  const [reviewScore, setReviewScore] = useState(review ? review.reviewScore : 0.5);
+  const [reviewContent, setReviewContent] = useState(review ? review.reviewContent : "");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // 컴포넌트가 마운트될 때 로그인 이메일로 리뷰 작성자 설정
-    if (loginEmail) {
-      setReviewWriter(loginEmail);
+    if (review) {
+      setReviewScore(review.reviewScore);
+      setReviewContent(review.reviewContent);
+    } else {
+      setReviewScore(0.5);
+      setReviewContent("");
     }
-  }, [loginEmail]);
+  }, [review]);
 
-  const writeReview = () => {
-    if (reviewScore > 0 && reviewContent !== "") {
+
+  const handleSubmit = () => {
+    if (reviewScore > 0 && reviewContent.trim()) {
+      setLoading(true); // 로딩 시작
       const form = new FormData();
       form.append("reviewWriter", reviewWriter);
       form.append("reviewScore", reviewScore);
       form.append("reviewContent", reviewContent);
       form.append("productNo", productNo);
 
-      axios
-        .post(`${backServer}/product/insertReview`, form, {
+      // 수정할 리뷰 ID 추가
+      if (review) {
+        form.append("reviewNo", review.reviewNo);
+      }
+
+      // const requestUrl = review ? `${backServer}/product/updateReview` : `${backServer}/product/insertReview`;
+
+      const request = review
+        ? axios.patch(
+          `${backServer}/product/updateReview`, form, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         })
+        : axios.post(
+          `${backServer}/product/insertReview`, form, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+
+      request
         .then((res) => {
           console.log(res);
           if (res.data) {
             Swal.fire({
-              title: "리뷰가 등록되었습니다.",
+              title: review ? "리뷰가 수정되었습니다." : "리뷰가 등록되었습니다.",
               icon: "success",
             });
             handleClose(); // 다이얼로그 닫기
             navigate(`/product/view/${productNo}`);
-            // 입력 필드 초기화
-            setReviewScore(0.5);
-            setReviewContent("");
           } else {
             Swal.fire({
-              title: "리뷰 등록에 실패하였습니다.",
+              title: "리뷰 등록/수정에 실패하였습니다.",
               icon: "warning",
             });
           }
@@ -60,8 +79,12 @@ const Review = ({ open, handleClose }) => {
           console.error(err);
           Swal.fire({
             title: "서버와의 통신 중 오류가 발생하였습니다.",
+            text: err.response?.data?.message || "문제가 발생했습니다.",
             icon: "error",
           });
+        })
+        .finally(() => {
+          setLoading(false); // 로딩 종료
         });
     } else {
       Swal.fire({
@@ -72,9 +95,6 @@ const Review = ({ open, handleClose }) => {
     }
     console.log("ReviewScore:", reviewScore, "ReviewContent:", reviewContent);
   };
-
-  // console.log(reviewScore);
-  // console.log(reviewContent);
 
   return (
     <Stack spacing={2}>
@@ -116,7 +136,8 @@ const Review = ({ open, handleClose }) => {
       <Button
         variant="contained"
         color="primary"
-        onClick={writeReview}
+        onClick={handleSubmit}
+        disabled={loading || reviewScore <= 0 || reviewContent.trim() === ""}
         sx={{
           backgroundColor: "#1363df",
           color: "white",
@@ -128,7 +149,7 @@ const Review = ({ open, handleClose }) => {
           },
         }}
       >
-        리뷰 작성
+        {loading ? <CircularProgress size={24} /> : (review ? "리뷰 수정" : "리뷰 작성")}
       </Button>
     </Stack>
   );

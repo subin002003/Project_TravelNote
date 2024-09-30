@@ -107,6 +107,16 @@
   </select>
   
   <select id="selectOneProductReviews" resultType="review">
+  	SELECT r.* ,
+	(SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO) AS LIKE_COUNT,
+	(SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO AND USER_NO = #{userNo}) AS IS_LIKE
+	FROM REVIEW r
+	WHERE REVIEW_REF = #{productNo} AND REVIEW_COMMENT_REF IS NULL
+	ORDER BY 1
+  </select>
+  
+  <!-- 
+  <select id="selectOneProductReviews" resultType="review">
     SELECT
         r.review_no AS reviewNo,
         r.product_no AS productNo,
@@ -115,8 +125,8 @@
         r.review_content AS reviewContent,
         to_char(r.review_date, 'yyyy-mm-dd') AS reviewDate,
         r.review_ref AS reviewRef,
-        NVL(rl.like_count, 0) AS reviewLikeCount,         -- 각 리뷰에 대한 좋아요 수
-        NVL(ul.user_like, 0) AS reviewLike                -- 로그인한 사용자의 좋아요 여부
+        NVL(rl.like_count, 0) AS reviewLikeCount,          각 리뷰에 대한 좋아요 수
+        NVL(ul.user_like, 0) AS reviewLike                 로그인한 사용자의 좋아요 여부
     FROM
         review r
     LEFT JOIN
@@ -130,7 +140,7 @@
          WHERE user_no = #{userNo}) ul
     ON r.review_no = ul.review_no
     WHERE r.product_no = #{productNo}
-  </select>
+  </select> -->
   
   
   <resultMap type="product" id="getProduct">
@@ -196,10 +206,27 @@
   	</foreach>
   </delete>
   
+  
+  <!-- 
+  insert into book_comment values(book_comment_seq.nextval, ?, ?, to_char(sysdate, 'yyyy-mm-dd'), ?, ?);
+   -->
   <!-- 리뷰 등록 -->
   <insert id="insertReview">
-  	insert into review values(review_seq.nextval, #{productNo}, #{reviewWriter}, #{reviewScore}, #{reviewContent}, sysdate, review_seq.currval)
-  </insert>
+  	insert into review values(
+  							review_seq.nextval,
+  							#{productNo},
+  							#{reviewWriter},
+  							#{reviewScore},
+  							#{reviewContent},
+  							to_char(sysdate, 'yyyy-mm-dd'),
+  							<if test="reviewCommentRef == 0">
+  								NULL
+  							</if>
+  							<if test="reviewCommentRef != 0">
+  								#{reviewCommentRef}
+  							</if>  							      
+  							)
+  </insert>  
   
   <!-- 리뷰 수정 -->
   <update id="updateReview">

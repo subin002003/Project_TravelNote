@@ -118,13 +118,13 @@ public class ProductController {
 		return ResponseEntity.ok(result == 1 + productFileList.size());
 	}
 	
-	// 패키지 상품 상세페이지
 //	@GetMapping(value="/productNo/{productNo}")
 //	public ResponseEntity<ProductDTO> selectOneProduct(@PathVariable int productNo) {
 //		ProductDTO product = productService.selectOneProduct(productNo);
 //		return ResponseEntity.ok(product);
 //	}
-	
+
+	// 패키지 상품 상세페이지
 	@GetMapping(value="/productNo/{productNo}/{userEmail}")
 	public ResponseEntity<ProductDTO> selectOneProduct(@PathVariable int productNo, @PathVariable String userEmail) {
 	    ProductDTO product = productService.selectOneProduct(productNo, userEmail);
