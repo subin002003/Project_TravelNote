@@ -1,15 +1,23 @@
 package kr.co.iei.Domestic.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 import kr.co.iei.Domestic.model.dao.DomesticDao;
+import kr.co.iei.Domestic.model.dto.EditPlanDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
+import kr.co.iei.foreignPlan.model.dto.ForeignEditPlanDTO;
 
 
 @Service
@@ -47,4 +55,24 @@ public class DomesticService {
 			List list = domesticDao.selectPlan(itineraryNo, planDay);
 			return list;
 		}
+	@Transactional
+	public static boolean updatePlan(String updateList) {
+		// Json 문자열로 받은 배열 변환
+		List<EditPlanDTO> editList = new ArrayList<>();
+		Gson gson = new Gson();
+		JsonArray planListArr = JsonParser.parseString(updateList).getAsJsonArray();
+		for (JsonElement jsonPlan : planListArr) {
+			EditPlanDTO plan = gson.fromJson(jsonPlan, EditPlanDTO.class);
+			editList.add(plan);
+		}
+
+		int result = 0;
+		for (int i = 0; i < editList.size(); i ++) {		
+			result += DomesticDao.updatePlan(editList.get(i));
+		}
+		if (editList.size() == result) {
+			return true;
+		}
+		return false;
 	}
+}

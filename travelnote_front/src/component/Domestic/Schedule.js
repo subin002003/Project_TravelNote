@@ -10,14 +10,9 @@ const Schedule = () => {
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
   const [selectedDay, setSelectedDay] = useState(1);
-  const [currentRange, setCurrentRange] = useState([1, 3]);
   const [map, setMap] = useState(null);
   const [itinerary, setItinerary] = useState({});
-  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
-  const [searchResults, setSearchResults] = useState([]); // 검색 결과 상태
-  const [showItineraryForm, setShowItineraryForm] = useState(false); // 일정 추가 폼 표시 상태
   const [totalPlanDates, setTotalPlanDates] = useState([]); // 전체 일정 날짜
-  const [planPageOption, setPlanPageOption] = useState(1); // 페이지 옵션
   const [cityCoordinates, setCityCoordinates] = useState({
     lat: 37.5665,
     lng: 126.978,
@@ -55,7 +50,7 @@ const Schedule = () => {
         document.getElementById("map"),
         {
           center: cityCoordinates, // 초기 중심 좌표 설정
-          zoom: 12,
+          zoom: 15,
         }
       );
       setMap(mapInstance);
@@ -94,7 +89,7 @@ const Schedule = () => {
   }, [map, selectedDay, itinerary, cityCoordinates]);
 
   useEffect(() => {
-    // 도시 이름에 따라 좌표를 설정합니다. 이 예제에서는 간단한 매핑을 사용합니다.
+    // 도시 이름에 따라 좌표를 설정합니다.
     const cityCoordinatesMap = {
       서울: { lat: 37.5665, lng: 126.978 },
       부산: { lat: 35.1796, lng: 129.0756 },
@@ -123,69 +118,8 @@ const Schedule = () => {
     }
   }, [city]);
 
-  const handleDayClick = (day) => {
-    setSelectedDay(day);
-  };
-
-  const handlePreviousRange = () => {
-    setCurrentRange((prevRange) => {
-      const newStart = Math.max(prevRange[1] - 3, 1);
-      const newEnd = Math.min(newStart + 2, totalPlanDates.length);
-      return [newStart, newEnd];
-    });
-  };
-
-  const handleNextRange = () => {
-    setCurrentRange((prevRange) => {
-      const newStart = Math.min(prevRange[1] + 1, totalPlanDates.length) - 2;
-      const newEnd = Math.min(newStart + 2, totalPlanDates.length);
-      return [newStart, newEnd];
-    });
-  };
-
-  const handleSearch = () => {
-    axios
-      .get(`https://maps.googleapis.com/maps/api/place/textsearch/json`, {
-        params: {
-          query: searchTerm,
-          key: googleMapsApiKey,
-        },
-      })
-      .then((response) => {
-        const results = response.data.results;
-        setSearchResults(results);
-
-        if (map) {
-          map.setCenter({
-            lat: results[0].geometry.location.lat,
-            lng: results[0].geometry.location.lng,
-          });
-
-          if (map.markers) {
-            map.markers.forEach((marker) => marker.setMap(null));
-          }
-
-          map.markers = [];
-          results.forEach((place) => {
-            const marker = new window.google.maps.Marker({
-              position: {
-                lat: place.geometry.location.lat,
-                lng: place.geometry.location.lng,
-              },
-              map: map,
-              title: place.name,
-            });
-            map.markers.push(marker);
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("장소 검색에 실패했습니다:", error);
-      });
-  };
-
   const handleItineraryButtonClick = () => {
-    setShowItineraryForm((prevShow) => !prevShow); // 일정 추가 폼을 토글
+    // 일정 추가 폼을 토글
   };
 
   return (
@@ -195,42 +129,12 @@ const Schedule = () => {
           <div className="schedule-plan">
             <SchedulePlanList
               itinerary={itinerary}
-              planDays={totalPlanDates}
+              totalPlanDates={totalPlanDates}
               selectedDay={selectedDay}
               setSelectedDay={setSelectedDay}
-              totalPlanDates={totalPlanDates}
-              planPageOption={planPageOption}
-              setPlanPageOption={setPlanPageOption}
             />
           </div>
-          <div className="day-selector">
-            <button
-              onClick={handlePreviousRange}
-              disabled={currentRange[0] === 1}
-            >
-              &lt;
-            </button>
-            {[...totalPlanDates]
-              .filter(
-                (day, index) =>
-                  index >= currentRange[0] - 1 && index <= currentRange[1] - 1
-              )
-              .map((day, index) => (
-                <button
-                  key={day}
-                  className={selectedDay === index + 1 ? "selected" : ""}
-                  onClick={() => handleDayClick(index + 1)}
-                >
-                  {day}
-                </button>
-              ))}
-            <button
-              onClick={handleNextRange}
-              disabled={currentRange[1] === totalPlanDates.length}
-            >
-              &gt;
-            </button>
-          </div>
+
           {itinerary[selectedDay] && (
             <div className="selected-day-itinerary">
               <h2>{itinerary[selectedDay].date}</h2>

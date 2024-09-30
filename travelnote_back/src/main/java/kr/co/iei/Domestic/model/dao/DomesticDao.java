@@ -2,9 +2,12 @@ package kr.co.iei.Domestic.model.dao;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
+
+import kr.co.iei.Domestic.model.dto.EditPlanDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
+import kr.co.iei.foreignPlan.model.dto.ForeignEditPlanDTO;
 
 @Mapper
 public interface DomesticDao {
@@ -22,5 +25,10 @@ public interface DomesticDao {
     ItineraryInfoDTO getItinerary(int itineraryNo);
 
 	List selectPlan(int itineraryNo, int planDay);
+
+	static int updatePlan(EditPlanDTO editPlanDTO) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 }
