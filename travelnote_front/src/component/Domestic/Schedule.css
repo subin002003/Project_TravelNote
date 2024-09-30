@@ -4,11 +4,12 @@
   width: 100%;
   height: 100vh;
   font-family: Arial, sans-serif;
+  padding: 20px;
 }
 
 .content {
   display: flex;
-  flex: 1; /* 콘텐츠 영역이 전체를 차지하도록 설정 */
+  flex-direction: row;
 }
 
 .itinerary-panel {
@@ -19,25 +20,11 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  margin-right: 20px;
 }
 
 .button-container {
   margin-top: auto; /* 버튼들을 하단으로 이동시킴 */
-}
-
-.save-btn {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.save-btn:hover {
-  background-color: #0056b3;
 }
 
 .map-container {
@@ -76,14 +63,14 @@
 .schedule-list > h4 {
   text-align: center;
 }
-.schedule-plan {
-  border-bottom: 1px solid #000;
+.schedule-itinerary > h3 {
+  text-align: center;
 }
-
 .plan-list {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
 }
 .plan-list > li {
   border: 1px solid var(--main-color);
@@ -124,4 +111,68 @@
 }
 .plan-list .active {
   color: var(--main-color);
+}
+.schedule-itinerary {
+  margin: 30px;
+  background-color: #007bff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 상단과 하단의 요소들을 양쪽에 배치 */
+  height: 400px; /* 부모 요소의 전체 높이를 차지 */
+}
+
+.schedule-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.schedule-plan-wrap,
+.schedule-edit-panel {
+  flex: 1; /* 두 패널을 동일한 비율로 나눠 가질 수 있도록 설정 */
+  height: 100%;
+}
+
+.schedule-edit-panel {
+  display: none; /* 수정 모드가 아닐 때는 숨김 */
+}
+
+.schedule-edit-panel.active {
+  display: block; /* 수정 모드일 때 활성화 */
+}
+.button-container {
+  display: flex;
+  justify-content: center; /* 버튼을 가운데 정렬 */
+  padding-bottom: 20px; /* 하단 여백 추가 */
+  margin-top: 200px;
+  gap: 20px;
+}
+
+.save-btn,
+.Editing-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.save-btn:hover,
+.Editing-btn:hover {
+  background-color: #0056b3;
+}
+
+.Editing-btn-active {
+  background-color: #0056b3; /* 수정 완료 상태일 때 다른 색으로 표시 */
+}
+
+.Editing-btn:hover {
+  background-color: #0056b3; /* 수정 버튼에 hover 상태 적용 */
+}
+.store-list {
+  flex: 1;
+  margin-left: 20px;
 }
