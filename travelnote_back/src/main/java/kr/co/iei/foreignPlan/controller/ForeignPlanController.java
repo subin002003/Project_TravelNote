@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,7 +50,8 @@ public class ForeignPlanController {
 	
 	// 여행 일정 생성
 	@PostMapping(value="/createItinerary")
-	public ResponseEntity<Integer> createItinerary(@ModelAttribute ForeignItineraryDTO itinerary) {
+	public ResponseEntity<Integer> createItinerary(@RequestBody ForeignItineraryDTO itinerary) {
+		System.out.println(itinerary);
 		int itineraryNo = foreignPlanService.insertItinerary(itinerary);
 		return ResponseEntity.ok(itineraryNo);
 	}

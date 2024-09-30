@@ -73,23 +73,24 @@ const ItineraryForm = () => {
   // 새 일정 생성
   const createItinerary = () => {
     if (startDate !== "" && endDate !== "") {
-      const form = new FormData();
-      form.append("userEmail", loginEmail);
-      form.append("regionNo", regionNo);
-      form.append("itineraryStartDate", itineraryStartDate);
-      form.append("itineraryEndDate", itineraryEndDate);
+      const obj = {};
+      obj.userEmail = loginEmail;
+      obj.regionNo = regionNo;
+      obj.itineraryStartDate = itineraryStartDate;
+      obj.itineraryEndDate = itineraryEndDate;
       if (itineraryTitle === "") {
-        form.append("itineraryTitle", `${region.regionName}으로 떠나는 여행`);
+        obj.itineraryTitle = `${region.regionName}으로 떠나는 여행`;
       } else {
-        form.append("itineraryTitle", itineraryTitle.trim());
+        obj.itineraryTitle = itineraryTitle.trim();
       }
+      console.log(obj);
       axios
-        .post(`${backServer}/foreign/createItinerary`, form)
+        .post(`${backServer}/foreign/createItinerary`, obj)
         .then((res) => {
           const itineraryNo = res.data;
           // 성공 시 조회 화면으로 이동
           if (itineraryNo > 0) {
-            navigate(`/foreign/plan/${itineraryNo}/view`);
+            navigate(`/foreign/plan/${itineraryNo}`);
           } else {
             Swal.fire({
               icon: "error",
