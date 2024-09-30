@@ -50,7 +50,31 @@ const ForeignPlanSearch = (props) => {
           </li>
         </ul>
       </div>
-      <div className="plan-search-box">
+      {category === 1 ? (
+        <FlightSearchBox />
+      ) : (
+        <PlaceSearchBox
+          searchInput={searchInput}
+          changeSearchInput={changeSearchInput}
+          search={search}
+          searchPlaceList={searchPlaceList}
+        />
+      )}
+    </div>
+  );
+};
+
+// category가 1이면 항공편 관련
+const FlightSearchBox = () => {
+  return;
+};
+
+// category가 2이면 장소 관련
+const PlaceSearchBox = (props) => {
+  const { searchInput, changeSearchInput, search, searchPlaceList } = props;
+  return (
+    <>
+      <div className="place-search-box">
         <input
           placeholder="검색어를 입력해 주세요."
           value={searchInput}
@@ -78,7 +102,7 @@ const ForeignPlanSearch = (props) => {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -365,7 +365,7 @@
 .place-list > h5 {
   margin: 30px auto;
 }
-.plan-search-box > input {
+.place-search-box > input {
   width: 200px;
   outline: none;
   border: none;
@@ -377,7 +377,7 @@
   font-family: "SUITE-Regular";
   margin-right: 15px;
 }
-.plan-search-box > button {
+.place-search-box > button {
   width: 65px;
   height: 40px;
   box-sizing: border-box;
