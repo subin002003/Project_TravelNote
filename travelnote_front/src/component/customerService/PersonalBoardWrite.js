@@ -39,8 +39,11 @@ const PersonalBoardWrite = () => {
     formData.append("personalBoardTitle", personalBoard.personalBoardTitle);
     formData.append("personalBoardContent", personalBoard.personalBoardContent);
     formData.append("personalBoardWriter", personalBoard.personalBoardWriter);
-    for (let i = 0; i < personalBoardFiles.length; i++)
-      formData.append("personalBoardFileList", personalBoardFiles[i]);
+    if (personalBoardFiles.length > 0) {
+      for (let i = 0; i < personalBoardFiles.length; i++) {
+        formData.append("personalBoardFileList", personalBoardFiles[i]);
+      }
+    }
     axios
       .post(`${backServer}/personalBoard`, formData, {
         headers: {

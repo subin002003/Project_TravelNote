@@ -31,17 +31,41 @@ const CustomerBoardList = () => {
       .catch((err) => {
         console.log(err);
       });
-    axios
-      .get(`${backServer}/personalBoard/list${personalBoardReqPage}`, userNick)
-      .then((res) => {
-        console.log(res);
-        setPersonaBoardList(res.data.list);
-        setPersonalBoardPi(res.data.pi);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [reqPage, personalBoardReqPage]);
+  }, [reqPage]);
+
+  useEffect(() => {
+    const fetchUserNick = async () => {
+      const token = localStorage.getItem("refreshToken");
+      try {
+        const response = await axios.get(`${backServer}/user/getNick`, {
+          headers: { Authorization: token },
+        }); // 백엔드에서 userNick 정보를 가져오는 API
+        console.log(response);
+        console.log("가져온 닉네임 : " + response.data);
+        setUserNick(response.data); // 백엔드에서 받아온 userNick을 설정
+      } catch (err) {
+        console.log("Error fetching userNick:", err);
+      }
+    };
+
+    // userNick이 없으면 백엔드에서 가져오고, 있으면 바로 요청
+    if (!userNick) {
+      fetchUserNick();
+    } else {
+      axios
+        .get(`${backServer}/personalBoard/list/${personalBoardReqPage}`, {
+          params: { userNick },
+        })
+        .then((res) => {
+          console.log(res);
+          setPersonaBoardList(res.data.list);
+          setPersonalBoardPi(res.data.pi);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [personalBoardReqPage, userNick, setUserNick]);
 
   const navigatePersonalBoardWrite = () => {
     navigate("/customerService/personalBoardWrite");
@@ -99,8 +123,29 @@ const CustomerBoardList = () => {
                   <th style={{ width: "20%" }}>작성일</th>
                   <th style={{ width: "25%" }}>답변여부</th>
                 </tr>
+                {personalBoardList.length > 0 ? (
+                  personalBoardList.map((personalBoard, i) => {
+                    return (
+                      <PersonalBoardItem
+                        key={"personalBoard" + i}
+                        personalBoard={personalBoard}
+                      />
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan="3">1대1 문의 기록이 없습니다.</td>
+                  </tr>
+                )}
               </tbody>
             </table>
+            <div className="faqboard-page-navi">
+              <PageNavi
+                pi={personalBoardPi}
+                reqPage={personalBoardReqPage}
+                setReqPage={setPerosnalBoardReqPage}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -127,3 +172,26 @@ const FaqBoardItem = (props) => {
   );
 };
 export default CustomerBoardList;
+
+const PersonalBoardItem = (props) => {
+  const personalBoard = props.personalBoard;
+  const navigate = useNavigate();
+
+  const navigateView = () => {
+    navigate(
+      `/customerService/personalBoard/view/${personalBoard.personalBoardNo}`
+    );
+  };
+
+  return (
+    <tr>
+      <td>
+        <p className="view-title" onClick={navigateView}>
+          {personalBoard.personalBoardTitle}
+        </p>
+      </td>
+      <td>{personalBoard.personalBoardWriteDate}</td>
+      <td>{personalBoard.personalBoardStatus}</td>
+    </tr>
+  );
+};

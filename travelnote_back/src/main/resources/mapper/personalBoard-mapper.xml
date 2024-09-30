@@ -10,4 +10,18 @@
 	<insert id="insertPersonalBoardFile">
 		insert into personal_board_file values(personal_board_file_seq.nextval, #{personalBoardNo}, #{personalBoardFilename}, #{personalBoardFilepath})
 	</insert>
+	<select id="selectPersonalBoardList" resultType="personalBoard">
+		select * from
+			(select rownum as rnum, b.* from
+				(select
+					personal_board_no,
+					personal_board_title,
+					personal_board_writer,
+					personal_board_write_date,
+					personal_board_status
+					from personal_board order by personal_board_no desc) b) where personal_board_writer = #{userNick} and (rnum between #{start} and #{end})
+	</select>
+	<select id="totalCount" resultType="int">
+		select count(*) from personal_board where personal_board_writer = #{userNick}
+	</select>
 </mapper>

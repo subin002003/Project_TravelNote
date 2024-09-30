@@ -13,4 +13,15 @@ public class PageInfo {
 	private int pageNo;
 	private int pageNaviSize;
 	private int totalPage;
+	private String userNick;
+	
+	public PageInfo(int start, int end, int pageNo, int pageNaviSize, int totalPage) {
+		super();
+		this.start = start;
+		this.end = end;
+		this.pageNo = pageNo;
+		this.pageNaviSize = pageNaviSize;
+		this.totalPage = totalPage;
+	}
+	
 }

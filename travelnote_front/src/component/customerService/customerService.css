@@ -87,7 +87,6 @@
 .write-section > th,
 td {
   padding: 12px 15px;
-  border: 1px solid var(--base-color);
 }
 .write-section > th {
   background-color: var(--base-color);
@@ -114,6 +113,12 @@ td {
 }
 .faqboard-list > table {
   width: 100%;
+}
+.view-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100px;
 }
 .view-title:hover {
   cursor: pointer;

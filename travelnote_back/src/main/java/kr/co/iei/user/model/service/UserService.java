@@ -239,6 +239,13 @@ public class UserService {
 	}
 
 
+	public String getNick(String token) {
+		LoginUserDTO loginUser = jwtUtil.checkToken(token);
+		
+		return loginUser.getUserNick();
+	}
+
+
 	
 
 
