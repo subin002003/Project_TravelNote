@@ -1,7 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 
 const ForeignPlanMap = (props) => {
-  const { map, setMap, regionInfo, searchKeyword, setSearchPlaceList } = props;
+  const {
+    map,
+    setMap,
+    regionInfo,
+    searchKeyword,
+    setSearchPlaceList,
+    selectedPosition,
+    setSelectedPosition,
+    placeInfo,
+    setPlaceInfo,
+  } = props;
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   const mapRef = useRef(null);
 
@@ -39,13 +49,19 @@ const ForeignPlanMap = (props) => {
     });
   }, [regionInfo]);
 
+  // 중심지, 정보창 위치 변경
+  useEffect(() => {
+    if (!selectedPosition) return;
+    map.setCenter(selectedPosition);
+  }, [selectedPosition]);
+
   // 장소 검색
   useEffect(() => {
     if (!map || !searchKeyword) return;
     // 서비스 객체
     const mapService = new window.google.maps.places.PlacesService(map);
 
-    // 요청 객체
+    // 요청 정보 담는 객체
     const request = {
       location: {
         lat: Number(regionInfo.regionLatitude),
@@ -57,6 +73,7 @@ const ForeignPlanMap = (props) => {
       language: "ko",
     };
 
+    // 검색 실행
     mapService.textSearch(request, (resultList, status) => {
       if (
         status === window.google.maps.places.PlacesServiceStatus.OK &&
@@ -71,8 +88,8 @@ const ForeignPlanMap = (props) => {
 
         map.setCenter(resultList[0].geometry.location);
         map.setZoom(15);
-        console.log(resultList.length);
         setSearchPlaceList(resultList);
+        setSelectedPosition(resultList[0].geometry.location);
       }
     });
   }, [searchKeyword]);

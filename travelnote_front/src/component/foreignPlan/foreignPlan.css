@@ -401,9 +401,14 @@
   margin: 10px 0;
   margin-top: 20px;
 }
+.place-item-title:hover {
+  cursor: pointer;
+}
 .place-item-address {
   font-size: small;
   text-align: left;
+  margin: 0;
+  margin-bottom: 10px;
 }
 .place-add-button {
   margin-top: 20px;
@@ -420,6 +425,10 @@
   background-color: var(--main-color);
   color: white;
   cursor: pointer;
+}
+.place-info-box {
+  width: 300px;
+  height: 100px;
 }
 
 /* ForeignPlanMap */
