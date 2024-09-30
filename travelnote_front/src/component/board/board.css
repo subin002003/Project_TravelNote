@@ -53,7 +53,7 @@
   border-radius: 5px; /* 모서리 둥글게 */
   transition: background-color 0.3s; /* 배경색 변화 애니메이션 */
   padding: 10px 20px;
-  font-size: 30px;
+  font-size: 20px;
 }
 .board-button-link-view-update:hover {
   background-color: #1363df; /* hover 시 색상 변경 */
@@ -66,7 +66,7 @@
   border-radius: 5px; /* 모서리 둥글게 */
   transition: background-color 0.3s; /* 배경색 변화 애니메이션 */
   padding: 10px 20px;
-  font-size: 30px;
+  font-size: 20px;
 }
 .board-button-link-view-delete:hover {
   background-color: #1363df; /* hover 시 색상 변경 */
@@ -80,7 +80,7 @@
   border-radius: 5px; /* 모서리 둥글게 */
   transition: background-color 0.3s; /* 배경색 변화 애니메이션 */
   padding: 10px 20px;
-  font-size: 30px;
+  font-size: 20px;
 }
 .board-button-link-report:hover {
   background-color: #1363df; /* hover 시 색상 변경 */
@@ -98,6 +98,7 @@
 .board-button-link-regist:hover {
   background-color: #1363df; /* hover 시 색상 변경 */
 }
+
 .board-button-link-update {
   margin: 30px auto;
   background-color: #47b5ff; /* 버튼 배경색 */

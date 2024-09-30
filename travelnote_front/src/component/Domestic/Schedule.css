@@ -21,49 +21,6 @@
   flex-direction: column;
 }
 
-.day-selector {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  gap: 10px;
-  overflow-x: auto; /* 버튼들이 넘칠 때 스크롤 가능하도록 설정 */
-}
-
-.day-selector button {
-  padding: 10px 15px;
-  background-color: #ddd;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.day-selector button.selected {
-  background-color: #1363df;
-  color: white;
-}
-
-.day-selector button:hover {
-  background-color: #47b5ff;
-}
-
-.selected-day-itinerary {
-  flex-grow: 1; /* 남은 공간을 차지하도록 설정 */
-  overflow-y: auto;
-}
-
-.selected-day-itinerary ul {
-  list-style: none;
-  padding: 0;
-}
-
-.selected-day-itinerary ul li {
-  background-color: #f0f0f0;
-  padding: 10px;
-  margin-bottom: 5px;
-  border-radius: 4px;
-}
-
 .button-container {
   margin-top: auto; /* 버튼들을 하단으로 이동시킴 */
 }
@@ -98,11 +55,6 @@
   border: 1px solid #ddd;
   border-radius: 8px;
 }
-.itinerary-btn,
-.air-btn {
-  margin: 0 20px;
-}
-
 .search > input {
   padding: 10px;
   margin: 50px 10px;
@@ -120,6 +72,56 @@
   padding: 9px;
   border-radius: 30px;
 }
-.schedule-plan-wrap {
+.schedule-list > h3,
+h4 {
   text-align: center;
+}
+.schedule-plan {
+  border-bottom: 1px solid #000;
+}
+
+.plan-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.plan-list > li {
+  border: 1px solid var(--main-color);
+  width: 80px;
+  padding: 10px;
+  color: var(--main-color);
+  font-weight: 600;
+  border-radius: 15px;
+}
+.plan-list > li:hover {
+  cursor: pointer;
+}
+.plan-list > li:nth-child(2) {
+  border-right: none;
+  border-radius: 15px;
+}
+.plan-list > li:nth-child(4) {
+  border-left: none;
+  border-radius: 15px;
+}
+.plan-list .selected-day {
+  background-color: var(--main-color);
+  color: white;
+  border-radius: 15px;
+}
+.plan-list > li:first-child {
+  border: none;
+  padding: 0;
+  width: 30px;
+}
+.plan-list > li:last-child {
+  border: none;
+  padding: 0;
+  width: 30px;
+}
+.plan-list .day-item {
+  color: var(--background-color);
+}
+.plan-list .active {
+  color: var(--main-color);
 }

@@ -40,4 +40,9 @@
 		select * from plan where itinerary_no = #{itineraryNo} and plan_day = #{planDay}
 	</select>
 	
+	<update id="updatePlan">
+		update plan set plan_memo = #{planMemo}, plan_time = #{planTime} where plan_no = #{planNo}
+	</update>
+	
+	
 </mapper>

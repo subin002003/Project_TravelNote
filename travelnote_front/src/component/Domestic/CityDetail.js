@@ -76,15 +76,15 @@ const CityDetail = () => {
       return;
     }
 
-    const form = new FormData();
-    form.append("userEmail", loginEmail);
-    form.append("regionNo", regionNo);
-    form.append("itineraryStartDate", startDate);
-    form.append("itineraryEndDate", endDate);
-    form.append("itineraryTitle", tripTitle.trim() || `${cityName}여행 `);
+    const obj = {};
+    obj.userEmail = loginEmail; // 객체.키 = 값; 형식으로 필요한 속성들 추가
+    obj.regionNo = regionNo;
+    obj.itineraryStartDate = startDate;
+    obj.itineraryEndDate = endDate;
+    obj.itineraryTitle = tripTitle.trim() || `${cityName} 여행`;
 
     axios
-      .post(`${backServer}/domestic/Schedule`, form)
+      .post(`${backServer}/domestic/Schedule`, obj)
       .then((res) => {
         Swal.fire({
           icon: "success",
