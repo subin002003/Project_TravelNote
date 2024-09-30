@@ -17,4 +17,6 @@ public class ForeignRegionDTO {
 	private String regionImg;
 	private String timeZone;
 	private String currencyCode;
+	private String regionLatitude;
+	private String regionLongitude;
 }

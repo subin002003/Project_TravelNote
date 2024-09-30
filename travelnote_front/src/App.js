@@ -23,6 +23,7 @@ import FindEmail from "./component/user/FindEmail";
 import FindPw from "./component/user/FindPw";
 import MypageMain from "./component/user/MypageMain";
 import CustomerServiceMain from "./component/customerService/CustomerServiceMain";
+import ReviewBoardMain from "./component/reviewBoard/ReviewBoardMain";
 
 function App() {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -81,6 +82,7 @@ function App() {
           <Route path="/city/:cityName/:regionNo" element={<CityDetail />} />
           <Route path="/schedule/:itineraryNo" element={<Schedule />} />
           <Route path="/board/*" element={<BoardMain />} />
+          <Route path="/reviewBoard/*" element={<ReviewBoardMain />} />
         </Routes>
       </main>
 

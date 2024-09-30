@@ -382,6 +382,45 @@
   height: 40px;
   box-sizing: border-box;
 }
+/* ForeignPlaceItem */
+.place-item-box {
+  height: 110px;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  justify-content: space-around;
+  text-align: left;
+}
+.place-list > div:last-child {
+  border: none;
+}
+.place-item-info {
+  width: 80%;
+  height: 90px;
+}
+.place-item-title {
+  margin: 10px 0;
+  margin-top: 20px;
+}
+.place-item-address {
+  font-size: small;
+  text-align: left;
+}
+.place-add-button {
+  margin-top: 20px;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--main-color);
+  border-radius: 15px;
+  box-sizing: content-box;
+  color: var(--main-color);
+  text-align: center;
+  font-weight: 600;
+}
+.place-add-button:hover {
+  background-color: var(--main-color);
+  color: white;
+  cursor: pointer;
+}
 
 /* ForeignPlanMap */
 .plan-map-wrap {

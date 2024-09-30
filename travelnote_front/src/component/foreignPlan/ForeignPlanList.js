@@ -17,7 +17,6 @@ const ForeignPlanList = (props) => {
   } = props;
 
   const backServer = process.env.REACT_APP_BACK_SERVER;
-  const navigate = useNavigate();
   const selectedDate = totalPlanDates[selectedDay - 1];
   const [planList, setPlanList] = useState([]); // 조회 중인 일정 목록 배열
   const [timeOptionsArr, setTimeOptionsArr] = useState([]); // 시간 선택 옵션 용 배열

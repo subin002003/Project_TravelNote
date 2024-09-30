@@ -34,7 +34,7 @@
 	</select>
 	
 	<select id="selectOneRegion" resultType="foreignRegion">
-		select r.*, time_zone, currency_code from (region)r left join (region_info)i on r.region_no = i.region_no where r.region_no = #{regionNo}
+		select r.*, time_zone, currency_code, region_latitude, region_longitude from (region)r left join (region_info)i on r.region_no = i.region_no where r.region_no = #{regionNo}
 	</select>
 	
 	<insert id="insertItinerary">

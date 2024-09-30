@@ -42,7 +42,13 @@ const BoardFrm = (props) => {
                   name="boardTitle"
                   value={boardTitle}
                   onChange={setBoardTitle}
-                  style={{ height: "30px", width: "1400px" }}
+                  style={{
+                    height: "30px",
+                    width: "1400px",
+                    border: "none",
+                    outline: "none",
+                    borderBottom: "1px solid black",
+                  }}
                 />
               </td>
             </tr>
@@ -57,7 +63,13 @@ const BoardFrm = (props) => {
                   name="boardCategory"
                   value={boardCategory}
                   onChange={setBoardCategory}
-                  style={{ height: "30px", width: "100px" }}
+                  style={{
+                    height: "30px",
+                    width: "100px",
+                    border: "none",
+                    outline: "none",
+                    borderBottom: "1px solid black",
+                  }}
                 />
               </td>
             </tr>
