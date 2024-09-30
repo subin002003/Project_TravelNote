@@ -8,8 +8,11 @@ import SchedulePlanList from "./SchedulePlanList";
 const Schedule = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+  const trainApiKey = process.env.REACT_APP_TRAIN_API_KEY;
 
+  const [planDays, setPlanDays] = useState([]); // 현재 조회 중인 날 기준으로 보여주는 날짜 배열
   const [selectedDay, setSelectedDay] = useState(1);
+  const [planPageOption, setPlanPageOption] = useState(1); // 조회 페이지 옵션 (1 조회, 2 수정)
   const [map, setMap] = useState(null);
   const [itinerary, setItinerary] = useState({});
   const [totalPlanDates, setTotalPlanDates] = useState([]); // 전체 일정 날짜
@@ -17,9 +20,11 @@ const Schedule = () => {
     lat: 37.5665,
     lng: 126.978,
   }); // 기본 서울 좌표
+  const [trainSchedules, setTrainSchedules] = useState([]); // 기차편 일정
   const { itineraryNo, city } = useParams(); // city 파라미터 추가
 
   useEffect(() => {
+    // 일정 데이터 가져오기
     axios
       .get(`${backServer}/domestic/getItinerary/${itineraryNo}`)
       .then((res) => {
@@ -118,8 +123,23 @@ const Schedule = () => {
     }
   }, [city]);
 
+  useEffect(() => {
+    const fetchTrainSchedules = async () => {
+      try {
+        const response = await axios.get(
+          `${backServer}/train?key=${trainApiKey}`
+        );
+        setTrainSchedules(response.data); // API 응답 데이터 저장
+      } catch (error) {
+        console.error("기차편 정보를 가져오는 데 실패했습니다:", error);
+      }
+    };
+
+    fetchTrainSchedules();
+  }, [backServer, trainApiKey]);
+
   const handleItineraryButtonClick = () => {
-    // 일정 추가 폼을 토글
+    // 일정 추가 폼을 토글하는 로직 구현
   };
 
   return (
@@ -132,6 +152,8 @@ const Schedule = () => {
               totalPlanDates={totalPlanDates}
               selectedDay={selectedDay}
               setSelectedDay={setSelectedDay}
+              planPageOption={planPageOption}
+              setPlanPageOption={setPlanPageOption}
             />
           </div>
 
@@ -145,10 +167,17 @@ const Schedule = () => {
               </ul>
             </div>
           )}
-
-          <div className="button-container">
-            <button className="save-btn">일정 저장</button>
-          </div>
+        </div>
+        <div className="store-list">
+          <h4>기차편 일정</h4>
+          <ul>
+            {trainSchedules.map((schedule, index) => (
+              <li key={index}>
+                {schedule.trainNumber} - {schedule.departure} -{" "}
+                {schedule.arrival} ({schedule.time})
+              </li>
+            ))}
+          </ul>
         </div>
         <div className="map-container">
           <div id="map" style={{ height: "100%", width: "100%" }}></div>
