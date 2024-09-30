@@ -73,7 +73,7 @@ const BoardList = () => {
             })}
           </tbody>
         </table>
-        <div>
+        <div style={{ margin: "50px" }}>
           <PagiNavi pi={pi} reqPage={reqPage} setReqPage={setReqPage} />
         </div>
       </div>
