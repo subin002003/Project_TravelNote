@@ -24,4 +24,13 @@
 	<select id="totalCount" resultType="int">
 		select count(*) from personal_board where personal_board_writer = #{userNick}
 	</select>
+	<select id="selectOnePersonalBoard" resultType="personalBoard">
+		select * from personal_board where personal_board_no = #{personalBoardNo}
+	</select>
+	<select id="getPersonalBoardAnswer" resultType="personalBoardAnswer">
+		select * from personal_board_answer where personal_board_answer_no = #{personalBoardAnswerNo}
+	</select>
+	<delete id="deletePersonalBoard">
+		delete from personal_board where personal_board_no = #{personalBoardNo}
+	</delete>
 </mapper>

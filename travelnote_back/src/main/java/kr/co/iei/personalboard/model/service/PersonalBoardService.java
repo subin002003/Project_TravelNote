@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.iei.personalboard.model.dao.PersonalBoardDao;
+import kr.co.iei.personalboard.model.dto.PersonalBoardAnswerDTO;
 import kr.co.iei.personalboard.model.dto.PersonalBoardDTO;
 import kr.co.iei.personalboard.model.dto.PersonalBoardFileDTO;
 import kr.co.iei.util.PageInfo;
@@ -43,5 +44,23 @@ public class PersonalBoardService {
 		map.put("pi",pi);
 		System.out.println("map 잘나오나요 ? : "+map);
 		return map;
+	}
+
+	public PersonalBoardDTO selectOnePersonalBoard(int personalBoardNo) {
+		PersonalBoardDTO personalBoard = personalBoardDao.selectOnePersonalBoard(personalBoardNo);
+		
+		return personalBoard;
+	}
+
+	public PersonalBoardAnswerDTO getPersonalBoardAnser(int personalBoardNo) {
+		PersonalBoardAnswerDTO personalBoardAnswer = personalBoardDao.getPersonalBoardAnswer(personalBoardNo);
+		
+		return personalBoardAnswer;
+	}
+	
+	@Transactional
+	public int deletePersonalBoard(int personalBoardNo) {
+		int result = personalBoardDao.deletePersonalBoard(personalBoardNo);
+		return result;
 	}
 }

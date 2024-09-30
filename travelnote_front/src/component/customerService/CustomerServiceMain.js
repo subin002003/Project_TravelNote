@@ -15,6 +15,8 @@ import CustomerBoardView from "./CustomerBoardView";
 import CustomerBoardUpdate from "./CustmerBoardUpdate";
 import ChannelTalk from "./ChannelTalk";
 import PersonalBoardWrite from "./PersonalBoardWrite";
+import PersonalBoardView from "./PersonalBoardView";
+import PersonalBoardUpdate from "./PersonalBoardUpdate";
 
 const CustomerServiceMain = () => {
   const navigate = useNavigate();
@@ -45,6 +47,14 @@ const CustomerServiceMain = () => {
         />
         <Route path="customerBoardWrite" element={<CustomerBoardWrite />} />
         <Route path="personalBoardWrite" element={<PersonalBoardWrite />} />
+        <Route
+          path="personalBoard/view/:personalBoardNo"
+          element={<PersonalBoardView />}
+        />
+        <Route
+          path="personalBoard/update/:personalBoardNo"
+          element={<PersonalBoardUpdate />}
+        />
       </Routes>
       <ChannelTalk />
       {isLogin ? (

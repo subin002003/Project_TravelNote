@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.iei.personalboard.model.dto.PersonalBoardAnswerDTO;
 import kr.co.iei.personalboard.model.dto.PersonalBoardDTO;
 import kr.co.iei.personalboard.model.dto.PersonalBoardFileDTO;
 import kr.co.iei.util.PageInfo;
@@ -18,5 +19,11 @@ public interface PersonalBoardDao {
 	int insertPersonalBoardFile(PersonalBoardFileDTO personalBoardFile);
 
 	List selectPersonalBoardList(PageInfo pi);
+
+	PersonalBoardDTO selectOnePersonalBoard(int personalBoardNo);
+
+	PersonalBoardAnswerDTO getPersonalBoardAnswer(int personalBoardNo);
+
+	int deletePersonalBoard(int personalBoardNo);
 
 }

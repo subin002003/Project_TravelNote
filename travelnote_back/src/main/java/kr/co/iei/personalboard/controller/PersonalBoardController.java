@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import kr.co.iei.personalboard.model.dto.PersonalBoardAnswerDTO;
 import kr.co.iei.personalboard.model.dto.PersonalBoardDTO;
 import kr.co.iei.personalboard.model.dto.PersonalBoardFileDTO;
 import kr.co.iei.personalboard.model.service.PersonalBoardService;
@@ -78,5 +79,24 @@ public class PersonalBoardController {
 	    int result = personalBoardService.insertPersonalBoard(personalBoard, personalBoardFiles);
 	    return ResponseEntity.ok(result == 1 + personalBoardFiles.size());
 	}
-
+	
+	@GetMapping(value="/view/{personalBoardNo}")
+	public ResponseEntity<PersonalBoardDTO> viewPersonalBoard(@PathVariable int personalBoardNo){
+		PersonalBoardDTO personalBoard = personalBoardService.selectOnePersonalBoard(personalBoardNo);
+		return ResponseEntity.ok(personalBoard);
+	}
+	
+	@GetMapping(value = "/getAnswer/{personalBoardNo}")
+	public ResponseEntity<PersonalBoardAnswerDTO> getAnswer(@PathVariable int personalBoardNo){
+		PersonalBoardAnswerDTO personalBoardAnswer = personalBoardService.getPersonalBoardAnser(personalBoardNo);
+		return ResponseEntity.ok(personalBoardAnswer);
+	}
+	
+	@DeleteMapping(value = "/{personalBoardNo}")
+	public ResponseEntity<Integer> deletePersonalBoard(@PathVariable int personalBoardNo){
+		int result = personalBoardService.deletePersonalBoard(personalBoardNo);
+		return ResponseEntity.ok(result);
+	}
+	
+	
 }
