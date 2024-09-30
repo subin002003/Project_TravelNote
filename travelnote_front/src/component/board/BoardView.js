@@ -3,7 +3,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { loginEmailState, userNickState } from "../utils/RecoilData";
+import { userNickState } from "../utils/RecoilData";
+
 import Swal from "sweetalert2";
 
 const BoardView = () => {
@@ -13,17 +14,51 @@ const BoardView = () => {
   const boardNo = params.boardNo;
   const [board, setBoard] = useState({});
   const [userNick, setUserNick] = useRecoilState(userNickState);
+  const [liked, setLiked] = useState(false); // 좋아요 상태
+  const [likeCount, setLikeCount] = useState(0); // 좋아요 개수
+
   useEffect(() => {
+    // 게시물 가져오기
     axios
       .get(`${backServer}/board/boardNo/${boardNo}`)
       .then((res) => {
-        console.log(res);
         setBoard(res.data);
+        setLikeCount(res.data.likeCount || 0); // res.data.likeCount 값 존재:그 값을 setLikeCount에 전달 / 존재x or null 등 일 때 : 0을 setLikeCount에 전달
+        setLiked(res.data.liked || false); // 초기 좋아요 상태 설정
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [boardNo]);
+  const toggleLike = () => {
+    const action = liked ? "remove" : "add"; // 좋아요 추가 또는 제거
+
+    console.log("userNick : ", userNick);
+    console.log("userNo : ", boardNo);
+    console.log("action : ", action);
+
+    axios
+      .post(`${backServer}/board/like/${boardNo}`, {
+        userNick: userNick,
+
+        action: action,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          setLiked(!liked); // 상태 반전
+          setLikeCount((prev) => (liked ? prev - 1 : prev + 1)); // 카운트 업데이트
+        } else {
+          Swal.fire({
+            title: "실패",
+            text: res.data.message,
+            icon: "error",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   const deleteBoard = () => {
     axios
       .delete(`${backServer}/board/${board.boardNo}`)
@@ -119,10 +154,16 @@ const BoardView = () => {
                 fontSize: "20px",
                 fontWeight: "bolder",
                 paddingRight: "20px",
+                cursor: "pointer",
               }}
+              onClick={toggleLike}
             >
-              {/* 숫자 임시 부여 */}
-              <span className="material-icons">favorite_border</span> 11
+              {/* 좋아요 */}
+              <span className="material-icons">
+                {/* 좋아요 상태에 따라 아이콘 변경 */}
+                {liked ? "favorite" : "favorite_border"}{" "}
+              </span>
+              <span style={{ marginLeft: "2px" }}>{likeCount}</span>
             </p>
             <div className="board-center">
               <p style={{ fontSize: "20px", fontWeight: "bolder" }}>카테고리</p>

@@ -19,6 +19,6 @@ public class ReviewDTO {
 	private String reviewDate;
 	private int reviewCommentRef;
 	
-	private int reviewLikeCount;
 	private int reviewLike;
+	private int reviewLikeCount;
 }

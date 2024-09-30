@@ -72,8 +72,14 @@ const ProductView = () => {
         month: "long",
         day: "numeric",
       };
-      const startFormatted = new Date(startDate).toLocaleDateString("ko-KR", options);
-      const endFormatted = new Date(endDate).toLocaleDateString("ko-KR", options);
+      const startFormatted = new Date(startDate).toLocaleDateString(
+        "ko-KR",
+        options
+      );
+      const endFormatted = new Date(endDate).toLocaleDateString(
+        "ko-KR",
+        options
+      );
       setDateRange(`선택된 날짜: ${startFormatted} ~ ${endFormatted}`);
     }
   };
@@ -127,7 +133,11 @@ const ProductView = () => {
                     <img
                       src={`${backServer}/product/${file.filepath}`}
                       alt={`Slide ${i}`}
-                      style={{ height: "780px", width: "100%", objectFit: "cover" }}
+                      style={{
+                        height: "780px",
+                        width: "100%",
+                        objectFit: "cover",
+                      }}
                     />
                   </SwiperSlide>
                 ))
@@ -154,7 +164,9 @@ const ProductView = () => {
           <DateRangePickerComponent onDateRangeChange={handleDateRangeChange} />
 
           <div className="people">
-            <button className="btn-primary sm" onClick={() => adjustCount(-1)}>-</button>
+            <button className="btn-primary sm" onClick={() => adjustCount(-1)}>
+              -
+            </button>
             <input
               type="number"
               id="count"
@@ -168,7 +180,9 @@ const ProductView = () => {
               }}
               readOnly
             />
-            <button className="btn-primary sm" onClick={() => adjustCount(1)}>+</button>
+            <button className="btn-primary sm" onClick={() => adjustCount(1)}>
+              +
+            </button>
           </div>
 
           <div style={{ margin: "50px 0" }}>
@@ -198,8 +212,17 @@ const ProductView = () => {
       <div className="line"></div>
 
       <div className="sec review">
-        <div className="section-title" style={{ display: "flex", justifyContent: "space-between", marginBottom: "0px" }}>
-          <strong style={{ fontSize: "20px" }}>리뷰({product.reviews.length}개)</strong>
+        <div
+          className="section-title"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: "0px",
+          }}
+        >
+          <strong style={{ fontSize: "20px" }}>
+            리뷰({product.reviews.length}개)
+          </strong>
           <button className="btn-secondary lg" onClick={handleOpenReviewDialog}>
             <span style={{ marginRight: "5px" }}>
               <i className="fa-solid fa-pen-to-square"></i>
@@ -214,7 +237,11 @@ const ProductView = () => {
           <div className="posting-review-wrap">
             <ul>
               {product.reviews.map((review, i) => (
-                <ReviewItem key={`review-${i}`} product={product} review={review} />
+                <ReviewItem
+                  key={`review-${i}`}
+                  product={product}
+                  review={review}
+                />
               ))}
             </ul>
           </div>
@@ -232,17 +259,34 @@ const ProductView = () => {
       >
         <DialogTitle>리뷰 작성</DialogTitle>
         <DialogContent>
-          <Review productNo={productNo} open={openReviewDialog} handleClose={handleCloseReviewDialog} />
+          <Review
+            productNo={productNo}
+            open={openReviewDialog}
+            handleClose={handleCloseReviewDialog}
+          />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseReviewDialog} color="primary">닫기</Button>
+          <Button onClick={handleCloseReviewDialog} color="primary">
+            닫기
+          </Button>
         </DialogActions>
       </Dialog>
 
       {isLogin && userType === 2 && (
         <div className="button-box">
-          <Link className="btn-primary lg" to={`/product/update/${product.productNo}`}>수정</Link>
-          <button type="button" className="btn-secondary lg" onClick={deleteProduct}>삭제</button>
+          <Link
+            className="btn-primary lg"
+            to={`/product/update/${product.productNo}`}
+          >
+            수정
+          </Link>
+          <button
+            type="button"
+            className="btn-secondary lg"
+            onClick={deleteProduct}
+          >
+            삭제
+          </button>
         </div>
       )}
     </section>
@@ -264,15 +308,17 @@ const ReviewItem = ({ product, review }) => {
       return;
     }
 
-    const url = review.reviewLike ?
-      `${backServer}/review/dislike/${review.reviewNo}` :
-      `${backServer}/review/like/${review.reviewNo}`;
+    const url = review.reviewLike
+      ? `${backServer}/review/dislike/${review.reviewNo}`
+      : `${backServer}/review/like/${review.reviewNo}`;
 
     axios
       .patch(url, { userEmail: loginEmail })
       .then(() => {
         Swal.fire({
-          title: `리뷰가 ${review.reviewLike ? "좋아요" : "좋아요 취소"}되었습니다.`,
+          title: `리뷰가 ${
+            review.reviewLike ? "좋아요" : "좋아요 취소"
+          }되었습니다.`,
           icon: "success",
         });
         navigate(0); // Refresh page
@@ -291,7 +337,10 @@ const ReviewItem = ({ product, review }) => {
         <div className="review-body">
           <p>{review.reviewContent}</p>
           <div className="review-footer">
-            <button className="like-button" onClick={() => handleLikeToggle(review)}>
+            <button
+              className="like-button"
+              onClick={() => handleLikeToggle(review)}
+            >
               {review.reviewLike ? "좋아요 취소" : "좋아요"}
             </button>
           </div>

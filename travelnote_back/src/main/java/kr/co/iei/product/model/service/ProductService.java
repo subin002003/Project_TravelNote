@@ -23,17 +23,31 @@ public class ProductService {
 	
 	@Autowired
 	private PageUtil pageUtil;
+	
+	// 패키지 상품 목록 조회(이메일 없으면)
+	public Map selectProductList(int reqPage) {
+		int numPerPage = 4;						// 한 페이지당 출력할 상품 갯수
+		int pageNaviSize = 7;						// 페이지네비 길이
+		int totalCount = productDao.totalCount();	// 전체 상품 수
+		// 페이징에 필요한 값들을 연산해서 객체로 리턴받음
+		PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
+		List list = productDao.selectProductList(pi);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list", list);
+		map.put("pi", pi);
+		return map;
+	}
 
-	// 패키지 상품 목록 조회
-	public Map selectProductList(int reqPage, String userEmail) {
-		int userNo = productDao.selectOneUser(userEmail);
+	// 패키지 상품 목록 조회(이메일 있으면)
+	public Map selectProductListEmail(int reqPage, String userEmail) {
+//		int userNo = productDao.selectOneUser(userEmail);
 		// 게시물 조회 및 페이징에 필요한 데이터를 모두 취합
 		int numPerPage = 4;						// 한 페이지당 출력할 상품 갯수
 		int pageNaviSize = 7;						// 페이지네비 길이
 		int totalCount = productDao.totalCount();	// 전체 상품 수
 		// 페이징에 필요한 값들을 연산해서 객체로 리턴받음
 		PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
-		List list = productDao.selectProductList(pi, userNo);
+		List list = productDao.selectProductListEmail(pi, userEmail);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list);
 		map.put("pi", pi);

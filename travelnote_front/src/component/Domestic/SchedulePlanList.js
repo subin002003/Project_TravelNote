@@ -74,10 +74,11 @@ const SchedulePlanList = (props) => {
           if (res.data) {
             Swal.fire({
               icon: "success",
-              text: "메모와 시간이 저장되었습니다.",
+              text: "일정이 저장되었습니다.",
             });
             setEditList([]); // 수정 목록 초기화
             setIsEditing(false); // 수정 모드 종료
+            setPlanPageOption(1); // 기본 조회 모드로 돌아가기
           } else {
             Swal.fire({
               icon: "error",
@@ -88,15 +89,17 @@ const SchedulePlanList = (props) => {
         .catch((err) => {
           console.log(err);
         });
-    } else {
-      setPlanPageOption(1); // 기본 조회 페이지로 돌아가기
     }
   };
 
   // 조회에서 버튼 클릭 시 수정 모드로 전환
-  const switchToEditMode = () => {
-    setPlanPageOption(2);
-    setIsEditing(true); // 수정 모드 활성화
+  const toggleEditMode = () => {
+    if (isEditing) {
+      saveUpdatedPlans(); // 수정 완료시 저장
+    } else {
+      setIsEditing(true); // 수정 모드로 전환
+      setPlanPageOption(2); // 수정 페이지로 변경
+    }
   };
 
   return (
@@ -109,17 +112,16 @@ const SchedulePlanList = (props) => {
         <h4>
           {itinerary.itineraryStartDate} {itinerary.itineraryEndDate}
         </h4>
+        <h4>{selectedDate}</h4>
       </div>
       <div className="schedule-box">
         {totalPlanDates.length > 0 ? (
           <>
-            <h4>{selectedDate}</h4>
             <SchedulePlanButton
               planDays={planDays}
               selectedDay={selectedDay}
               setSelectedDay={setSelectedDay}
               totalPlanDates={totalPlanDates}
-              switchToEditMode={switchToEditMode} // 수정 모드 전환 함수 전달
             />
           </>
         ) : (
@@ -139,11 +141,23 @@ const SchedulePlanList = (props) => {
                   setIsEditing={setIsEditing}
                   editList={editList}
                   setEditList={setEditList}
+                  planPageOption={planPageOption}
+                  setPlanPageOption={setPlanPageOption}
                 />
               ))
             ) : (
-              <h3></h3>
+              <h3>일정 </h3>
             )}
+          </div>
+
+          <div className="button-container">
+            <button className="save-btn">일정 저장</button>
+            <button
+              className={"Editing-btn" + (isEditing ? "-active" : "")}
+              onClick={toggleEditMode}
+            >
+              {isEditing ? "수정 완료" : "일정 수정하기"}
+            </button>
           </div>
         </div>
       </div>

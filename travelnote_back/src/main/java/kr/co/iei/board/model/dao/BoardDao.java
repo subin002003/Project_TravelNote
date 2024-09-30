@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import kr.co.iei.board.model.dto.BoardDTO;
 import kr.co.iei.board.model.dto.BoardFileDTO;
 import kr.co.iei.util.PageInfo;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface BoardDao {
@@ -32,5 +33,18 @@ public interface BoardDao {
 	List<BoardFileDTO> selectBoardFile(int[] delBoardFileNo);
 
 	int deleteBoarFile(int[] delBoardFileNo);
+
+	int insertLike(@Param("userNick") String userNick, @Param("boardNo") int boardNo);
+
+	int deleteLike(@Param("userNick") String userNick, @Param("boardNo") int boardNo);
+
+	void incrementLikeCount(int boardNo);
+
+	void decrementLikeCount(int boardNo);
+
+	
+
+	
+	
 
 }
