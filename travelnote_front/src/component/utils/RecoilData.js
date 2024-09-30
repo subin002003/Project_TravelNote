@@ -6,7 +6,7 @@ const loginEmailState = atom({
   default: "",
 });
 
-//로그인한 회원의 타입을 저장하는 저장소\
+//로그인한 회원의 타입을 저장하는 저장소
 const userTypeState = atom({
   key: "userTypeState",
   default: 0,
@@ -25,6 +25,7 @@ const isLoginState = selector({
     const loginEmail = state.get(loginEmailState);
     const userType = state.get(userTypeState);
     const userNick = state.get(userNickState);
+
     return loginEmail !== "" && userType !== 0 && userNick !== "";
   },
 });

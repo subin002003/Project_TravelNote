@@ -99,7 +99,7 @@ const BoardItem = (props) => {
       <td>{board.boardWriter}</td>
       <td>{board.boardDate}</td>
       <td>{board.boardReadCount}</td>
-      <td>{board.boardLike}</td>
+      <td>{board.likeCount}</td>
     </tr>
   );
 };
