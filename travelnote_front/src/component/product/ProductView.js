@@ -52,14 +52,14 @@ const ProductView = () => {
 
   useEffect(() => {
     if (!productNo || !userEmail) {
-      // console.error("productNo 또는 userEmail이 유효하지 않습니다.");
+      console.error("productNo 또는 userEmail이 유효하지 않습니다.");
       return;
     }
 
     axios
       .get(`${backServer}/product/productNo/${productNo}/${userEmail}`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setProduct(res.data);
       })
       .catch((err) => {
@@ -70,19 +70,24 @@ const ProductView = () => {
           icon: "error",
         });
       });
-  }, [backServer, productNo, userEmail]);
+  }, [backServer, productNo, userEmail, product.reviews]);
 
   const handleDateRangeChange = (startDate, endDate) => {
     if (startDate && endDate) {
-
       const options = {
         weekday: "long",
         year: "numeric",
         month: "long",
         day: "numeric",
       };
-      const startFormatted = new Date(startDate).toLocaleDateString("ko-KR", options);
-      const endFormatted = new Date(startDate).toLocaleDateString("ko-KR", options);
+      const startFormatted = new Date(startDate).toLocaleDateString(
+        "ko-KR",
+        options
+      );
+      const endFormatted = new Date(startDate).toLocaleDateString(
+        "ko-KR",
+        options
+      );
 
       setDateRange(`선택된 날짜: ${startFormatted} ~ ${endFormatted}`);
     }
@@ -90,26 +95,51 @@ const ProductView = () => {
 
   // 패키지 상품 삭제
   const deleteProduct = () => {
-    axios
-      .delete(`${backServer}/product/${product.productNo}`)
-      .then((res) => {
-        console.log(res);
-        if (res.data === 1) {
-          Swal.fire({
-            title: "상품이 삭제되었습니다.",
-            icon: "success",
+    Swal.fire({
+      title: "상품을 삭제하시겠습니까?",
+      text: "삭제 후 복구할 수 없습니다.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "삭제",
+      cancelButtonText: "취소",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        // 사용자가 삭제를 확인했을 경우에만 Axios 요청 실행
+        axios
+          .delete(`${backServer}/product/${product.productNo}`)
+          .then((res) => {
+            // 응답 처리
+            if (res.data === 1) {
+              Swal.fire({
+                title: "상품이 삭제되었습니다.",
+                icon: "success",
+              });
+              navigate("/product/list");
+            } else {
+              Swal.fire({
+                title: "상품 삭제에 실패했습니다.",
+                text: "다시 시도해 주세요.",
+                icon: "error",
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            Swal.fire({
+              title: "오류 발생",
+              text: "상품 삭제 중 오류가 발생했습니다.",
+              icon: "error",
+            });
           });
-          navigate("/product/list");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      }
+    });
   };
 
   const minus = () => {
     if (count === 1) {
-      alert("최소 주문 수량은 1개 입니다.");
+      alert("최소 구매 수량은 1개 입니다.");
     } else {
       setCount((prevCount) => prevCount - 1); // 이전 값을 기반으로 상태 업데이트
     }
@@ -117,7 +147,7 @@ const ProductView = () => {
 
   const plus = () => {
     if (count === 10) {
-      alert("최대 주문 수량은 10개 입니다.");
+      alert("최대 구매 수량은 10개 입니다.");
     } else {
       setCount((prevCount) => prevCount + 1); // 이전 값을 기반으로 상태 업데이트
     }
@@ -296,10 +326,17 @@ const ProductView = () => {
 
               {product.reviews.length > 0 ? (
                 product.reviews.map((review, i) => (
-                  <ReviewItem key={`review-${i}`} product={product} review={review} />
+                  <ReviewItem
+                    key={`review-${i}`}
+                    product={product}
+                    review={review}
+                    parentReviewNo={review.reviewNo} // 부모 리뷰 ID 전달
+                  />
                 ))
               ) : (
-                <li style={{ textAlign: "center", color: "gray" }}>등록된 리뷰가 없습니다.</li>
+                <li style={{ textAlign: "center", color: "gray" }}>
+                  등록된 리뷰가 없습니다.
+                </li>
               )}
             </ul>
           </div>
@@ -365,6 +402,8 @@ const ReviewItem = (props) => {
   const product = props.product;
   const productNo = product.productNo;
   const review = props.review;
+  // console.log(review);
+  const parentReviewNo = props.reviewCommentRef;
 
   // 로그인 회원 정보
   const isLogin = useRecoilValue(isLoginState);
@@ -386,6 +425,8 @@ const ReviewItem = (props) => {
   // 리뷰 작성 팝업 열기
   const handleOpenReviewDialog = () => {
     setOpenReviewDialog(true);
+    // 여기에 parentReviewId를 사용하는 로직 추가
+    console.log("Parent Review ID:", parentReviewNo);
   };
 
   // 리뷰 작성 팝업 닫기
@@ -421,10 +462,10 @@ const ReviewItem = (props) => {
       text: "삭제 후 복구할 수 없습니다.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: '삭제',
-      cancelButtonText: '취소'
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "삭제",
+      cancelButtonText: "취소",
     }).then((result) => {
       if (result.isConfirmed) {
         axios
@@ -481,14 +522,14 @@ const ReviewItem = (props) => {
       const newLikeStatus = !reviewLike; // 좋아요 상태 토글
       const request = newLikeStatus
         ? axios.post(
-          // 리뷰 좋아요
-          `${backServer}/product/${review.reviewNo}/insertReviewLike/${userEmail}`,
-          { reviewLike: 1 }
-        )
+            // 리뷰 좋아요
+            `${backServer}/product/${review.reviewNo}/insertReviewLike/${userEmail}`,
+            { reviewLike: 1 }
+          )
         : axios.delete(
-          // 리뷰 좋아요 취소
-          `${backServer}/product/${review.reviewNo}/deleteReviewLike/${userEmail}?reviewLike=1`
-        );
+            // 리뷰 좋아요 취소
+            `${backServer}/product/${review.reviewNo}/deleteReviewLike/${userEmail}?reviewLike=1`
+          );
 
       request
         .then((res) => {
@@ -571,9 +612,7 @@ const ReviewItem = (props) => {
           </span>
           <span className="reviewReComment-btn">
             <i className="fa-solid fa-comment-dots"></i>
-            {/* <a className="recShow" href="javascript:void(0)">
-              답글
-            </a> */}
+            <Link className="recShow">답글</Link>
             <span className="reviewReCommentCount">0</span>
           </span>
         </div>

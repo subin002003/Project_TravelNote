@@ -45,11 +45,19 @@ public class ProductController {
 	@Value("${file.root}")
 	public String root;
 	
-	// 패키지 상품 목록
+	// 패키지 상품 목록(이메일 없으면)
+	@GetMapping(value="/list/{reqPage}")
+	public ResponseEntity<Map> list(@PathVariable int reqPage){
+		// 조회 결과는 게시물목록, pageNavi생성 시 필요한 데이터들
+		Map map = productService.selectProductList(reqPage);
+		return ResponseEntity.ok(map);
+	}
+	
+	// 패키지 상품 목록(이메일 있으면)
 	@GetMapping(value="/list/{reqPage}/{userEmail}")
 	public ResponseEntity<Map> list(@PathVariable int reqPage, @PathVariable String userEmail){
 		// 조회 결과는 게시물목록, pageNavi생성 시 필요한 데이터들
-		Map map = productService.selectProductList(reqPage, userEmail);
+		Map map = productService.selectProductListEmail(reqPage, userEmail);
 		return ResponseEntity.ok(map);
 	}
 	
@@ -81,7 +89,7 @@ public class ProductController {
 	    } else {
 	        // 그 외 확장자는 지원하지 않음
 	        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
-	    }
+	    } 
 
 	    // 파일을 읽어와서 InputStreamResource로 반환
 	    InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
@@ -118,13 +126,13 @@ public class ProductController {
 		return ResponseEntity.ok(result == 1 + productFileList.size());
 	}
 	
+	// 패키지 상품 상세페이지
 //	@GetMapping(value="/productNo/{productNo}")
 //	public ResponseEntity<ProductDTO> selectOneProduct(@PathVariable int productNo) {
 //		ProductDTO product = productService.selectOneProduct(productNo);
 //		return ResponseEntity.ok(product);
 //	}
-
-	// 패키지 상품 상세페이지
+	
 	@GetMapping(value="/productNo/{productNo}/{userEmail}")
 	public ResponseEntity<ProductDTO> selectOneProduct(@PathVariable int productNo, @PathVariable String userEmail) {
 	    ProductDTO product = productService.selectOneProduct(productNo, userEmail);
@@ -184,6 +192,7 @@ public class ProductController {
 	// 리뷰 등록
 	@PostMapping(value="/insertReview")
 	public ResponseEntity<Integer> insertReview(@ModelAttribute ReviewDTO review) {
+		System.out.println(review);
 		int result = productService.insertReview(review);
 		return ResponseEntity.ok(result);
 	}
@@ -242,7 +251,7 @@ public class ProductController {
 	}
 	
 	// 상품 좋아요의 상태가 바뀔 때 마다 상품 좋아요 수 조회
-	@GetMapping(value="/{productNo}/likeCount")
+	@GetMapping(value="/{productNo}/productLike")
 	public ResponseEntity<Integer> selectProductLikeCount(@PathVariable int productNo) {
 		int productLikeCount = productService.selectProductLikeCount(productNo);
 		return ResponseEntity.ok(productLikeCount);

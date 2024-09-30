@@ -23,8 +23,12 @@ const ProductList = () => {
   const [userType, setUserType] = useRecoilState(userTypeState);
 
   useEffect(() => {
-    axios
-      .get(`${backServer}/product/list/${reqPage}/${userEmail}`)
+    const request =
+      isLogin && userEmail
+        ? axios.get(`${backServer}/product/list/${reqPage}/${userEmail}`)
+        : axios.get(`${backServer}/product/list/${reqPage}`);
+
+    request
       .then((res) => {
         console.log(res.data);
         setProductList(res.data.list);
@@ -33,7 +37,25 @@ const ProductList = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [reqPage]);
+  }, [userEmail, reqPage]);
+
+  // useEffect(() => {
+  //   if (userEmail) {
+  //     // userEmail이 존재하는 경우에만 요청
+  //     axios
+  //       .get(`${backServer}/product/list/${reqPage}/${userEmail}`)
+  //       .then((res) => {
+  //         console.log(res.data);
+  //         setProductList(res.data.list);
+  //         setPi(res.data.pi);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   }
+  // }, [userEmail, reqPage]);
+
+  // console.log(`${backServer}/product/list/${reqPage}/${userEmail}`);
 
   return (
     <section className="section product-list">
@@ -86,6 +108,7 @@ const ProductItem = (props) => {
         title: "로그인 후 이용이 가능합니다.",
         icon: "info",
       });
+      // navigate(`/login`);
       return;
     }
 
@@ -162,7 +185,7 @@ const ProductItem = (props) => {
             ></i>
           </span>
           {/* 좋아요 수 출력 */}
-          <span className="productLikeCount">{productLikeCount}</span>
+          {/* <span className="productLikeCount">{productLikeCount}</span> */}
         </div>
         <span className="price">{product.productPrice.toLocaleString()}원</span>
       </div>
