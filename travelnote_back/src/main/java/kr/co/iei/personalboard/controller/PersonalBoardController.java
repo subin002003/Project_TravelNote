@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -123,5 +125,44 @@ public class PersonalBoardController {
 				 .contentLength(file.length())
 				 .contentType(MediaType.APPLICATION_OCTET_STREAM)
 				 .body(resource);
+	}
+	
+	@PatchMapping(value = "/update")
+	public ResponseEntity<Integer> updatePersonalBoard(@RequestParam(value = "personalBoardTitle") String personalBoardTitle,
+	        @RequestParam(value = "personalBoardContent") String personalBoardContent,
+	        @RequestParam(value = "personalBoardWriter") String personalBoardWriter,
+	        @RequestParam(value = "personalBoardNo") int personalBoardNo,
+	        @RequestParam(value = "personalBoardFileList", required = false) MultipartFile[] personalBoardFileList,
+	        @RequestParam(value = "delPersonalBoardFileNo") int[] delPersonalBoardFileNo){
+		PersonalBoardDTO personalBoard = new PersonalBoardDTO();
+		personalBoard.setPersonalBoardContent(personalBoardContent);
+		personalBoard.setPersonalBoardTitle(personalBoardTitle);
+		personalBoard.setPersonalBoardWriter(personalBoardWriter);
+		personalBoard.setPersonalBoardNo(personalBoardNo);
+		personalBoard.setDelPersonalBoardFileNo(delPersonalBoardFileNo);
+		System.out.println("게시글번호 : "+personalBoardNo);
+		List<PersonalBoardFileDTO> personalBoardFiles = new ArrayList<PersonalBoardFileDTO>();
+		if(personalBoardFileList != null) {
+			String savepath = root + "/personalBoard/";
+			for(MultipartFile file : personalBoardFileList) {
+				PersonalBoardFileDTO personalBoardFile = new PersonalBoardFileDTO();
+				String filename = file.getOriginalFilename();
+				String filepath = fileUtil.upload(savepath, file);
+				personalBoardFile.setPersonalBoardFilename(filename);
+				personalBoardFile.setPersonalBoardFilepath(filepath);
+				personalBoardFile.setPersonalBoardNo(personalBoardNo);
+				personalBoardFiles.add(personalBoardFile);
+			}
+		}
+		List<PersonalBoardFileDTO> delPersonalBoardFileList = personalBoardService.updatePersonalBoard(personalBoard, personalBoardFiles);
+		if(delPersonalBoardFileList != null) {
+			String savepath = root + "/personalBoard/";
+			for(PersonalBoardFileDTO deleteFile : delPersonalBoardFileList) {
+				File delFile = new File(savepath + deleteFile.getPersonalBoardFilepath());
+				delFile.delete();
+			}
+			return ResponseEntity.ok(1);
+		}
+		return ResponseEntity.ok(0);
 	}
 }

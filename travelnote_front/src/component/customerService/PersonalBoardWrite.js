@@ -1,6 +1,6 @@
 import { useRecoilState } from "recoil";
 import { userNickState } from "../utils/RecoilData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,12 @@ const PersonalBoardWrite = () => {
   const [userNick, setUserNick] = useRecoilState(userNickState);
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
+  const [currentDate, setCurrentDate] = useState("");
+  useEffect(() => {
+    const today = new Date();
+    const formattedDate = today.toISOString().split("T")[0]; // YYYY-MM-DD 형식으로 변환
+    setCurrentDate(formattedDate);
+  }, []);
   const [personalBoard, setPersonalBoard] = useState({
     personalBoardTitle: "",
     personalBoardContent: "",
@@ -111,7 +117,7 @@ const PersonalBoardWrite = () => {
                 <label>작성일</label>
               </th>
               <td>
-                <div className="personalBoard-input">2024-09-30</div>
+                <div className="personalBoard-input">{currentDate}</div>
               </td>
             </tr>
 

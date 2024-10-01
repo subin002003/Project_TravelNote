@@ -69,4 +69,21 @@
 		update personal_board_answer set personal_board_answer_content = #{personalBoardAnswerContent}, personal_board_answer_writer = #{personalBoardAnswerWriter}
 		where personal_board_no = #{personalBoardNo}
 	</update>
+	<update id="updatePersonalBoard">
+		update personal_board set personal_board_content = #{personalBoardContent}, personal_board_writer = #{personalBoardWriter}, personal_board_title = #{personalBoardTitle}
+		where personal_board_no = #{personalBoardNo}
+	</update>
+	<select id="selectOnePersonalBoardFile2">
+		select * from personal_board_file
+		where personal_board_file_no in
+		<foreach collection="array" item="personalBoardFileNo" open="(" close=")" separator=",">
+			#{personalBoardFileNo}
+		</foreach>
+	</select>
+	<delete id="deletePersonalBoardFile">
+		delete from personal_board_file where personal_board_file_no in
+		<foreach collection="array" item="personalBoardFileNo" open="(" close=")" separator=",">
+			#{personalBoardFileNo}
+		</foreach>
+	</delete>
 </mapper>

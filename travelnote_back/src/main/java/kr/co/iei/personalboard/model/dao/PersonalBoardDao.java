@@ -45,6 +45,12 @@ public interface PersonalBoardDao {
 
 	int updatePersonalBoardAnswer(PersonalBoardAnswerDTO personalBoardAnswer);
 
+	int updatePersonalBoard(PersonalBoardDTO personalBoard);
+
+	List<PersonalBoardFileDTO> selectOnePersonalBoardFile2(int[] delPersonalBoardFileNo);
+
+	int deletePersonalBoardFile(int[] delPersonalBoardFileNo);
+
 
 
 }

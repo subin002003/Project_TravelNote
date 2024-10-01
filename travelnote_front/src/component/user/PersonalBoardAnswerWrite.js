@@ -76,7 +76,12 @@ const PersonalBoardAnswerWrite = () => {
         `${backServer}/admin/deletePersonalBoardAnswer/${personalBoardNo}`
       )
       .then((res) => {
-        console.log(res);
+        if (res.data === 2) {
+          Swal.fire({
+            title: "삭제성공",
+            icon: "success",
+          });
+        }
       })
       .catch((err) => {
         console.log(err);

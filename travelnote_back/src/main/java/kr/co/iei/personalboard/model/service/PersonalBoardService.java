@@ -1,5 +1,6 @@
 package kr.co.iei.personalboard.model.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,5 +112,28 @@ public class PersonalBoardService {
 	public int updatePersonalBoardAnswer(PersonalBoardAnswerDTO personalBoardAnswer) {
 		int result = personalBoardDao.updatePersonalBoardAnswer(personalBoardAnswer);
 		return result;
+	}
+
+	@Transactional
+	public List<PersonalBoardFileDTO> updatePersonalBoard(PersonalBoardDTO personalBoard,
+			List<PersonalBoardFileDTO> personalBoardFiles) {
+		int result = personalBoardDao.updatePersonalBoard(personalBoard);
+		if(result>0) {
+			List<PersonalBoardFileDTO> delFileList = new ArrayList<PersonalBoardFileDTO>();
+			if(personalBoard.getDelPersonalBoardFileNo() != null) {
+				delFileList = personalBoardDao.selectOnePersonalBoardFile2(personalBoard.getDelPersonalBoardFileNo());
+				result += personalBoardDao.deletePersonalBoardFile(personalBoard.getDelPersonalBoardFileNo());
+			}
+			for(PersonalBoardFileDTO personalBoardFile : personalBoardFiles) {
+				result += personalBoardDao.insertPersonalBoardFile(personalBoardFile);
+			}
+			int updateTotal = personalBoard.getDelPersonalBoardFileNo() == null
+							  ? 1+personalBoardFiles.size()
+							  : 1+personalBoardFiles.size() + personalBoard.getDelPersonalBoardFileNo().length;
+			if(result == updateTotal) {
+				return delFileList;
+			}
+		}
+		return null;
 	}
 }

@@ -58,7 +58,12 @@ const PersonalBoardAnswerUpdate = () => {
         personalBoardAnswer
       )
       .then((res) => {
-        console.log(res);
+        if (res.data === 1) {
+          Swal.fire({
+            title: "수정 성공",
+            icon: "success",
+          });
+        }
       })
       .catch((err) => {
         console.log(err);
