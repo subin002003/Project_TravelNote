@@ -3,60 +3,74 @@
 <mapper
 	namespace="kr.co.iei.foreignPlan.model.dao.ForeignPlanDao">
 
-	<!-- 
-	<select id="selectRegionList" resultType="foreignRegion">
-		select * from (select rownum as rnum, r.* from
-			(select * from region ]
-			where country_name != '한국'
-			order by region_no desc)r)
-		where rnum between #{startNum} and #{endNum}
-	</select>
-	 -->
-	
+	<!-- <select id="selectRegionList" resultType="foreignRegion"> select * 
+		from (select rownum as rnum, r.* from (select * from region ] where country_name 
+		!= '한국' order by region_no desc)r) where rnum between #{startNum} and #{endNum} 
+		</select> -->
+
 	<select id="getTotalCount" resultType="int">
 		select count(*) from region
 		where country_name != '대한민국'
 		<if test="searchInput != ''">
-			and (country_name like '%' || #{searchInput}|| '%' or region_name like '%' || #{searchInput}|| '%')
+			and (country_name like '%' || #{searchInput}|| '%' or
+			region_name like '%' || #{searchInput}|| '%')
 		</if>
 	</select>
-	
+
 	<select id="selectRegionList" resultType="foreignRegion">
 		select * from (select rownum as rnum, r.* from
-			(select * from region
-			where country_name != '대한민국'
-			<if test="searchInput != ''">
-				and ((region_name = #{searchInput} or country_name = #{searchInput})
-				or (country_name like '%' || #{searchInput}|| '%' or region_name like '%' || #{searchInput}|| '%'))
-			</if>
-			)r)
+		(select * from region
+		where country_name != '대한민국'
+		<if test="searchInput != ''">
+			and ((region_name = #{searchInput} or country_name = #{searchInput})
+			or (country_name like '%' || #{searchInput}|| '%' or region_name like
+			'%' || #{searchInput}|| '%'))
+		</if>
+		)r)
 		where rnum between #{startNum} and #{endNum}
 	</select>
-	
+
 	<select id="selectOneRegion" resultType="foreignRegion">
-		select r.*, time_zone, currency_code, region_latitude, region_longitude from (region)r left join (region_info)i on r.region_no = i.region_no where r.region_no = #{regionNo}
+		select r.*, time_zone,
+		currency_code, region_latitude, region_longitude from (region)r left
+		join (region_info)i on r.region_no = i.region_no where r.region_no =
+		#{regionNo}
 	</select>
-	
+
 	<insert id="insertItinerary">
-		insert into itinerary values(itinerary_no_seq.nextval, (select user_no from user_tbl where user_email = #{userEmail}), #{regionNo}, #{itineraryStartDate}, #{itineraryEndDate}, #{itineraryTitle})
-		<selectKey resultType="int" keyProperty="itineraryNo" order="AFTER">
+		insert into itinerary values(itinerary_no_seq.nextval, (select user_no
+		from user_tbl where user_email = #{userEmail}), #{regionNo},
+		#{itineraryStartDate}, #{itineraryEndDate}, #{itineraryTitle})
+		<selectKey resultType="int" keyProperty="itineraryNo"
+			order="AFTER">
 			select max(itinerary_no) from itinerary
 		</selectKey>
 	</insert>
-	
-	<select id="selectOneItinerary" resultType="foreignItineraryInfo">
-		select i.*, region_name, country_name from 
-		(select itinerary_no, region_no, itinerary_start_date, itinerary_end_date, itinerary_title from itinerary where itinerary_no = #{itineraryNo})i
+
+	<select id="selectOneItinerary"
+		resultType="foreignItineraryInfo">
+		select i.*, region_name, country_name from
+		(select itinerary_no, region_no, itinerary_start_date, itinerary_end_date,
+		itinerary_title from itinerary where itinerary_no = #{itineraryNo})i
 		join (region)r on i.region_no = r.region_no
 	</select>
-	
+
 	<select id="selectPlanList" resultType="foreignPlan">
-		select * from plan where itinerary_no = #{itineraryNo} and plan_day = #{planDay}
+		select * from plan where
+		itinerary_no = #{itineraryNo} and plan_day = #{planDay}
 	</select>
-	
+
 	<update id="updatePlanInfo">
-		update plan set plan_memo = #{planMemo}, plan_time = #{planTime} where plan_no = #{planNo}
+		update plan set plan_memo = #{planMemo}, plan_time =
+		#{planTime} where plan_no = #{planNo}
 	</update>
-	
-	
+
+	<insert id="insertPlace">
+		<selectKey resultType="int" keyProperty="planSeq" order="BEFORE">
+			select coalesce(max(plan_seq) + 1, 1) from plan where itinerary_no = #{itineraryNo} and plan_day = #{planDay}
+		</selectKey>
+		insert into plan values(plan_no_seq.nextval, #{itineraryNo}, #{planDay}, #{planDate}, #{planSeq}, #{planAddress}, #{planLatitude}, #{planLongitude}, null, null, null, 1, #{planName}, #{planId})
+	</insert>
+
+
 </mapper>

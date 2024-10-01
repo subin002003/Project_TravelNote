@@ -87,5 +87,12 @@ public class ForeignPlanService {
 		return false;
 	}
 
+	// 일정에 장소 추가
+	@Transactional
+	public int insertPlace(ForeignPlanDTO plan) {
+		int result = foreignPlanDao.insertPlace(plan);
+		return result;
+	}
+
 
 }

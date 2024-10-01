@@ -393,33 +393,64 @@
 .place-list > div:last-child {
   border: none;
 }
+.place-item-image {
+  width: 100px;
+  padding: 10px;
+  padding-left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.place-item-image-box {
+  width: 80px;
+  height: 80px;
+  text-align: center;
+  overflow: hidden;
+}
+.place-item-image-box > img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+  max-height: 80;
+}
+.place-item-image-box > img:hover {
+  cursor: pointer;
+}
 .place-item-info {
   width: 80%;
   height: 90px;
 }
 .place-item-title {
   margin: 10px 0;
-  margin-top: 20px;
+  margin-top: 13px;
+  padding-right: 10px;
 }
 .place-item-title:hover {
   cursor: pointer;
 }
 .place-item-address {
-  font-size: small;
+  font-size: 12px;
   text-align: left;
   margin: 0;
   margin-bottom: 10px;
+  padding-right: 10px;
+}
+.place-item-add {
+  display: flex;
+  justify-content: right;
+  align-items: center;
 }
 .place-add-button {
-  margin-top: 20px;
-  width: 20px;
-  height: 20px;
+  width: 17px;
+  height: 17px;
   border: 2px solid var(--main-color);
   border-radius: 15px;
   box-sizing: content-box;
   color: var(--main-color);
   text-align: center;
   font-weight: 600;
+  font-size: 13px;
 }
 .place-add-button:hover {
   background-color: var(--main-color);

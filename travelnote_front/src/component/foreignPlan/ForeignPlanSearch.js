@@ -7,12 +7,17 @@ const ForeignPlanSearch = (props) => {
     itineraryNo,
     searchInput,
     setSearchInput,
-    searchKeyword,
     setSearchKeyword,
     searchPlaceList,
     selectedPosition,
     setSelectedPosition,
     setPlaceInfo,
+    selectedDay,
+    planList,
+    setPlanList,
+    backServer,
+    totalPlanDates,
+    setIsPlanAdded,
   } = props;
   const [category, setCategory] = useState(2); // 1이면 항공편, 2면 장소
 
@@ -64,6 +69,13 @@ const ForeignPlanSearch = (props) => {
           selectedPosition={selectedPosition}
           setSelectedPosition={setSelectedPosition}
           setPlaceInfo={setPlaceInfo}
+          selectedDay={selectedDay}
+          itineraryNo={itineraryNo}
+          planList={planList}
+          setPlanList={setPlanList}
+          backServer={backServer}
+          totalPlanDates={totalPlanDates}
+          setIsPlanAdded={setIsPlanAdded}
         />
       )}
     </div>
@@ -85,6 +97,13 @@ const PlaceSearchBox = (props) => {
     selectedPosition,
     setSelectedPosition,
     setPlaceInfo,
+    selectedDay,
+    itineraryNo,
+    planList,
+    setPlanList,
+    backServer,
+    totalPlanDates,
+    setIsPlanAdded,
   } = props;
   return (
     <>
@@ -111,6 +130,13 @@ const PlaceSearchBox = (props) => {
                   selectedPosition={selectedPosition}
                   setSelectedPosition={setSelectedPosition}
                   setPlaceInfo={setPlaceInfo}
+                  selectedDay={selectedDay}
+                  itineraryNo={itineraryNo}
+                  planList={planList}
+                  setPlanList={setPlanList}
+                  backServer={backServer}
+                  totalPlanDates={totalPlanDates}
+                  setIsPlanAdded={setIsPlanAdded}
                 />
               );
             })
