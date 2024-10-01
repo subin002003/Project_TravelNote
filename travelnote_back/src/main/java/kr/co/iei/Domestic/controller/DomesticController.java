@@ -40,22 +40,28 @@ public class DomesticController {
         return ResponseEntity.ok(itineraryNo);
     }
 
- // 여행 상세일정 조회 
+    // 여행 상세일정 조회 
     @GetMapping(value="/getItinerary/{itineraryNo}")
     public ResponseEntity<ItineraryInfoDTO> getItinerary(@PathVariable int itineraryNo) {
         ItineraryInfoDTO itinerary = domesticService.getItinerary(itineraryNo);
         return ResponseEntity.ok(itinerary);
     }
-    
-    @GetMapping(value="/Plan")
+    // 상세일정 리스트
+    @GetMapping(value="/plan")
 	public ResponseEntity<List> plan(@RequestParam int itineraryNo, int planDay){
 		List list = domesticService.selectPlan(itineraryNo, planDay);
 		return ResponseEntity.ok(list);
 	}
-    
+    //상세일정 수정
     @PatchMapping(value="/updatePlan")
     public ResponseEntity<Boolean> updatePlan(@RequestBody String updateList){
-    	boolean result = DomesticService.updatePlan(updateList);
+    	boolean result = domesticService.updatePlan(updateList);
 		return ResponseEntity.ok(result);
+    }
+    //기차편 리스트 검색
+    @GetMapping(value="/search")
+    public ResponseEntity<List<RegionDTO>> search(){
+    	List<RegionDTO> list = domesticService.search();
+    	return ResponseEntity.ok(list);
     }
 }

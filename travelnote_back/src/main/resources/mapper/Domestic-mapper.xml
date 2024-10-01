@@ -43,6 +43,12 @@
 	<update id="updatePlan">
 		update plan set plan_memo = #{planMemo}, plan_time = #{planTime} where plan_no = #{planNo}
 	</update>
-	
-	
+
+    <select id="selectAllRegions" resultType="Region">
+        SELECT region_no AS regionNo,
+               region_name AS regionName,
+               country_name AS countryName,
+               region_img AS regionImg
+        FROM region
+    </select>
 </mapper>
