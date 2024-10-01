@@ -7,6 +7,7 @@ import SideMenu from "../utils/SideMenu";
 import MyInfo from "./MyInfo";
 import PersonalBoardList from "./PersonalBoardList";
 import PersonalBoardAnswerWrite from "./PersonalBoardAnswerWrite";
+import PersonalBoardAnswerUpdate from "./PersonalBoardAnswerUpdate";
 
 const MypageMain = () => {
   const navigate = useNavigate();
@@ -91,6 +92,10 @@ const MypageMain = () => {
                 path="admin/personalBoardList/writeAnswer/:personalBoardNo"
                 element={<PersonalBoardAnswerWrite />}
               ></Route>
+              <Route
+                path="admin/personalBoardList/updateAnswer/:personalBoardNo"
+                element={<PersonalBoardAnswerUpdate />}
+              />
             </Routes>
           </section>
         </div>

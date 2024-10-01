@@ -43,5 +43,8 @@ public interface PersonalBoardDao {
 	int updatePersonalBoardAnswerInfo2(int personalBoardNo);
 
 
+	int updatePersonalBoardAnswer(PersonalBoardAnswerDTO personalBoardAnswer);
+
+
 
 }

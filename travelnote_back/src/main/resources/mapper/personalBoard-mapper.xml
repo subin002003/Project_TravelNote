@@ -65,4 +65,8 @@
 	<update id="updatePersonalBoardAnswerInfo2">
 		update personal_board set personal_board_status = 'N', personal_board_answer_date = null where personal_board_no = #{personalBoardNo}
 	</update>
+	<update id="updatePersonalBoardAnswer">
+		update personal_board_answer set personal_board_answer_content = #{personalBoardAnswerContent}, personal_board_answer_writer = #{personalBoardAnswerWriter}
+		where personal_board_no = #{personalBoardNo}
+	</update>
 </mapper>

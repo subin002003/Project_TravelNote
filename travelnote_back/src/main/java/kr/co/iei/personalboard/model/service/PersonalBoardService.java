@@ -105,4 +105,11 @@ public class PersonalBoardService {
 		int result = personalBoardDao.updatePersonalBoardAnswerInfo2(personalBoardNo);
 		return result;
 	}
+	
+
+	@Transactional
+	public int updatePersonalBoardAnswer(PersonalBoardAnswerDTO personalBoardAnswer) {
+		int result = personalBoardDao.updatePersonalBoardAnswer(personalBoardAnswer);
+		return result;
+	}
 }

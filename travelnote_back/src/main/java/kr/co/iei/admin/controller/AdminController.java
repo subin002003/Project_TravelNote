@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,6 +43,13 @@ public class AdminController {
 	public ResponseEntity<Integer> deletePersonalBoardAnswer(@PathVariable int personalBoardNo){
 		int result = personalBoardService.deletePersonalBoardAnswer(personalBoardNo);
 		result += personalBoardService.updatePersonalBoardAnswerInfo2(personalBoardNo);
+		return ResponseEntity.ok(result);
+	}
+	
+	@PatchMapping(value = "/updatePersonalBoardAnswer/{personalBoardNo}")
+	public ResponseEntity<Integer> updatePersonalBoardAnswer(@RequestBody PersonalBoardAnswerDTO personalBoardAnswer, @PathVariable int personalBoardNo){
+		System.out.println("업뎃 테스트 : "+personalBoardAnswer);
+		int result = personalBoardService.updatePersonalBoardAnswer(personalBoardAnswer);
 		return ResponseEntity.ok(result);
 	}
 }

@@ -4,8 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { userNickState, userTypeState } from "../utils/RecoilData";
 import Swal from "sweetalert2";
-
-const PersonalBoardAnswerWrite = () => {
+const PersonalBoardAnswerUpdate = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const parmas = useParams();
   const navigate = useNavigate();
@@ -37,7 +36,6 @@ const PersonalBoardAnswerWrite = () => {
   }, [personalBoardNo]);
 
   useEffect(() => {
-    // 답변 정보 가져오기
     axios
       .get(`${backServer}/personalBoard/getAnswer/${personalBoardNo}`)
       .then((res) => {
@@ -53,27 +51,11 @@ const PersonalBoardAnswerWrite = () => {
       });
   }, [personalBoardNo]);
 
-  const writePersonalBoardAnswer = () => {
+  const updatePersonalBoardAnswer = () => {
     axios
-      .post(`${backServer}/admin/writePersonalBoardAnswer`, personalBoardAnswer)
-      .then((res) => {
-        if (res.data === 2) {
-          Swal.fire({
-            icon: "success",
-            title: "작성 성공",
-          });
-          navigate("/mypage/admin/personalBoardList");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const deletePersonalBoardAnswer = () => {
-    axios
-      .delete(
-        `${backServer}/admin/deletePersonalBoardAnswer/${personalBoardNo}`
+      .patch(
+        `${backServer}/admin/updatePersonalBoardAnswer/${personalBoardNo}`,
+        personalBoardAnswer
       )
       .then((res) => {
         console.log(res);
@@ -81,9 +63,6 @@ const PersonalBoardAnswerWrite = () => {
       .catch((err) => {
         console.log(err);
       });
-  };
-  const navigateUpdatePersonalBoardAnswer = () => {
-    navigate(`/mypage/admin/personalBoardList/updateAnswer/${personalBoardNo}`);
   };
   return (
     <div>
@@ -147,35 +126,17 @@ const PersonalBoardAnswerWrite = () => {
           <h2>1대1문의 답변</h2>
         </div>
         <div className="faqBoard-content" style={{ minHeight: "400px" }}>
-          {personalBoard.personalBoardStatus === "N" ? (
-            <>
-              <textarea
-                className="personalboard-answer"
-                id="personalBoardAnswerContent"
-                name="personalBoardAnswerContent"
-                onChange={changePersonalBoardAnswerContent}
-              ></textarea>
-              <div className="btn-box">
-                <button onClick={writePersonalBoardAnswer}>작성하기</button>
-              </div>
-            </>
-          ) : (
-            <p>{personalBoardAnswer.personalBoardAnswerContent}</p>
-          )}
+          <textarea
+            className="personalboard-answer"
+            id="personalBoardAnswerContent"
+            name="personalBoardAnswerContent"
+            value={personalBoardAnswer.personalBoardAnswerContent}
+            onChange={changePersonalBoardAnswerContent}
+          ></textarea>
         </div>
-        {personalBoard.personalBoardStatus === "Y" ? (
-          <div className="btn-box">
-            <button
-              onClick={navigateUpdatePersonalBoardAnswer}
-              style={{ marginRight: "20px" }}
-            >
-              수정하기
-            </button>
-            <button onClick={deletePersonalBoardAnswer}>삭제하기</button>
-          </div>
-        ) : (
-          <></>
-        )}
+        <div className="btn-box">
+          <button onClick={updatePersonalBoardAnswer}>수정완료</button>
+        </div>
       </div>
     </div>
   );
@@ -217,4 +178,4 @@ const FileItem = (props) => {
   );
 };
 
-export default PersonalBoardAnswerWrite;
+export default PersonalBoardAnswerUpdate;
