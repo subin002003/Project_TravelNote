@@ -138,7 +138,7 @@
 .schedule-plan-wrap {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 700px;
 }
 
 .schedule-plan-list {
@@ -146,6 +146,7 @@
   overflow-y: auto;
   padding: 1rem;
   border: 1px solid #ddd;
+  margin-top: 10px;
 }
 
 .schedule-content {
