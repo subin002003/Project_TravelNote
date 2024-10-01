@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.iei.board.model.dao.BoardDao;
+import kr.co.iei.board.model.dto.BoardCommentDTO;
 import kr.co.iei.board.model.dto.BoardDTO;
 import kr.co.iei.board.model.dto.BoardFileDTO;
 import kr.co.iei.util.PageInfo;
@@ -121,6 +122,16 @@ public class BoardService {
 	
 	public BoardDTO getBoardById(int boardNo) {
 		return boardDao.selectBoardById(boardNo);
+	}
+	public void addComment(BoardCommentDTO comment) {
+		boardDao.addComment(comment);
+		
+	}
+	public List<BoardCommentDTO> getComments(int boardRef) {
+        return boardDao.getComments(boardRef);
+    }
+	public void deleteComment(int commentNo) {
+	   boardDao.deleteComment(commentNo);
 	}
 	
 	
