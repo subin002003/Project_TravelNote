@@ -19,7 +19,13 @@ const BoardView = () => {
   const [comments, setComments] = useState([]); // 댓글 상태
   const [newComment, setNewComment] = useState(""); // 새 댓글 입력 상태
   const [reset, setReset] = useState(false);
+  // ... 기존 상태 정의
+  const [editingComment, setEditingComment] = useState(null); // 수정 중인 댓글 상태
 
+  const handleCommentEditChange = (e) => {
+    console.log(editingComment.content);
+    setEditingComment({ ...editingComment, content: e.target.value });
+  };
   useEffect(() => {
     // 게시물 가져오기
     axios
@@ -37,6 +43,7 @@ const BoardView = () => {
     axios
       .get(`${backServer}/board/${boardNo}`)
       .then((res) => {
+        console.log(res.data);
         setComments(res.data);
       })
       .catch((err) => {
@@ -163,7 +170,42 @@ const BoardView = () => {
       });
   };
 
-  const updateComment = (comment) => {};
+  const updateComment = (comment) => {
+    if (!editingComment) {
+      setEditingComment({ ...comment }); // 수정할 댓글 데이터 설정
+    } else {
+      // 수정된 댓글을 서버로 전송
+      const updatedCommentData = {
+        ...editingComment,
+        boardCommentContent: editingComment.content,
+      };
+
+      axios
+        .put(
+          `${backServer}/board/${boardNo}/comments/${updatedCommentData.boardCommentNo}`,
+          updatedCommentData
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            setReset((prev) => !prev); // 댓글 목록을 새로고침
+            Swal.fire({
+              title: "댓글 수정 성공",
+              icon: "success",
+            });
+            setEditingComment(null); // 수정 모드 종료
+          } else {
+            Swal.fire({
+              title: "댓글 수정 실패",
+              text: res.data.message,
+              icon: "error",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
 
   return (
     <section className="board-wrap">
@@ -327,21 +369,47 @@ const BoardView = () => {
                 {comment.boardCommentWriter}
               </p>
               <p>{comment.boardCommentDate}</p>
-              <p style={{ marginLeft: "20px" }}>
-                {comment.boardCommentContent}
-              </p>
-              <button
-                onClick={() => updateComment(comment)}
-                style={{ marginLeft: "20px" }}
-              >
-                수정
-              </button>
-              <button
-                onClick={() => deleteComment(comment.boardCommentNo)}
-                style={{ marginLeft: "10px" }}
-              >
-                삭제
-              </button>
+
+              {editingComment?.boardCommentNo === comment.boardCommentNo ? (
+                <>
+                  <input
+                    type="text"
+                    value={editingComment.content || ""}
+                    onChange={handleCommentEditChange}
+                    style={{ marginLeft: "20px", width: "300px" }}
+                  />
+                  <button
+                    onClick={() => updateComment(comment)}
+                    style={{ marginLeft: "10px" }}
+                  >
+                    저장
+                  </button>
+                  <button
+                    onClick={() => setEditingComment(null)}
+                    style={{ marginLeft: "10px" }}
+                  >
+                    취소
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p style={{ marginLeft: "20px" }}>
+                    {comment.boardCommentContent}
+                  </p>
+                  <button
+                    onClick={() => updateComment(comment)}
+                    style={{ marginLeft: "20px" }}
+                  >
+                    수정
+                  </button>
+                  <button
+                    onClick={() => deleteComment(comment.boardCommentNo)}
+                    style={{ marginLeft: "10px" }}
+                  >
+                    삭제
+                  </button>
+                </>
+              )}
             </div>
           ))}
         </div>

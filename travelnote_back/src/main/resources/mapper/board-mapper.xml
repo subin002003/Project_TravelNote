@@ -150,9 +150,14 @@
 	
 	<delete id="deleteComment">
 		delete from board_comment 
-		where board_comment_no = #{commentNo}
+		where board_comment_no = #{boardCommentNo}
 	</delete> 
 	
+	<update id="updateComment">
+    	update board_comment
+    	set board_comment_content = #{boardCommentContent}
+    	where board_ref = #{boardNo} and board_comment_no = #{commentNo}
+	</update>
 	
 </mapper>
 
