@@ -7,7 +7,7 @@
   </select>
   
   <insert id="payment">
-  	insert into order_pay values(order_pay_seq.nextval, #{userNo}, #{productNo}, sysdate, #{startDate}, #{endDate}, #{people}, #{price}, #{paymentType});
+  	insert into order_pay values(order_pay_seq.nextval, #{userEmail}, #{productNo}, sysdate, #{startDate}, #{endDate}, #{people}, #{price}, #{paymentType})
   </insert>
   
 </mapper>

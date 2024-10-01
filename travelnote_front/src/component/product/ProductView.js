@@ -34,7 +34,6 @@ import {
   loginEmailState,
   userTypeState,
 } from "../utils/RecoilData";
-import Payment from "../pay/TravelReservation";
 
 const ProductView = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -269,6 +268,7 @@ const ProductView = () => {
             <Link
               to="/travelReservation"
               onClick={() => {
+                localStorage.setItem("productNo", product.productNo);
                 localStorage.setItem("productName", product.productName);
                 localStorage.setItem("startDate", startDate);
                 localStorage.setItem("endDate", endDate);
