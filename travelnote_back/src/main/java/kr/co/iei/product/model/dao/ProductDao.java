@@ -15,7 +15,9 @@ public interface ProductDao {
 
 	int totalCount();
 
-	List selectProductList(PageInfo pi, int userNo);
+	List selectProductList(PageInfo pi);
+
+	List selectProductListEmail(PageInfo pi, String userEmail);
 
 	int insertProduct(ProductDTO product);
 
@@ -62,5 +64,13 @@ public interface ProductDao {
 	int deleteWishLike(int productNo, int userNo);
 	// 상품 찜 수 조회
 	int selectProductLikeCount(int productNo);
+
+	int selectOneProductReview(ReviewDTO review);
+
+	int selectParentProduct(int productNo);
+
+	int selectParentreview(int reviewCommentRef);
+
+	int checkProductExists(int productNo);
 
 }

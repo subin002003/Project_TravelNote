@@ -401,9 +401,14 @@
   margin: 10px 0;
   margin-top: 20px;
 }
+.place-item-title:hover {
+  cursor: pointer;
+}
 .place-item-address {
   font-size: small;
   text-align: left;
+  margin: 0;
+  margin-bottom: 10px;
 }
 .place-add-button {
   margin-top: 20px;
@@ -421,6 +426,10 @@
   color: white;
   cursor: pointer;
 }
+.place-info-box {
+  width: 300px;
+  height: 100px;
+}
 
 /* ForeignPlanMap */
 .plan-map-wrap {
@@ -431,4 +440,21 @@
   height: 100%;
   width: 100%;
   border-radius: 10px;
+}
+.gm-style .gm-style-iw-c {
+  padding-left: 15px;
+}
+.gm-style-iw-chr {
+  height: 35px;
+}
+.gm-style-iw-ch {
+  padding: 0;
+  margin-top: 20px;
+}
+.gm-style-iw-d {
+  margin: 10px auto;
+  padding: 0px;
+}
+.gm-style-iw-d > div {
+  margin-top: 10px;
 }

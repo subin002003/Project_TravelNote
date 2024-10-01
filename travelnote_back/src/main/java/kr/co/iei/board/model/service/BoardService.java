@@ -115,6 +115,14 @@ public class BoardService {
         return false;
 	}
 	
+	public void incrementViewCount(int boardNo) {
+        boardDao.updateViewCount(boardNo);
+    }
+	
+	public BoardDTO getBoardById(int boardNo) {
+		return boardDao.selectBoardById(boardNo);
+	}
+	
 	
 }
 

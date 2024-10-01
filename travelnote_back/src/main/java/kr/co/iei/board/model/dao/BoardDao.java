@@ -42,6 +42,10 @@ public interface BoardDao {
 
 	void decrementLikeCount(int boardNo);
 
+	void updateViewCount(@Param("boardNo") int boardNo);
+
+	BoardDTO selectBoardById(@Param("boardNo") int boardNo);
+
 	
 
 	

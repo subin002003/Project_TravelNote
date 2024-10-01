@@ -10,6 +10,9 @@ const ForeignPlanSearch = (props) => {
     searchKeyword,
     setSearchKeyword,
     searchPlaceList,
+    selectedPosition,
+    setSelectedPosition,
+    setPlaceInfo,
   } = props;
   const [category, setCategory] = useState(2); // 1이면 항공편, 2면 장소
 
@@ -58,6 +61,9 @@ const ForeignPlanSearch = (props) => {
           changeSearchInput={changeSearchInput}
           search={search}
           searchPlaceList={searchPlaceList}
+          selectedPosition={selectedPosition}
+          setSelectedPosition={setSelectedPosition}
+          setPlaceInfo={setPlaceInfo}
         />
       )}
     </div>
@@ -71,7 +77,15 @@ const FlightSearchBox = () => {
 
 // category가 2이면 장소 관련
 const PlaceSearchBox = (props) => {
-  const { searchInput, changeSearchInput, search, searchPlaceList } = props;
+  const {
+    searchInput,
+    changeSearchInput,
+    search,
+    searchPlaceList,
+    selectedPosition,
+    setSelectedPosition,
+    setPlaceInfo,
+  } = props;
   return (
     <>
       <div className="place-search-box">
@@ -94,6 +108,9 @@ const PlaceSearchBox = (props) => {
                   key={"foreign-place-item-" + index}
                   place={place}
                   index={index}
+                  selectedPosition={selectedPosition}
+                  setSelectedPosition={setSelectedPosition}
+                  setPlaceInfo={setPlaceInfo}
                 />
               );
             })

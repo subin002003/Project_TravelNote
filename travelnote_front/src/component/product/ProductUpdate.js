@@ -8,10 +8,10 @@ import ToastEditor from "../utils/ToastEditor";
 import Swal from "sweetalert2";
 
 const ProductUpdate = () => {
-  const params = useParams();
-  const navigate = useNavigate();
-  const productNo = params.productNo;
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  const navigate = useNavigate();
+  const params = useParams();
+  const productNo = params.productNo;
 
   const [productName, setProductName] = useState("");
   const [productSubName, setProductSubName] = useState("");
@@ -31,6 +31,7 @@ const ProductUpdate = () => {
   // 조회해온 파일목록을 화면에 보여주기 휘한 state
   const [fileList, setFileList] = useState([]);
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
+  const userEmail = loginEmail;
   // 기존 첨부파일을 삭제하면 삭제한 파일 번호를 저장할 배열
   const [delProductFileNo, setDelProductFileNo] = useState([]);
 
@@ -57,7 +58,7 @@ const ProductUpdate = () => {
 
   useEffect(() => {
     axios
-      .get(`${backServer}/product/productNo/${productNo}`)
+      .get(`${backServer}/product/productNo/${productNo}/${userEmail}`)
       .then((res) => {
         console.log(res);
         setProductName(res.data.productName);
@@ -71,9 +72,20 @@ const ProductUpdate = () => {
         setFileList(res.data.fileList);
       })
       .catch((err) => {
-        console.log(err);
+        console.error("Error details:", err);
+        if (err.response) {
+          console.error("Response data:", err.response.data);
+          console.error("Response status:", err.response.status);
+        } else if (err.request) {
+          console.error("Request data:", err.request);
+        } else {
+          console.error("Error message:", err.message);
+        }
       });
-  }, []);
+  }, [productNo, userEmail]);
+
+  console.log("Product No:", productNo);
+  console.log(`${backServer}/product/productNo/${productNo}`);
 
   const updateProduct = () => {
     if (productName !== "" && productSubName !== "" && productInfo !== "") {

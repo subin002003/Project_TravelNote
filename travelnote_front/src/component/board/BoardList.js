@@ -16,10 +16,8 @@ const BoardList = () => {
     axios
       .get(`${backServer}/board/list/${reqPage}`)
       .then((res) => {
-        console.log(res);
         setBoardList(res.data.list);
         setPi(res.data.pi);
-        console.log(pi);
       })
       .catch((err) => {
         console.log(err);
@@ -84,15 +82,23 @@ const BoardList = () => {
 const BoardItem = (props) => {
   const board = props.board;
   const navigate = useNavigate();
+  const backServer = process.env.REACT_APP_BACK_SERVER;
+  const handleClick = () => {
+    // 조회수 증가 api 호출
+    axios
+      .get(`${backServer}/board/view/${board.boardNo}`)
+      .then(() => {
+        navigate(`/board/view/${board.boardNo}`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <tr className="boardlist-content">
       <td>{board.boardNo}</td>
-      <td
-        onClick={() => {
-          navigate(`/board/view/${board.boardNo}`);
-        }}
-        className="boardTitle-mouse-on"
-      >
+      <td onClick={handleClick} className="boardTitle-mouse-on">
         {board.boardTitle}
       </td>
       <td>{board.boardCategory}</td>
@@ -104,3 +110,7 @@ const BoardItem = (props) => {
   );
 };
 export default BoardList;
+
+// onClick={() => {
+//   navigate(`/board/view/${board.boardNo}`);
+// }}

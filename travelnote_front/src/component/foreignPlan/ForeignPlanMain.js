@@ -32,6 +32,8 @@ const ForeignPlanMain = () => {
   const [regionInfo, setRegionInfo] = useState({});
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchPlaceList, setSearchPlaceList] = useState([]);
+  const [selectedPosition, setSelectedPosition] = useState();
+  const [placeInfo, setPlaceInfo] = useState();
 
   // 일정 정보 조회
   useEffect(() => {
@@ -93,6 +95,9 @@ const ForeignPlanMain = () => {
           searchKeyword={searchKeyword}
           setSearchKeyword={setSearchKeyword}
           searchPlaceList={searchPlaceList}
+          selectedPosition={selectedPosition}
+          setSelectedPosition={setSelectedPosition}
+          setPlaceInfo={setPlaceInfo}
         />
       )}
       <ForeignPlanMap
@@ -101,6 +106,10 @@ const ForeignPlanMain = () => {
         regionInfo={regionInfo}
         searchKeyword={searchKeyword}
         setSearchPlaceList={setSearchPlaceList}
+        selectedPosition={selectedPosition}
+        setSelectedPosition={setSelectedPosition}
+        placeInfo={placeInfo}
+        setPlaceInfo={setPlaceInfo}
       />
     </div>
   );

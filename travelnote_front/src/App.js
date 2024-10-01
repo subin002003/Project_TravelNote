@@ -24,6 +24,7 @@ import FindPw from "./component/user/FindPw";
 import MypageMain from "./component/user/MypageMain";
 import CustomerServiceMain from "./component/customerService/CustomerServiceMain";
 import ReviewBoardMain from "./component/reviewBoard/ReviewBoardMain";
+import TravelReservation from "./component/pay/TravelReservation";
 
 function App() {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -78,6 +79,7 @@ function App() {
           <Route path="/mypage/*" element={<MypageMain />} />
           <Route path="/customerService/*" element={<CustomerServiceMain />} />
           <Route path="/product/*" element={<ProductMain />} />
+          <Route path="/travelReservation" element={<TravelReservation />} />
           <Route path="/Domestic/*" element={<DomesticMain />}></Route>
           <Route path="/city/:cityName/:regionNo" element={<CityDetail />} />
           <Route path="/schedule/:itineraryNo" element={<Schedule />} />
