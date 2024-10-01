@@ -19,9 +19,10 @@ public class PayController {
 	@Autowired
 	private PayService payService;
 	
-	@PostMapping(value="/payment/{userEmail}")
-	public ResponseEntity<Integer> payment(@ModelAttribute PayDTO pay, @PathVariable String userEmail) {
-		int result = payService.payment(pay, userEmail);
+	@PostMapping(value="/saveOrder")
+	public ResponseEntity<Integer> payment(@ModelAttribute PayDTO pay) {
+		System.out.println(pay);
+		int result = payService.payment(pay);
 		return ResponseEntity.ok(result);
 	}
 }

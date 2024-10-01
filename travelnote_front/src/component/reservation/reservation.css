@@ -1,0 +1,175 @@
+:root {
+  --main-color: #1363df;
+  --point-color: #c57cff;
+  --sub-color: #47b5ff;
+  --base-color: #dff6ff;
+  --background-color: #eef2f3;
+  --text-color: #333;
+  --black: #000;
+  --white: #fff;
+  --gray: #ddd;
+  --gray2: #777;
+  --gray3: #b2b2b2;
+}
+
+/* travel-info */
+.travel-info {
+  width: 100%;
+  max-width: 1200px;
+  margin: 150px auto;
+  overflow: hidden;
+}
+.travel-info > ul {
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+}
+.travel-info > ul > li {
+  padding: 15px;
+  float: left;
+  width: calc(90% / 3);
+  height: 130px;
+  border: 1px solid var(--main-color);
+  border-radius: 20px;
+}
+.travel-info > ul > li:nth-child(2) {
+  margin: 0 5%;
+}
+.travel-info > ul > li > p {
+  font-size: 16px;
+  color: var(--black);
+  font-weight: 900;
+}
+.travel-info > ul > li > p.info-title {
+  color: var(--gray3);
+  font-size: 13px !important;
+  font-weight: 500;
+}
+section > div > h2 {
+  font-size: 24px;
+}
+
+/* payment-guide */
+.payment-guide > p {
+  font-size: 16px;
+  font-weight: 900;
+}
+.payment-guide-info {
+  margin-top: 20px;
+  padding: 40px 30px;
+  width: 100%;
+  border: 1px solid var(--main-color);
+  border-radius: 20px;
+}
+.payment-guide-info > p {
+  font-size: 18px;
+  color: var(--black);
+  font-weight: 900;
+}
+.payment-guide-info > p:nth-child(1),
+.payment-guide-info > p:nth-child(2) {
+  margin-bottom: 5px;
+}
+.payment-guide > .payment-guide-info > .total-price {
+  margin-top: 15px;
+  text-align: right;
+  color: var(--main-color);
+}
+/* checkbox */
+/* 전체 드래그 방지 css 삽입 */
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-use-select: none;
+  -webkit-user-select: none;
+}
+.draggable {
+  -webkit-user-select: all;
+  -moz-user-select: all;
+  -ms-use-select: all;
+  -webkit-user-select: all;
+}
+.draggable {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-use-select: text;
+  -webkit-user-select: text;
+}
+.draggable-img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  -webkit-user-drag: none;
+}
+.agree-box {
+  margin-bottom: 20px;
+}
+.agree-box:last-child {
+  margin-bottom: 0px;
+}
+input + label {
+  cursor: pointer;
+}
+input[type="checkbox"] {
+  display: none;
+}
+label {
+  display: block;
+}
+label.parents-label {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+label.child-label {
+  margin-bottom: 7px;
+  font-size: 16px;
+}
+label.parents-label::before {
+  content: "\f00c";
+  font-family: Fontawesome;
+  border: 1px solid var(--gray2);
+  width: 16px;
+  height: 16px;
+  border-radius: 10px;
+  margin-right: 5px;
+  font-size: 13px;
+  vertical-align: middle;
+  display: inline-block;
+  text-align: center;
+  line-height: 16px;
+  color: transparent;
+  transition: 0.2s;
+}
+label.child-label::before {
+  content: "\f00c";
+  font-family: Fontawesome;
+  /* border: 1px solid var(--text-color); */
+  width: 18px;
+  height: 18px;
+  border-radius: 10px;
+  margin-right: 5px;
+  font-size: 13px;
+  vertical-align: middle;
+  display: inline-block;
+  text-align: center;
+  line-height: 18px;
+  color: var(--gray2);
+  transition: 0.2s;
+}
+input[type="checkbox"]:checked + label.parents-label::before {
+  background-color: var(--main-color);
+  color: var(--white);
+  border-color: transparent;
+}
+input[type="checkbox"] + label.parents-label:active::before {
+  transform: scale(0);
+}
+input[type="checkbox"]:checked + label.child-label::before {
+  /* background-color: var(--main-color); */
+  color: var(--main-color);
+  /* border-color: transparent; */
+}
+input[type="checkbox"] + label.child-label:active::before {
+  transform: scale(0);
+}
