@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { userNickState } from "../utils/RecoilData";
+import { userNickState, isLoginState } from "../utils/RecoilData";
 
 import Swal from "sweetalert2";
 
@@ -19,7 +19,6 @@ const BoardView = () => {
   const [comments, setComments] = useState([]); // 댓글 상태
   const [newComment, setNewComment] = useState(""); // 새 댓글 입력 상태
   const [reset, setReset] = useState(false);
-  const isLoginState = useRecoilState(isLoginState);
 
   useEffect(() => {
     // 게시물 가져오기
