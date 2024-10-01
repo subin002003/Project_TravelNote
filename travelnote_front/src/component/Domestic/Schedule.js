@@ -9,22 +9,31 @@ const Schedule = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   const trainApiKey = process.env.REACT_APP_TRAIN_API_KEY;
-
-  const [planDays, setPlanDays] = useState([]); // 현재 조회 중인 날 기준으로 보여주는 날짜 배열
+  const [planDays, setPlanDays] = useState([]);
   const [selectedDay, setSelectedDay] = useState(1);
-  const [planPageOption, setPlanPageOption] = useState(1); // 조회 페이지 옵션 (1 조회, 2 수정)
+  const [planPageOption, setPlanPageOption] = useState(1);
   const [map, setMap] = useState(null);
   const [itinerary, setItinerary] = useState({});
-  const [totalPlanDates, setTotalPlanDates] = useState([]); // 전체 일정 날짜
+  const [totalPlanDates, setTotalPlanDates] = useState([]);
   const [cityCoordinates, setCityCoordinates] = useState({
     lat: 37.5665,
-    lng: 126.978,
-  }); // 기본 서울 좌표
-  const [trainSchedules, setTrainSchedules] = useState([]); // 기차편 일정
-  const { itineraryNo, city } = useParams(); // city 파라미터 추가
+    lng: 126.93,
+  });
+  const [trainSchedules, setTrainSchedules] = useState([]);
+  const [showSearch, setShowSearch] = useState(false);
+  const [showTrainSearch, setShowTrainSearch] = useState(false); // 기차편 검색 상태
+  const [searchResults, setSearchResults] = useState([]);
+  const [trainDeparture, setTrainDeparture] = useState(""); // 출발지 상태
+  const [trainArrival, setTrainArrival] = useState(""); // 도착지 상태
+  const { itineraryNo, city } = useParams();
+
+  // 일정에 추가할 리스트 항목 상태
+  const [selectedPlans, setSelectedPlans] = useState([]);
+
+  // 마커 상태 추가
+  const [markers, setMarkers] = useState([]);
 
   useEffect(() => {
-    // 일정 데이터 가져오기
     axios
       .get(`${backServer}/domestic/getItinerary/${itineraryNo}`)
       .then((res) => {
@@ -54,7 +63,7 @@ const Schedule = () => {
       const mapInstance = new window.google.maps.Map(
         document.getElementById("map"),
         {
-          center: cityCoordinates, // 초기 중심 좌표 설정
+          center: cityCoordinates,
           zoom: 15,
         }
       );
@@ -70,80 +79,114 @@ const Schedule = () => {
     return () => {
       document.body.removeChild(script);
     };
-  }, [googleMapsApiKey, cityCoordinates]); // cityCoordinates를 의존성에 추가
+  }, [googleMapsApiKey, cityCoordinates]);
 
   useEffect(() => {
     if (map) {
-      map.setCenter(cityCoordinates); // cityCoordinates가 변경될 때마다 지도 중심 업데이트
+      map.setCenter(cityCoordinates);
     }
   }, [map, cityCoordinates]);
 
   useEffect(() => {
-    if (map && itinerary[selectedDay]) {
-      const { places } = itinerary[selectedDay];
-      if (map.markers) {
-        map.markers.forEach((marker) => marker.setMap(null));
-      }
-
-      map.markers = [];
-      places.forEach((place) => {
-        const marker = new window.google.maps.Marker({
-          position: { lat: place.lat, lng: place.lng },
-          map: map,
-          title: place.name,
-        });
-        map.markers.push(marker);
-      });
-    }
-  }, [map, selectedDay, itinerary]);
-
-  useEffect(() => {
-    // 도시 이름에 따라 좌표를 설정합니다.
     const cityCoordinatesMap = {
       서울: { lat: 37.5665, lng: 126.978 },
       부산: { lat: 35.1796, lng: 129.0756 },
-      포항: { lat: 36.0190178, lng: 129.3434808 },
-      제주: { lat: 33.25235, lng: 126.5125556 },
-      인천: { lat: 37.4562557, lng: 126.7052062 },
-      강릉: { lat: 37.74913611, lng: 128.8784972 },
-      춘천: { lat: 37.87854167, lng: 127.7323111 },
-      가평: { lat: 37.82883056, lng: 127.5117778 },
-      군산: { lat: 35.96464167, lng: 126.7388444 },
-      경주: { lat: 35.85316944, lng: 129.2270222 },
-      통영: { lat: 34.85125833, lng: 128.4352778 },
-      수원: { lat: 37.30101111, lng: 127.0122222 },
-      목포: { lat: 34.80878889, lng: 126.3944194 },
-      대전: { lat: 36.31204028, lng: 127.4548596 },
-      남원: { lat: 35.41325556, lng: 127.3925 },
-      영월: { lat: 37.18086111, lng: 128.4640194 },
-      여수: { lat: 34.75731111, lng: 127.6643861 },
-      안동: { lat: 36.56546389, lng: 128.7316222 },
-      전주: { lat: 35.80918889, lng: 127.1219194 },
-      제천: { lat: 37.12976944, lng: 128.1931528 },
     };
 
     if (city && cityCoordinatesMap[city]) {
-      setCityCoordinates(cityCoordinatesMap[city]); // city에 따라 좌표 설정
+      setCityCoordinates(cityCoordinatesMap[city]);
     }
   }, [city]);
 
-  useEffect(() => {
-    const fetchTrainSchedules = async () => {
-      try {
-        const response = await axios.get(
-          `${backServer}/train?key=${trainApiKey}`
+  const handleSearch = (e) => {
+    const searchTerm = e.target.value;
+
+    if (searchTerm && searchTerm.length >= 2) {
+      const service = new window.google.maps.places.PlacesService(map);
+      const request = {
+        query: searchTerm,
+        location: cityCoordinates,
+        radius: 500,
+        fields: ["name", "geometry", "place_id", "formatted_address", "photos"],
+      };
+
+      service.textSearch(request, (results, status) => {
+        if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+          const places = results.map((place) => ({
+            name: place.name,
+            formattedAddress: place.formatted_address,
+            geometry: place.geometry,
+          }));
+          setSearchResults(places);
+          updateMarkers(places); // 마커 업데이트 호출
+        } else {
+          console.error("검색에 실패했습니다: ", status);
+        }
+      });
+    } else {
+      setSearchResults([]); // 검색 결과 초기화
+      updateMarkers([]); // 검색어가 없을 경우 마커 제거 및 상태 초기화
+      setMarkers([]); // 마커 상태 초기화
+    }
+  };
+
+  const updateMarkers = (places) => {
+    // 기존 마커 제거
+    markers.forEach((marker) => marker.setMap(null));
+
+    // 새로운 마커 생성
+    const newMarkers = places.map((place) => {
+      const marker = new window.google.maps.Marker({
+        position: {
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        },
+        map: map,
+        title: place.name,
+      });
+
+      const infoWindow = new window.google.maps.InfoWindow();
+
+      // 마커 클릭 시 InfoWindow 표시
+      marker.addListener("click", () => {
+        infoWindow.setContent(
+          `<div><strong>${place.name}</strong><br>${place.formattedAddress}</div>`
         );
-        setTrainSchedules(response.data); // API 응답 데이터 저장
-      } catch (error) {
-        console.error("기차편 정보를 가져오는 데 실패했습니다:", error);
-      }
-    };
+        infoWindow.open(map, marker);
+      });
 
-    fetchTrainSchedules();
-  }, [backServer, trainApiKey]);
+      return marker;
+    });
 
-  const handleItineraryButtonClick = () => {
-    // 일정 추가 폼을 토글하는 로직 구현
+    // 마커 상태 업데이트
+    setMarkers(newMarkers);
+  };
+
+  // 일정에 추가하는 함수 (위치 포함)
+  const addPlanToDay = (plan) => {
+    setSelectedPlans((prevPlans) => [...prevPlans, plan]);
+  };
+
+  // 기차편 검색 처리 함수
+  const handleTrainSearch = () => {
+    if (trainDeparture.length >= 2 && trainArrival.length >= 2) {
+      axios
+        .get(`${backServer}/domestic/search`, {
+          params: {
+            departure: trainDeparture,
+            arrival: trainArrival,
+            apiKey: trainApiKey,
+          },
+        })
+        .then((res) => {
+          setTrainSchedules(res.data); // 기차 시간 리스트 업데이트
+        })
+        .catch((error) => {
+          console.error("기차편 검색에 실패했습니다:", error);
+        });
+    } else {
+      alert("출발지와 도착지를 입력해주세요.");
+    }
   };
 
   return (
@@ -158,34 +201,100 @@ const Schedule = () => {
               setSelectedDay={setSelectedDay}
               planPageOption={planPageOption}
               setPlanPageOption={setPlanPageOption}
+              selectedPlans={selectedPlans} // 선택된 일정 전달
             />
           </div>
+        </div>
+        <div className="store-list" style={{ width: "300px" }}>
+          <div className="search-button">
+            <button
+              className="tri-date"
+              onClick={() => setShowTrainSearch(!showTrainSearch)}
+            >
+              기차편 추가
+            </button>
+            <button
+              className="date-list"
+              onClick={() => setShowSearch(!showSearch)}
+            >
+              일정 추가
+            </button>
+          </div>
+          {showTrainSearch && (
+            <div className="train-search-container">
+              <div className="train-inputs">
+                <input
+                  type="text"
+                  placeholder="출발지"
+                  value={trainDeparture}
+                  onChange={(e) => setTrainDeparture(e.target.value)}
+                />
+                <input
+                  type="text"
+                  placeholder="도착지"
+                  value={trainArrival}
+                  onChange={(e) => setTrainArrival(e.target.value)}
+                />
+              </div>
+              <button className="train-search-btn" onClick={handleTrainSearch}>
+                검색
+              </button>
 
-          {itinerary[selectedDay] && (
-            <div className="selected-day-itinerary">
-              <h2>{itinerary[selectedDay].date}</h2>
+              <div className="train-search-list-box">
+                {trainSchedules.length > 0 ? (
+                  <ul>
+                    {trainSchedules.map((schedule, index) => (
+                      <li key={index}>
+                        <div className="train-schedule-box">
+                          <p>
+                            출발: {schedule.departureTime} - 도착:{" "}
+                            {schedule.arrivalTime}
+                          </p>
+                          <p>
+                            {schedule.trainName} ({schedule.trainType})
+                          </p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>검색된 기차편이 없습니다.</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {showSearch && (
+            <div className="search-container">
+              <input
+                type="text"
+                placeholder="장소 검색"
+                onChange={handleSearch}
+              />
+              <button className="search-add">검색</button>
               <ul>
-                {itinerary[selectedDay].places.map((place, index) => (
-                  <li key={index}>{place.name}</li>
+                {searchResults.map((result, index) => (
+                  <li key={index}>
+                    {result.name} - {result.formattedAddress}
+                    <button
+                      className="add-btn"
+                      onClick={() =>
+                        addPlanToDay({
+                          name: result.name,
+                          address: result.formattedAddress,
+                        })
+                      }
+                    >
+                      +
+                    </button>
+                  </li>
                 ))}
               </ul>
             </div>
           )}
         </div>
-        <div className="store-list">
-          <h4>기차편 일정</h4>
-          <h4>일정 추가</h4>
-          <ul>
-            {trainSchedules.map((schedule, index) => (
-              <li key={index}>
-                {schedule.trainNumber} - {schedule.departure} -{" "}
-                {schedule.arrival} ({schedule.time})
-              </li>
-            ))}
-          </ul>
-        </div>
         <div className="map-container">
-          <div id="map" style={{ height: "100%", width: "100%" }}></div>
+          <div id="map" style={{ height: "100%", width: "100%" }} />
         </div>
       </div>
     </div>
