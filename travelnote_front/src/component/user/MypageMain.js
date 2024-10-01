@@ -53,6 +53,14 @@ const MypageMain = () => {
         { url: "#", text: "여행지 등록하기" },
         { url: "#", text: "관광지 등록하기" },
       ]);
+      if (userType === 2) {
+        setMenus([
+          { url: "#", text: "여행사 정보 수정" },
+          { url: "#", text: "비밀번호 변경" },
+          { url: "#", text: "판매중인 상품" },
+          { url: "#", text: "결제 내역 확인" },
+        ]);
+      }
     } else if (userType === 2) {
       setMenus([...menus, { url: "/", text: "여행사 페이지" }]);
     }

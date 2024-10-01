@@ -110,18 +110,13 @@ const CustomerBoardList = () => {
           <h3>1대1 문의</h3>
         </div>
         <div className="personalboard-section">
-          <div className="personalboard-write-btn">
-            <button onClick={navigatePersonalBoardWrite}>
-              1대1 문의 작성하기
-            </button>
-          </div>
           <div className="personalboard-list">
             <table>
               <tbody>
                 <tr style={{ height: "50px" }}>
-                  <th style={{ width: "55%" }}>제목</th>
+                  <th style={{ width: "50%" }}>제목</th>
                   <th style={{ width: "20%" }}>작성일</th>
-                  <th style={{ width: "25%" }}>답변여부</th>
+                  <th style={{ width: "30%" }}>답변여부</th>
                 </tr>
                 {personalBoardList.length > 0 ? (
                   personalBoardList.map((personalBoard, i) => {
@@ -146,6 +141,11 @@ const CustomerBoardList = () => {
                 setReqPage={setPerosnalBoardReqPage}
               />
             </div>
+          </div>
+          <div className="personalboard-write-btn">
+            <button onClick={navigatePersonalBoardWrite}>
+              1대1 문의 작성하기
+            </button>
           </div>
         </div>
       </div>
