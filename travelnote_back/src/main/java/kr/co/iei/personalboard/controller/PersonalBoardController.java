@@ -1,6 +1,8 @@
 package kr.co.iei.personalboard.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +10,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,8 +49,6 @@ public class PersonalBoardController {
 	
 	@GetMapping(value = "/list/{personalBoardReqPage}")
 	public ResponseEntity<Map> list(@PathVariable int personalBoardReqPage, @RequestParam String userNick){
-		System.out.println("닉네임 : "+userNick);
-		System.out.println("1대1문의 시작");
 		Map map = personalBoardService.selectBoardList(personalBoardReqPage, userNick);
 		return ResponseEntity.ok(map);
 	}
@@ -98,5 +103,24 @@ public class PersonalBoardController {
 		return ResponseEntity.ok(result);
 	}
 	
-	
+	@GetMapping(value = "/file/{personalBoardFileNo}")
+	public ResponseEntity<Resource> filedown(@PathVariable int personalBoardFileNo) throws FileNotFoundException{
+		PersonalBoardFileDTO personalBoardFile = personalBoardService.getPersonalBoardFile(personalBoardFileNo);
+		String savepath = root+"/personalBoard/";
+		File file = new File(savepath+personalBoardFile.getPersonalBoardFilepath());
+		
+		Resource resource = new InputStreamResource(new FileInputStream(file));
+		
+		HttpHeaders header = new HttpHeaders();
+		header.add("Content-Disposition", "attachment; filename=\""+personalBoardFile.getPersonalBoardFilename()+"\"");
+		header.add("Cache-Control", "no-cache, no-store, must-revalidate");
+		header.add("Pragma", "no-cache");
+		header.add("Expires", "0");
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				 .headers(header)
+				 .contentLength(file.length())
+				 .contentType(MediaType.APPLICATION_OCTET_STREAM)
+				 .body(resource);
+	}
 }

@@ -5,15 +5,24 @@ import { useRecoilState } from "recoil";
 import { userNickState, userTypeState } from "../utils/RecoilData";
 import Swal from "sweetalert2";
 
-const PersonalBoardView = () => {
+const PersonalBoardAnswerWrite = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  const parmas = useParams();
   const navigate = useNavigate();
-  const params = useParams();
-  const personalBoardNo = params.personalBoardNo;
-  const [personalBoard, setPersonalBoard] = useState({});
-  const [personalBoardAnswer, setPersonalBoardAnswer] = useState({});
-  const [userType, setUserType] = useRecoilState(userTypeState);
+  const personalBoardNo = parmas.personalBoardNo;
   const [userNick, setUserNick] = useRecoilState(userNickState);
+  const [userType, setUserType] = useRecoilState(userTypeState);
+  const [personalBoard, setPersonalBoard] = useState({});
+  const [personalBoardAnswer, setPersonalBoardAnswer] = useState({
+    personalBoardNo: personalBoardNo,
+    perosnalBoardAnswerContent: "",
+    personalBoardAnswerWriter: userNick,
+  });
+  const changePersonalBoardAnswerContent = (e) => {
+    const name = e.target.name;
+    setPersonalBoardAnswer({ ...personalBoardAnswer, [name]: e.target.value });
+  };
+  console.log(personalBoardAnswer);
   useEffect(() => {
     axios
       .get(`${backServer}/personalBoard/view/${personalBoardNo}`)
@@ -35,45 +44,27 @@ const PersonalBoardView = () => {
       });
   });
 
-  const deletePersonalBoard = () => {
-    Swal.fire({
-      title: "문의글 삭제",
-      icon: "info",
-      text: "문의글을 삭제 하시겠습니까?",
-      showCancelButton: true,
-      confirmButtonText: "삭제하기",
-      cancelButtonText: "취소",
-    }).then((res) => {
-      if (res.isConfirmed) {
-        axios
-          .delete(`${backServer}/personalBoard/${personalBoardNo}`)
-          .then((res) => {
-            if (res.data === 1) {
-              Swal.fire({
-                title: "삭제완료",
-                icon: "success",
-              });
-              navigate("/customerService/customerBoard");
-            } else {
-              Swal.fire({
-                title: "삭제실패",
-                text: "잠시 후 다시 시도해주세요.",
-                icon: "success",
-              });
-            }
-          })
-          .catch((err) => {
-            console.log(err);
+  const writePersonalBoardAnswer = () => {
+    axios
+      .post(`${backServer}/admin/writePersonalBoardAnswer`, personalBoardAnswer)
+      .then((res) => {
+        if (res.data === 2) {
+          Swal.fire({
+            icon: "success",
+            title: "작성 성공",
           });
-      } else {
-      }
-    });
+          navigate("/mypage/admin/personalBoardList");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
-    <div className="write-section">
+    <div>
       <div className="page-small-title">
-        <h2>1대1문의 상세보기</h2>
+        <h2>1대1문의 내용보기</h2>
       </div>
       <table className="personalboard-tbl">
         <tbody>
@@ -127,63 +118,24 @@ const PersonalBoardView = () => {
           </tr>
         </tbody>
       </table>
-      {personalBoard.personalBoardWriter === userNick ? (
-        <div className="personalBoard-btn-box">
-          <button
-            onClick={() => {
-              navigate(
-                `/customerService/personalBoard/update/${personalBoardNo}`
-              );
-            }}
-          >
-            수정하기
-          </button>
-          <button onClick={deletePersonalBoard}>삭제하기</button>
-        </div>
-      ) : (
-        <p>첨부파일이 없습니다.</p>
-      )}
-
       <div className="answer-section">
         <div className="page-small-title">
-          <h2>1대1문의 답변내용</h2>
+          <h2>1대1문의 답변 작성하기</h2>
         </div>
-        {personalBoardAnswer === null ? (
-          <>
-            <table className="personalboard-tbl">
-              <tbody>
-                <tr>
-                  <th style={{ width: "25%" }}>작성자</th>
-                  <td style={{ width: "25%" }}>
-                    {personalBoardAnswer.personalBoardAnswerWriter}
-                  </td>
-                  <th style={{ width: "25%" }}>작성일</th>
-                  <th style={{ width: "25%" }}>
-                    {personalBoard.personalBoardAnswerDate}
-                  </th>
-                </tr>
-                <tr>
-                  <th>내용</th>
-                  <div className="faqBoard-content">
-                    <td colSpan={3}>
-                      {personalBoardAnswer.personalBoardAnswerContent}
-                    </td>
-                  </div>
-                </tr>
-              </tbody>
-            </table>
-          </>
-        ) : (
-          <div style={{ textAlign: "center" }} className="faqBoard-content">
-            <p>아직 답변이 작성되지 않았습니다.</p>
-            {userType === 3 ? (
-              <div>
-                <button>답변 작성하기</button>
-              </div>
-            ) : (
-              <></>
-            )}
+        {personalBoard.personalBoardStatus === "N" ? (
+          <div className="faqBoard-content" style={{ minHeight: "400px" }}>
+            <textarea
+              className="personalboard-answer"
+              id="personalBoardAnswerContent"
+              name="personalBoardAnswerContent"
+              onChange={changePersonalBoardAnswerContent}
+            ></textarea>
+            <div className="btn-box">
+              <button onClick={writePersonalBoardAnswer}>작성하기</button>
+            </div>
           </div>
+        ) : (
+          <></>
         )}
       </div>
     </div>
@@ -228,4 +180,4 @@ const FileItem = (props) => {
   );
 };
 
-export default PersonalBoardView;
+export default PersonalBoardAnswerWrite;

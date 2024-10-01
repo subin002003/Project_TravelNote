@@ -42,13 +42,13 @@ public class PersonalBoardService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list);
 		map.put("pi",pi);
-		System.out.println("map 잘나오나요 ? : "+map);
 		return map;
 	}
 
 	public PersonalBoardDTO selectOnePersonalBoard(int personalBoardNo) {
 		PersonalBoardDTO personalBoard = personalBoardDao.selectOnePersonalBoard(personalBoardNo);
-		
+		List<PersonalBoardFileDTO> personalBoardFileList = personalBoardDao.selectOnePersonalBoardFile(personalBoardNo);
+		personalBoard.setPersonalBoardFileList(personalBoardFileList);
 		return personalBoard;
 	}
 
@@ -61,6 +61,36 @@ public class PersonalBoardService {
 	@Transactional
 	public int deletePersonalBoard(int personalBoardNo) {
 		int result = personalBoardDao.deletePersonalBoard(personalBoardNo);
+		return result;
+	}
+
+	public PersonalBoardFileDTO getPersonalBoardFile(int personalBoardFileNo) {
+		PersonalBoardFileDTO personalBoardFile = personalBoardDao.getPersonalBoardFile(personalBoardFileNo);
+		return personalBoardFile;
+	}
+
+
+	public Map selectPersonalBoardList(int reqPage) {
+		int numPerPage = 10;
+		int pageNaviSize = 5;
+		int totalCount = personalBoardDao.personalBoardTotalCount();
+		PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
+		List list = personalBoardDao.selectAllPersonalBoardList(pi);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list", list);
+		map.put("pi",pi);
+		return map;
+	}
+
+	@Transactional
+	public int insertPersonalBoardAnswer(PersonalBoardAnswerDTO personalBoardAnswer) {
+		int result = personalBoardDao.insertPersonalBoardAnswer(personalBoardAnswer);
+		return result;
+	}
+	
+	@Transactional
+	public int updatePersonalBoardAnswerInfo(int personalBoardNo) {
+		int result = personalBoardDao.updatePersonalBoardAnswerInfo(personalBoardNo);
 		return result;
 	}
 }

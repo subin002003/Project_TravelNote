@@ -2,12 +2,15 @@ import { useRecoilValue } from "recoil";
 import { isLoginState, userTypeState } from "../utils/RecoilData";
 import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import SideMenu from "../utils/SideMenu";
 import MyInfo from "./MyInfo";
+import PersonalBoardList from "./PersonalBoardList";
+import PersonalBoardAnswerWrite from "./PersonalBoardAnswerWrite";
 
 const MypageMain = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // 현재 경로를 확인
   const userType = useRecoilValue(userTypeState);
   const isLogin = useRecoilValue(isLoginState);
 
@@ -20,8 +23,8 @@ const MypageMain = () => {
     { url: "#", text: "내가 작성한 글" },
   ]);
 
+  // 로그인 상태 체크 및 리다이렉트
   useEffect(() => {
-    console.log(isLogin);
     if (!isLogin) {
       Swal.fire({
         title: "로그인 후 이용 가능합니다",
@@ -29,14 +32,26 @@ const MypageMain = () => {
       }).then(() => {
         navigate("/login"); // 경고 후 로그인 페이지로 리다이렉트
       });
-    } else {
-      navigate("info"); // 로그인 상태면 기본 페이지로 이동
     }
   }, [isLogin, navigate]);
 
+  // 현재 경로가 '/mypage'일 때만 'info'로 이동, 다른 경로일 경우 유지
+  useEffect(() => {
+    if (isLogin && location.pathname === "/mypage") {
+      navigate("info"); // 기본 페이지로 이동
+    }
+  }, [isLogin, location.pathname, navigate]);
+
+  // 관리자 메뉴 추가
   useEffect(() => {
     if (userType === 3) {
-      setMenus([...menus, { url: "/admin", text: "관리자 페이지" }]);
+      setMenus([
+        { url: "#", text: "게시글 관리" },
+        { url: "#", text: "회원 관리" },
+        { url: "/mypage/admin/personalBoardList", text: "1대1문의 답변하기" },
+        { url: "#", text: "여행지 등록하기" },
+        { url: "#", text: "관광지 등록하기" },
+      ]);
     } else if (userType === 2) {
       setMenus([...menus, { url: "/", text: "여행사 페이지" }]);
     }
@@ -67,7 +82,15 @@ const MypageMain = () => {
         <div className="mypage-content">
           <section className="section">
             <Routes>
-              <Route path="info" element={<MyInfo />}></Route>
+              <Route path="info" element={<MyInfo />} />
+              <Route
+                path="admin/personalBoardList"
+                element={<PersonalBoardList />}
+              />
+              <Route
+                path="admin/personalBoardList/writeAnswer/:personalBoardNo"
+                element={<PersonalBoardAnswerWrite />}
+              ></Route>
             </Routes>
           </section>
         </div>
