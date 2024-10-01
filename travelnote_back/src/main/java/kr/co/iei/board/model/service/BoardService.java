@@ -93,7 +93,7 @@ public class BoardService {
 		}
 		return null;
 	}
-	
+	@Transactional
 	public boolean addLike(String userNick, int boardNo) {
         // 좋아요 추가 로직
         int result = boardDao.insertLike(userNick, boardNo);
@@ -104,7 +104,7 @@ public class BoardService {
         }
         return false;
     }
-	
+	@Transactional
 	public boolean removeLike(String userNick, int boardNo) {
         // 좋아요 제거 로직
         int result = boardDao.deleteLike(userNick, boardNo);
@@ -115,7 +115,7 @@ public class BoardService {
         }
         return false;
 	}
-	
+	@Transactional
 	public void incrementViewCount(int boardNo) {
         boardDao.updateViewCount(boardNo);
     }
@@ -123,6 +123,7 @@ public class BoardService {
 	public BoardDTO getBoardById(int boardNo) {
 		return boardDao.selectBoardById(boardNo);
 	}
+	@Transactional
 	public void addComment(BoardCommentDTO comment) {
 		boardDao.addComment(comment);
 		
@@ -130,9 +131,18 @@ public class BoardService {
 	public List<BoardCommentDTO> getComments(int boardRef) {
         return boardDao.getComments(boardRef);
     }
+	@Transactional
 	public void deleteComment(int commentNo) {
 	   boardDao.deleteComment(commentNo);
 	}
+	@Transactional
+	public void updateComment(int boardNo, int commentNo, BoardCommentDTO boardCommentDTO) {
+		boardDao.updateComment(boardNo, commentNo, boardCommentDTO.getBoardCommentContent());
+	}
+	
+	
+	   
+	
 	
 	
 }

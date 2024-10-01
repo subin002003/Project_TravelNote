@@ -53,6 +53,8 @@ public interface BoardDao {
 
 	void deleteComment(int commentNo);
 
+	void updateComment(int boardNo, int commentNo, String boardCommentContent);
+
 	
 
 	
