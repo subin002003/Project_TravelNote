@@ -4,13 +4,13 @@ const ForeignPlaceItem = (props) => {
 
   const viewPlace = () => {
     setSelectedPosition(place.geometry.location);
-    setPlaceInfo(
-      "" +
-        `
-      <div className="place-info-box">
-        <h4 className="place-info-title">${place.name}</h4>
-      </div>`
-    );
+    console.log(place);
+    setPlaceInfo({
+      placeName: place.name,
+      placeLocation: place.geometry.location,
+      placeAddress: place.formatted_address,
+      placeId: place.place_id,
+    });
   };
   return (
     <div className="place-item-box">
