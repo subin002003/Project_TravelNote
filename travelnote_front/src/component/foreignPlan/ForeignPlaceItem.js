@@ -1,17 +1,12 @@
 import axios from "axios";
-import Swal from "sweetalert2";
 
 const ForeignPlaceItem = (props) => {
   const {
     place,
-    index,
-    selectedPosition,
     setSelectedPosition,
     setPlaceInfo,
     itineraryNo,
     selectedDay,
-    planList,
-    setPlanList,
     backServer,
     totalPlanDates,
     setIsPlanAdded,
@@ -51,7 +46,6 @@ const ForeignPlaceItem = (props) => {
       .then((res) => {
         if (res.data > 0) {
           setIsPlanAdded(true);
-          // Swal.fire;
         }
       })
       .catch((err) => {

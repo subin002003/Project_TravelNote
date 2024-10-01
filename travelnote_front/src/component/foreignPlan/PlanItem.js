@@ -4,12 +4,10 @@ const PlanItem = (props) => {
   const {
     plan,
     timeOptionsArr,
-    backServer,
     setEdited,
     editPlanList,
     setEditPlanList,
     planPageOption, // planPageOption이 1이면 조회, 2면 수정
-    setPlanPageOption,
   } = props;
   const [editPlan, setEditPlan] = useState({}); // 수정할 정보 저장planListStr
 

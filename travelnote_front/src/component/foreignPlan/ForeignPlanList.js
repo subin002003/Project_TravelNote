@@ -154,12 +154,10 @@ const ForeignPlanList = (props) => {
                     key={"plan-item-" + index}
                     plan={plan}
                     timeOptionsArr={timeOptionsArr}
-                    backServer={backServer}
                     setEdited={setEdited}
                     editPlanList={editPlanList}
                     setEditPlanList={setEditPlanList}
                     planPageOption={planPageOption}
-                    setPlanPageOption={setPlanPageOption}
                   />
                 );
               })

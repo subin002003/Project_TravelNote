@@ -1,8 +1,10 @@
 import { useState } from "react";
 import ForeignPlaceItem from "./ForeignPlaceItem";
 import axios from "axios";
+import FlightItem from "./FlightItem";
 
 const ForeignPlanSearch = (props) => {
+  const flightsApiKey = process.env.REACT_APP_FLIGHTS_API_KEY;
   const {
     itineraryNo,
     searchInput,
@@ -18,15 +20,20 @@ const ForeignPlanSearch = (props) => {
     backServer,
     totalPlanDates,
     setIsPlanAdded,
+    searchAirport,
+    setSearchAirport,
+    searchFlightList,
+    setSearchFlightList,
   } = props;
-  const [category, setCategory] = useState(2); // 1이면 항공편, 2면 장소
+  const [category, setCategory] = useState(1); // 1일 때 항공편, 2일 때 장소
 
-  // 목록 조회
+  // 추천 명소로 저장된 정보 목록 조회
 
+  // 인풋에 엔터 입력 시 검색
   const changeSearchInput = (e) => {
     setSearchInput(e.target.value);
     if (e.keyCode === 13) {
-      document.getElementById("search-button").click();
+      document.getElementById("place-search-button").click();
     }
   };
 
@@ -34,6 +41,26 @@ const ForeignPlanSearch = (props) => {
   const search = () => {
     if (searchInput.trim() === "") return;
     setSearchKeyword(searchInput.trim());
+  };
+
+  // 공항 검색 인풋 핸들러
+  const changeSearchAirport = (e) => {
+    setSearchAirport({ ...searchAirport, [e.target.id]: e.target.value });
+    if (e.keyCode === 13) {
+      document.getElementById("flight-search-button").click();
+    }
+  };
+
+  // 항공편 검색
+  const searchFlights = () => {
+    axios
+      .get(`${backServer}/flightsApi/getFlights`)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -59,7 +86,19 @@ const ForeignPlanSearch = (props) => {
         </ul>
       </div>
       {category === 1 ? (
-        <FlightSearchBox />
+        <FlightSearchBox
+          selectedDay={selectedDay}
+          totalPlanDates={totalPlanDates}
+          itineraryNo={itineraryNo}
+          backServer={backServer}
+          setIsPlanAdded={setIsPlanAdded}
+          searchAirport={searchAirport}
+          setSearchAirport={setSearchAirport}
+          searchFlightList={searchFlightList}
+          setSearchFlightList={setSearchFlightList}
+          changeSearchAirport={changeSearchAirport}
+          searchFlights={searchFlights}
+        />
       ) : (
         <PlaceSearchBox
           searchInput={searchInput}
@@ -82,29 +121,87 @@ const ForeignPlanSearch = (props) => {
   );
 };
 
-// category가 1이면 항공편 관련
-const FlightSearchBox = () => {
-  return;
+// category가 1일 때 (항공편 관련)
+const FlightSearchBox = (props) => {
+  const {
+    selectedDay,
+    totalPlanDates,
+    itineraryNo,
+    backServer,
+    setIsPlanAdded,
+    searchAirport,
+    setSearchAirport,
+    searchFlightList,
+    setSearchFlightList,
+    changeSearchAirport,
+    searchFlights,
+  } = props;
+
+  return (
+    <>
+      <div className="flight-search-box">
+        <input
+          id="departure"
+          placeholder="출발 공항을 입력해 주세요."
+          value={searchAirport.departure}
+          onChange={changeSearchAirport}
+          onKeyUp={changeSearchAirport}
+        ></input>
+        <input
+          id="arrival"
+          placeholder="도착 공항을 입력해 주세요."
+          value={searchAirport.arrival}
+          onChange={changeSearchAirport}
+          onKeyUp={changeSearchAirport}
+        ></input>
+      </div>
+      <div className="flight-search-box">
+        <button onClick={searchFlights} id="flight-search-button">
+          검색
+        </button>
+      </div>
+      <div className="flight-list-box">
+        <div className="flight-list">
+          {searchFlightList.length > 0 ? (
+            searchFlightList.map((flight, index) => {
+              return (
+                <FlightItem
+                  key={"foreign-flight-item-" + index}
+                  flight={flight}
+                  index={index}
+                  selectedDay={selectedDay}
+                  totalPlanDates={totalPlanDates}
+                  itineraryNo={itineraryNo}
+                  backServer={backServer}
+                  setIsPlanAdded={setIsPlanAdded}
+                />
+              );
+            })
+          ) : (
+            <h5>일치하는 여정을 찾을 수 없어요.</h5>
+          )}
+        </div>
+      </div>
+    </>
+  );
 };
 
-// category가 2이면 장소 관련
+// category가 2일 때 (장소 관련)
 const PlaceSearchBox = (props) => {
   const {
     searchInput,
     changeSearchInput,
     search,
     searchPlaceList,
-    selectedPosition,
     setSelectedPosition,
     setPlaceInfo,
     selectedDay,
     itineraryNo,
-    planList,
-    setPlanList,
     backServer,
     totalPlanDates,
     setIsPlanAdded,
   } = props;
+
   return (
     <>
       <div className="place-search-box">
@@ -114,7 +211,7 @@ const PlaceSearchBox = (props) => {
           onChange={changeSearchInput}
           onKeyUp={changeSearchInput}
         ></input>
-        <button onClick={search} id="search-button">
+        <button onClick={search} id="place-search-button">
           검색
         </button>
       </div>
@@ -126,14 +223,10 @@ const PlaceSearchBox = (props) => {
                 <ForeignPlaceItem
                   key={"foreign-place-item-" + index}
                   place={place}
-                  index={index}
-                  selectedPosition={selectedPosition}
                   setSelectedPosition={setSelectedPosition}
                   setPlaceInfo={setPlaceInfo}
-                  selectedDay={selectedDay}
                   itineraryNo={itineraryNo}
-                  planList={planList}
-                  setPlanList={setPlanList}
+                  selectedDay={selectedDay}
                   backServer={backServer}
                   totalPlanDates={totalPlanDates}
                   setIsPlanAdded={setIsPlanAdded}

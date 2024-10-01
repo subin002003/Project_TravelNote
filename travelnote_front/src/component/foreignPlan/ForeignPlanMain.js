@@ -35,6 +35,8 @@ const ForeignPlanMain = () => {
   const [selectedPosition, setSelectedPosition] = useState();
   const [placeInfo, setPlaceInfo] = useState();
   const [isPlanAdded, setIsPlanAdded] = useState(false);
+  const [searchAirport, setSearchAirport] = useState({});
+  const [searchFlightList, setSearchFlightList] = useState([]);
 
   // 일정 정보 조회
   useEffect(() => {
@@ -109,6 +111,10 @@ const ForeignPlanMain = () => {
           totalPlanDates={totalPlanDates}
           itineraryNo={itineraryNo}
           setIsPlanAdded={setIsPlanAdded}
+          searchAirport={searchAirport}
+          setSearchAirport={setSearchAirport}
+          searchFlightList={searchFlightList}
+          setSearchFlightList={setSearchFlightList}
         />
       )}
       <ForeignPlanMap

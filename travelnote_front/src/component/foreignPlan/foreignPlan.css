@@ -215,6 +215,9 @@
 }
 
 /* ForeignPlanDaysButton */
+.daily-plan-box {
+  padding-top: 20px;
+}
 .plan-dates-list {
   display: flex;
   justify-content: center;
@@ -347,8 +350,9 @@
   color: white;
   background-color: var(--main-color);
 }
-.place-list {
-  height: 500px;
+.place-list,
+.flight-list {
+  height: 507px;
   background-color: var(--base-color);
   overflow: auto;
   border-radius: 10px;
@@ -359,13 +363,19 @@
   -ms-overflow-style: none; /* 인터넷 익스플로러 */
   scrollbar-width: none; /* 파이어폭스 */
 }
-.place-list::-webkit-scrollbar {
+.flight-list {
+  height: 400px;
+}
+.place-list::-webkit-scrollbar,
+.flight-list::-webkit-scrollbar {
   display: none; /* 스크롤바 제거 ( 크롬, 사파리, 오페라, 엣지 ) */
 }
-.place-list > h5 {
+.place-list > h5,
+.flight-list > h5 {
   margin: 30px auto;
 }
-.place-search-box > input {
+.place-search-box > input,
+.flight-search-box > input {
   width: 200px;
   outline: none;
   border: none;
@@ -377,10 +387,17 @@
   font-family: "SUITE-Regular";
   margin-right: 15px;
 }
+.flight-search-box > input {
+  margin: 0;
+}
 .place-search-box > button {
   width: 65px;
   height: 40px;
   box-sizing: border-box;
+}
+.flight-search-box > button {
+  width: 200px;
+  height: 40px;
 }
 /* ForeignPlaceItem */
 .place-item-box {
