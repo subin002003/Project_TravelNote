@@ -27,4 +27,6 @@ public interface ForeignPlanDao {
 
 	int updatePlanInfo(ForeignEditPlanDTO foreignEditPlanDTO);
 
+	int insertPlace(ForeignPlanDTO plan);
+
 }

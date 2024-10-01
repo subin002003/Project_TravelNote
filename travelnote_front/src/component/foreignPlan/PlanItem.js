@@ -71,11 +71,7 @@ const PlanItem = (props) => {
       </div>
       <div className="plan-image-box">
         <img
-          src={
-            plan.planImg
-              ? `${backServer}/foreign/${plan.planImg}`
-              : "/image/default_img.png"
-          }
+          src={plan.planImage ? plan.planImage : "/image/default_img.png"}
         ></img>
       </div>
     </div>

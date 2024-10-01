@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.iei.foreignPlan.model.dto.ForeignItineraryDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignItineraryInfoDTO;
+import kr.co.iei.foreignPlan.model.dto.ForeignPlanDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignRegionDTO;
 import kr.co.iei.foreignPlan.model.service.ForeignPlanService;
 
@@ -76,6 +77,13 @@ public class ForeignPlanController {
 		return ResponseEntity.ok(result);
 	}
 	
+	// 일정에 장소 추가
+	@PostMapping(value="/addPlace")
+	public ResponseEntity<Integer> addPlace(@RequestBody ForeignPlanDTO plan) {
+		System.out.println(plan);
+		int result = foreignPlanService.insertPlace(plan);
+		return ResponseEntity.ok(result);
+	}
 
 	
 }

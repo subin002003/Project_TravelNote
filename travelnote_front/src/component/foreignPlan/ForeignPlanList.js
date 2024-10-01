@@ -14,11 +14,14 @@ const ForeignPlanList = (props) => {
     totalPlanDates,
     planPageOption, // planPageOption이 1이면 조회, 2면 수정
     setPlanPageOption,
+    planList,
+    setPlanList,
+    isPlanAdded,
+    setIsPlanAdded,
   } = props;
 
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const selectedDate = totalPlanDates[selectedDay - 1];
-  const [planList, setPlanList] = useState([]); // 조회 중인 일정 목록 배열
   const [timeOptionsArr, setTimeOptionsArr] = useState([]); // 시간 선택 옵션 용 배열
   const [edited, setEdited] = useState(false);
   const [editPlanList, setEditPlanList] = useState([]); // 수정할 일정 목록
@@ -40,12 +43,13 @@ const ForeignPlanList = (props) => {
         })
         .then((res) => {
           setPlanList(res.data);
+          setIsPlanAdded(false);
         })
         .catch((err) => {
           console.log(err);
         });
     }
-  }, [itinerary, selectedDate]);
+  }, [itinerary, selectedDate, isPlanAdded]);
 
   // 시간 배열에 값 추가
   useEffect(() => {

@@ -34,6 +34,7 @@ const ForeignPlanMain = () => {
   const [searchPlaceList, setSearchPlaceList] = useState([]);
   const [selectedPosition, setSelectedPosition] = useState();
   const [placeInfo, setPlaceInfo] = useState();
+  const [isPlanAdded, setIsPlanAdded] = useState(false);
 
   // 일정 정보 조회
   useEffect(() => {
@@ -85,6 +86,10 @@ const ForeignPlanMain = () => {
         totalPlanDates={totalPlanDates}
         planPageOption={planPageOption}
         setPlanPageOption={setPlanPageOption}
+        planList={planList}
+        setPlanList={setPlanList}
+        isPlanAdded={isPlanAdded}
+        setIsPlanAdded={setIsPlanAdded}
       />
       {planPageOption === 1 ? (
         <ForeignRegionInfo />
@@ -92,12 +97,18 @@ const ForeignPlanMain = () => {
         <ForeignPlanSearch
           searchInput={searchInput}
           setSearchInput={setSearchInput}
-          searchKeyword={searchKeyword}
           setSearchKeyword={setSearchKeyword}
           searchPlaceList={searchPlaceList}
           selectedPosition={selectedPosition}
           setSelectedPosition={setSelectedPosition}
           setPlaceInfo={setPlaceInfo}
+          selectedDay={selectedDay}
+          planList={planList}
+          setPlanList={setPlanList}
+          backServer={backServer}
+          totalPlanDates={totalPlanDates}
+          itineraryNo={itineraryNo}
+          setIsPlanAdded={setIsPlanAdded}
         />
       )}
       <ForeignPlanMap
