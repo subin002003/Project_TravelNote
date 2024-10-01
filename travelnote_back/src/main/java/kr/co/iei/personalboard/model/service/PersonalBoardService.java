@@ -1,5 +1,6 @@
 package kr.co.iei.personalboard.model.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,17 +43,17 @@ public class PersonalBoardService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list);
 		map.put("pi",pi);
-		System.out.println("map 잘나오나요 ? : "+map);
 		return map;
 	}
 
 	public PersonalBoardDTO selectOnePersonalBoard(int personalBoardNo) {
 		PersonalBoardDTO personalBoard = personalBoardDao.selectOnePersonalBoard(personalBoardNo);
-		
+		List<PersonalBoardFileDTO> personalBoardFileList = personalBoardDao.selectOnePersonalBoardFile(personalBoardNo);
+		personalBoard.setPersonalBoardFileList(personalBoardFileList);
 		return personalBoard;
 	}
 
-	public PersonalBoardAnswerDTO getPersonalBoardAnser(int personalBoardNo) {
+	public PersonalBoardAnswerDTO getPersonalBoardAnswer(int personalBoardNo) {
 		PersonalBoardAnswerDTO personalBoardAnswer = personalBoardDao.getPersonalBoardAnswer(personalBoardNo);
 		
 		return personalBoardAnswer;
@@ -62,5 +63,77 @@ public class PersonalBoardService {
 	public int deletePersonalBoard(int personalBoardNo) {
 		int result = personalBoardDao.deletePersonalBoard(personalBoardNo);
 		return result;
+	}
+
+	public PersonalBoardFileDTO getPersonalBoardFile(int personalBoardFileNo) {
+		PersonalBoardFileDTO personalBoardFile = personalBoardDao.getPersonalBoardFile(personalBoardFileNo);
+		return personalBoardFile;
+	}
+
+
+	public Map selectPersonalBoardList(int reqPage) {
+		int numPerPage = 10;
+		int pageNaviSize = 5;
+		int totalCount = personalBoardDao.personalBoardTotalCount();
+		PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
+		List list = personalBoardDao.selectAllPersonalBoardList(pi);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list", list);
+		map.put("pi",pi);
+		return map;
+	}
+
+	@Transactional
+	public int insertPersonalBoardAnswer(PersonalBoardAnswerDTO personalBoardAnswer) {
+		int result = personalBoardDao.insertPersonalBoardAnswer(personalBoardAnswer);
+		return result;
+	}
+	
+	@Transactional
+	public int updatePersonalBoardAnswerInfo(int personalBoardNo) {
+		int result = personalBoardDao.updatePersonalBoardAnswerInfo(personalBoardNo);
+		return result;
+	}
+
+	@Transactional
+	public int deletePersonalBoardAnswer(int personalBoardNo) {
+		int result = personalBoardDao.deletePersonalBoardAnswer(personalBoardNo);
+		return result;
+	}
+	
+	@Transactional
+	public int updatePersonalBoardAnswerInfo2(int personalBoardNo) {
+		int result = personalBoardDao.updatePersonalBoardAnswerInfo2(personalBoardNo);
+		return result;
+	}
+	
+
+	@Transactional
+	public int updatePersonalBoardAnswer(PersonalBoardAnswerDTO personalBoardAnswer) {
+		int result = personalBoardDao.updatePersonalBoardAnswer(personalBoardAnswer);
+		return result;
+	}
+
+	@Transactional
+	public List<PersonalBoardFileDTO> updatePersonalBoard(PersonalBoardDTO personalBoard,
+			List<PersonalBoardFileDTO> personalBoardFiles) {
+		int result = personalBoardDao.updatePersonalBoard(personalBoard);
+		if(result>0) {
+			List<PersonalBoardFileDTO> delFileList = new ArrayList<PersonalBoardFileDTO>();
+			if(personalBoard.getDelPersonalBoardFileNo() != null) {
+				delFileList = personalBoardDao.selectOnePersonalBoardFile2(personalBoard.getDelPersonalBoardFileNo());
+				result += personalBoardDao.deletePersonalBoardFile(personalBoard.getDelPersonalBoardFileNo());
+			}
+			for(PersonalBoardFileDTO personalBoardFile : personalBoardFiles) {
+				result += personalBoardDao.insertPersonalBoardFile(personalBoardFile);
+			}
+			int updateTotal = personalBoard.getDelPersonalBoardFileNo() == null
+							  ? 1+personalBoardFiles.size()
+							  : 1+personalBoardFiles.size() + personalBoard.getDelPersonalBoardFileNo().length;
+			if(result == updateTotal) {
+				return delFileList;
+			}
+		}
+		return null;
 	}
 }

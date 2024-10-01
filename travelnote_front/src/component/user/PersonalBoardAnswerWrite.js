@@ -5,17 +5,26 @@ import { useRecoilState } from "recoil";
 import { userNickState, userTypeState } from "../utils/RecoilData";
 import Swal from "sweetalert2";
 
-const PersonalBoardView = () => {
+const PersonalBoardAnswerWrite = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  const parmas = useParams();
   const navigate = useNavigate();
-  const params = useParams();
-  const personalBoardNo = params.personalBoardNo;
+  const personalBoardNo = parmas.personalBoardNo;
+  const [userNick, setUserNick] = useRecoilState(userNickState); // Recoil에서 상태 가져오기
+  const [userType, setUserType] = useRecoilState(userTypeState); // Recoil에서 상태 가져오기
   const [personalBoard, setPersonalBoard] = useState({});
-  const [personalBoardAnswer, setPersonalBoardAnswer] = useState({});
-  const [userType] = useRecoilState(userTypeState);
-  const [userNick] = useRecoilState(userNickState);
+  const [personalBoardAnswer, setPersonalBoardAnswer] = useState({
+    personalBoardNo: personalBoardNo,
+    personalBoardAnswerContent: "",
+    personalBoardAnswerWriter: userNick,
+  });
 
-  // 문의글 데이터를 가져오는 useEffect
+  const changePersonalBoardAnswerContent = (e) => {
+    setPersonalBoardAnswer((prevState) => ({
+      ...prevState,
+      personalBoardAnswerContent: e.target.value,
+    }));
+  };
   useEffect(() => {
     axios
       .get(`${backServer}/personalBoard/view/${personalBoardNo}`)
@@ -25,59 +34,66 @@ const PersonalBoardView = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [personalBoardNo, backServer]);
+  }, [personalBoardNo]);
 
-  // 답변 데이터를 가져오는 useEffect
   useEffect(() => {
+    // 답변 정보 가져오기
     axios
       .get(`${backServer}/personalBoard/getAnswer/${personalBoardNo}`)
       .then((res) => {
-        console.log(res);
-        setPersonalBoardAnswer(res.data);
+        if (res.data) {
+          setPersonalBoardAnswer((prevState) => ({
+            ...prevState,
+            ...res.data,
+          }));
+        }
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [personalBoardNo, backServer]);
+  }, [personalBoardNo]);
 
-  const deletePersonalBoard = () => {
-    Swal.fire({
-      title: "문의글 삭제",
-      icon: "info",
-      text: "문의글을 삭제 하시겠습니까?",
-      showCancelButton: true,
-      confirmButtonText: "삭제하기",
-      cancelButtonText: "취소",
-    }).then((res) => {
-      if (res.isConfirmed) {
-        axios
-          .delete(`${backServer}/personalBoard/${personalBoardNo}`)
-          .then((res) => {
-            if (res.data === 1) {
-              Swal.fire({
-                title: "삭제완료",
-                icon: "success",
-              });
-              navigate("/customerService/customerBoard");
-            } else {
-              Swal.fire({
-                title: "삭제실패",
-                text: "잠시 후 다시 시도해주세요.",
-                icon: "error",
-              });
-            }
-          })
-          .catch((err) => {
-            console.log(err);
+  const writePersonalBoardAnswer = () => {
+    axios
+      .post(`${backServer}/admin/writePersonalBoardAnswer`, personalBoardAnswer)
+      .then((res) => {
+        if (res.data === 2) {
+          Swal.fire({
+            icon: "success",
+            title: "작성 성공",
           });
-      }
-    });
+          navigate("/mypage/admin/personalBoardList");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
+  const deletePersonalBoardAnswer = () => {
+    axios
+      .delete(
+        `${backServer}/admin/deletePersonalBoardAnswer/${personalBoardNo}`
+      )
+      .then((res) => {
+        if (res.data === 2) {
+          Swal.fire({
+            title: "삭제성공",
+            icon: "success",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const navigateUpdatePersonalBoardAnswer = () => {
+    navigate(`/mypage/admin/personalBoardList/updateAnswer/${personalBoardNo}`);
+  };
   return (
-    <div className="write-section">
+    <div>
       <div className="page-small-title">
-        <h2>1대1문의 상세보기</h2>
+        <h2>1대1문의 내용보기</h2>
       </div>
       <table className="personalboard-tbl">
         <tbody>
@@ -110,14 +126,13 @@ const PersonalBoardView = () => {
           <tr>
             <th>첨부파일</th>
             <td colSpan={3}>
-              <div className="personalboard-filezone">
-                {personalBoard.personalBoardFileList &&
-                personalBoard.personalBoardFileList.length > 0 ? (
-                  personalBoard.personalBoardFileList.map((file, i) => (
-                    <FileItem key={"file" + i} file={file} />
-                  ))
+              <div className="personalboard-file0zone">
+                {personalBoard.personalBoardFileList ? (
+                  personalBoard.personalBoardFileList.map((file, i) => {
+                    return <FileItem key={"file" + i} file={file} />;
+                  })
                 ) : (
-                  <p>첨부파일이 없습니다.</p>
+                  <></>
                 )}
               </div>
             </td>
@@ -132,54 +147,39 @@ const PersonalBoardView = () => {
           </tr>
         </tbody>
       </table>
-
-      {personalBoard.personalBoardWriter === userNick && (
-        <div className="personalBoard-btn-box">
-          <button
-            onClick={() =>
-              navigate(
-                `/customerService/personalBoard/update/${personalBoardNo}`
-              )
-            }
-          >
-            수정하기
-          </button>
-          <button onClick={deletePersonalBoard}>삭제하기</button>
-        </div>
-      )}
-
       <div className="answer-section">
         <div className="page-small-title">
-          <h2>1대1문의 답변내용</h2>
+          <h2>1대1문의 답변</h2>
         </div>
-        {personalBoardAnswer &&
-        personalBoardAnswer.personalBoardAnswerContent ? (
-          <table className="personalboard-tbl">
-            <tbody>
-              <tr>
-                <th style={{ width: "25%" }}>작성자</th>
-                <td style={{ width: "25%" }}>
-                  {personalBoardAnswer.personalBoardAnswerWriter}
-                </td>
-                <th style={{ width: "25%" }}>작성일</th>
-                <td style={{ width: "25%" }}>
-                  {personalBoard.personalBoardAnswerDate}
-                </td>
-              </tr>
-              <tr>
-                <th>내용</th>
-                <td colSpan={3}>
-                  <div className="faqBoard-content">
-                    {personalBoardAnswer.personalBoardAnswerContent}
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        ) : (
-          <div style={{ textAlign: "center" }} className="faqBoard-content">
-            <p>아직 답변이 작성되지 않았습니다.</p>
+        <div className="faqBoard-content" style={{ minHeight: "400px" }}>
+          {personalBoard.personalBoardStatus === "N" ? (
+            <>
+              <textarea
+                className="personalboard-answer"
+                id="personalBoardAnswerContent"
+                name="personalBoardAnswerContent"
+                onChange={changePersonalBoardAnswerContent}
+              ></textarea>
+              <div className="btn-box">
+                <button onClick={writePersonalBoardAnswer}>작성하기</button>
+              </div>
+            </>
+          ) : (
+            <p>{personalBoardAnswer.personalBoardAnswerContent}</p>
+          )}
+        </div>
+        {personalBoard.personalBoardStatus === "Y" ? (
+          <div className="btn-box">
+            <button
+              onClick={navigateUpdatePersonalBoardAnswer}
+              style={{ marginRight: "20px" }}
+            >
+              수정하기
+            </button>
+            <button onClick={deletePersonalBoardAnswer}>삭제하기</button>
           </div>
+        ) : (
+          <></>
         )}
       </div>
     </div>
@@ -188,8 +188,7 @@ const PersonalBoardView = () => {
 
 const FileItem = (props) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
-  const { file } = props;
-
+  const file = props.file;
   const filedown = () => {
     axios
       .get(`${backServer}/personalBoard/file/${file.personalBoardFileNo}`, {
@@ -213,7 +212,6 @@ const FileItem = (props) => {
         console.log(err);
       });
   };
-
   return (
     <div className="board-file">
       <span className="material-icons file-icon" onClick={filedown}>
@@ -224,4 +222,4 @@ const FileItem = (props) => {
   );
 };
 
-export default PersonalBoardView;
+export default PersonalBoardAnswerWrite;

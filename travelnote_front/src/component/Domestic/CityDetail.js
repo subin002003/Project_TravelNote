@@ -19,6 +19,9 @@ const CityDetail = () => {
   const [endDate, setEndDate] = useState("");
   const [cityInfo, setCityInfo] = useState(null);
 
+  // 현재 날짜를 YYYY-MM-DD 형식으로 가져오기
+  const today = new Date().toISOString().split("T")[0];
+
   // 도시 정보와 날씨 정보를 가져오는 useEffect
   useEffect(() => {
     // 도시 정보 가져오기
@@ -139,6 +142,7 @@ const CityDetail = () => {
                   <input
                     type="date"
                     value={startDate}
+                    min={today} // 오늘 날짜 이후의 날짜만 선택 가능
                     onChange={(e) => setStartDate(e.target.value)}
                   />
                 </label>
@@ -147,6 +151,7 @@ const CityDetail = () => {
                   <input
                     type="date"
                     value={endDate}
+                    min={today}
                     onChange={(e) => setEndDate(e.target.value)}
                   />
                 </label>

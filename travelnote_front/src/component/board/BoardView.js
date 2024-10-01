@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { isLoginState, userNickState } from "../utils/RecoilData";
+import { userNickState, isLoginState } from "../utils/RecoilData";
 
 import Swal from "sweetalert2";
 
@@ -16,6 +16,9 @@ const BoardView = () => {
   const [userNick, setUserNick] = useRecoilState(userNickState);
   const [liked, setLiked] = useState(false); // 좋아요 상태
   const [likeCount, setLikeCount] = useState(0); // 좋아요 개수
+  const [comments, setComments] = useState([]); // 댓글 상태
+  const [newComment, setNewComment] = useState(""); // 새 댓글 입력 상태
+  const [reset, setReset] = useState(false);
 
   useEffect(() => {
     // 게시물 가져오기
@@ -29,24 +32,20 @@ const BoardView = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [boardNo]); //boardNo가 바뀔때마다 데이터 가져옴
-  const toggleLike = () => {
-    // 로그인 여부 확인
-    if (!isLoginState) {
-      Swal.fire({
-        title: "로그인 필요",
-        text: "좋아요 기능을 사용하려면 로그인하세요.",
-        icon: "warning",
+
+    // 댓글 목록 가져오기
+    axios
+      .get(`${backServer}/board/${boardNo}`)
+      .then((res) => {
+        setComments(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      return;
-    }
-
+  }, [reset]);
+  const toggleLike = () => {
     const action = liked ? "remove" : "add"; // 좋아요 추가 또는 제거
-
-    console.log("userNick : ", userNick);
-    console.log("userNo : ", boardNo);
-    console.log("action : ", action);
-
+    //좋아요
     axios
       .post(`${backServer}/board/like/${boardNo}`, {
         userNick: userNick,
@@ -68,11 +67,11 @@ const BoardView = () => {
         console.log(err);
       });
   };
+
   const deleteBoard = () => {
     axios
       .delete(`${backServer}/board/${board.boardNo}`)
       .then((res) => {
-        console.log(res);
         if (res.data === 1) {
           Swal.fire({
             title: "삭제완료",
@@ -92,6 +91,80 @@ const BoardView = () => {
         console.log(err);
       });
   };
+
+  const handleCommentChange = (e) => {
+    setNewComment(e.target.value);
+  };
+
+  // 댓글 추가
+  const addComment = () => {
+    if (!isLoginState) {
+      Swal.fire({
+        title: "로그인 필요",
+        text: "댓글 기능을 사용하려면 로그인하세요.",
+        icon: "warning",
+      });
+      return;
+    }
+
+    if (!newComment) {
+      Swal.fire({
+        title: "댓글 내용 필수",
+        text: "댓글 내용을 입력해주세요",
+        icon: "warning",
+      });
+      return;
+    }
+    const commentData = {
+      boardCommentWriter: userNick,
+      boardCommentContent: newComment,
+    };
+
+    axios
+      .post(`${backServer}/board/${boardNo}/comments`, commentData) // boardNo에 대한 댓글 추가
+      .then((res) => {
+        if (res.status === 201) {
+          reset ? setReset(false) : setReset(true); // useEffect의 두번째 매개변수 값을 변경해서 다시 작동시킴
+          Swal.fire({
+            title: "댓글 등록 성공",
+            icon: "success",
+          });
+          setNewComment(""); // 입력 초기화
+        } else {
+          Swal.fire({
+            title: "댓글 등록 실패",
+            text: res.data.message,
+            icon: "error",
+          });
+        }
+      });
+  };
+
+  const deleteComment = (commentNo) => {
+    axios
+      .delete(`${backServer}/board/${boardNo}/comments/${commentNo}`) // 댓글 삭제 API 경로
+      .then((res) => {
+        if (res.status === 200) {
+          reset ? setReset(false) : setReset(true); // useEffect의 두번째 매개변수 값을 변경해서 다시 작동시킴
+          Swal.fire({
+            title: "댓글 삭제 성공",
+            icon: "success",
+          });
+        } else {
+          Swal.fire({
+            title: "댓글 삭제 실패",
+            text: res.data.message,
+            icon: "error",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const updateComment = (comment) => {};
+
   return (
     <section className="board-wrap">
       <h1
@@ -217,11 +290,14 @@ const BoardView = () => {
             width: "100%",
           }}
         ></div>
+
+        {/* 댓글 입력 */}
         <h1 style={{ margin: "0" }}>댓글</h1>
         <div>
           <input
             type="text"
-            id="input"
+            value={newComment}
+            onChange={handleCommentChange}
             placeholder="댓글을 작성해주세요."
             style={{
               padding: "20px",
@@ -233,7 +309,7 @@ const BoardView = () => {
           ></input>
           <button
             type="button"
-            onClick={deleteBoard}
+            onClick={addComment}
             className="board-button-link-view-delete"
             style={{ margin: "15px", width: "100px" }}
           >
@@ -242,6 +318,36 @@ const BoardView = () => {
         </div>
         {/* 댓글 추가 등록 시 */}
         <div>
+          {comments.map((comment) => (
+            <div
+              key={comment.boardCommentNo}
+              style={{ display: "flex", margin: "20px" }}
+            >
+              <p style={{ marginRight: "15px", fontWeight: "bold" }}>
+                {comment.boardCommentWriter}
+              </p>
+              <p>{comment.boardCommentDate}</p>
+              <p style={{ marginLeft: "20px" }}>
+                {comment.boardCommentContent}
+              </p>
+              <button
+                onClick={() => updateComment(comment)}
+                style={{ marginLeft: "20px" }}
+              >
+                수정
+              </button>
+              <button
+                onClick={() => deleteComment(comment.boardCommentNo)}
+                style={{ marginLeft: "10px" }}
+              >
+                삭제
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {/* 댓글 추가 등록 시 */}
+        {/* <div>
           <div style={{ display: "flex", margin: "20px" }}>
             <p style={{ marginRight: "15px", fontWeight: "bold" }}>닉네임1</p>
             <p>2024-09-30</p>
@@ -259,7 +365,12 @@ const BoardView = () => {
               }}
             ></input>
             <p style={{ margin: "20px", fontWeight: "bold" }}>수정</p>
-            <p style={{ margin: "20px", fontWeight: "bold" }}>삭제</p>
+            <p
+              onClick={deleteComment}
+              style={{ margin: "20px", fontWeight: "bold" }}
+            >
+              삭제
+            </p>
           </div>
 
           <div
@@ -270,7 +381,7 @@ const BoardView = () => {
               width: "100%",
             }}
           ></div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

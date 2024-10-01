@@ -26,4 +26,31 @@ public interface PersonalBoardDao {
 
 	int deletePersonalBoard(int personalBoardNo);
 
+	List<PersonalBoardFileDTO> selectOnePersonalBoardFile(int personalBoardNo);
+
+	PersonalBoardFileDTO getPersonalBoardFile(int personalBoardFileNo);
+
+	int personalBoardTotalCount();
+
+	List selectAllPersonalBoardList(PageInfo pi);
+
+	int insertPersonalBoardAnswer(PersonalBoardAnswerDTO personalBoardAnswer);
+
+	int updatePersonalBoardAnswerInfo(int personalBoardNo);
+
+	int deletePersonalBoardAnswer(int personalBoardNo);
+
+	int updatePersonalBoardAnswerInfo2(int personalBoardNo);
+
+
+	int updatePersonalBoardAnswer(PersonalBoardAnswerDTO personalBoardAnswer);
+
+	int updatePersonalBoard(PersonalBoardDTO personalBoard);
+
+	List<PersonalBoardFileDTO> selectOnePersonalBoardFile2(int[] delPersonalBoardFileNo);
+
+	int deletePersonalBoardFile(int[] delPersonalBoardFileNo);
+
+
+
 }

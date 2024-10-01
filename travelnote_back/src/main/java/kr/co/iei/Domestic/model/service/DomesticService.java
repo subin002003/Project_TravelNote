@@ -56,7 +56,7 @@ public class DomesticService {
 			return list;
 		}
 	@Transactional
-	public static boolean updatePlan(String updateList) {
+	public boolean updatePlan(String updateList) {
 		// Json 문자열로 받은 배열 변환
 		List<EditPlanDTO> editList = new ArrayList<>();
 		Gson gson = new Gson();
@@ -65,14 +65,15 @@ public class DomesticService {
 			EditPlanDTO plan = gson.fromJson(jsonPlan, EditPlanDTO.class);
 			editList.add(plan);
 		}
-
 		int result = 0;
 		for (int i = 0; i < editList.size(); i ++) {		
-			result += DomesticDao.updatePlan(editList.get(i));
+			result += domesticDao.updatePlan(editList.get(i));
 		}
-		if (editList.size() == result) {
-			return true;
+		return editList.size() == result;
 		}
-		return false;
+	
+	public List<RegionDTO> search() {
+		List<RegionDTO> list = domesticDao.selectAllRegions();
+		return list;
 	}
 }

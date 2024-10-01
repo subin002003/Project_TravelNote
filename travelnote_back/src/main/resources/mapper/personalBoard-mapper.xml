@@ -27,10 +27,63 @@
 	<select id="selectOnePersonalBoard" resultType="personalBoard">
 		select * from personal_board where personal_board_no = #{personalBoardNo}
 	</select>
+	<select id="selectOnePersonalBoardFile">
+		select * from personal_board_file where personal_board_no = #{personalBoardNo}
+	</select>
 	<select id="getPersonalBoardAnswer" resultType="personalBoardAnswer">
-		select * from personal_board_answer where personal_board_answer_no = #{personalBoardAnswerNo}
+		select * from personal_board_answer where personal_board_no = #{personalBoardNo}
 	</select>
 	<delete id="deletePersonalBoard">
 		delete from personal_board where personal_board_no = #{personalBoardNo}
+	</delete>
+	<select id="getPersonalBoardFile" resultType="personalBoardFile">
+		select * from personal_board_file where personal_board_file_no = #{personalBoardFileNo}
+	</select>
+	<select id="personalBoardTotalCount" resultType="int">
+		select count(*) from personal_board 
+	</select>
+	<select id="selectAllPersonalBoardList" resultType="personalBoard">
+		select * from
+			(select rownum as rnum, b.* from
+				(select
+					personal_board_no,
+					personal_board_title,
+					personal_board_writer,
+					personal_board_write_date,
+					personal_board_status
+					from personal_board order by personal_board_no desc) b) where rnum between #{start} and #{end}
+	</select>
+	<insert id="insertPersonalBoardAnswer">
+		insert into personal_board_answer values(personal_board_answer_seq.nextval, #{personalBoardNo}, #{personalBoardAnswerContent}, #{personalBoardAnswerWriter})
+	</insert>
+	<update id="updatePersonalBoardAnswerInfo">
+		update personal_board set personal_board_status = 'Y', personal_board_answer_date = to_char(sysdate, 'YYYY-MM-DD') where personal_board_no = #{personalBoardNo}
+	</update>
+	<delete id="deletePersonalBoardAnswer">
+		delete from personal_board_answer where personal_board_no = #{personalBoardNo}
+	</delete>
+	<update id="updatePersonalBoardAnswerInfo2">
+		update personal_board set personal_board_status = 'N', personal_board_answer_date = null where personal_board_no = #{personalBoardNo}
+	</update>
+	<update id="updatePersonalBoardAnswer">
+		update personal_board_answer set personal_board_answer_content = #{personalBoardAnswerContent}, personal_board_answer_writer = #{personalBoardAnswerWriter}
+		where personal_board_no = #{personalBoardNo}
+	</update>
+	<update id="updatePersonalBoard">
+		update personal_board set personal_board_content = #{personalBoardContent}, personal_board_writer = #{personalBoardWriter}, personal_board_title = #{personalBoardTitle}
+		where personal_board_no = #{personalBoardNo}
+	</update>
+	<select id="selectOnePersonalBoardFile2">
+		select * from personal_board_file
+		where personal_board_file_no in
+		<foreach collection="array" item="personalBoardFileNo" open="(" close=")" separator=",">
+			#{personalBoardFileNo}
+		</foreach>
+	</select>
+	<delete id="deletePersonalBoardFile">
+		delete from personal_board_file where personal_board_file_no in
+		<foreach collection="array" item="personalBoardFileNo" open="(" close=")" separator=",">
+			#{personalBoardFileNo}
+		</foreach>
 	</delete>
 </mapper>
