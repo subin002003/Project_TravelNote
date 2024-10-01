@@ -38,6 +38,10 @@ public interface PersonalBoardDao {
 
 	int updatePersonalBoardAnswerInfo(int personalBoardNo);
 
+	int deletePersonalBoardAnswer(int personalBoardNo);
+
+	int updatePersonalBoardAnswerInfo2(int personalBoardNo);
+
 
 
 }

@@ -52,7 +52,7 @@ public class PersonalBoardService {
 		return personalBoard;
 	}
 
-	public PersonalBoardAnswerDTO getPersonalBoardAnser(int personalBoardNo) {
+	public PersonalBoardAnswerDTO getPersonalBoardAnswer(int personalBoardNo) {
 		PersonalBoardAnswerDTO personalBoardAnswer = personalBoardDao.getPersonalBoardAnswer(personalBoardNo);
 		
 		return personalBoardAnswer;
@@ -91,6 +91,18 @@ public class PersonalBoardService {
 	@Transactional
 	public int updatePersonalBoardAnswerInfo(int personalBoardNo) {
 		int result = personalBoardDao.updatePersonalBoardAnswerInfo(personalBoardNo);
+		return result;
+	}
+
+	@Transactional
+	public int deletePersonalBoardAnswer(int personalBoardNo) {
+		int result = personalBoardDao.deletePersonalBoardAnswer(personalBoardNo);
+		return result;
+	}
+	
+	@Transactional
+	public int updatePersonalBoardAnswerInfo2(int personalBoardNo) {
+		int result = personalBoardDao.updatePersonalBoardAnswerInfo2(personalBoardNo);
 		return result;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,13 @@ public class AdminController {
 	public ResponseEntity<Integer> insertPersonalBoardAnswer(@RequestBody PersonalBoardAnswerDTO personalBoardAnswer){
 		int result = personalBoardService.insertPersonalBoardAnswer(personalBoardAnswer);
 		result += personalBoardService.updatePersonalBoardAnswerInfo(personalBoardAnswer.getPersonalBoardNo());
+		return ResponseEntity.ok(result);
+	}
+	
+	@DeleteMapping(value = "/deletePersonalBoardAnswer/{personalBoardNo}")
+	public ResponseEntity<Integer> deletePersonalBoardAnswer(@PathVariable int personalBoardNo){
+		int result = personalBoardService.deletePersonalBoardAnswer(personalBoardNo);
+		result += personalBoardService.updatePersonalBoardAnswerInfo2(personalBoardNo);
 		return ResponseEntity.ok(result);
 	}
 }

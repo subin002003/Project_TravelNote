@@ -93,7 +93,8 @@ public class PersonalBoardController {
 	
 	@GetMapping(value = "/getAnswer/{personalBoardNo}")
 	public ResponseEntity<PersonalBoardAnswerDTO> getAnswer(@PathVariable int personalBoardNo){
-		PersonalBoardAnswerDTO personalBoardAnswer = personalBoardService.getPersonalBoardAnser(personalBoardNo);
+		PersonalBoardAnswerDTO personalBoardAnswer = personalBoardService.getPersonalBoardAnswer(personalBoardNo);
+		System.out.println("답변정보 : "+personalBoardAnswer);
 		return ResponseEntity.ok(personalBoardAnswer);
 	}
 	

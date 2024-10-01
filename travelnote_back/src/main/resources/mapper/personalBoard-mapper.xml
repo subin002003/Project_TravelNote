@@ -31,7 +31,7 @@
 		select * from personal_board_file where personal_board_no = #{personalBoardNo}
 	</select>
 	<select id="getPersonalBoardAnswer" resultType="personalBoardAnswer">
-		select * from personal_board_answer where personal_board_answer_no = #{personalBoardAnswerNo}
+		select * from personal_board_answer where personal_board_no = #{personalBoardNo}
 	</select>
 	<delete id="deletePersonalBoard">
 		delete from personal_board where personal_board_no = #{personalBoardNo}
@@ -58,5 +58,11 @@
 	</insert>
 	<update id="updatePersonalBoardAnswerInfo">
 		update personal_board set personal_board_status = 'Y', personal_board_answer_date = to_char(sysdate, 'YYYY-MM-DD') where personal_board_no = #{personalBoardNo}
+	</update>
+	<delete id="deletePersonalBoardAnswer">
+		delete from personal_board_answer where personal_board_no = #{personalBoardNo}
+	</delete>
+	<update id="updatePersonalBoardAnswerInfo2">
+		update personal_board set personal_board_status = 'N', personal_board_answer_date = null where personal_board_no = #{personalBoardNo}
 	</update>
 </mapper>

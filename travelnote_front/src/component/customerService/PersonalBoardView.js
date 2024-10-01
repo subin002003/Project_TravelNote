@@ -12,8 +12,10 @@ const PersonalBoardView = () => {
   const personalBoardNo = params.personalBoardNo;
   const [personalBoard, setPersonalBoard] = useState({});
   const [personalBoardAnswer, setPersonalBoardAnswer] = useState({});
-  const [userType, setUserType] = useRecoilState(userTypeState);
-  const [userNick, setUserNick] = useRecoilState(userNickState);
+  const [userType] = useRecoilState(userTypeState);
+  const [userNick] = useRecoilState(userNickState);
+
+  // 문의글 데이터를 가져오는 useEffect
   useEffect(() => {
     axios
       .get(`${backServer}/personalBoard/view/${personalBoardNo}`)
@@ -23,17 +25,20 @@ const PersonalBoardView = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [personalBoardNo, backServer]);
+
+  // 답변 데이터를 가져오는 useEffect
   useEffect(() => {
     axios
       .get(`${backServer}/personalBoard/getAnswer/${personalBoardNo}`)
       .then((res) => {
         console.log(res);
+        setPersonalBoardAnswer(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  });
+  }, [personalBoardNo, backServer]);
 
   const deletePersonalBoard = () => {
     Swal.fire({
@@ -58,14 +63,13 @@ const PersonalBoardView = () => {
               Swal.fire({
                 title: "삭제실패",
                 text: "잠시 후 다시 시도해주세요.",
-                icon: "success",
+                icon: "error",
               });
             }
           })
           .catch((err) => {
             console.log(err);
           });
-      } else {
       }
     });
   };
@@ -106,13 +110,14 @@ const PersonalBoardView = () => {
           <tr>
             <th>첨부파일</th>
             <td colSpan={3}>
-              <div className="personalboard-file0zone">
-                {personalBoard.personalBoardFileList ? (
-                  personalBoard.personalBoardFileList.map((file, i) => {
-                    return <FileItem key={"file" + i} file={file} />;
-                  })
+              <div className="personalboard-filezone">
+                {personalBoard.personalBoardFileList &&
+                personalBoard.personalBoardFileList.length > 0 ? (
+                  personalBoard.personalBoardFileList.map((file, i) => (
+                    <FileItem key={"file" + i} file={file} />
+                  ))
                 ) : (
-                  <></>
+                  <p>첨부파일이 없습니다.</p>
                 )}
               </div>
             </td>
@@ -127,62 +132,53 @@ const PersonalBoardView = () => {
           </tr>
         </tbody>
       </table>
-      {personalBoard.personalBoardWriter === userNick ? (
+
+      {personalBoard.personalBoardWriter === userNick && (
         <div className="personalBoard-btn-box">
           <button
-            onClick={() => {
+            onClick={() =>
               navigate(
                 `/customerService/personalBoard/update/${personalBoardNo}`
-              );
-            }}
+              )
+            }
           >
             수정하기
           </button>
           <button onClick={deletePersonalBoard}>삭제하기</button>
         </div>
-      ) : (
-        <p>첨부파일이 없습니다.</p>
       )}
 
       <div className="answer-section">
         <div className="page-small-title">
           <h2>1대1문의 답변내용</h2>
         </div>
-        {personalBoardAnswer === null ? (
-          <>
-            <table className="personalboard-tbl">
-              <tbody>
-                <tr>
-                  <th style={{ width: "25%" }}>작성자</th>
-                  <td style={{ width: "25%" }}>
-                    {personalBoardAnswer.personalBoardAnswerWriter}
-                  </td>
-                  <th style={{ width: "25%" }}>작성일</th>
-                  <th style={{ width: "25%" }}>
-                    {personalBoard.personalBoardAnswerDate}
-                  </th>
-                </tr>
-                <tr>
-                  <th>내용</th>
+        {personalBoardAnswer &&
+        personalBoardAnswer.personalBoardAnswerContent ? (
+          <table className="personalboard-tbl">
+            <tbody>
+              <tr>
+                <th style={{ width: "25%" }}>작성자</th>
+                <td style={{ width: "25%" }}>
+                  {personalBoardAnswer.personalBoardAnswerWriter}
+                </td>
+                <th style={{ width: "25%" }}>작성일</th>
+                <td style={{ width: "25%" }}>
+                  {personalBoard.personalBoardAnswerDate}
+                </td>
+              </tr>
+              <tr>
+                <th>내용</th>
+                <td colSpan={3}>
                   <div className="faqBoard-content">
-                    <td colSpan={3}>
-                      {personalBoardAnswer.personalBoardAnswerContent}
-                    </td>
+                    {personalBoardAnswer.personalBoardAnswerContent}
                   </div>
-                </tr>
-              </tbody>
-            </table>
-          </>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         ) : (
           <div style={{ textAlign: "center" }} className="faqBoard-content">
             <p>아직 답변이 작성되지 않았습니다.</p>
-            {userType === 3 ? (
-              <div>
-                <button>답변 작성하기</button>
-              </div>
-            ) : (
-              <></>
-            )}
           </div>
         )}
       </div>
@@ -192,15 +188,14 @@ const PersonalBoardView = () => {
 
 const FileItem = (props) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
-  const file = props.file;
-  console.log("file정보 : " + file);
+  const { file } = props;
+
   const filedown = () => {
     axios
       .get(`${backServer}/personalBoard/file/${file.personalBoardFileNo}`, {
         responseType: "blob",
       })
       .then((res) => {
-        console.log(res);
         const blob = new Blob([res.data]);
         const fileObjecturl = window.URL.createObjectURL(blob);
 
@@ -218,6 +213,7 @@ const FileItem = (props) => {
         console.log(err);
       });
   };
+
   return (
     <div className="board-file">
       <span className="material-icons file-icon" onClick={filedown}>
