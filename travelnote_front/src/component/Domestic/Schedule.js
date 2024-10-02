@@ -17,22 +17,19 @@ const Schedule = () => {
   const [totalPlanDates, setTotalPlanDates] = useState([]);
   const [cityCoordinates, setCityCoordinates] = useState({
     lat: 37.5665,
-    lng: 126.93,
+    lng: 126.978,
   });
   const [trainSchedules, setTrainSchedules] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
-  const [showTrainSearch, setShowTrainSearch] = useState(false); // 기차편 검색 상태
+  const [showTrainSearch, setShowTrainSearch] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
-  const [trainDeparture, setTrainDeparture] = useState(""); // 출발지 상태
-  const [trainArrival, setTrainArrival] = useState(""); // 도착지 상태
+  const [trainDeparture, setTrainDeparture] = useState("");
+  const [trainArrival, setTrainArrival] = useState("");
   const { itineraryNo, city } = useParams();
-
-  // 일정에 추가할 리스트 항목 상태
   const [selectedPlans, setSelectedPlans] = useState([]);
-
-  // 마커 상태 추가
   const [markers, setMarkers] = useState([]);
 
+  // 일정 데이터 가져오기
   useEffect(() => {
     axios
       .get(`${backServer}/domestic/getItinerary/${itineraryNo}`)
@@ -58,6 +55,7 @@ const Schedule = () => {
       });
   }, [backServer, itineraryNo]);
 
+  // Google Maps 초기화
   useEffect(() => {
     const initMap = () => {
       const mapInstance = new window.google.maps.Map(
@@ -81,12 +79,14 @@ const Schedule = () => {
     };
   }, [googleMapsApiKey, cityCoordinates]);
 
+  // 도시 중심 변경
   useEffect(() => {
     if (map) {
       map.setCenter(cityCoordinates);
     }
   }, [map, cityCoordinates]);
 
+  // 도시 좌표 설정
   useEffect(() => {
     const cityCoordinatesMap = {
       서울: { lat: 37.5665, lng: 126.978 },
@@ -98,6 +98,7 @@ const Schedule = () => {
     }
   }, [city]);
 
+  // 장소 검색
   const handleSearch = (e) => {
     const searchTerm = e.target.value;
 
@@ -116,25 +117,25 @@ const Schedule = () => {
             name: place.name,
             formattedAddress: place.formatted_address,
             geometry: place.geometry,
+            photos: place.photos,
+            place_id: place.place_id,
           }));
           setSearchResults(places);
-          updateMarkers(places); // 마커 업데이트 호출
+          updateMarkers(places);
         } else {
           console.error("검색에 실패했습니다: ", status);
         }
       });
     } else {
-      setSearchResults([]); // 검색 결과 초기화
-      updateMarkers([]); // 검색어가 없을 경우 마커 제거 및 상태 초기화
-      setMarkers([]); // 마커 상태 초기화
+      setSearchResults([]);
+      updateMarkers([]);
+      setMarkers([]);
     }
   };
 
   const updateMarkers = (places) => {
-    // 기존 마커 제거
     markers.forEach((marker) => marker.setMap(null));
 
-    // 새로운 마커 생성
     const newMarkers = places.map((place) => {
       const marker = new window.google.maps.Marker({
         position: {
@@ -146,8 +147,6 @@ const Schedule = () => {
       });
 
       const infoWindow = new window.google.maps.InfoWindow();
-
-      // 마커 클릭 시 InfoWindow 표시
       marker.addListener("click", () => {
         infoWindow.setContent(
           `<div><strong>${place.name}</strong><br>${place.formattedAddress}</div>`
@@ -158,11 +157,35 @@ const Schedule = () => {
       return marker;
     });
 
-    // 마커 상태 업데이트
     setMarkers(newMarkers);
   };
 
-  // 일정에 추가하는 함수 (위치 포함)
+  // 계획 추가 함수
+  const planInsert = (plan) => {
+    const SchedulePlan = {
+      itineraryNo: itineraryNo,
+      planDay: selectedDay,
+      planDate: totalPlanDates[selectedDay - 1],
+      planAddress: plan.formattedAddress,
+      planLatitude: plan.geometry.location.lat(),
+      planLongitude: plan.geometry.location.lng(),
+      planImage: plan.photos[0]?.getUrl(),
+      planType: 1,
+      planName: plan.name,
+      planId: plan.place_id,
+    };
+
+    axios
+      .post(`${backServer}/domestic/insertPlan`, SchedulePlan)
+      .then((response) => {
+        console.log("일정이 추가되었습니다:", response.data);
+        addPlanToDay(SchedulePlan);
+      })
+      .catch((error) => {
+        console.error("일정 추가에 실패했습니다:", error);
+      });
+  };
+
   const addPlanToDay = (plan) => {
     setSelectedPlans((prevPlans) => [...prevPlans, plan]);
   };
@@ -179,7 +202,7 @@ const Schedule = () => {
           },
         })
         .then((res) => {
-          setTrainSchedules(res.data); // 기차 시간 리스트 업데이트
+          setTrainSchedules(res.data);
         })
         .catch((error) => {
           console.error("기차편 검색에 실패했습니다:", error);
@@ -188,6 +211,19 @@ const Schedule = () => {
       alert("출발지와 도착지를 입력해주세요.");
     }
   };
+
+  const toggleTrainSearch = () => {
+    setShowTrainSearch(!showTrainSearch);
+    setShowSearch(false);
+  };
+
+  const togglePlaceSearch = () => {
+    setShowSearch(!showSearch);
+    setShowTrainSearch(false);
+  };
+
+  // selectedPlans가 변경될 때마다 화면 업데이트
+  useEffect(() => {}, [selectedPlans]);
 
   return (
     <div className="schedule-wrap">
@@ -201,88 +237,61 @@ const Schedule = () => {
               setSelectedDay={setSelectedDay}
               planPageOption={planPageOption}
               setPlanPageOption={setPlanPageOption}
-              selectedPlans={selectedPlans} // 선택된 일정 전달
+              selectedPlans={selectedPlans}
             />
           </div>
         </div>
         <div className="store-list" style={{ width: "300px" }}>
           <div className="search-button">
-            <button
-              className="tri-date"
-              onClick={() => setShowTrainSearch(!showTrainSearch)}
-            >
+            <button className="tri-date" onClick={toggleTrainSearch}>
               기차편 추가
             </button>
-            <button
-              className="date-list"
-              onClick={() => setShowSearch(!showSearch)}
-            >
-              일정 추가
+            <button className="date-list" onClick={togglePlaceSearch}>
+              장소 검색
             </button>
           </div>
           {showTrainSearch && (
-            <div className="train-search-container">
-              <div className="train-inputs">
-                <input
-                  type="text"
-                  placeholder="출발지"
-                  value={trainDeparture}
-                  onChange={(e) => setTrainDeparture(e.target.value)}
-                />
-                <input
-                  type="text"
-                  placeholder="도착지"
-                  value={trainArrival}
-                  onChange={(e) => setTrainArrival(e.target.value)}
-                />
-              </div>
-              <button className="train-search-btn" onClick={handleTrainSearch}>
-                검색
-              </button>
-
-              <div className="train-search-list-box">
-                {trainSchedules.length > 0 ? (
-                  <ul>
-                    {trainSchedules.map((schedule, index) => (
-                      <li key={index}>
-                        <div className="train-schedule-box">
-                          <p>
-                            출발: {schedule.departureTime} - 도착:{" "}
-                            {schedule.arrivalTime}
-                          </p>
-                          <p>
-                            {schedule.trainName} ({schedule.trainType})
-                          </p>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>검색된 기차편이 없습니다.</p>
-                )}
-              </div>
+            <div className="train-search">
+              <input
+                type="text"
+                placeholder="출발지"
+                value={trainDeparture}
+                onChange={(e) => setTrainDeparture(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="도착지"
+                value={trainArrival}
+                onChange={(e) => setTrainArrival(e.target.value)}
+              />
+              <button onClick={handleTrainSearch}>검색</button>
+              <ul>
+                {trainSchedules.map((schedule, index) => (
+                  <li key={index}>
+                    {schedule.trainNo} - {schedule.departureTime} -{" "}
+                    {schedule.arrivalTime}
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
-
           {showSearch && (
             <div className="search-container">
               <input
                 type="text"
-                placeholder="장소 검색"
+                placeholder="장소 추가"
                 onChange={handleSearch}
               />
               <button className="search-add">검색</button>
               <ul>
-                {searchResults.map((result, index) => (
-                  <li key={index}>
+                {searchResults.map((result) => (
+                  <li key={result.place_id}>
+                    {" "}
                     {result.name} - {result.formattedAddress}
                     <button
                       className="add-btn"
-                      onClick={() =>
-                        addPlanToDay({
-                          name: result.name,
-                          address: result.formattedAddress,
-                        })
+                      onClick={
+                        () => planInsert(result) // planInsert를 호출하여 일정에 추가
                       }
                     >
                       +
@@ -293,9 +302,7 @@ const Schedule = () => {
             </div>
           )}
         </div>
-        <div className="map-container">
-          <div id="map" style={{ height: "100%", width: "100%" }} />
-        </div>
+        <div id="map" style={{ height: "100%", width: "100%" }}></div>
       </div>
     </div>
   );
