@@ -36,6 +36,7 @@ import kr.co.iei.board.model.dto.BoardDTO;
 import kr.co.iei.board.model.dto.BoardFileDTO;
 
 import kr.co.iei.board.model.service.BoardService;
+import kr.co.iei.user.model.dto.UserDTO;
 import kr.co.iei.util.FileUtils;
 
 @CrossOrigin("*")
@@ -213,20 +214,19 @@ public class BoardController {
     // 댓글 수정
     @PutMapping("/{boardNo}/comments/{commentNo}")
     public ResponseEntity<String> updateComment(@PathVariable int boardNo, @PathVariable int commentNo, @RequestBody BoardCommentDTO boardCommentDTO) {
-
-    	System.out.println(boardNo);
-        System.out.println(commentNo);
-        System.out.println(boardCommentDTO);
-
         boardService.updateComment(boardNo, commentNo, boardCommentDTO);
         return ResponseEntity.ok("Update success");
-        
     }
     
-    
+    // 신고하기
+   @PostMapping("/report/{boardNo}")
+   public ResponseEntity<String> boardViewReport(@RequestBody UserDTO userDTO, @PathVariable int boardNo){
+	   String userNick = userDTO.getUserNick();
+	   boardService.boardViewReport(userNick, boardNo);
+	   return ResponseEntity.ok("Report Success");
+   }
     
 }
-
 
 
 

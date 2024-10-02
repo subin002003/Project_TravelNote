@@ -139,6 +139,10 @@ public class BoardService {
 	public void updateComment(int boardNo, int commentNo, BoardCommentDTO boardCommentDTO) {
 		boardDao.updateComment(boardNo, commentNo, boardCommentDTO.getBoardCommentContent());
 	}
+	public void boardViewReport(String userNick, int boardNo) {
+		boardDao.boardViewReport(userNick, boardNo);
+		
+	}
 	
 	
 	   
