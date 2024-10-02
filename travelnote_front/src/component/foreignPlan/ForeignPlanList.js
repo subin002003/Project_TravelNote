@@ -18,11 +18,11 @@ const ForeignPlanList = (props) => {
     setPlanList,
     isPlanAdded,
     setIsPlanAdded,
+    timeOptionsArr,
   } = props;
 
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const selectedDate = totalPlanDates[selectedDay - 1];
-  const [timeOptionsArr, setTimeOptionsArr] = useState([]); // 시간 선택 옵션 용 배열
   const [edited, setEdited] = useState(false);
   const [editPlanList, setEditPlanList] = useState([]); // 수정할 일정 목록
 
@@ -50,30 +50,6 @@ const ForeignPlanList = (props) => {
         });
     }
   }, [itinerary, selectedDate, isPlanAdded]);
-
-  // 시간 배열에 값 추가
-  useEffect(() => {
-    if (timeOptionsArr.length === 0) {
-      for (let i = 0; i < 24; i++) {
-        let time = "";
-        if (i < 10) {
-          time = "0" + i;
-        } else {
-          time = "" + i;
-        }
-        for (let j = 0; j < 60; j += 30) {
-          let timeOption = "";
-          if (j === 0) {
-            timeOption += time + ":0" + j;
-          } else {
-            timeOption += time + ":" + j;
-          }
-          timeOptionsArr.push(timeOption);
-          setTimeOptionsArr([...timeOptionsArr]);
-        }
-      }
-    }
-  }, []);
 
   // 일정 수정 버튼 클릭 시 일정 수정 적용
   const editPlan = () => {
@@ -154,12 +130,10 @@ const ForeignPlanList = (props) => {
                     key={"plan-item-" + index}
                     plan={plan}
                     timeOptionsArr={timeOptionsArr}
-                    backServer={backServer}
                     setEdited={setEdited}
                     editPlanList={editPlanList}
                     setEditPlanList={setEditPlanList}
                     planPageOption={planPageOption}
-                    setPlanPageOption={setPlanPageOption}
                   />
                 );
               })

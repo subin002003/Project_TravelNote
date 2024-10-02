@@ -11,10 +11,15 @@ const ForeignPlanMap = (props) => {
     setSelectedPosition,
     placeInfo,
     setPlaceInfo,
+    departInfo,
+    setDepartInfo,
+    arrivalInfo,
+    setArrivalInfo,
   } = props;
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   const mapRef = useRef(null);
   const infoWindowRef = useRef(null);
+  const [markerArr, setMarkerArr] = useState([]);
 
   // 구글 지도 스크립트 추가
   useEffect(() => {
@@ -131,6 +136,10 @@ const ForeignPlanMap = (props) => {
       language: "ko",
     };
 
+    markerArr.forEach((marker) => {
+      marker.setMap(null);
+    });
+
     // 검색 실행
     mapService.textSearch(request, (resultList, status) => {
       if (
@@ -138,9 +147,8 @@ const ForeignPlanMap = (props) => {
         resultList
       ) {
         const bounds = new window.google.maps.LatLngBounds();
-
         // 마커 추가
-        resultList.map((place, index) => {
+        const newMarkerArr = resultList.map((place, index) => {
           const marker = new window.google.maps.Marker({
             position: place.geometry.location,
             map: map,
@@ -148,6 +156,7 @@ const ForeignPlanMap = (props) => {
           bounds.extend(marker.position);
           marker.addListener("click", () => {
             map.setZoom(15);
+            map.setCenter(place.geometry.location);
             setPlaceInfo({
               placeName: place.name,
               placeLocation: place.geometry.location,
@@ -156,11 +165,49 @@ const ForeignPlanMap = (props) => {
             });
             setSelectedPosition(place.geometry.location);
           });
+          return marker;
         });
+        setMarkerArr(newMarkerArr);
         setSearchPlaceList(resultList);
+      } else {
+        setSearchPlaceList([]);
       }
     });
   }, [searchKeyword]);
+
+  // 출발 공항 검색
+  useEffect(() => {
+    if (!map || departInfo.departAirport === "") return;
+    // 서비스 객체
+    const mapService = new window.google.maps.places.PlacesService(map);
+
+    // 요청 정보 담는 객체
+    const request = {
+      query: departInfo.departAirport,
+      fields: ["name", "geometry", "place_id", "formatted_address", "photos"],
+      language: "ko",
+    };
+
+    // 검색 실행
+    mapService.textSearch(request, (resultList, status) => {
+      if (
+        status === window.google.maps.places.PlacesServiceStatus.OK &&
+        resultList
+      ) {
+        // 마커 추가
+        resultList.map((place, index) => {
+          const marker = new window.google.maps.Marker({
+            position: place.geometry.location,
+            map: map,
+          });
+        });
+        console.log(resultList);
+        setSearchPlaceList(resultList);
+      } else {
+        setSearchPlaceList([]);
+      }
+    });
+  }, [departInfo.departAirport]);
 
   return (
     <div className="plan-map-wrap">

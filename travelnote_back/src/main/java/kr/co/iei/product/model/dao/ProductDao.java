@@ -47,6 +47,8 @@ public interface ProductDao {
 
 	int insertReview(ReviewDTO review);
 
+	int insertReviewComment(ReviewDTO review);
+
 	int updateReview(ReviewDTO review);
 
 	int deleteReview(ReviewDTO review);

@@ -23,6 +23,9 @@ const SchedulePlanList = (props) => {
   const [timeOptionsArr, setTimeOptionsArr] = useState([]); // 시간 선택 옵션 용 배열
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 상태
   const [editList, setEditList] = useState([]); // 수정할 일정 목록
+  const [edited, setEdited] = useState(false); // 수정 여부 상태
+  const [selectedPlans, setSelectedPlans] = useState([]); // 선택된 일정 목록
+  const [editPlanList, setEditPlanList] = useState([]); // 추가된 상태: 수정할 계획 목록
 
   // 상세 일정 조회
   useEffect(() => {
@@ -63,7 +66,7 @@ const SchedulePlanList = (props) => {
   // 수정된 일정 저장
   const saveUpdatedPlans = () => {
     if (isEditing) {
-      const updateList = JSON.stringify(editList);
+      const updateList = JSON.stringify(editPlanList); // 수정할 목록으로 업데이트
       axios
         .patch(`${backServer}/domestic/updatePlan`, updateList, {
           headers: {
@@ -76,8 +79,9 @@ const SchedulePlanList = (props) => {
               icon: "success",
               text: "수정이 완료되었습니다.",
             });
-            setEditList([]); // 수정 목록 초기화
+            setEditPlanList([]); // 수정 목록 초기화
             setIsEditing(false); // 수정 모드 종료
+            setEdited(false); // 수정 여부 상태 초기화
             setPlanPageOption(1); // 기본 조회 모드로 돌아가기
           } else {
             Swal.fire({
@@ -99,6 +103,17 @@ const SchedulePlanList = (props) => {
     } else {
       setIsEditing(true); // 수정 모드로 전환
       setPlanPageOption(2); // 수정 페이지로 변경
+    }
+  };
+
+  // 일정 선택 처리
+  const handleSelectPlan = (plan) => {
+    if (selectedPlans.includes(plan)) {
+      setSelectedPlans(
+        selectedPlans.filter((selectedPlan) => selectedPlan !== plan)
+      ); // 선택 해제
+    } else {
+      setSelectedPlans([...selectedPlans, plan]); // 선택 추가
     }
   };
 
@@ -137,10 +152,13 @@ const SchedulePlanList = (props) => {
                   timeOptionsArr={timeOptionsArr}
                   backServer={backServer}
                   setIsEditing={setIsEditing}
-                  editList={editList}
-                  setEditList={setEditList}
+                  editPlanList={editPlanList} // editPlanList 전달
+                  setEditPlanList={setEditPlanList} // setEditPlanList 전달
                   planPageOption={planPageOption}
                   setPlanPageOption={setPlanPageOption}
+                  setEdited={setEdited} // setEdited 전달
+                  handleSelectPlan={handleSelectPlan} // 선택 처리 함수 전달
+                  isSelected={selectedPlans.includes(plan)} // 선택 여부 전달
                 />
               ))
             ) : (
@@ -150,15 +168,23 @@ const SchedulePlanList = (props) => {
         </div>
       </div>
       <div className="button-container">
-        <button className="save-btn" onClick={saveUpdatedPlans}>
-          일정 저장
-        </button>
         <button
           className={"Editing-btn" + (isEditing ? "-active" : "")}
           onClick={toggleEditMode}
         >
           {isEditing ? "수정 완료" : "일정 수정하기"}
         </button>
+      </div>
+      <div className="selected-plans">
+        {selectedPlans.length > 0 ? (
+          <ul>
+            {selectedPlans.map((plan, index) => (
+              <li key={"selected-plan-" + index}>{plan.title}</li>
+            ))}
+          </ul>
+        ) : (
+          <p></p>
+        )}
       </div>
     </div>
   );

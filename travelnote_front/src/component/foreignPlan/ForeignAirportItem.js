@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const ForeignPlaceItem = (props) => {
+const ForeignAirportItem = (props) => {
   const {
     place,
     setSelectedPosition,
@@ -38,7 +38,7 @@ const ForeignPlaceItem = (props) => {
       planId: place.place_id,
     };
     axios
-      .post(`${backServer}/foreign/addPlace`, placeObj)
+      .post(`${backServer}/foreign/addFlight`, placeObj)
       .then((res) => {
         if (res.data > 0) {
           setIsPlanAdded(true);
@@ -76,4 +76,4 @@ const ForeignPlaceItem = (props) => {
   );
 };
 
-export default ForeignPlaceItem;
+export default ForeignAirportItem;
