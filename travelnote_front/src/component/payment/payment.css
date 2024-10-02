@@ -29,3 +29,10 @@
   background: transparent;
   color: var(--text-color);
 }
+.pay-btn-box > button img {
+  width: 120px;
+  margin-bottom: 8px;
+}
+.pay-btn-box:last-child > button img {
+  margin-bottom: 0;
+}

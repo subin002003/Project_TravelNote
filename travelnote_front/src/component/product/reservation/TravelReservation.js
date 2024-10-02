@@ -182,6 +182,34 @@ const TravelReservation = () => {
     }
   };
 
+  const handlePayment = () => {
+    // 필수 체크박스가 모두 선택되지 않았을 경우 경고 메시지
+    if (
+      !(agree1 && agree11 && agree12 && agree13 && agree2 && agree21 && agree22)
+    ) {
+      Swal.fire({
+        icon: "warning",
+        title: "약관 동의 필요",
+        text: "모든 필수 약관에 동의해야 결제할 수 있습니다.",
+      });
+      return;
+    }
+
+    // 필수 약관에 모두 동의했을 경우 결제 페이지로 이동
+    localStorage.setItem("productNo", productNo);
+    localStorage.setItem("productName", productName);
+    localStorage.setItem("startDate", startDate);
+    localStorage.setItem("endDate", endDate);
+    localStorage.setItem("people", people);
+    localStorage.setItem("productPrice", productPrice);
+    localStorage.setItem("totalPrice", totalPrice);
+    localStorage.setItem("userName", userName);
+    localStorage.setItem("userEmail", userEmail);
+    localStorage.setItem("userPhone", userPhone);
+
+    window.location.href = "/payment"; // 결제 페이지로 이동
+  };
+
   return (
     <section className="sec reservation-wrap">
       <div className="travel-info">
@@ -460,25 +488,13 @@ const TravelReservation = () => {
       <div style={{ margin: "50px 0px" }} className="line"></div>
 
       <div>
-        <Link
-          to="/payment"
-          onClick={() => {
-            localStorage.setItem("productNo", productNo);
-            localStorage.setItem("productName", productName);
-            localStorage.setItem("startDate", startDate);
-            localStorage.setItem("endDate", endDate);
-            localStorage.setItem("people", people);
-            localStorage.setItem("productPrice", productPrice);
-            localStorage.setItem("totalPrice", totalPrice);
-            localStorage.setItem("userName", userName);
-            localStorage.setItem("userEmail", userEmail);
-            localStorage.setItem("userPhone", userPhone);
-          }}
+        <button
+          onClick={handlePayment}
           style={{ padding: "23.5px 0", width: "100%", display: "block" }}
           className="btn-primary lg"
         >
           결제하기
-        </Link>
+        </button>
       </div>
       <ChannelTalk />
       {isLogin ? (
