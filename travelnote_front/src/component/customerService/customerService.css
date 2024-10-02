@@ -118,7 +118,7 @@ td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 100px;
+  width: 100%;
 }
 .view-title:hover {
   cursor: pointer;
@@ -138,8 +138,6 @@ td {
   border-radius: 8px;
   padding: 20px;
   text-align: center;
-  display: flex;
-  justify-content: space-between;
 }
 .personalboard-write-btn {
   width: 45%;
@@ -149,10 +147,11 @@ td {
   line-height: 250px;
 }
 .personalboard-list {
-  width: 45%;
+  width: 80%;
   height: 250px;
   background-color: var(--sub-color);
   border-radius: 10px;
+  margin: 0 auto;
 }
 
 .personalboard-tbl {
