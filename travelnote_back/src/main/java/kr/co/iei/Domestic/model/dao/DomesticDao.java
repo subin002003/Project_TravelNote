@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import kr.co.iei.Domestic.model.dto.EditPlanDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
+import kr.co.iei.Domestic.model.dto.PlanDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignEditPlanDTO;
 
@@ -27,7 +28,11 @@ public interface DomesticDao {
 	List selectPlan(int itineraryNo, int planDay);
 
 	int updatePlan(EditPlanDTO editPlanDTO);
+
+	int deletePlans(int planNo);
+
+	int insertPlan(PlanDTO plan);
+
 	
-	List<RegionDTO> selectAllRegions();
 
 }

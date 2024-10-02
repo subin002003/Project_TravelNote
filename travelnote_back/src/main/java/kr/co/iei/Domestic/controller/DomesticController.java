@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import kr.co.iei.Domestic.model.dto.ItineraryDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
+import kr.co.iei.Domestic.model.dto.PlanDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
 import kr.co.iei.Domestic.model.service.DomesticService;
 
@@ -26,6 +27,7 @@ public class DomesticController {
         List<RegionDTO> list = domesticService.getAllRegions(reqPage);
         return ResponseEntity.ok(list);
     }
+    
     // 여행지 정보 조회 
     @GetMapping("/view/{regionNo}")
     public ResponseEntity<RegionDTO> view(@PathVariable int regionNo) {
@@ -46,22 +48,34 @@ public class DomesticController {
         ItineraryInfoDTO itinerary = domesticService.getItinerary(itineraryNo);
         return ResponseEntity.ok(itinerary);
     }
+    
     // 상세일정 리스트
     @GetMapping(value="/plan")
 	public ResponseEntity<List> plan(@RequestParam int itineraryNo, int planDay){
 		List list = domesticService.selectPlan(itineraryNo, planDay);
 		return ResponseEntity.ok(list);
 	}
+    
+    //상세 일정 추가
+    @PostMapping(value="/insertPlan")
+    public ResponseEntity<Integer> insertPlan(@RequestBody PlanDTO plan){
+    	int result = domesticService.insertPlan(plan);
+    	return ResponseEntity.ok(result);
+    }
+    
     //상세일정 수정
     @PatchMapping(value="/updatePlan")
     public ResponseEntity<Boolean> updatePlan(@RequestBody String updateList){
     	boolean result = domesticService.updatePlan(updateList);
 		return ResponseEntity.ok(result);
     }
-    //기차편 리스트 검색
-    @GetMapping(value="/search")
-    public ResponseEntity<List<RegionDTO>> search(){
-    	List<RegionDTO> list = domesticService.search();
-    	return ResponseEntity.ok(list);
+
+    //상세 일정 삭제
+    @DeleteMapping(value="/deletePlans/{planNo}")
+    public ResponseEntity<Integer> deletePlans(@PathVariable int planNo){
+    	domesticService.deletePlans(planNo);
+    	return ResponseEntity.ok(planNo);
     }
+   
+
 }

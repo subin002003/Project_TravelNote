@@ -16,6 +16,7 @@ import kr.co.iei.Domestic.model.dao.DomesticDao;
 import kr.co.iei.Domestic.model.dto.EditPlanDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
+import kr.co.iei.Domestic.model.dto.PlanDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignEditPlanDTO;
 
@@ -51,6 +52,7 @@ public class DomesticService {
     	ItineraryInfoDTO itinerary = domesticDao.getItinerary(itineraryNo);
     	return itinerary;
     }
+    
 	public List selectPlan(int itineraryNo, int planDay) {
 			List list = domesticDao.selectPlan(itineraryNo, planDay);
 			return list;
@@ -72,8 +74,13 @@ public class DomesticService {
 		return editList.size() == result;
 		}
 	
-	public List<RegionDTO> search() {
-		List<RegionDTO> list = domesticDao.selectAllRegions();
-		return list;
+	@Transactional
+	public void deletePlans(int planNo) {
+	    domesticDao.deletePlans(planNo);
 	}
+	public int insertPlan(PlanDTO plan) {
+		int result = domesticDao.insertPlan(plan);
+		return result;
+	}
+
 }
