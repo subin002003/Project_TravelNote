@@ -9,6 +9,9 @@ import Swal from "sweetalert2";
 import { useEffect } from "react";
 import "./payment.css";
 import Kakaopay from "./image/kakaopay/payment_icon_yellow_medium.png";
+import smailepay from "./image/smilepay.jpg";
+import payco from "./image/payco.jpg";
+import hecto from "./image/hecto.jpg";
 import ChannelTalk from "../product/ChannelTalk";
 
 const Payment = () => {
@@ -367,13 +370,22 @@ const Payment = () => {
           </button>
         </div>
         <div className="pay-btn-box">
-          <button onClick={handleSmailpay}>스마일페이</button>
+          <button onClick={handleSmailpay}>
+            <img src={smailepay} /> <br />
+            스마일페이
+          </button>
         </div>
         <div className="pay-btn-box">
-          <button onClick={handlePayco}>페이코</button>
+          <button onClick={handlePayco}>
+            <img src={payco} /> <br />
+            페이코
+          </button>
         </div>
         <div className="pay-btn-box">
-          <button onClick={handleSettlebank}>헥토파이낸셜</button>
+          <button onClick={handleSettlebank}>
+            <img style={{ width: "250px" }} src={hecto} /> <br />
+            헥토파이낸셜
+          </button>
         </div>
       </div>
       <ChannelTalk />
