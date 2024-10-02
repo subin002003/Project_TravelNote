@@ -11,7 +11,7 @@ const SchedulePlanTime = (props) => {
     setEditPlanList,
     planPageOption,
   } = props;
-  const backServer = process.env.REACT_APP_BACK_SERVER; // 환경 변수에서 서버 URL 가져오기
+  const backServer = process.env.REACT_APP_BACK_SERVER;
   const [saveUpdatedPlan, setSaveUpdatedPlan] = useState({
     planNo: plan.planNo,
     planMemo: plan.planMemo,
@@ -72,7 +72,7 @@ const SchedulePlanTime = (props) => {
                 const newPlanList = editPlanList.filter(
                   (item) => item.planNo !== saveUpdatedPlan.planNo
                 );
-                console.log("삭제가 성공:", newPlanList); // 상태 업데이트 확인
+                console.log("삭제 성공:", newPlanList);
                 setEditPlanList(newPlanList);
                 Swal.fire(
                   "삭제되었습니다!",
