@@ -526,19 +526,24 @@
 .place-item-title:hover {
   cursor: pointer;
 }
-.place-item-address {
+.place-item-address,
+.place-airport-check {
   font-size: 12px;
   text-align: left;
   margin: 0;
   margin-bottom: 10px;
   padding-right: 10px;
 }
+.place-airport-check {
+  font-size: 12px;
+}
 .place-item-add {
   display: flex;
   justify-content: right;
   align-items: center;
 }
-.place-add-button {
+.place-add-button,
+.airport-add-button {
   width: 17px;
   height: 17px;
   border: 2px solid var(--main-color);
@@ -553,6 +558,16 @@
   background-color: var(--main-color);
   color: white;
   cursor: pointer;
+}
+.airport-add-button > span {
+  font-size: 16px;
+  font-weight: 600;
+}
+.airport-add-button:hover {
+  background-color: var(--main-color);
+}
+.airport-add-button:hover > span {
+  color: white;
 }
 .place-info-box {
   width: 300px;

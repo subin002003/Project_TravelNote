@@ -27,6 +27,12 @@ const ForeignPlanSearch = (props) => {
     timeOptionsArr,
     isNextDayButtonChecked,
     setIsNextDayButtonChecked,
+    searchDepartAirport,
+    setSearchDepartAirport,
+    searchArrivalAirport,
+    setSearchArrivalAirport,
+    searchAirport,
+    setSearchAirport,
   } = props;
   const [category, setCategory] = useState(1); // 1일 때 항공편, 2일 때 장소
 
@@ -49,11 +55,19 @@ const ForeignPlanSearch = (props) => {
   // 출발 항공편 인풋 핸들러
   const changeDepartInfo = (e) => {
     setDepartInfo({ ...departInfo, [e.target.id]: e.target.value });
+    if (e.keyCode === 13) {
+      setSearchDepartAirport(e.target.value);
+      setSearchAirport(1);
+    }
   };
 
   // 도착 항공편 인풋 핸들러
   const changeArrivalInfo = (e) => {
     setArrivalInfo({ ...arrivalInfo, [e.target.id]: e.target.value });
+    if (e.keyCode === 13) {
+      setSearchArrivalAirport(e.target.value);
+      setSearchAirport(2);
+    }
   };
 
   // 항공편 검색
@@ -78,6 +92,7 @@ const ForeignPlanSearch = (props) => {
             className={category === 2 ? "selected" : ""}
             onClick={() => {
               setCategory(2);
+              setSearchPlaceList([]);
             }}
           >
             일정 추가
@@ -104,6 +119,8 @@ const ForeignPlanSearch = (props) => {
           searchPlaceList={searchPlaceList}
           setSelectedPosition={setSelectedPosition}
           setPlaceInfo={setPlaceInfo}
+          searchAirport={searchAirport}
+          setSearchAirport={setSearchAirport}
         />
       ) : (
         <PlaceSearchBox
@@ -148,6 +165,8 @@ const FlightInputBox = (props) => {
     changeArrivalInfo,
     setSelectedPosition,
     setPlaceInfo,
+    searchAirport,
+    setSearchAirport,
   } = props;
 
   return (
@@ -168,8 +187,8 @@ const FlightInputBox = (props) => {
           id="arrivalAirport"
           placeholder="도착 공항을 입력해 주세요."
           value={arrivalInfo.arrivalAirport}
-          onChange={setArrivalInfo}
-          onKeyUp={setArrivalInfo}
+          onChange={changeArrivalInfo}
+          onKeyUp={changeArrivalInfo}
         ></input>
       </div>
       <div className="flight-input-box">
@@ -249,6 +268,12 @@ const FlightInputBox = (props) => {
                 backServer={backServer}
                 totalPlanDates={totalPlanDates}
                 setIsPlanAdded={setIsPlanAdded}
+                departInfo={departInfo}
+                setDepartInfo={setDepartInfo}
+                arrivalInfo={arrivalInfo}
+                setArrivalInfo={setArrivalInfo}
+                searchAirport={searchAirport}
+                setSearchAirport={setSearchAirport}
               />
             );
           })}
