@@ -64,6 +64,7 @@ public class UserController {
 	
 	@PostMapping
 	public ResponseEntity<Integer> joinUser(@RequestBody UserDTO user){
+		System.out.println("가입한 유저 정보 : "+user);
 		int result = userService.joinUser(user);
 		return ResponseEntity.ok(result);
 	}

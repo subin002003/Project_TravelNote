@@ -13,8 +13,9 @@ const JoinUser = () => {
     userName: "",
     userPhone: "",
     userNick: "",
+    userType: "0",
   });
-
+  const [category, setCategory] = useState("user"); // 회원 유형 상태
   const [verificationCode, setVerificationCode] = useState("");
   const [verifyToken, setVerifyToken] = useState(null);
   const changeUser = (e) => {
@@ -24,6 +25,26 @@ const JoinUser = () => {
   const changeVerificationCode = (e) => {
     setVerificationCode(e.target.value);
   };
+  const changeCategory = (e) => {
+    const selectedCategory = e.target.value;
+    setCategory(selectedCategory);
+
+    if (selectedCategory === "agency") {
+      // 여행사일 때 userNick을 userName과 동일하게 설정하고 userType을 2로 설정
+      setUser((prevUser) => ({
+        ...prevUser,
+        userNick: prevUser.userName,
+        userType: "2", // 여행사일 때 userType은 2
+      }));
+    } else {
+      // 유저일 때는 userType을 1로 설정
+      setUser((prevUser) => ({
+        ...prevUser,
+        userType: "1", // 유저일 때 userType은 1
+      }));
+    }
+  };
+
   //email 중복 체크
   // 입력안한상태 -> 0 / 중복 상태 -> 1 / 이메일 형식 아님 -> 2 /
   // 이메일 인증 가능한 상태 -> 3 / 모든 인증이 끝나고 회원가입 가능 -> 4
@@ -228,6 +249,16 @@ const JoinUser = () => {
   };
 
   const join = () => {
+    console.log(category);
+    if (category === "agency") {
+      user.userNick = user.userName;
+      setNickState(3);
+    }
+    console.log(user);
+    console.log(pwState);
+    console.log(phoneState);
+    console.log(nameState);
+    console.log(nickState);
     if (
       //emailCheck === 4 &&
       pwState === 3 &&
@@ -257,7 +288,7 @@ const JoinUser = () => {
   };
 
   return (
-    <section className="section">
+    <section className="section" style={{ marginBottom: "30px" }}>
       <div className="page-title">
         <h1>회원가입</h1>
       </div>
@@ -271,14 +302,27 @@ const JoinUser = () => {
         >
           <div className="select-box">
             <label>
-              <input type="radio" name="category" defaultChecked /> 유저
+              <input
+                type="radio"
+                name="category"
+                value="user"
+                defaultChecked
+                onChange={changeCategory}
+              />{" "}
+              유저
             </label>
             <label>
-              <input type="radio" name="category" /> 여행사
+              <input
+                type="radio"
+                name="category"
+                value="agency"
+                onChange={changeCategory}
+              />{" "}
+              여행사
             </label>
           </div>
-          <div className="logo-box">
-            <img src=""></img>
+          <div className="img-box">
+            <img className="logo" src="/image/logo1.png"></img>
           </div>
           <div className="input-group">
             <div className="label-box">
@@ -384,42 +428,66 @@ const JoinUser = () => {
               </div>
             </div>
           </div>
-          <div className="input-group">
-            <div className="label-box">
-              <label htmlFor="userName">이름</label>
-            </div>
-            <div className="input-box">
-              <input
-                className="user-input"
-                type="text"
-                id="userName"
-                name="userName"
-                onChange={changeUser}
-                onBlur={nameCheck}
-              ></input>
-              <div className="msg-box">
-                <p ref={nameRef}></p>
+          {category === "user" ? (
+            <div className="input-group">
+              <div className="label-box">
+                <label htmlFor="userName">이름</label>
+              </div>
+              <div className="input-box">
+                <input
+                  className="user-input"
+                  type="text"
+                  id="userName"
+                  name="userName"
+                  onChange={changeUser}
+                  onBlur={nameCheck}
+                ></input>
+                <div className="msg-box">
+                  <p ref={nameRef}></p>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="input-group">
-            <div className="label-box">
-              <label id="userNick">닉네임</label>
+          ) : (
+            <div className="input-group">
+              <div className="label-box">
+                <label htmlFor="userName">여행사 이름</label>
+              </div>
+              <div className="input-box">
+                <input
+                  className="user-input"
+                  type="text"
+                  id="userName"
+                  name="userName"
+                  onChange={changeUser}
+                  onBlur={nameCheck}
+                ></input>
+                <div className="msg-box">
+                  <p ref={nameRef}></p>
+                </div>
+              </div>
             </div>
-            <div className="input-box">
-              <input
-                className="user-input"
-                type="text"
-                id="userNick"
-                name="userNick"
-                onChange={changeUser}
-                onBlur={nickCheck}
-              ></input>
+          )}
+
+          {category === "user" && (
+            <div className="input-group">
+              <div className="label-box">
+                <label htmlFor="userNick">닉네임</label>
+              </div>
+              <div className="input-box">
+                <input
+                  className="user-input"
+                  type="text"
+                  id="userNick"
+                  name="userNick"
+                  onChange={changeUser}
+                  onBlur={nickCheck}
+                ></input>
+              </div>
+              <div className="msg-box">
+                <p ref={nickRef}></p>
+              </div>
             </div>
-            <div className="msg-box">
-              <p ref={nickRef}></p>
-            </div>
-          </div>
+          )}
           <div className="join-btn-box">
             <button type="submit">가입하기</button>
           </div>

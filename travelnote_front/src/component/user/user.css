@@ -75,7 +75,7 @@
 
 .button-box {
   width: 400px;
-  margin: 0 auto;
+  margin: 0 auto !important;
   padding: 10px;
   text-align: center;
 }
