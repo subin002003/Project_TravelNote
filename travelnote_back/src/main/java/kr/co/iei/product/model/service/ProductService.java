@@ -140,6 +140,13 @@ public class ProductService {
 		int result = productDao.insertReview(review);
 		return result;
 	}
+
+	// 리뷰 답글 등록
+	@Transactional
+	public int insertReviewComment(ReviewDTO review) {
+		int result = productDao.insertReviewComment(review);
+		return result;
+	}
 	
 	// 리뷰 수정
 	@Transactional

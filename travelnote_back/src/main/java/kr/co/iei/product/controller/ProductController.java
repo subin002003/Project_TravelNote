@@ -197,6 +197,14 @@ public class ProductController {
 		return ResponseEntity.ok(result);
 	}
 	
+	// 리뷰 답글 등록
+	@PostMapping(value="/insertReviewComment")
+	public ResponseEntity<Integer> insertReviewComment(@ModelAttribute ReviewDTO review) {
+		System.out.println(review);
+		int result = productService.insertReviewComment(review);
+		return ResponseEntity.ok(result);
+	}
+	
 	// 리뷰 수정
 	@PatchMapping(value="/updateReview/{reviewNo}")
 	public ResponseEntity<Integer> updateReview(@ModelAttribute ReviewDTO review) {
