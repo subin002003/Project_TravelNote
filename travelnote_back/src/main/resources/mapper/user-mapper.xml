@@ -11,7 +11,7 @@
 		select count(*) from user_tbl where user_phone = #{userPhone}
 	</select>
 	<insert id="joinUser">
-		insert into user_tbl values(user_seq.nextval, #{userEmail}, #{userPw}, #{userName}, #{userPhone}, #{userNick}, #{userType}, null)
+		insert into user_tbl values(user_seq.nextval, #{userEmail}, #{userPw}, #{userName}, #{userPhone}, #{userNick}, #{userType}, null, #{businessRegNo})
 	</insert>
 	<select id="selectOneUser" resultType="user">
 		select * from user_tbl where user_email = #{userEmail}

@@ -14,6 +14,7 @@ const JoinUser = () => {
     userPhone: "",
     userNick: "",
     userType: "0",
+    businessRegNo: "",
   });
   const [category, setCategory] = useState("user"); // 회원 유형 상태
   const [verificationCode, setVerificationCode] = useState("");
@@ -247,43 +248,119 @@ const JoinUser = () => {
       });
     }
   };
+  /////////////////////////사업자 번호 체크///////////////////////////////////
+  const businessRegNoRef = useRef();
+  // 0 -> 입력 x / 1 -> 양식 위반 / 2 -> 중복 / 3-> 사용가능
+  const [businessRegNoState, setBusinessRegNoState] = useState(0);
+
+  const businessRegNoCheck = async () => {
+    businessRegNoRef.current.classList.remove("invalid");
+    businessRegNoRef.current.classList.remove("valid");
+    const businessNoReg = /^\d{1,10}$/;
+    if (!businessNoReg.test(user.businessRegNo)) {
+      setBusinessRegNoState(1);
+      businessRegNoRef.current.classList.add("invalid");
+      businessRegNoRef.current.innerText =
+        "사업자 번호를 올바르게 입력해주세요.";
+    }
+    const apiKey =
+      "dSiINCFp60y42Zq8nlU%2FT8m%2FNJaNn0JeIQ6Is%2BMXJdEGdciAH%2Fd03MTkDY3Wdz%2BF0MkaCXwN7VJdZK2R9iVkHA%3D%3D"; // 발급받은 API 키를 여기에 입력
+    const url = `https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${apiKey}`;
+
+    const payload = {
+      b_no: [user.businessRegNo], // 사업자등록번호를 배열로 전달
+    };
+
+    try {
+      const response = await axios.post(url, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response.data);
+      if (
+        response.data.data[0].tax_type ===
+        "국세청에 등록되지 않은 사업자등록번호입니다."
+      ) {
+        setBusinessRegNoState(2);
+        businessRegNoRef.current.classList.add("invalid");
+        businessRegNoRef.current.innerText =
+          "국세청에 등록되지 않은 사업자등록번호입니다.";
+      } else {
+        setBusinessRegNoState(3);
+        businessRegNoRef.current.classList.add("valid");
+        businessRegNoRef.current.innerText = "사용 가능한 사업자 번호입니다.";
+      }
+    } catch (error) {
+      console.error("사업자 상태 조회 중 오류 발생:", error);
+    }
+  };
 
   const join = () => {
     console.log(category);
-    if (category === "agency") {
-      user.userNick = user.userName;
-      setNickState(3);
-    }
     console.log(user);
     console.log(pwState);
     console.log(phoneState);
     console.log(nameState);
     console.log(nickState);
-    if (
-      //emailCheck === 4 &&
-      pwState === 3 &&
-      phoneState === 3 &&
-      nameState === 2 &&
-      nickState === 3
-    ) {
-      axios
-        .post(`${backServer}/user`, user)
-        .then((res) => {
-          console.log(res);
-          Swal.fire({
-            title: "가입 성공 !",
-            icon: "success",
+    console.log(businessRegNoState);
+    if (category === "agency") {
+      user.userNick = user.userName;
+      setNickState(3);
+      if (
+        //emailCheck === 4 &&
+        pwState === 3 &&
+        phoneState === 3 &&
+        nameState === 2 &&
+        nickState === 3 &&
+        businessRegNoState === 3
+      ) {
+        axios
+          .post(`${backServer}/user`, user)
+          .then((res) => {
+            console.log(res);
+            Swal.fire({
+              title: "가입 성공 !",
+              icon: "success",
+            });
+            navigate("/");
+          })
+          .catch((err) => {
+            console.log(err);
           });
-          navigate("/");
-        })
-        .catch((err) => {
-          console.log(err);
+      } else {
+        Swal.fire({
+          title: "입력값을 확인해주세요.",
+          icon: "success",
         });
-    } else {
-      Swal.fire({
-        title: "입력값을 확인해주세요.",
-        icon: "success",
-      });
+      }
+    } else if (category === "user") {
+      if (
+        //emailCheck === 4 &&
+        pwState === 3 &&
+        phoneState === 3 &&
+        nameState === 2 &&
+        nickState === 3
+      ) {
+        axios
+          .post(`${backServer}/user`, user)
+          .then((res) => {
+            console.log(res);
+            Swal.fire({
+              title: "가입 성공 !",
+              icon: "success",
+            });
+            navigate("/");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        Swal.fire({
+          title: "입력값을 확인해주세요.",
+          icon: "success",
+        });
+      }
     }
   };
 
@@ -468,7 +545,7 @@ const JoinUser = () => {
             </div>
           )}
 
-          {category === "user" && (
+          {category === "user" ? (
             <div className="input-group">
               <div className="label-box">
                 <label htmlFor="userNick">닉네임</label>
@@ -487,6 +564,27 @@ const JoinUser = () => {
                 <p ref={nickRef}></p>
               </div>
             </div>
+          ) : (
+            <>
+              <div className="input-group">
+                <div className="label-box">
+                  <label htmlFor="businessRegNo">사업자 번호</label>
+                </div>
+                <div className="input-box">
+                  <input
+                    className="user-input"
+                    type="text"
+                    id="businessRegNo"
+                    name="businessRegNo"
+                    onChange={changeUser}
+                    onBlur={businessRegNoCheck}
+                  ></input>
+                </div>
+                <div className="msg-box">
+                  <p ref={businessRegNoRef}></p>
+                </div>
+              </div>
+            </>
           )}
           <div className="join-btn-box">
             <button type="submit">가입하기</button>

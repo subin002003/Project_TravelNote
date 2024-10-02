@@ -19,4 +19,5 @@ public class UserDTO {
 	private String userNick;
 	private int userType;
 	private String socialType;
+	private String businessRegNo;
 }
