@@ -3,11 +3,12 @@ import {
   isLoginState,
   loginEmailState,
   userTypeState,
-} from "../utils/RecoilData";
+} from "../../utils/RecoilData";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./reservation.css";
+import ChannelTalk from "../ChannelTalk";
 
 const TravelReservation = () => {
   const productNo = localStorage.getItem("productNo");
@@ -19,12 +20,12 @@ const TravelReservation = () => {
   // totalPrice 계산
   const totalPrice = people * productPrice;
 
-  console.log("productNo", productNo);
-  console.log("productName", productName);
-  console.log("startDate:", startDate);
-  console.log("endDate:", endDate);
-  console.log("people:", people);
-  console.log("productPrice:", productPrice);
+  // console.log("productNo", productNo);
+  // console.log("productName", productName);
+  // console.log("startDate:", startDate);
+  // console.log("endDate:", endDate);
+  // console.log("people:", people);
+  // console.log("productPrice:", productPrice);
 
   const backServer = process.env.REACT_APP_BACK_SERVER;
   // 로그인 회원 정보
@@ -479,6 +480,14 @@ const TravelReservation = () => {
           결제하기
         </Link>
       </div>
+      <ChannelTalk />
+      {isLogin ? (
+        <button className="channelTalkBtn">
+          <img src="/image/logo2.png"></img>
+        </button>
+      ) : (
+        ""
+      )}
     </section>
   );
 };

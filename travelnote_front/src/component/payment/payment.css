@@ -1,0 +1,31 @@
+:root {
+  --main-color: #1363df;
+  --point-color: #c57cff;
+  --sub-color: #47b5ff;
+  --base-color: #dff6ff;
+  --background-color: #eef2f3;
+  --text-color: #333;
+  --black: #000;
+  --white: #fff;
+  --gray: #ddd;
+  --gray2: #777;
+  --gray3: #b2b2b2;
+}
+
+.pay-btn-box {
+  margin-right: 3.3%;
+  float: left;
+  display: flex;
+  justify-content: center;
+  width: calc(90% / 4);
+  height: 240px;
+  border: 1px solid var(--black);
+  border-radius: 10px;
+}
+.pay-btn-box:last-child {
+  margin-right: 0;
+}
+.pay-btn-box > button {
+  background: transparent;
+  color: var(--text-color);
+}

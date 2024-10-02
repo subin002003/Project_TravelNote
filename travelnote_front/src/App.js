@@ -24,8 +24,8 @@ import FindPw from "./component/user/FindPw";
 import MypageMain from "./component/user/MypageMain";
 import CustomerServiceMain from "./component/customerService/CustomerServiceMain";
 import ReviewBoardMain from "./component/reviewBoard/ReviewBoardMain";
-import TravelReservation from "./component/reservation/TravelReservation";
 import Payment from "./component/payment/Payment";
+import TravelReservation from "./component/product/reservation/TravelReservation";
 
 function App() {
   const backServer = process.env.REACT_APP_BACK_SERVER;
