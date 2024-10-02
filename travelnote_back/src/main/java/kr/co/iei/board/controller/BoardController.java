@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -197,6 +198,7 @@ public class BoardController {
     @GetMapping("/{boardNo}")
     public ResponseEntity<List<BoardCommentDTO>> getComments(@PathVariable int boardNo) {
         List<BoardCommentDTO> comments = boardService.getComments(boardNo);
+        System.out.println(comments);
         return ResponseEntity.ok(comments);
     }
 	
@@ -208,7 +210,18 @@ public class BoardController {
     }
     
     
-    
+    // 댓글 수정
+    @PutMapping("/{boardNo}/comments/{commentNo}")
+    public ResponseEntity<String> updateComment(@PathVariable int boardNo, @PathVariable int commentNo, @RequestBody BoardCommentDTO boardCommentDTO) {
+
+    	System.out.println(boardNo);
+        System.out.println(commentNo);
+        System.out.println(boardCommentDTO);
+
+        boardService.updateComment(boardNo, commentNo, boardCommentDTO);
+        return ResponseEntity.ok("Update success");
+        
+    }
     
     
     

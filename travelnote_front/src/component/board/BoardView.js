@@ -2,7 +2,7 @@ import { Viewer } from "@toast-ui/react-editor";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { userNickState, isLoginState } from "../utils/RecoilData";
 
 import Swal from "sweetalert2";
@@ -14,20 +14,28 @@ const BoardView = () => {
   const boardNo = params.boardNo;
   const [board, setBoard] = useState({});
   const [userNick, setUserNick] = useRecoilState(userNickState);
+
+  const isLogin = useRecoilValue(isLoginState); // 로그인 상태 확인
   const [liked, setLiked] = useState(false); // 좋아요 상태
   const [likeCount, setLikeCount] = useState(0); // 좋아요 개수
   const [comments, setComments] = useState([]); // 댓글 상태
   const [newComment, setNewComment] = useState(""); // 새 댓글 입력 상태
   const [reset, setReset] = useState(false);
+  // ... 기존 상태 정의
+  const [editingComment, setEditingComment] = useState(null); // 수정 중인 댓글 상태
 
+  const handleCommentEditChange = (e) => {
+    console.log(editingComment.content);
+    setEditingComment({ ...editingComment, content: e.target.value });
+  };
   useEffect(() => {
     // 게시물 가져오기
     axios
       .get(`${backServer}/board/boardNo/${boardNo}`)
       .then((res) => {
         setBoard(res.data);
-        setLikeCount(res.data.likeCount || 0); // res.data.likeCount 값 존재:그 값을 setLikeCount에 전달 / 존재x or null 등 일 때 : 0을 setLikeCount에 전달
-        setLiked(res.data.liked || false); // 초기 좋아요 상태 설정
+        setLikeCount(res.data.likeCount || 0); // 초기 좋아요 수, res.data.likeCount 값 존재:그 값을 setLikeCount에 전달 / 존재x or null 등 일 때 : 0을 setLikeCount에 전달
+        setLiked(res.data.liked || false); // 초기 좋아요 상태
       })
       .catch((err) => {
         console.log(err);
@@ -37,13 +45,25 @@ const BoardView = () => {
     axios
       .get(`${backServer}/board/${boardNo}`)
       .then((res) => {
+        console.log(res.data);
         setComments(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
   }, [reset]);
+
   const toggleLike = () => {
+    // 로그인 유무 확인
+    if (!isLogin) {
+      Swal.fire({
+        title: "로그인 필요",
+        text: "좋아요 기능을 사용하려면 로그인하세요.",
+        icon: "warning",
+      });
+      return; // 로그인하지 않은 경우, toggleLike 함수 중단
+    }
+
     const action = liked ? "remove" : "add"; // 좋아요 추가 또는 제거
     //좋아요
     axios
@@ -98,15 +118,6 @@ const BoardView = () => {
 
   // 댓글 추가
   const addComment = () => {
-    if (!isLoginState) {
-      Swal.fire({
-        title: "로그인 필요",
-        text: "댓글 기능을 사용하려면 로그인하세요.",
-        icon: "warning",
-      });
-      return;
-    }
-
     if (!newComment) {
       Swal.fire({
         title: "댓글 내용 필수",
@@ -115,9 +126,13 @@ const BoardView = () => {
       });
       return;
     }
+
+    // 줄바꿈을 <br />로 변환 (댓글 줄바꿈 후 작성 시, 줄바꿈 처리된 부분이 제대로 조회 되도록 하기 위함)
+    const formattedComment = newComment.replace(/\n/g, "<br />");
+
     const commentData = {
       boardCommentWriter: userNick,
-      boardCommentContent: newComment,
+      boardCommentContent: formattedComment,
     };
 
     axios
@@ -163,7 +178,42 @@ const BoardView = () => {
       });
   };
 
-  const updateComment = (comment) => {};
+  const updateComment = (comment) => {
+    if (!editingComment) {
+      setEditingComment({ ...comment }); // 수정할 댓글 데이터 설정
+    } else {
+      // 수정된 댓글을 서버로 전송
+      const updatedCommentData = {
+        ...editingComment,
+        boardCommentContent: editingComment.content,
+      };
+
+      axios
+        .put(
+          `${backServer}/board/${boardNo}/comments/${updatedCommentData.boardCommentNo}`,
+          updatedCommentData
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            setReset((prev) => !prev); // 댓글 목록을 새로고침
+            Swal.fire({
+              title: "댓글 수정 성공",
+              icon: "success",
+            });
+            setEditingComment(null); // 수정 모드 종료
+          } else {
+            Swal.fire({
+              title: "댓글 수정 실패",
+              text: res.data.message,
+              icon: "error",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
 
   return (
     <section className="board-wrap">
@@ -293,95 +343,165 @@ const BoardView = () => {
 
         {/* 댓글 입력 */}
         <h1 style={{ margin: "0" }}>댓글</h1>
-        <div>
-          <input
-            type="text"
-            value={newComment}
-            onChange={handleCommentChange}
-            placeholder="댓글을 작성해주세요."
-            style={{
-              padding: "20px",
-              width: "1000px",
-              border: "none",
-              outline: "none",
-              borderBottom: "1px solid black",
-            }}
-          ></input>
-          <button
-            type="button"
-            onClick={addComment}
-            className="board-button-link-view-delete"
-            style={{ margin: "15px", width: "100px" }}
-          >
-            등록
-          </button>
-        </div>
-        {/* 댓글 추가 등록 시 */}
+        {isLogin ? ( // isLogin이 true일 경우에만 표시
+          <div>
+            <textarea
+              value={newComment}
+              onChange={handleCommentChange} // 댓글 내용 변경 시 상태 업데이트
+              placeholder="댓글을 작성해주세요."
+              style={{
+                marginTop: "30px",
+                padding: "10px",
+                width: "1000px",
+                border: "none",
+                outline: "none",
+                borderBottom: "1px solid black",
+                resize: "none", // 크기 조절 비활성화
+                minHeight: "50px", // 최소 높이 설정
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && e.shiftKey) {
+                  // Shift + Enter가 눌렸을 때 기본 엔터 키 동작(줄 바꿈)을 허용
+                  return;
+                } else if (e.key === "Enter") {
+                  // 엔터 키가 눌렸을 때
+                  e.preventDefault(); // 기본 엔터 키 동작(줄 바꿈) 방지
+                  addComment(); // 댓글 등록 함수 호출
+                }
+              }}
+            ></textarea>
+            <button
+              type="button"
+              onClick={addComment} // 버튼 클릭 시 댓글 등록
+              className="board-button-link-view-comment-regist"
+              style={{ margin: "15px", width: "100px" }}
+            >
+              등록
+            </button>
+          </div>
+        ) : (
+          <h4 style={{ margin: "10px" }}>댓글을 작성하려면 로그인하세요.</h4>
+        )}
+        {/* 댓글 조회 */}
         <div>
           {comments.map((comment) => (
             <div
               key={comment.boardCommentNo}
-              style={{ display: "flex", margin: "20px" }}
+              style={{
+                margin: "20px",
+                borderBottom: "1px solid #ccc",
+                paddingBottom: "10px",
+              }}
             >
-              <p style={{ marginRight: "15px", fontWeight: "bold" }}>
-                {comment.boardCommentWriter}
-              </p>
-              <p>{comment.boardCommentDate}</p>
-              <p style={{ marginLeft: "20px" }}>
-                {comment.boardCommentContent}
-              </p>
-              <button
-                onClick={() => updateComment(comment)}
-                style={{ marginLeft: "20px" }}
+              {/* 작성자(닉네임)와 작성일을 수평으로 출력 */}
+              <div
+                style={{
+                  display: "flex",
+                }}
               >
-                수정
-              </button>
-              <button
-                onClick={() => deleteComment(comment.boardCommentNo)}
-                style={{ marginLeft: "10px" }}
-              >
-                삭제
-              </button>
+                <p style={{ marginRight: "15px", fontWeight: "bold" }}>
+                  {comment.boardCommentWriter}
+                </p>
+                <p>{comment.boardCommentDate}</p>
+              </div>
+
+              {editingComment?.boardCommentNo === comment.boardCommentNo ? (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginTop: "10px",
+                  }}
+                >
+                  <input
+                    type="text"
+                    value={editingComment.content || ""}
+                    onChange={handleCommentEditChange}
+                    style={{ marginLeft: "20px", width: "300px" }}
+                  />
+                  <div>
+                    <button
+                      onClick={() => updateComment(comment)}
+                      style={{
+                        marginLeft: "10px",
+                        backgroundColor: "transparent",
+                        color: "#000",
+                      }}
+                    >
+                      저장
+                    </button>
+                    <button
+                      onClick={() => setEditingComment(null)}
+                      style={{
+                        marginLeft: "10px",
+                        backgroundColor: "transparent",
+                        color: "#000",
+                      }}
+                    >
+                      취소
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    marginTop: "10px",
+                    display: "flex",
+                    alignItems: "flex-end", // 세로 정렬을 위쪽으로 맞춤
+                    marginBottom: "5px", // 댓글 내용과 버튼 사이의 간격
+                  }}
+                >
+                  <p
+                    style={{
+                      marginLeft: "20px",
+                      marginBottom: "0", // 댓글 내용과 밑줄 간격 없애기
+                      flexGrow: 1, // 버튼과 공간을 나누기 위해
+                    }}
+                    // 이 기능 사용 시, 다른 자식 요소를 추가 X /해당 속성만 사용해야 함
+                    dangerouslySetInnerHTML={{
+                      __html: comment.boardCommentContent,
+                    }}
+                  />
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column", // 버튼을 수직으로 정렬
+                      justifyContent: "flex-end", // 버튼을 아래쪽에 정렬
+                      marginLeft: "20px", // 버튼과 댓글 내용 사이의 간격
+                    }}
+                  >
+                    {/* 로그인한 유저와 댓글 작성자가 같은 경우에만 수정 및 삭제 버튼을 보여줌 */}
+                    {userNick === comment.boardCommentWriter && (
+                      <div>
+                        <button
+                          onClick={() => updateComment(comment)}
+                          style={{
+                            marginLeft: "20px",
+                            backgroundColor: "transparent",
+                            color: "#000",
+                          }}
+                        >
+                          수정
+                        </button>
+                        <button
+                          onClick={() => deleteComment(comment.boardCommentNo)}
+                          style={{
+                            marginLeft: "10px",
+                            backgroundColor: "transparent",
+                            color: "#000",
+                          }}
+                        >
+                          삭제
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
-
-        {/* 댓글 추가 등록 시 */}
-        {/* <div>
-          <div style={{ display: "flex", margin: "20px" }}>
-            <p style={{ marginRight: "15px", fontWeight: "bold" }}>닉네임1</p>
-            <p>2024-09-30</p>
-          </div>
-          <div style={{ display: "flex", margin: "20px" }}>
-            <input
-              type="text"
-              id="input"
-              placeholder="댓글 내용"
-              style={{
-                padding: "20px",
-                width: "1400px",
-                border: "none",
-                outline: "none",
-              }}
-            ></input>
-            <p style={{ margin: "20px", fontWeight: "bold" }}>수정</p>
-            <p
-              onClick={deleteComment}
-              style={{ margin: "20px", fontWeight: "bold" }}
-            >
-              삭제
-            </p>
-          </div>
-
-          <div
-            style={{
-              borderTop: "1px solid black",
-              // 상단, 우측, 하단, 좌측 여백
-              margin: "20px 0px 40px 0px",
-              width: "100%",
-            }}
-          ></div>
-        </div> */}
       </div>
     </section>
   );

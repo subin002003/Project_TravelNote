@@ -13,8 +13,7 @@ public class PayService {
 	private PayDao payDao;
 
 	@Transactional
-	public int payment(PayDTO pay, String userEmail) {
-		int userNo = payDao.selectOneUser(userEmail);
+	public int payment(PayDTO pay) {
 		int result = payDao.payment(pay);
 		return result;
 	}
