@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ForeignPlaceItem from "./ForeignPlaceItem";
 import axios from "axios";
-import FlightItem from "./FlightItem";
+import ForeignAirportItem from "./ForeignAirportItem";
 
 const ForeignPlanSearch = (props) => {
-  const flightsApiKey = process.env.REACT_APP_FLIGHTS_API_KEY;
   const {
     itineraryNo,
     searchInput,
     setSearchInput,
     setSearchKeyword,
     searchPlaceList,
+    setSearchPlaceList,
     selectedPosition,
     setSelectedPosition,
     setPlaceInfo,
@@ -20,16 +20,19 @@ const ForeignPlanSearch = (props) => {
     backServer,
     totalPlanDates,
     setIsPlanAdded,
-    searchAirport,
-    setSearchAirport,
-    searchFlightList,
-    setSearchFlightList,
+    departInfo,
+    setDepartInfo,
+    arrivalInfo,
+    setArrivalInfo,
+    timeOptionsArr,
+    isNextDayButtonChecked,
+    setIsNextDayButtonChecked,
   } = props;
   const [category, setCategory] = useState(1); // 1일 때 항공편, 2일 때 장소
 
   // 추천 명소로 저장된 정보 목록 조회
 
-  // 인풋에 엔터 입력 시 검색
+  // 장소 검색 인풋에 엔터 입력 시 검색
   const changeSearchInput = (e) => {
     setSearchInput(e.target.value);
     if (e.keyCode === 13) {
@@ -43,24 +46,19 @@ const ForeignPlanSearch = (props) => {
     setSearchKeyword(searchInput.trim());
   };
 
-  // 공항 검색 인풋 핸들러
-  const changeSearchAirport = (e) => {
-    setSearchAirport({ ...searchAirport, [e.target.id]: e.target.value });
-    if (e.keyCode === 13) {
-      document.getElementById("flight-search-button").click();
-    }
+  // 출발 항공편 인풋 핸들러
+  const changeDepartInfo = (e) => {
+    setDepartInfo({ ...departInfo, [e.target.id]: e.target.value });
+  };
+
+  // 도착 항공편 인풋 핸들러
+  const changeArrivalInfo = (e) => {
+    setArrivalInfo({ ...arrivalInfo, [e.target.id]: e.target.value });
   };
 
   // 항공편 검색
-  const searchFlights = () => {
-    axios
-      .get(`${backServer}/flightsApi/getFlights`)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const addFlightInfo = () => {
+    console.log(1);
   };
 
   return (
@@ -71,6 +69,7 @@ const ForeignPlanSearch = (props) => {
             className={category === 1 ? "selected" : ""}
             onClick={() => {
               setCategory(1);
+              setSearchPlaceList([]);
             }}
           >
             항공편 추가
@@ -86,18 +85,25 @@ const ForeignPlanSearch = (props) => {
         </ul>
       </div>
       {category === 1 ? (
-        <FlightSearchBox
+        <FlightInputBox
           selectedDay={selectedDay}
           totalPlanDates={totalPlanDates}
           itineraryNo={itineraryNo}
           backServer={backServer}
           setIsPlanAdded={setIsPlanAdded}
-          searchAirport={searchAirport}
-          setSearchAirport={setSearchAirport}
-          searchFlightList={searchFlightList}
-          setSearchFlightList={setSearchFlightList}
-          changeSearchAirport={changeSearchAirport}
-          searchFlights={searchFlights}
+          departInfo={departInfo}
+          setDepartInfo={setDepartInfo}
+          arrivalInfo={arrivalInfo}
+          setArrivalInfo={setArrivalInfo}
+          changeDepartInfo={changeDepartInfo}
+          changeArrivalInfo={changeArrivalInfo}
+          addFlightInfo={addFlightInfo}
+          timeOptionsArr={timeOptionsArr}
+          isNextDayButtonChecked={isNextDayButtonChecked}
+          setIsNextDayButtonChecked={setIsNextDayButtonChecked}
+          searchPlaceList={searchPlaceList}
+          setSelectedPosition={setSelectedPosition}
+          setPlaceInfo={setPlaceInfo}
         />
       ) : (
         <PlaceSearchBox
@@ -122,67 +128,138 @@ const ForeignPlanSearch = (props) => {
 };
 
 // category가 1일 때 (항공편 관련)
-const FlightSearchBox = (props) => {
+const FlightInputBox = (props) => {
   const {
     selectedDay,
     totalPlanDates,
     itineraryNo,
     backServer,
     setIsPlanAdded,
-    searchAirport,
-    setSearchAirport,
-    searchFlightList,
-    setSearchFlightList,
-    changeSearchAirport,
-    searchFlights,
+    addFlightInfo,
+    timeOptionsArr,
+    isNextDayButtonChecked,
+    setIsNextDayButtonChecked,
+    searchPlaceList,
+    departInfo,
+    setDepartInfo,
+    arrivalInfo,
+    setArrivalInfo,
+    changeDepartInfo,
+    changeArrivalInfo,
+    setSelectedPosition,
+    setPlaceInfo,
   } = props;
 
   return (
-    <>
-      <div className="flight-search-box">
+    <div className="flight-info-form">
+      <div className="flight-input-box">
+        <h4>출발 공항</h4>
         <input
-          id="departure"
+          id="departAirport"
           placeholder="출발 공항을 입력해 주세요."
-          value={searchAirport.departure}
-          onChange={changeSearchAirport}
-          onKeyUp={changeSearchAirport}
+          value={departInfo.departAirport}
+          onChange={changeDepartInfo}
+          onKeyUp={changeDepartInfo}
         ></input>
+      </div>
+      <div className="flight-input-box">
+        <h4>도착 공항</h4>
         <input
-          id="arrival"
+          id="arrivalAirport"
           placeholder="도착 공항을 입력해 주세요."
-          value={searchAirport.arrival}
-          onChange={changeSearchAirport}
-          onKeyUp={changeSearchAirport}
+          value={arrivalInfo.arrivalAirport}
+          onChange={setArrivalInfo}
+          onKeyUp={setArrivalInfo}
         ></input>
       </div>
-      <div className="flight-search-box">
-        <button onClick={searchFlights} id="flight-search-button">
-          검색
-        </button>
-      </div>
-      <div className="flight-list-box">
-        <div className="flight-list">
-          {searchFlightList.length > 0 ? (
-            searchFlightList.map((flight, index) => {
+      <div className="flight-input-box">
+        <h4>출발 시간</h4>
+        <div className="flight-time">
+          <select
+            id="departTime"
+            onClick={changeDepartInfo}
+            key={departInfo.departTime}
+            defaultValue={departInfo.departTime}
+          >
+            {timeOptionsArr.map((time, index) => {
               return (
-                <FlightItem
-                  key={"foreign-flight-item-" + index}
-                  flight={flight}
-                  index={index}
-                  selectedDay={selectedDay}
-                  totalPlanDates={totalPlanDates}
-                  itineraryNo={itineraryNo}
-                  backServer={backServer}
-                  setIsPlanAdded={setIsPlanAdded}
-                />
+                <option key={"time-option-" + index} value={time}>
+                  {time}
+                </option>
               );
-            })
-          ) : (
-            <h5>일치하는 여정을 찾을 수 없어요.</h5>
-          )}
+            })}
+          </select>
         </div>
       </div>
-    </>
+      <div className="flight-input-box">
+        <h4>도착 시간</h4>
+        <div className="flight-time">
+          <select
+            id="arrivalTime"
+            onClick={changeArrivalInfo}
+            key={arrivalInfo.arrivalTime}
+            defaultValue={arrivalInfo.arrivalTime}
+          >
+            {timeOptionsArr.map((time, index) => {
+              return (
+                <option key={"time-option-" + index} value={time}>
+                  {time}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      </div>
+      <div className="flight-input-box next-day-checkbox">
+        <div>
+          <label className="next-day-check">
+            <input
+              id="next-day-check"
+              name="arriveNextDay"
+              type="checkbox"
+              checked={isNextDayButtonChecked}
+              onChange={() => {
+                setIsNextDayButtonChecked(!isNextDayButtonChecked);
+              }}
+            ></input>
+            <div>
+              <p>익일 도착</p>
+            </div>
+            <div
+              className={
+                "check-icon" + (isNextDayButtonChecked ? " icon-checked" : "")
+              }
+            >
+              <span className="material-icons">done</span>
+            </div>
+          </label>
+        </div>
+      </div>
+      <div className="airport-list-box">
+        <div className="airport-list">
+          {searchPlaceList.map((place, index) => {
+            return (
+              <ForeignAirportItem
+                key={"foreign-place-item-" + index}
+                place={place}
+                setSelectedPosition={setSelectedPosition}
+                setPlaceInfo={setPlaceInfo}
+                itineraryNo={itineraryNo}
+                selectedDay={selectedDay}
+                backServer={backServer}
+                totalPlanDates={totalPlanDates}
+                setIsPlanAdded={setIsPlanAdded}
+              />
+            );
+          })}
+        </div>
+      </div>
+      <div className="flight-submit-box">
+        <button onClick={addFlightInfo} id="flight-submit-button">
+          일정에 추가하기
+        </button>
+      </div>
+    </div>
   );
 };
 
@@ -234,7 +311,7 @@ const PlaceSearchBox = (props) => {
               );
             })
           ) : (
-            <h5>등록된 추천 장소가 없어요.</h5>
+            <h5>장소 정보가 없어요.</h5>
           )}
         </div>
       </div>

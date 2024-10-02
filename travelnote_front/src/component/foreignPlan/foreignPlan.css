@@ -84,6 +84,10 @@
   margin: 20px auto;
   background-color: var(--base-color);
   border-radius: 20px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .foreign-info-box {
   display: flex;
@@ -142,6 +146,10 @@
 /* ForeignPlanMain */
 .plan-view-wrap {
   overflow: hidden;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .plan-view-wrap > div {
   float: left;
@@ -351,7 +359,8 @@
   background-color: var(--main-color);
 }
 .place-list,
-.flight-list {
+.flight-list,
+.airport-list {
   height: 507px;
   background-color: var(--base-color);
   overflow: auto;
@@ -367,15 +376,25 @@
   height: 400px;
 }
 .place-list::-webkit-scrollbar,
-.flight-list::-webkit-scrollbar {
+.flight-list::-webkit-scrollbar,
+.airport-list::-webkit-scrollbar {
   display: none; /* 스크롤바 제거 ( 크롬, 사파리, 오페라, 엣지 ) */
 }
 .place-list > h5,
 .flight-list > h5 {
   margin: 30px auto;
 }
+.airport-list-box {
+  margin: 0;
+  padding: 0;
+}
+.airport-list {
+  height: 250px;
+  width: 330px;
+  background-color: var(--base-color);
+}
 .place-search-box > input,
-.flight-search-box > input {
+.flight-input-box > input {
   width: 200px;
   outline: none;
   border: none;
@@ -387,18 +406,79 @@
   font-family: "SUITE-Regular";
   margin-right: 15px;
 }
-.flight-search-box > input {
+.flight-info-form > div {
+  margin-right: 10px;
+  margin-left: 10px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.flight-input-box > h4 {
   margin: 0;
+}
+.flight-input-box > input {
+  width: 180px;
+  margin: 0;
+  margin-left: 10px;
+}
+.flight-time select {
+  height: 47px;
+  width: 180px;
+  margin-left: 10px;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  line-height: 45px;
+  font-size: 15px;
+  padding-left: 15px;
+  font-family: "SUITE-Regular";
 }
 .place-search-box > button {
   width: 65px;
   height: 40px;
   box-sizing: border-box;
 }
-.flight-search-box > button {
+.flight-input-box > button {
   width: 200px;
   height: 40px;
 }
+.flight-time > #arrivalTime {
+  border: none;
+}
+.flight-info-form > div:nth-last-child(3) {
+  justify-content: right;
+}
+.next-day-check {
+  display: flex;
+  justify-content: right;
+  margin-right: 35px;
+}
+.check-icon {
+  margin-left: 5px;
+  border: 1px solid var(--main-color);
+  height: 24px;
+  width: 24px;
+  border-radius: 20px;
+}
+.check-icon p {
+  color: var(--main-color);
+}
+.check-icon > span {
+  font-size: 17px;
+  line-height: 22px;
+  color: var(--main-color);
+}
+.next-day-checkbox input {
+  display: none;
+}
+.icon-checked {
+  background-color: var(--main-color);
+}
+.icon-checked > span {
+  color: white;
+}
+
 /* ForeignPlaceItem */
 .place-item-box {
   height: 110px;

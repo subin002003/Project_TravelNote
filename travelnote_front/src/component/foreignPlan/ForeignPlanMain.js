@@ -35,8 +35,10 @@ const ForeignPlanMain = () => {
   const [selectedPosition, setSelectedPosition] = useState();
   const [placeInfo, setPlaceInfo] = useState();
   const [isPlanAdded, setIsPlanAdded] = useState(false);
-  const [searchAirport, setSearchAirport] = useState({});
-  const [searchFlightList, setSearchFlightList] = useState([]);
+  const [departInfo, setDepartInfo] = useState({});
+  const [arrivalInfo, setArrivalInfo] = useState({});
+  const [timeOptionsArr, setTimeOptionsArr] = useState([]); // 시간 선택 옵션 용 배열
+  const [isNextDayButtonChecked, setIsNextDayButtonChecked] = useState(false);
 
   // 일정 정보 조회
   useEffect(() => {
@@ -78,6 +80,30 @@ const ForeignPlanMain = () => {
     }
   }, [itinerary]);
 
+  // 시간 배열에 값 추가
+  useEffect(() => {
+    if (timeOptionsArr.length === 0) {
+      for (let i = 0; i < 24; i++) {
+        let time = "";
+        if (i < 10) {
+          time = "0" + i;
+        } else {
+          time = "" + i;
+        }
+        for (let j = 0; j < 60; j += 30) {
+          let timeOption = "";
+          if (j === 0) {
+            timeOption += time + ":0" + j;
+          } else {
+            timeOption += time + ":" + j;
+          }
+          timeOptionsArr.push(timeOption);
+          setTimeOptionsArr([...timeOptionsArr]);
+        }
+      }
+    }
+  }, []);
+
   return (
     <div className="plan-view-wrap">
       <ForeignPlanList
@@ -92,6 +118,7 @@ const ForeignPlanMain = () => {
         setPlanList={setPlanList}
         isPlanAdded={isPlanAdded}
         setIsPlanAdded={setIsPlanAdded}
+        timeOptionsArr={timeOptionsArr}
       />
       {planPageOption === 1 ? (
         <ForeignRegionInfo />
@@ -101,6 +128,7 @@ const ForeignPlanMain = () => {
           setSearchInput={setSearchInput}
           setSearchKeyword={setSearchKeyword}
           searchPlaceList={searchPlaceList}
+          setSearchPlaceList={setSearchPlaceList}
           selectedPosition={selectedPosition}
           setSelectedPosition={setSelectedPosition}
           setPlaceInfo={setPlaceInfo}
@@ -111,10 +139,13 @@ const ForeignPlanMain = () => {
           totalPlanDates={totalPlanDates}
           itineraryNo={itineraryNo}
           setIsPlanAdded={setIsPlanAdded}
-          searchAirport={searchAirport}
-          setSearchAirport={setSearchAirport}
-          searchFlightList={searchFlightList}
-          setSearchFlightList={setSearchFlightList}
+          departInfo={departInfo}
+          setDepartInfo={setDepartInfo}
+          arrivalInfo={arrivalInfo}
+          setArrivalInfo={setArrivalInfo}
+          timeOptionsArr={timeOptionsArr}
+          isNextDayButtonChecked={isNextDayButtonChecked}
+          setIsNextDayButtonChecked={setIsNextDayButtonChecked}
         />
       )}
       <ForeignPlanMap
@@ -127,6 +158,10 @@ const ForeignPlanMain = () => {
         setSelectedPosition={setSelectedPosition}
         placeInfo={placeInfo}
         setPlaceInfo={setPlaceInfo}
+        departInfo={departInfo}
+        setDepartInfo={setDepartInfo}
+        arrivalInfo={arrivalInfo}
+        setArrivalInfo={setArrivalInfo}
       />
     </div>
   );
