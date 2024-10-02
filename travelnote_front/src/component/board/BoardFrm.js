@@ -33,7 +33,9 @@ const BoardFrm = (props) => {
           <tbody>
             <tr>
               <th>
-                <label htmlFor="boardTitle">제목</label>
+                <label htmlFor="boardTitle" style={{ fontSize: "30px" }}>
+                  제목
+                </label>
               </th>
               <td>
                 <input
@@ -54,7 +56,9 @@ const BoardFrm = (props) => {
             </tr>
             <tr>
               <th>
-                <label htmlFor="boardCategory">카테고리</label>
+                <label htmlFor="boardCategory" style={{ fontSize: "21px" }}>
+                  카테고리
+                </label>
               </th>
               <td>
                 <input
@@ -75,7 +79,9 @@ const BoardFrm = (props) => {
             </tr>
             <tr>
               <th>
-                <label htmlFor="boardFile">첨부파일</label>
+                <label htmlFor="boardFile" style={{ fontSize: "20px" }}>
+                  첨부파일
+                </label>
               </th>
               <td>
                 <input
@@ -87,7 +93,7 @@ const BoardFrm = (props) => {
               </td>
             </tr>
             <tr>
-              <th>첨부파일 목록</th>
+              <th style={{ fontSize: "15px" }}>첨부파일 목록</th>
               <td>
                 <div>
                   {fileList
