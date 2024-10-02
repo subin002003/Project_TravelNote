@@ -158,4 +158,11 @@ public class UserController {
 		System.out.println("userNick 출력 : "+userNick);
 		return ResponseEntity.ok(userNick);
 	}
+	
+	@GetMapping(value = "/checkBusinessRegNo/{businessRegNo}")
+	public ResponseEntity<Integer> checkBusinessRegNo(@PathVariable String businessRegNo){
+		System.out.println("사업자번호 : "+businessRegNo);
+		int result = userService.checkBusinessRegNo(businessRegNo);
+		return ResponseEntity.ok(result);
+	}
 }

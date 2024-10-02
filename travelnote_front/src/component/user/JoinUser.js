@@ -30,18 +30,20 @@ const JoinUser = () => {
     const selectedCategory = e.target.value;
     setCategory(selectedCategory);
 
+    setUser({
+      userEmail: "",
+      userPw: "",
+      userName: "",
+      userPhone: "",
+      userNick: "",
+      userType: selectedCategory === "agency" ? "2" : "1", // 카테고리에 따라 userType 설정
+    });
+
+    // 여행사일 때 userNick을 userName과 동일하게 설정
     if (selectedCategory === "agency") {
-      // 여행사일 때 userNick을 userName과 동일하게 설정하고 userType을 2로 설정
       setUser((prevUser) => ({
         ...prevUser,
         userNick: prevUser.userName,
-        userType: "2", // 여행사일 때 userType은 2
-      }));
-    } else {
-      // 유저일 때는 userType을 1로 설정
-      setUser((prevUser) => ({
-        ...prevUser,
-        userType: "1", // 유저일 때 userType은 1
       }));
     }
   };
@@ -256,6 +258,7 @@ const JoinUser = () => {
   const businessRegNoCheck = async () => {
     businessRegNoRef.current.classList.remove("invalid");
     businessRegNoRef.current.classList.remove("valid");
+
     const businessNoReg = /^\d{1,10}$/;
     if (!businessNoReg.test(user.businessRegNo)) {
       setBusinessRegNoState(1);
@@ -263,6 +266,7 @@ const JoinUser = () => {
       businessRegNoRef.current.innerText =
         "사업자 번호를 올바르게 입력해주세요.";
     }
+
     const apiKey =
       "dSiINCFp60y42Zq8nlU%2FT8m%2FNJaNn0JeIQ6Is%2BMXJdEGdciAH%2Fd03MTkDY3Wdz%2BF0MkaCXwN7VJdZK2R9iVkHA%3D%3D"; // 발급받은 API 키를 여기에 입력
     const url = `https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${apiKey}`;
@@ -277,12 +281,25 @@ const JoinUser = () => {
           "Content-Type": "application/json",
         },
       });
+      axios
+        .get(`${backServer}/user/checkBusinessRegNo/${user.businessRegNo}`)
+        .then((res) => {
+          if (res.data === 1) {
+            setBusinessRegNoState(2);
+            businessRegNoRef.current.classList.add("invalid");
+            businessRegNoRef.current.innerText =
+              "이미 가입한 사업자 번호 입니다.";
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       console.log(response.data);
       if (
         response.data.data[0].tax_type ===
         "국세청에 등록되지 않은 사업자등록번호입니다."
       ) {
-        setBusinessRegNoState(2);
+        setBusinessRegNoState(1);
         businessRegNoRef.current.classList.add("invalid");
         businessRegNoRef.current.innerText =
           "국세청에 등록되지 않은 사업자등록번호입니다.";
@@ -578,6 +595,7 @@ const JoinUser = () => {
                     name="businessRegNo"
                     onChange={changeUser}
                     onBlur={businessRegNoCheck}
+                    placeholder=" - 없이 입력해주세요."
                   ></input>
                 </div>
                 <div className="msg-box">

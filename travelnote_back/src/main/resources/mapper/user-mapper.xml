@@ -34,4 +34,7 @@
 	<delete id="deleteUser">
 		delete from user_tbl where user_email = #{userEmail}
 	</delete>
+	<select id="checkBusinessRegNo" resultType="int">
+		select count(*) from user_tbl where business_reg_no = #{businessRegNo}
+	</select>
 </mapper>

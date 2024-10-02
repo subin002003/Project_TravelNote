@@ -52,4 +52,11 @@ public class AdminController {
 		int result = personalBoardService.updatePersonalBoardAnswer(personalBoardAnswer);
 		return ResponseEntity.ok(result);
 	}
+	
+	@GetMapping(value = "/reportBoardList/{BoardReqPage}")
+	public ResponseEntity<Map> selectReportBoardList(@PathVariable int reqPage){
+		//Map map = .selectReportBoardList(reqPage);
+		return ResponseEntity.ok(null);
+	}
+	
 }

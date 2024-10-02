@@ -55,6 +55,8 @@ public interface BoardDao {
 
 	void updateComment(int boardNo, int commentNo, String boardCommentContent);
 
+	int reportBoardTotalCount();
+
 	
 
 	

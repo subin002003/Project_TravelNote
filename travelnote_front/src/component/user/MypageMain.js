@@ -8,6 +8,8 @@ import MyInfo from "./MyInfo";
 import PersonalBoardList from "./PersonalBoardList";
 import PersonalBoardAnswerWrite from "./PersonalBoardAnswerWrite";
 import PersonalBoardAnswerUpdate from "./PersonalBoardAnswerUpdate";
+import ManageBoard from "./ManageBoard";
+import ManageUser from "./ManageUser";
 
 const MypageMain = () => {
   const navigate = useNavigate();
@@ -38,8 +40,10 @@ const MypageMain = () => {
 
   // 현재 경로가 '/mypage'일 때만 'info'로 이동, 다른 경로일 경우 유지
   useEffect(() => {
-    if (isLogin && location.pathname === "/mypage") {
+    if (isLogin && location.pathname === "/mypage" && userType === 1) {
       navigate("info"); // 기본 페이지로 이동
+    } else if (isLogin && location.pathname === "/mypage" && userType === 3) {
+      navigate("admin/manageBoard");
     }
   }, [isLogin, location.pathname, navigate]);
 
@@ -53,16 +57,13 @@ const MypageMain = () => {
         { url: "#", text: "여행지 등록하기" },
         { url: "#", text: "관광지 등록하기" },
       ]);
-      if (userType === 2) {
-        setMenus([
-          { url: "#", text: "여행사 정보 수정" },
-          { url: "#", text: "비밀번호 변경" },
-          { url: "#", text: "판매중인 상품" },
-          { url: "#", text: "결제 내역 확인" },
-        ]);
-      }
     } else if (userType === 2) {
-      setMenus([...menus, { url: "/", text: "여행사 페이지" }]);
+      setMenus([
+        { url: "#", text: "여행사 정보 수정" },
+        { url: "#", text: "비밀번호 변경" },
+        { url: "#", text: "판매중인 상품" },
+        { url: "#", text: "결제 내역 확인" },
+      ]);
     }
   }, [userType]);
 
@@ -92,10 +93,15 @@ const MypageMain = () => {
           <section className="section">
             <Routes>
               <Route path="info" element={<MyInfo />} />
+
+              <Route path="admin/manageBoard" element={<ManageBoard />} />
+              <Route path="admin/manageUser" element={<ManageUser />} />
+
               <Route
                 path="admin/personalBoardList"
                 element={<PersonalBoardList />}
               />
+
               <Route
                 path="admin/personalBoardList/writeAnswer/:personalBoardNo"
                 element={<PersonalBoardAnswerWrite />}
