@@ -19,6 +19,7 @@ const ForeignPlanMap = (props) => {
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   const mapRef = useRef(null);
   const infoWindowRef = useRef(null);
+  const [markerArr, setMarkerArr] = useState([]);
 
   // 구글 지도 스크립트 추가
   useEffect(() => {
@@ -135,19 +136,26 @@ const ForeignPlanMap = (props) => {
       language: "ko",
     };
 
+    markerArr.forEach((marker) => {
+      marker.setMap(null);
+    });
+
     // 검색 실행
     mapService.textSearch(request, (resultList, status) => {
       if (
         status === window.google.maps.places.PlacesServiceStatus.OK &&
         resultList
       ) {
+        const bounds = new window.google.maps.LatLngBounds();
         // 마커 추가
-        resultList.map((place, index) => {
+        const newMarkerArr = resultList.map((place, index) => {
           const marker = new window.google.maps.Marker({
             position: place.geometry.location,
             map: map,
           });
+          bounds.extend(marker.position);
           marker.addListener("click", () => {
+            map.setZoom(15);
             map.setCenter(place.geometry.location);
             setPlaceInfo({
               placeName: place.name,
@@ -157,7 +165,9 @@ const ForeignPlanMap = (props) => {
             });
             setSelectedPosition(place.geometry.location);
           });
+          return marker;
         });
+        setMarkerArr(newMarkerArr);
         setSearchPlaceList(resultList);
       } else {
         setSearchPlaceList([]);
