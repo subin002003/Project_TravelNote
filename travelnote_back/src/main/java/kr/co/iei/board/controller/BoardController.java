@@ -24,12 +24,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.co.iei.board.model.dto.BoardCommentDTO;
 import kr.co.iei.board.model.dto.BoardDTO;
 import kr.co.iei.board.model.dto.BoardFileDTO;
 
@@ -184,11 +186,47 @@ public class BoardController {
 		return boardService.getBoardById(boardNo);
 	}
 	
-	    
+	// 댓글 등록
+	@PostMapping("/{boardNo}/comments")
+	public ResponseEntity<String> addComment(@PathVariable int boardNo, @RequestBody BoardCommentDTO comment) {
+		comment.setBoardRef(boardNo);
+		boardService.addComment(comment);
+		return ResponseEntity.status(HttpStatus.CREATED).body("Comment added successfully");
+	}
 
+	// 댓글 목록 조회
+    @GetMapping("/{boardNo}")
+    public ResponseEntity<List<BoardCommentDTO>> getComments(@PathVariable int boardNo) {
+        List<BoardCommentDTO> comments = boardService.getComments(boardNo);
+        System.out.println(comments);
+        return ResponseEntity.ok(comments);
+    }
 	
-	
+    //댓글 삭제
+    @DeleteMapping("/{boardNo}/comments/{commentNo}")
+    public ResponseEntity<String> deleteComment(@PathVariable int boardNo, @PathVariable int commentNo) {
+        boardService.deleteComment(commentNo);
+        return ResponseEntity.ok("Comment deleted successfully");
+    }
+    
+    
+    // 댓글 수정
+    @PutMapping("/{boardNo}/comments/{commentNo}")
+    public ResponseEntity<String> updateComment(@PathVariable int boardNo, @PathVariable int commentNo, @RequestBody BoardCommentDTO boardCommentDTO) {
+
+    	System.out.println(boardNo);
+        System.out.println(commentNo);
+        System.out.println(boardCommentDTO);
+
+        boardService.updateComment(boardNo, commentNo, boardCommentDTO);
+        return ResponseEntity.ok("Update success");
+        
+    }
+    
+    
+    
 }
+
 
 
 

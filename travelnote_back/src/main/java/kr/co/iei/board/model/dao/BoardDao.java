@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.iei.board.model.dto.BoardCommentDTO;
 import kr.co.iei.board.model.dto.BoardDTO;
 import kr.co.iei.board.model.dto.BoardFileDTO;
 import kr.co.iei.util.PageInfo;
@@ -45,6 +46,16 @@ public interface BoardDao {
 	void updateViewCount(@Param("boardNo") int boardNo);
 
 	BoardDTO selectBoardById(@Param("boardNo") int boardNo);
+
+	void addComment(BoardCommentDTO comment);
+
+	List<BoardCommentDTO> getComments(int boardRef);
+
+	void deleteComment(int commentNo);
+
+	void updateComment(int boardNo, int commentNo, String boardCommentContent);
+
+	
 
 	
 

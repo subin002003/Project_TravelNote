@@ -21,7 +21,7 @@
   	</select>
   	
   	<insert id="insertBoard">
-  		insert into board values(board_seq.nextval,#{boardWriter},#{boardTitle},#{boardContent},sysdate,#{boardCategory},0,1,1)
+  		insert into board values(board_seq.nextval,#{boardWriter},#{boardTitle},#{boardContent},sysdate,#{boardCategory},0,1,1,0)
 		<selectKey resultType="int" keyProperty="boardNo" order="AFTER" >
 			select max(board_no) from board
 		</selectKey>
@@ -127,11 +127,37 @@
 	</update>
 	
 	<select id="selectBoardById" resultType="board">
-		select * from board where board_no = #{boardNo}
+		select * 
+		from board 
+		where board_no = #{boardNo}
 	</select>
 	
+	 <insert id="addComment">
+		insert into board_comment 
+		values (
+					board_comment_seq.nextval,
+					#{boardRef},
+					#{boardCommentWriter},
+					#{boardCommentContent},
+					to_char(sysdate, 'yyyy-mm-dd')
+				)
+	</insert>
 	
+	<select id="getComments" resultType="boardComment">
+		select * from board_comment 
+		where board_ref = #{boardRef} order by board_comment_no
+	</select>
 	
+	<delete id="deleteComment">
+		delete from board_comment 
+		where board_comment_no = #{boardCommentNo}
+	</delete> 
+	
+	<update id="updateComment">
+    	update board_comment
+    	set board_comment_content = #{boardCommentContent}
+    	where board_ref = #{boardNo} and board_comment_no = #{commentNo}
+	</update>
 	
 </mapper>
 

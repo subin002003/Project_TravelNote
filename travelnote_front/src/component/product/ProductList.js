@@ -10,6 +10,7 @@ import {
 } from "../utils/RecoilData";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Swal from "sweetalert2";
+import ChannelTalk from "./ChannelTalk";
 
 const ProductList = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -58,7 +59,7 @@ const ProductList = () => {
   // console.log(`${backServer}/product/list/${reqPage}/${userEmail}`);
 
   return (
-    <section className="section product-list">
+    <section style={{ margin: "50px auto" }} className="section product-list">
       {isLogin === true && userType === 2 ? (
         <Link to="/product/write" className="btn-primary writeBtn">
           상품 등록
@@ -77,6 +78,14 @@ const ProductList = () => {
       <div className="product-paging-wrap">
         <PageNavi pi={pi} reqPage={reqPage} setReqPage={setReqPage} />
       </div>
+      <ChannelTalk />
+      {isLogin ? (
+        <button className="channelTalkBtn">
+          <img src="/image/logo2.png"></img>
+        </button>
+      ) : (
+        ""
+      )}
     </section>
   );
 };

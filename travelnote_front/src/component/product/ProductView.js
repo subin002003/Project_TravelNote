@@ -34,7 +34,7 @@ import {
   loginEmailState,
   userTypeState,
 } from "../utils/RecoilData";
-import Payment from "../pay/TravelReservation";
+import ChannelTalk from "./ChannelTalk";
 
 const ProductView = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -178,6 +178,7 @@ const ProductView = () => {
           <div className="product-thumbnail-swiper">
             <Swiper
               modules={[Navigation, Pagination, Autoplay]}
+              slidesPerView={1}
               pagination={{
                 el: ".swiper-pagination",
                 type: "fraction",
@@ -269,6 +270,7 @@ const ProductView = () => {
             <Link
               to="/travelReservation"
               onClick={() => {
+                localStorage.setItem("productNo", product.productNo);
                 localStorage.setItem("productName", product.productName);
                 localStorage.setItem("startDate", startDate);
                 localStorage.setItem("endDate", endDate);
@@ -410,6 +412,15 @@ const ProductView = () => {
             삭제
           </button>
         </div>
+      ) : (
+        ""
+      )}
+
+      <ChannelTalk />
+      {isLogin ? (
+        <button className="channelTalkBtn">
+          <img src="/image/logo2.png"></img>
+        </button>
       ) : (
         ""
       )}

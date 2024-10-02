@@ -29,7 +29,7 @@ const SchedulePlanList = (props) => {
     if (itinerary.itineraryNo > 0) {
       setEditList([]); // 초기화
       axios
-        .get(`${backServer}/domestic/Plan`, {
+        .get(`${backServer}/domestic/plan`, {
           params: {
             itineraryNo: itinerary.itineraryNo,
             planDay: selectedDay,
@@ -74,7 +74,7 @@ const SchedulePlanList = (props) => {
           if (res.data) {
             Swal.fire({
               icon: "success",
-              text: "일정이 저장되었습니다.",
+              text: "수정이 완료되었습니다.",
             });
             setEditList([]); // 수정 목록 초기화
             setIsEditing(false); // 수정 모드 종료
@@ -110,20 +110,18 @@ const SchedulePlanList = (props) => {
           {itinerary.countryName} {itinerary.regionName}
         </h4>
         <h4>
-          {itinerary.itineraryStartDate} {itinerary.itineraryEndDate}
+          {itinerary.itineraryStartDate} ~ {itinerary.itineraryEndDate}
         </h4>
-        <h4>{selectedDate}</h4>
+        <h4>선택된 날짜: {selectedDate}</h4>
       </div>
       <div className="schedule-box">
         {totalPlanDates.length > 0 ? (
-          <>
-            <SchedulePlanButton
-              planDays={planDays}
-              selectedDay={selectedDay}
-              setSelectedDay={setSelectedDay}
-              totalPlanDates={totalPlanDates}
-            />
-          </>
+          <SchedulePlanButton
+            planDays={planDays}
+            selectedDay={selectedDay}
+            setSelectedDay={setSelectedDay}
+            totalPlanDates={totalPlanDates}
+          />
         ) : (
           ""
         )}
@@ -146,20 +144,21 @@ const SchedulePlanList = (props) => {
                 />
               ))
             ) : (
-              <h3>일정 </h3>
+              <h3>일정이 없습니다.</h3>
             )}
           </div>
-
-          <div className="button-container">
-            <button className="save-btn">일정 저장</button>
-            <button
-              className={"Editing-btn" + (isEditing ? "-active" : "")}
-              onClick={toggleEditMode}
-            >
-              {isEditing ? "수정 완료" : "일정 수정하기"}
-            </button>
-          </div>
         </div>
+      </div>
+      <div className="button-container">
+        <button className="save-btn" onClick={saveUpdatedPlans}>
+          일정 저장
+        </button>
+        <button
+          className={"Editing-btn" + (isEditing ? "-active" : "")}
+          onClick={toggleEditMode}
+        >
+          {isEditing ? "수정 완료" : "일정 수정하기"}
+        </button>
       </div>
     </div>
   );

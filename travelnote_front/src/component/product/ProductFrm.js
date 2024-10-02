@@ -1,5 +1,6 @@
 import { Switch } from "@mui/material";
 import { useRef, useState } from "react";
+import "./product.css";
 
 const ProductFrm = (props) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;

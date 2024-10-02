@@ -26,9 +26,8 @@ public interface DomesticDao {
 
 	List selectPlan(int itineraryNo, int planDay);
 
-	static int updatePlan(EditPlanDTO editPlanDTO) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	int updatePlan(EditPlanDTO editPlanDTO);
+	
+	List<RegionDTO> selectAllRegions();
 
 }

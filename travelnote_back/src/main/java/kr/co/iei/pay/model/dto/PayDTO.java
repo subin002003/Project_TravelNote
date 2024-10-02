@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Alias(value="pay")
 public class PayDTO {
 	private int orderNo;
-	private int userNo;
+	private String userEmail;
 	private int productNo;
 	private String orderDate;
 	private String startDate;

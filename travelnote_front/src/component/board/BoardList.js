@@ -17,6 +17,7 @@ const BoardList = () => {
       .get(`${backServer}/board/list/${reqPage}`)
       .then((res) => {
         setBoardList(res.data.list);
+
         setPi(res.data.pi);
       })
       .catch((err) => {
@@ -105,7 +106,10 @@ const BoardItem = (props) => {
       <td>{board.boardWriter}</td>
       <td>{board.boardDate}</td>
       <td>{board.boardReadCount}</td>
-      <td>{board.likeCount}</td>
+      <td style={{ display: "flex" }}>
+        <span className="material-icons">favorite</span>
+        {board.likeCount}
+      </td>
     </tr>
   );
 };

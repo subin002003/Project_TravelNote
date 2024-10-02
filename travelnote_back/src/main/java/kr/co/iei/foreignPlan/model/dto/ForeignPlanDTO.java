@@ -24,4 +24,5 @@ public class ForeignPlanDTO {
 	private String planImage;
 	private int planType;
 	private String planName;
+	private String planId;
 }
