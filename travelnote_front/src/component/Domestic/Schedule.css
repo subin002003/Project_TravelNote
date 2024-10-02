@@ -82,11 +82,9 @@
   cursor: pointer;
 }
 .plan-list > li:nth-child(2) {
-  border-right: none;
   border-radius: 15px;
 }
 .plan-list > li:nth-child(4) {
-  border-left: none;
   border-radius: 15px;
 }
 .plan-list .selected-day {
@@ -116,9 +114,6 @@
   flex-direction: column;
   justify-content: space-between;
   height: 400px;
-}
-.plan-wrap {
-  border-bottom: 1px solid #ccc;
 }
 .schedule-container {
   display: flex;
