@@ -7,6 +7,9 @@ import {
 } from "../utils/RecoilData";
 import Swal from "sweetalert2";
 import { useEffect } from "react";
+import "./payment.css";
+import Kakaopay from "./image/kakaopay/payment_icon_yellow_medium.png";
+import ChannelTalk from "../product/ChannelTalk";
 
 const Payment = () => {
   const productNo = localStorage.getItem("productNo");
@@ -115,6 +118,142 @@ const Payment = () => {
     );
   };
 
+  const handleSmailpay = () => {
+    const { IMP } = window;
+    IMP.init("imp73014035"); // 'imp00000000' 대신 발급받은 가맹점 식별코드를 사용합니다.
+
+    console.log(typeof totalPrice);
+
+    IMP.request_pay(
+      {
+        pg: "smilepay.cnstest25m",
+        merchant_uid: `order_${Math.random().toString(36).slice(2)}`, // 상점에서 생성한 고유 주문번호
+        name: productName, // 필수 파라미터 입니다.
+        amount: 100,
+        buyer_email: userEmail,
+        buyer_name: userName,
+        buyer_tel: userPhone,
+        buyer_addr: "서울특별시 강남구 삼성동",
+        buyer_postcode: "123-456",
+      },
+      function (rsp) {
+        console.log("결제 응답:", rsp); // 추가 로그
+        if (rsp.success) {
+          // 결제 성공 시 서버로 결제 정보 전달
+          const form = new FormData();
+          form.append("userEmail", userEmail);
+          form.append("productNo", productNo);
+          form.append("startDate", startDate);
+          form.append("endDate", endDate);
+          form.append("people", people);
+          form.append("price", 1);
+          form.append("paymentType", 2);
+
+          console.log(form);
+
+          axios
+            .post(`${backServer}/pay/saveOrder`, form, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            })
+            .then((res) => {
+              Swal.fire({
+                title: "결제 성공",
+                text: "결제가 완료되었습니다.",
+                icon: "success",
+              });
+            })
+            .catch((err) => {
+              console.error(
+                "결제 정보 저장 중 오류:",
+                err.response ? err.response.data : err
+              );
+              Swal.fire({
+                title: "오류",
+                text: "결제 정보 저장 중 오류가 발생했습니다.",
+                icon: "error",
+              });
+            });
+        } else {
+          Swal.fire({
+            title: "결제 실패",
+            text: rsp.error_msg, // 결제 실패 시 에러 메시지
+            icon: "error",
+          });
+        }
+      }
+    );
+  };
+
+  const handlePayco = () => {
+    const { IMP } = window;
+    IMP.init("imp73014035"); // 'imp00000000' 대신 발급받은 가맹점 식별코드를 사용합니다.
+
+    console.log(typeof totalPrice);
+
+    IMP.request_pay(
+      {
+        pg: "payco.PARTNERTEST",
+        merchant_uid: `order_${Math.random().toString(36).slice(2)}`, // 상점에서 생성한 고유 주문번호
+        name: productName, // 필수 파라미터 입니다.
+        amount: 1,
+        buyer_email: userEmail,
+        buyer_name: userName,
+        buyer_tel: userPhone,
+        buyer_addr: "서울특별시 강남구 삼성동",
+        buyer_postcode: "123-456",
+      },
+      function (rsp) {
+        console.log("결제 응답:", rsp); // 추가 로그
+        if (rsp.success) {
+          // 결제 성공 시 서버로 결제 정보 전달
+          const form = new FormData();
+          form.append("userEmail", userEmail);
+          form.append("productNo", productNo);
+          form.append("startDate", startDate);
+          form.append("endDate", endDate);
+          form.append("people", people);
+          form.append("price", 1);
+          form.append("paymentType", 3);
+
+          console.log(form);
+
+          axios
+            .post(`${backServer}/pay/saveOrder`, form, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            })
+            .then((res) => {
+              Swal.fire({
+                title: "결제 성공",
+                text: "결제가 완료되었습니다.",
+                icon: "success",
+              });
+            })
+            .catch((err) => {
+              console.error(
+                "결제 정보 저장 중 오류:",
+                err.response ? err.response.data : err
+              );
+              Swal.fire({
+                title: "오류",
+                text: "결제 정보 저장 중 오류가 발생했습니다.",
+                icon: "error",
+              });
+            });
+        } else {
+          Swal.fire({
+            title: "결제 실패",
+            text: rsp.error_msg, // 결제 실패 시 에러 메시지
+            icon: "error",
+          });
+        }
+      }
+    );
+  };
+
   const handleSettlebank = () => {
     const { IMP } = window;
     IMP.init("imp73014035"); // 'imp00000000' 대신 발급받은 가맹점 식별코드를 사용합니다.
@@ -147,7 +286,7 @@ const Payment = () => {
           form.append("endDate", endDate);
           form.append("people", people);
           form.append("price", 1);
-          form.append("paymentType", 2);
+          form.append("paymentType", 4);
 
           console.log(form);
 
@@ -219,11 +358,32 @@ const Payment = () => {
 
       <div style={{ margin: "50px 0px" }} className="line"></div>
 
-      <div>
+      <div style={{ overflow: "hidden" }}>
         <h2>결제 수단</h2>
-        <button onClick={handleKakaopay}>카카오페이</button>
-        <button onClick={handleSettlebank}>헥토파이낸셜</button>
+        <div className="pay-btn-box">
+          <button onClick={handleKakaopay}>
+            <img src={Kakaopay} /> <br />
+            카카오페이
+          </button>
+        </div>
+        <div className="pay-btn-box">
+          <button onClick={handleSmailpay}>스마일페이</button>
+        </div>
+        <div className="pay-btn-box">
+          <button onClick={handlePayco}>페이코</button>
+        </div>
+        <div className="pay-btn-box">
+          <button onClick={handleSettlebank}>헥토파이낸셜</button>
+        </div>
       </div>
+      <ChannelTalk />
+      {isLogin ? (
+        <button className="channelTalkBtn">
+          <img src="/image/logo2.png"></img>
+        </button>
+      ) : (
+        ""
+      )}
     </section>
   );
 };
