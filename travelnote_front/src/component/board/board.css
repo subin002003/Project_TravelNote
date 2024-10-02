@@ -44,6 +44,22 @@
 .board-button-link-write:hover {
   background-color: #1363df; /* hover 시 색상 변경 */
 }
+/* 댓글 등록 버튼 */
+.board-button-link-view-comment-regist {
+  margin-right: 10px;
+  margin-bottom: 10px;
+  background-color: #47b5ff; /* 버튼 배경색 */
+  color: #fff; /* 글자색 */
+  text-decoration: none; /* 텍스트 장식 제거 */
+  border-radius: 5px; /* 모서리 둥글게 */
+  transition: background-color 0.3s; /* 배경색 변화 애니메이션 */
+  padding: 10px 20px;
+  font-size: 20px;
+}
+.board-button-link-view-comment-regist:hover {
+  background-color: #1363df; /* hover 시 색상 변경 */
+}
+
 .board-button-link-view-update {
   margin-right: 10px;
   margin-bottom: 10px;
