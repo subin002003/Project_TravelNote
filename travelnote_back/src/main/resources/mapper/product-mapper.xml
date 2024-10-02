@@ -213,6 +213,11 @@
   	insert into review values(review_seq.nextval, #{productNo}, #{reviewWriter}, #{reviewScore}, #{reviewContent}, sysdate, null)
   </insert>
   
+  <!-- 리뷰 답글 등록 -->
+  <insert id="insertReviewComment">
+  	insert into review values(review_seq.nextval, #{productNo}, #{reviewWriter}, #{reviewScore}, #{reviewContent}, sysdate, #{reviewCommentRef})
+  </insert>
+  
   <!-- 리뷰 수정 -->
   <update id="updateReview">
   	update review set review_content=#{reviewContent} where review_no=#{reviewNo}

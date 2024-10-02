@@ -5,7 +5,6 @@ import {
   userTypeState,
 } from "../../utils/RecoilData";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./reservation.css";
 import ChannelTalk from "../ChannelTalk";
