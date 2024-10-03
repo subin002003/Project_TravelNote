@@ -17,6 +17,7 @@ const ForeignAirportItem = (props) => {
     setArrivalInfo,
     searchAirport,
     setSearchAirport,
+    setSearchPlaceList,
   } = props;
 
   // 클릭 시 지도 이동
@@ -32,7 +33,26 @@ const ForeignAirportItem = (props) => {
 
   // 추가 버튼 클릭 시 DB에 저장하고 일정 목록에 추가
   const addAirport = () => {
+    console.log(1);
+    console.log(arrivalInfo);
+    console.log(2);
+    console.log(departInfo);
+    console.log(3);
+    console.log(place.place_id);
+    if (
+      (arrivalInfo.planId &&
+        arrivalInfo.planId.trim() == place.place_id.trim()) ||
+      (departInfo.planId && departInfo.planId.trim() == place.place_id.trim())
+    ) {
+      console.log(4);
+      Swal.fire({
+        icon: "warning",
+        text: "출발 공항과 도착 공항은 동일하게 설정할 수 없습니다.",
+      });
+      return;
+    }
     if (searchAirport === 1) {
+      // 출발 공항 설정
       setDepartInfo({
         ...departInfo,
         itineraryNo: itineraryNo,
@@ -52,7 +72,9 @@ const ForeignAirportItem = (props) => {
         icon: "success",
         text: "출발 공항으로 설정되었습니다.",
       });
+      setSearchPlaceList([]);
     } else if (searchAirport === 2) {
+      // 도착 공항 설정
       setArrivalInfo({
         ...arrivalInfo,
         itineraryNo: itineraryNo,
@@ -72,6 +94,7 @@ const ForeignAirportItem = (props) => {
         icon: "success",
         text: "도착 공항으로 설정되었습니다.",
       });
+      setSearchPlaceList([]);
     }
   };
 

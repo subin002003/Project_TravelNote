@@ -388,6 +388,11 @@
   margin: 0;
   padding: 0;
 }
+.airport-list-title {
+  margin: 10px;
+  font-size: 14px;
+  font-weight: 700;
+}
 .airport-list {
   height: 250px;
   width: 330px;

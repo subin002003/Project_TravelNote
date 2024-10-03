@@ -162,6 +162,7 @@ const ForeignPlanMain = () => {
         setMap={setMap}
         regionInfo={regionInfo}
         searchKeyword={searchKeyword}
+        setSearchKeyword={setSearchKeyword}
         setSearchPlaceList={setSearchPlaceList}
         selectedPosition={selectedPosition}
         setSelectedPosition={setSelectedPosition}

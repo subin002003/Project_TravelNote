@@ -6,6 +6,7 @@ const ForeignPlanMap = (props) => {
     setMap,
     regionInfo,
     searchKeyword,
+    setSearchKeyword,
     setSearchPlaceList,
     selectedPosition,
     setSelectedPosition,
@@ -171,8 +172,10 @@ const ForeignPlanMap = (props) => {
         });
         setMarkerArr(newMarkerArr);
         setSearchPlaceList(resultList);
+        setSearchKeyword("");
       } else {
         setSearchPlaceList([]);
+        setSearchKeyword("");
       }
     });
   }, [searchKeyword]);
@@ -224,8 +227,12 @@ const ForeignPlanMap = (props) => {
         });
         setMarkerArr(newMarkerArr);
         setSearchPlaceList(resultList);
+        setSearchDepartAirport("");
+        setSearchArrivalAirport("");
       } else {
         setSearchPlaceList([]);
+        setSearchDepartAirport("");
+        setSearchArrivalAirport("");
       }
     });
   }, [searchDepartAirport, searchArrivalAirport]);
