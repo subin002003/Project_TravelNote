@@ -11,19 +11,46 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil";
 import Swal from "sweetalert2";
 import ChannelTalk from "./ChannelTalk";
+// mui-select
+import OutlinedInput from '@mui/material/OutlinedInput';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
+const sortOptions = [
+  { label: '상품 찜이 많은 순', value: 'mostLiked' },
+  { label: '등록 최신 순', value: 'newest' },
+];
 
 const ProductList = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const [productList, setProductList] = useState([]);
   const [reqPage, setReqPage] = useState(1);
   const [pi, setPi] = useState({});
+
   // 로그인 회원 정보
   const isLogin = useRecoilValue(isLoginState);
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
   const userEmail = loginEmail;
   const [userType, setUserType] = useRecoilState(userTypeState);
 
+  // 상품 리스트 조회
+  const fetchProductList = (sortOption) => {
+    const requestUrl = `${backServer}/product/list/${reqPage}?sort=${sortOption}`; // 정렬 조건에 따른 URL 설정
+    axios.get(requestUrl)
+      .then((res) => {
+        setProductList(res.data.list); // 상품 목록 업데이트
+        setPi(res.data.pi); // 페이지 정보 업데이트
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  // 상품 리스트 조회
   useEffect(() => {
+    fetchProductList('newest'); // 처음에 '등록 최신 순'으로 데이터 요청
+
     const request =
       isLogin && userEmail
         ? axios.get(`${backServer}/product/list/${reqPage}/${userEmail}`)
@@ -38,36 +65,60 @@ const ProductList = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [userEmail, reqPage]);
+  }, [userEmail, reqPage, sortOptions]); // sortOption이나 reqPage가 변경될 때마다 실행
 
-  // useEffect(() => {
-  //   if (userEmail) {
-  //     // userEmail이 존재하는 경우에만 요청
-  //     axios
-  //       .get(`${backServer}/product/list/${reqPage}/${userEmail}`)
-  //       .then((res) => {
-  //         console.log(res.data);
-  //         setProductList(res.data.list);
-  //         setPi(res.data.pi);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }
-  // }, [userEmail, reqPage]);
+  // 각 정렬 옵션에 따른 클릭 이벤트 처리
+  const handleSortClick = (sortOption) => {
+    console.log(sortOption);
 
-  // console.log(`${backServer}/product/list/${reqPage}/${userEmail}`);
+    if (sortOption === "mostLiked") {
+      axios.get(`${backServer}/product/list/${reqPage}/${userEmail}/${sortOption}`)
+        .then((res) => {
+          console.log(res.data);
+          setProductList(res.data.list);
+          setPi(res.data.pi);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+
+    }
+    fetchProductList(sortOption); // 해당 정렬 조건으로 상품 목록 요청
+  };
 
   return (
     <section style={{ margin: "50px auto" }} className="section product-list">
-      {isLogin === true && userType === 2 ? (
-        <Link to="/product/write" className="btn-primary writeBtn">
-          상품 등록
-        </Link>
-      ) : (
-        ""
-      )}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        {isLogin === true && userType === 2 ? (
+          <Link to="/product/write" className="btn-primary writeBtn">
+            상품 등록
+          </Link>
+        ) : (
+          ""
+        )}
+        {/* 정렬을 위한 Select 대신 직접적인 클릭 이벤트 처리 */}
+        <FormControl sx={{ m: 1, width: '150px' }}>
+          <Select
+            displayEmpty
+            input={<OutlinedInput />}
+            defaultValue="" // 기본값 설정
+            renderValue={() => <em>정렬 기준 선택</em>}
+          >
+            {sortOptions.map((option) => (
+              <MenuItem
+                key={option.value}
+                value={option.value}
+                onClick={() => handleSortClick(option.value)} // onClick으로 axios 요청
+              >
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
 
+      {/* 상품 리스트 */}
       <div className="product-list-wrap">
         <ul className="posting-wrap">
           {productList.map((product, i) => {
@@ -125,14 +176,14 @@ const ProductItem = (props) => {
       const newLikeStatus = !productLike; // 좋아요 상태 토글
       const request = newLikeStatus
         ? axios.post(
-            // 리뷰 좋아요
-            `${backServer}/product/${productNo}/insertWishLike/${userEmail}`,
-            { productLike: 1 }
-          )
+          // 리뷰 좋아요
+          `${backServer}/product/${productNo}/insertWishLike/${userEmail}`,
+          { productLike: 1 }
+        )
         : axios.delete(
-            // 리뷰 좋아요 취소
-            `${backServer}/product/${productNo}/deleteWishLike/${userEmail}?productLike=1`
-          );
+          // 리뷰 좋아요 취소
+          `${backServer}/product/${productNo}/deleteWishLike/${userEmail}?productLike=1`
+        );
 
       request
         .then((res) => {

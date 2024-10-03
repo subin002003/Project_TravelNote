@@ -53,6 +53,31 @@ public class ProductService {
 		map.put("pi", pi);
 		return map;
 	}
+	
+	public Map selectProductListSortOption(int reqPage, String userEmail, String sortOption) {
+	    // 게시물 조회 및 페이징에 필요한 데이터를 모두 취합
+	    int numPerPage = 4;                        // 한 페이지당 출력할 상품 갯수
+	    int pageNaviSize = 7;                      // 페이지네비 길이
+	    int totalCount = productDao.totalCount();  // 전체 상품 수
+	    // 페이징에 필요한 값들을 연산해서 객체로 리턴받음
+	    PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
+
+	    List<ProductDTO> list; // Product 타입으로 리스트 선언
+
+	    if (sortOption.equals("mostLiked")) {
+	        list = productDao.selectProductListMostLiked(pi, userEmail);
+	    } else if (sortOption.equals("newest")) {
+	        list = productDao.selectProductListNewest(pi, userEmail);
+	    } else {
+	        list = list = productDao.selectProductListEmail(pi, userEmail); // 기본값으로 빈 리스트 할당
+	    }
+
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("list", list);
+	    map.put("pi", pi);
+	    return map;
+	}
+
 
 	// 패키지 상품 등록
 	@Transactional
@@ -241,4 +266,5 @@ public class ProductService {
 		int productLikeCount = productDao.selectProductLikeCount(productNo);
 		return productLikeCount;
 	}
+
 }

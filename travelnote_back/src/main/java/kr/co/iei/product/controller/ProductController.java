@@ -61,6 +61,14 @@ public class ProductController {
 		return ResponseEntity.ok(map);
 	}
 	
+	// 패키지 상품 목록(이메일 있으면)
+	@GetMapping(value="/list/{reqPage}/{userEmail}/{sortOption}")
+	public ResponseEntity<Map> list(@PathVariable int reqPage, @PathVariable String userEmail, @PathVariable String sortOption){
+		// 조회 결과는 게시물목록, pageNavi생성 시 필요한 데이터들
+		Map map = productService.selectProductListSortOption(reqPage, userEmail, sortOption);
+		return ResponseEntity.ok(map);
+	}
+	
 	// 첨부파일
 	@PostMapping(value="/editorImage")
 	public ResponseEntity<String> editorImage(@ModelAttribute MultipartFile image){

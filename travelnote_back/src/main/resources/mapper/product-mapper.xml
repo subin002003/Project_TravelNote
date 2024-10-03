@@ -24,7 +24,6 @@
 	         from product where product_status=1 order by product_no desc) p)
 	where rnum between #{start} and #{end}
   </select>
-  
 
   <select id="selectProductListEmail" resultType="product">
     SELECT p.*, 
@@ -67,6 +66,83 @@
     <if test="userEmail != null">
         AND w.product_no IS NOT NULL  
     </if> -->
+  </select>
+  
+  <select id="selectProductListMostLiked" resultType="product">
+  	SELECT p.*, 
+       COALESCE(w.product_like, 0) AS productLike,
+       COALESCE(likeCount.total_like_count, 0) AS productLikeCount
+	FROM (
+	    SELECT rownum AS rnum, 
+	           p.*
+	    FROM (
+	        SELECT 
+	            product_no,
+	            product_name,
+	            product_sub_name,
+	            product_thumb,
+	            product_price,
+	            product_info,
+	            product_latitude,
+	            product_longitude,
+	            product_writer,
+	            product_status,
+	            TO_CHAR(enroll_date, 'yyyy-mm-dd') AS enroll_date
+	        FROM product 
+	        WHERE product_status = 1 
+	        ORDER BY product_no DESC
+		    ) p
+		) p
+		LEFT JOIN (
+		    SELECT product_no, user_no, 1 AS product_like 
+		    FROM wish 
+		    WHERE user_no = (SELECT user_no FROM user_tbl WHERE user_email = #{userEmail})
+		) w ON p.product_no = w.product_no
+		LEFT JOIN (
+		    SELECT product_no, COUNT(*) AS total_like_count 
+		    FROM wish 
+		    GROUP BY product_no
+		) likeCount ON p.product_no = likeCount.product_no
+		WHERE rnum BETWEEN #{pi.start} AND #{pi.end}
+		ORDER BY productLikeCount DESC
+  </select>
+  
+  <select id="selectProductListNewest" resultType="product">
+    SELECT p.*, 
+           COALESCE(w.product_like, 0) AS productLike,         -- 좋아요 여부 (0 또는 1)
+           COALESCE(likeCount.total_like_count, 0) AS productLikeCount  -- 좋아요 수
+    FROM (
+        SELECT rownum AS rnum, 
+               p.*
+        FROM (
+            SELECT 
+                product_no,
+                product_name,
+                product_sub_name,
+                product_thumb,
+                product_price,
+                product_info,
+                product_latitude,
+                product_longitude,
+                product_writer,
+                product_status,
+                TO_CHAR(enroll_date, 'yyyy-mm-dd') AS enroll_date
+            FROM product 
+            WHERE product_status = 1 
+            ORDER BY product_no DESC
+        ) p
+    ) p
+    LEFT JOIN (
+        SELECT product_no, user_no, 1 AS product_like 
+        FROM wish 
+        WHERE user_no = (SELECT user_no FROM user_tbl WHERE user_email = #{userEmail})
+    ) w ON p.product_no = w.product_no
+    LEFT JOIN (
+        SELECT product_no, COUNT(*) AS total_like_count 
+        FROM wish 
+        GROUP BY product_no
+    ) likeCount ON p.product_no = likeCount.product_no
+    WHERE rnum BETWEEN #{pi.start} AND #{pi.end}
   </select>
   
   <insert id="insertProduct">
