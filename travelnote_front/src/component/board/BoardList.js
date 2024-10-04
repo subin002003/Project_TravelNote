@@ -16,9 +16,7 @@ const BoardList = () => {
 
   useEffect(() => {
     axios
-      .get(
-        `${backServer}/board/list/${reqPage}?searchTerm=${searchTerm}&searchFilter=${searchFilter}`
-      )
+      .get(`${backServer}/board/list/${reqPage}`)
       .then((res) => {
         setBoardList(res.data.list);
         setPi(res.data.pi);
@@ -33,7 +31,7 @@ const BoardList = () => {
     // 검색어와 필터가 변경된 경우 API 호출
     axios
       .get(
-        `${backServer}/board/list/${reqPage}?searchTerm=${searchTerm}&searchFilter=${searchFilter}`
+        `${backServer}/board/search/${reqPage}?searchTerm=${searchTerm}&searchFilter=${searchFilter}`
       )
       .then((res) => {
         setBoardList(res.data.list);
@@ -46,7 +44,7 @@ const BoardList = () => {
 
   return (
     <section className="board-wrap">
-      <h1 className="board-title" style={{ marginBottom: "15px" }}>
+      <h1 className="board-title" style={{ marginBottom: "5px" }}>
         자유게시판
       </h1>
       <div className="board-horizontal-between-space">
