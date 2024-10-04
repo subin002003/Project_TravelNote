@@ -10,6 +10,7 @@ import PersonalBoardAnswerWrite from "./PersonalBoardAnswerWrite";
 import PersonalBoardAnswerUpdate from "./PersonalBoardAnswerUpdate";
 import ManageBoard from "./ManageBoard";
 import ManageUser from "./ManageUser";
+import MyBoard from "./MyBoard";
 
 const MypageMain = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const MypageMain = () => {
     { url: "#", text: "내 예약" },
     { url: "#", text: "내 일정" },
     { url: "#", text: "공유된 일정" },
-    { url: "#", text: "내가 작성한 글" },
+    { url: "myboard", text: "내가 작성한 글" },
   ]);
 
   // 로그인 상태 체크 및 리다이렉트
@@ -93,7 +94,7 @@ const MypageMain = () => {
           <section className="section">
             <Routes>
               <Route path="info" element={<MyInfo />} />
-
+              <Route path="myboard" element={<MyBoard />} />
               <Route path="admin/manageBoard" element={<ManageBoard />} />
               <Route path="admin/manageUser" element={<ManageUser />} />
 

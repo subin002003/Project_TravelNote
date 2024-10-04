@@ -143,6 +143,24 @@ public class BoardService {
 		boardDao.boardViewReport(userNick, boardNo);
 		
 	}
+	//오건하 작성
+	public Map selectReportBoardList(int boardReqPage) {
+		int numPerPage = 5;
+		int pageNaviSize = 5;
+		int totalCount = boardDao.reportTotalCount();
+		PageInfo pi = pageUtil.getPageInfo(boardReqPage, numPerPage, pageNaviSize, totalCount);
+		List list = boardDao.selectReportBoard(pi);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list", list);
+		map.put("pi",pi);
+		return map;
+	}
+	//오건하 작성
+	@Transactional
+	public int updateBoardStatus(int boardNo) {
+		int result = boardDao.updateBoardStatus(boardNo);
+		return result;
+	}
 	
 	
 	   

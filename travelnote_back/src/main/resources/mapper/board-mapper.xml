@@ -188,6 +188,51 @@
 		)
 	</insert>
 	 
+	 <!-- 오건하 작성 -->
+	 <select id="reportTotalCount" resultType="int">
+		select count(*) as total
+		from (
+		    select board_no
+		    from board_report
+		    group by board_no
+		    having count(*) >= 3
+		) subquery
+	 </select>
+	 
+	 <!-- 오건하 작성 -->
+	 <select id="selectReportBoard" resultType="board">
+			select * 
+			from (
+			    select rownum as rnum, result.* 
+			    from (
+			        select 
+			            b.board_no, 
+			            b.board_title, 
+			            b.board_writer, 
+			            to_char(b.board_date,'yyyy-mm-dd') as board_date,
+			            b.board_status, 
+			            count(br.board_no) as report_count
+			        from board_report br
+			        inner join board b 
+			            on br.board_no = b.board_no
+			        group by 
+			            b.board_no, 
+			            b.board_title, 
+			            b.board_writer, 
+			            b.board_date,
+			            b.board_status
+			        having count(br.board_no) >= 3
+			        order by b.board_no desc
+			    ) result
+			    where rownum &lt; #{end}
+			) 
+			where rnum >= #{start}
+	 </select>
+	 <!-- 오건하 작성 -->
+	 <update id="updateBoardStatus">
+	 	update board set board_status = 0 where board_no = #{boardNo}
+	 </update>
+	 
 </mapper>
 
 
