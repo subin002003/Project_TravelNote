@@ -19,8 +19,6 @@ const SchedulePlanList = (props) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
   const params = useParams();
-  const cityName = params.cityName;
-  const regionNo = params.regionNo;
   const itineraryNo = params.itineraryNo;
   const selectedDate = totalPlanDates[selectedDay - 1];
   const [planList, setPlanList] = useState([]); // 조회 중인 일정 목록 배열
@@ -110,6 +108,11 @@ const SchedulePlanList = (props) => {
     }
   };
 
+  // 일정 관리 페이지로 이동
+  const handleManageClick = () => {
+    navigate(`/Domestic/share/${itineraryNo}`);
+  };
+
   // 일정 선택 처리
   const handleSelectPlan = (plan) => {
     if (selectedPlans.includes(plan)) {
@@ -120,7 +123,7 @@ const SchedulePlanList = (props) => {
       setSelectedPlans([...selectedPlans, plan]); // 선택 추가
     }
   };
-  console.log(regionNo, cityName);
+
   return (
     <div className="schedule-plan-wrap">
       <div className="schedule-list">
@@ -132,12 +135,9 @@ const SchedulePlanList = (props) => {
           {itinerary.itineraryStartDate} ~ {itinerary.itineraryEndDate}
         </h4>
         <h4>선택된 날짜: {selectedDate}</h4>
-        <Link
-          to={`/Domestic/share/${cityName}/${regionNo}/${itineraryNo}`}
-          className="share-button"
-        >
+        <button onClick={handleManageClick} className="share-button">
           여행 관리
-        </Link>
+        </button>
       </div>
       <div className="schedule-box">
         {totalPlanDates.length > 0 ? (

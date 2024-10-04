@@ -89,7 +89,7 @@ function App() {
           <Route path="/board/*" element={<BoardMain />} />
           <Route path="/reviewBoard/*" element={<ReviewBoardMain />} />
           <Route
-            path="/Domestic/share/:cityName/:regionNo/:itineraryNo"
+            path="/Domestic/share/:itineraryNo"
             element={<DomesticPlanShare />}
           />
         </Routes>
