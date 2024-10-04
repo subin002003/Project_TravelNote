@@ -26,6 +26,7 @@ import CustomerServiceMain from "./component/customerService/CustomerServiceMain
 import ReviewBoardMain from "./component/reviewBoard/ReviewBoardMain";
 import Payment from "./component/payment/Payment";
 import TravelReservation from "./component/product/reservation/TravelReservation";
+import DomesticPlanShare from "./component/Domestic/DomesticPlanShare";
 
 function App() {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -87,6 +88,10 @@ function App() {
           <Route path="/schedule/:itineraryNo" element={<Schedule />} />
           <Route path="/board/*" element={<BoardMain />} />
           <Route path="/reviewBoard/*" element={<ReviewBoardMain />} />
+          <Route
+            path="/Domestic/share/:cityName/:regionNo/:itineraryNo"
+            element={<DomesticPlanShare />}
+          />
         </Routes>
       </main>
 

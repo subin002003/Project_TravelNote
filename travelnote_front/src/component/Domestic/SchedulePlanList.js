@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import SchedulePlanButton from "./SchedulePlanButton";
 import SchedulePlanTime from "./SchedulePlanTime";
 import Swal from "sweetalert2";
@@ -18,6 +18,10 @@ const SchedulePlanList = (props) => {
 
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
+  const params = useParams();
+  const cityName = params.cityName;
+  const regionNo = params.regionNo;
+  const itineraryNo = params.itineraryNo;
   const selectedDate = totalPlanDates[selectedDay - 1];
   const [planList, setPlanList] = useState([]); // 조회 중인 일정 목록 배열
   const [timeOptionsArr, setTimeOptionsArr] = useState([]); // 시간 선택 옵션 용 배열
@@ -116,7 +120,7 @@ const SchedulePlanList = (props) => {
       setSelectedPlans([...selectedPlans, plan]); // 선택 추가
     }
   };
-
+  console.log(regionNo, cityName);
   return (
     <div className="schedule-plan-wrap">
       <div className="schedule-list">
@@ -128,6 +132,12 @@ const SchedulePlanList = (props) => {
           {itinerary.itineraryStartDate} ~ {itinerary.itineraryEndDate}
         </h4>
         <h4>선택된 날짜: {selectedDate}</h4>
+        <Link
+          to={`/Domestic/share/${cityName}/${regionNo}/${itineraryNo}`}
+          className="share-button"
+        >
+          여행 관리
+        </Link>
       </div>
       <div className="schedule-box">
         {totalPlanDates.length > 0 ? (

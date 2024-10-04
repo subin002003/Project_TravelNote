@@ -82,5 +82,13 @@ public class DomesticService {
 		int result = domesticDao.insertPlan(plan);
 		return result;
 	}
+	public List<ItineraryDTO> scheduleUpdate(int regionNo) {
+		List<ItineraryDTO> regions = domesticDao.scheduleUpdate(regionNo);
+		return regions;
+	}
+	public void updateItinerary(int itineraryNo, ItineraryDTO itineraryDTO) {
+	    domesticDao.updateItinerary(itineraryNo, itineraryDTO);
+	}
+
 
 }
