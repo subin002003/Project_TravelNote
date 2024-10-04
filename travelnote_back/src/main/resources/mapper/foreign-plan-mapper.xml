@@ -58,6 +58,7 @@
 	<select id="selectPlanList" resultType="foreignPlan">
 		select * from plan where
 		itinerary_no = #{itineraryNo} and plan_day = #{planDay}
+		order by plan_seq
 	</select>
 
 	<update id="updatePlanInfo">

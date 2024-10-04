@@ -55,6 +55,11 @@ const ForeignPlanSearch = (props) => {
 
   // 출발 항공편 인풋 핸들러
   const changeDepartInfo = (e) => {
+    if (e.target.id === "planTime") {
+      if (checkTime) {
+        console.log(1);
+      }
+    }
     setDepartInfo({ ...departInfo, [e.target.id]: e.target.value });
     if (e.keyCode === 13) {
       setSearchDepartAirport(e.target.value);
@@ -71,43 +76,55 @@ const ForeignPlanSearch = (props) => {
     }
   };
 
+  // 시간 정보 검증 함수
+  const checkTime = () => {
+    // const departTime = Number((departInfo.planTime + "").trim().slice(0, 2));
+    // const arrivalTime = Number((arrivalInfo.planTime + "").trim().slice(0, 2));
+    // if (departTime > arrivalTime) {
+    //   console.log("출발 시간이 더 느림!!!!");
+    //   return;
+    // } else if (departTime === arrivalTime) {
+    //   console.log("분 비교할 것");
+    //   return;
+    // } else {
+    //   console.log("통과");
+    // }
+    return true;
+  };
+
   // 항공편 정보 저장
   const addFlightInfo = () => {
-    console.log(departInfo);
-    console.log(arrivalInfo);
     var warningType;
     var warningName;
-    // if (!departInfo.planName || !arrivalInfo.planName) {
-    //   warningName = "공항";
-    //   if (!departInfo.planName) {
-    //     warningType = "출발";
-    //   } else {
-    //     warningType = "도착";
-    //   }
-    // } else if (!departInfo.planTime || !arrivalInfo.planTime) {
-    //   warningName = "시간";
-    //   if (!departInfo.planTime) {
-    //     warningType = "출발";
-    //   } else if (!arrivalInfo.planTime) {
-    //     warningType = "도착";
-    //   }
-    // } else if {
-    // 시간 검증
-    // }
-    // Swal.fire({
-    //   icon: "warning",
-    //   text: warningType + " " + warningName + "을 설정해 주세요.",
-    // });
 
-    const departTime = Number((departInfo.planTime + "").trim().slice(0, 2));
-    const arrivalTime = Number((arrivalInfo.planTime + "").trim().slice(0, 2));
-    if (departTime > arrivalTime) {
-      console.log("출발 시간이 더 느림!!!!");
-    } else if (departTime === arrivalTime) {
-      console.log("분 비교할 것");
-    } else {
-      console.log("통과");
+    // 공항 정보 입력 여부 검증
+    if (
+      departInfo.planName &&
+      departInfo.planTime &&
+      arrivalInfo.planName &&
+      arrivalInfo.planTime
+    ) {
+      console.log("서버 작업");
+      return;
+    } else if (!departInfo.planName || !arrivalInfo.planName) {
+      warningName = "공항";
+      if (!departInfo.planName) {
+        warningType = "출발";
+      } else {
+        warningType = "도착";
+      }
+    } else if (!departInfo.planTime || !arrivalInfo.planTime) {
+      warningName = "시간";
+      if (!departInfo.planTime) {
+        warningType = "출발";
+      } else if (!arrivalInfo.planTime) {
+        warningType = "도착";
+      }
     }
+    Swal.fire({
+      icon: "warning",
+      text: warningType + " " + warningName + "을 설정해 주세요.",
+    });
   };
 
   return (
