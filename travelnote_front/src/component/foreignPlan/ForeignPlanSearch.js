@@ -55,11 +55,6 @@ const ForeignPlanSearch = (props) => {
 
   // 출발 항공편 인풋 핸들러
   const changeDepartInfo = (e) => {
-    if (e.target.id === "planTime") {
-      if (checkTime) {
-        console.log(1);
-      }
-    }
     setDepartInfo({ ...departInfo, [e.target.id]: e.target.value });
     if (e.keyCode === 13) {
       setSearchDepartAirport(e.target.value);
@@ -76,36 +71,34 @@ const ForeignPlanSearch = (props) => {
     }
   };
 
-  // 시간 정보 검증 함수
-  const checkTime = () => {
-    // const departTime = Number((departInfo.planTime + "").trim().slice(0, 2));
-    // const arrivalTime = Number((arrivalInfo.planTime + "").trim().slice(0, 2));
-    // if (departTime > arrivalTime) {
-    //   console.log("출발 시간이 더 느림!!!!");
-    //   return;
-    // } else if (departTime === arrivalTime) {
-    //   console.log("분 비교할 것");
-    //   return;
-    // } else {
-    //   console.log("통과");
-    // }
-    return true;
-  };
+  // 익일 도착 선택 버튼
+  useEffect(() => {
+    if (isNextDayButtonChecked) {
+      setArrivalInfo({
+        ...arrivalInfo,
+        planDay: selectedDay + 1,
+        planDate: totalPlanDates[selectedDay],
+      });
+    } else {
+      setArrivalInfo({
+        ...arrivalInfo,
+        planDay: selectedDay,
+        planDate: totalPlanDates[selectedDay - 1],
+      });
+    }
+  }, [isNextDayButtonChecked]);
 
-  // 항공편 정보 저장
-  const addFlightInfo = () => {
+  // 입력값 확인
+  const checkInput = () => {
     var warningType;
     var warningName;
-
-    // 공항 정보 입력 여부 검증
     if (
       departInfo.planName &&
       departInfo.planTime &&
       arrivalInfo.planName &&
       arrivalInfo.planTime
     ) {
-      console.log("서버 작업");
-      return;
+      return true;
     } else if (!departInfo.planName || !arrivalInfo.planName) {
       warningName = "공항";
       if (!departInfo.planName) {
@@ -125,6 +118,52 @@ const ForeignPlanSearch = (props) => {
       icon: "warning",
       text: warningType + " " + warningName + "을 설정해 주세요.",
     });
+    return false;
+  };
+
+  // 시간 입력값 유효성 검사
+  const checkTime = () => {
+    const departTime = Number((departInfo.planTime + "").trim().slice(0, 2));
+    const arrivalTime = Number((arrivalInfo.planTime + "").trim().slice(0, 2));
+    if (departTime < arrivalTime) {
+      return true;
+    } else if (isNextDayButtonChecked) {
+      return true;
+    } else if (departTime === arrivalTime) {
+      const departMin = Number((departInfo.planTime + "").trim().slice(3, 5));
+      const arrivalMin = Number((arrivalInfo.planTime + "").trim().slice(3, 5));
+      if (departMin < arrivalMin) {
+        return true;
+      } else if (departMin === arrivalMin) {
+        Swal.fire({
+          icon: "info",
+          html: "출발 시간과 도착 시간이 동일합니다.<br>익일 도착인 경우 익일 도착을 체크해 주세요.",
+        });
+        return false;
+      }
+    }
+    Swal.fire({
+      icon: "info",
+      html: "출발 시간이 도착 시간보다 느립니다.<br>익일 도착인 경우 익일 도착을 체크해 주세요.",
+    });
+    return false;
+  };
+
+  // 항공편 정보 저장
+  const addFlightInfo = () => {
+    if (!checkInput()) return;
+    if (!checkTime()) return;
+    const flightsInfo = [departInfo, arrivalInfo];
+    axios
+      .post(`${backServer}/foreign/addFlights`, flightsInfo)
+      .then(() => {})
+      .catch(() => {});
+    // const checkInputResult = checkInput();
+    // console.log(checkInputResult);
+    // if (checkInputResult) {
+    // }
+    // const checkTimeResult = checkTime();
+    // console.log(checkTimeResult);
   };
 
   return (
@@ -229,7 +268,7 @@ const FlightInputBox = (props) => {
         <h4>출발 공항</h4>
         <input
           id="departAirport"
-          placeholder="출발 공항을 입력해 주세요."
+          placeholder="지도에서 출발 공항 찾기"
           value={departInfo.departAirport}
           onChange={changeDepartInfo}
           onKeyUp={changeDepartInfo}
@@ -239,7 +278,7 @@ const FlightInputBox = (props) => {
         <h4>도착 공항</h4>
         <input
           id="arrivalAirport"
-          placeholder="도착 공항을 입력해 주세요."
+          placeholder="지도에서 도착 공항 찾기"
           value={arrivalInfo.arrivalAirport}
           onChange={changeArrivalInfo}
           onKeyUp={changeArrivalInfo}
@@ -284,29 +323,33 @@ const FlightInputBox = (props) => {
         </div>
       </div>
       <div className="flight-input-box next-day-checkbox">
-        <div>
-          <label className="next-day-check">
-            <input
-              id="next-day-check"
-              name="arriveNextDay"
-              type="checkbox"
-              checked={isNextDayButtonChecked}
-              onChange={() => {
-                setIsNextDayButtonChecked(!isNextDayButtonChecked);
-              }}
-            ></input>
-            <div>
-              <p>익일 도착</p>
-            </div>
-            <div
-              className={
-                "check-icon" + (isNextDayButtonChecked ? " icon-checked" : "")
-              }
-            >
-              <span className="material-icons">done</span>
-            </div>
-          </label>
-        </div>
+        {selectedDay != totalPlanDates.length ? (
+          <div>
+            <label className="next-day-check">
+              <input
+                id="next-day-check"
+                name="arriveNextDay"
+                type="checkbox"
+                checked={isNextDayButtonChecked}
+                onChange={() => {
+                  setIsNextDayButtonChecked(!isNextDayButtonChecked);
+                }}
+              ></input>
+              <div>
+                <p>익일 도착</p>
+              </div>
+              <div
+                className={
+                  "check-icon" + (isNextDayButtonChecked ? " icon-checked" : "")
+                }
+              >
+                <span className="material-icons">done</span>
+              </div>
+            </label>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
       <div className="airport-list-box">
         {searchPlaceList.length > 0 ? (

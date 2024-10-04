@@ -90,7 +90,17 @@ public class ForeignPlanService {
 	// 일정에 장소 추가
 	@Transactional
 	public int insertPlace(ForeignPlanDTO plan) {
-		int result = foreignPlanDao.insertPlace(plan);
+		int result = foreignPlanDao.insertPlan(plan);
+		return result;
+	}
+
+	// 일정에 항공편 추가
+	@Transactional
+	public int insertFlights(ArrayList<ForeignPlanDTO> flightInfo) {
+		int result = 0;
+		for (int i = 0; i < flightInfo.size(); i++) {
+			result += foreignPlanDao.insertPlan(flightInfo.get(i));
+		}
 		return result;
 	}
 

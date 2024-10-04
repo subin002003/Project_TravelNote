@@ -56,7 +56,7 @@ const PlanItem = (props) => {
         </div>
       </div>
       <div className="plan-info-box">
-        <div className="plan-name">{plan.planName}</div>
+        <div className="plan-place-name">{plan.planName}</div>
         <div className="plan-memo">
           <input
             id="planMemo"
