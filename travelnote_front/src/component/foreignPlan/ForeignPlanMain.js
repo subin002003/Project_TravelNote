@@ -37,8 +37,11 @@ const ForeignPlanMain = () => {
   const [isPlanAdded, setIsPlanAdded] = useState(false);
   const [departInfo, setDepartInfo] = useState({});
   const [arrivalInfo, setArrivalInfo] = useState({});
+  const [searchDepartAirport, setSearchDepartAirport] = useState("");
+  const [searchArrivalAirport, setSearchArrivalAirport] = useState();
   const [timeOptionsArr, setTimeOptionsArr] = useState([]); // 시간 선택 옵션 용 배열
   const [isNextDayButtonChecked, setIsNextDayButtonChecked] = useState(false);
+  const [searchAirport, setSearchAirport] = useState(0); // 1이면 Departure, 2면 Arrival
 
   // 일정 정보 조회
   useEffect(() => {
@@ -146,6 +149,12 @@ const ForeignPlanMain = () => {
           timeOptionsArr={timeOptionsArr}
           isNextDayButtonChecked={isNextDayButtonChecked}
           setIsNextDayButtonChecked={setIsNextDayButtonChecked}
+          searchDepartAirport={searchDepartAirport}
+          setSearchDepartAirport={setSearchDepartAirport}
+          searchArrivalAirport={searchArrivalAirport}
+          setSearchArrivalAirport={setSearchArrivalAirport}
+          searchAirport={searchAirport}
+          setSearchAirport={setSearchAirport}
         />
       )}
       <ForeignPlanMap
@@ -153,6 +162,7 @@ const ForeignPlanMain = () => {
         setMap={setMap}
         regionInfo={regionInfo}
         searchKeyword={searchKeyword}
+        setSearchKeyword={setSearchKeyword}
         setSearchPlaceList={setSearchPlaceList}
         selectedPosition={selectedPosition}
         setSelectedPosition={setSelectedPosition}
@@ -162,6 +172,11 @@ const ForeignPlanMain = () => {
         setDepartInfo={setDepartInfo}
         arrivalInfo={arrivalInfo}
         setArrivalInfo={setArrivalInfo}
+        searchDepartAirport={searchDepartAirport}
+        setSearchDepartAirport={setSearchDepartAirport}
+        searchArrivalAirport={searchArrivalAirport}
+        setSearchArrivalAirport={setSearchArrivalAirport}
+        searchAirport={searchAirport}
       />
     </div>
   );

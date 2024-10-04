@@ -6,6 +6,7 @@ const ForeignPlanMap = (props) => {
     setMap,
     regionInfo,
     searchKeyword,
+    setSearchKeyword,
     setSearchPlaceList,
     selectedPosition,
     setSelectedPosition,
@@ -15,6 +16,11 @@ const ForeignPlanMap = (props) => {
     setDepartInfo,
     arrivalInfo,
     setArrivalInfo,
+    searchDepartAirport,
+    setSearchDepartAirport,
+    searchArrivalAirport,
+    setSearchArrivalAirport,
+    searchAirport,
   } = props;
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   const mapRef = useRef(null);
@@ -121,10 +127,7 @@ const ForeignPlanMap = (props) => {
   // 장소 검색
   useEffect(() => {
     if (!map || !searchKeyword) return;
-    // 서비스 객체
     const mapService = new window.google.maps.places.PlacesService(map);
-
-    // 요청 정보 담는 객체
     const request = {
       location: {
         lat: Number(regionInfo.regionLatitude),
@@ -169,24 +172,42 @@ const ForeignPlanMap = (props) => {
         });
         setMarkerArr(newMarkerArr);
         setSearchPlaceList(resultList);
+        setSearchKeyword("");
       } else {
         setSearchPlaceList([]);
+        setSearchKeyword("");
       }
     });
   }, [searchKeyword]);
 
-  // 출발 공항 검색
+  // 공항 검색
   useEffect(() => {
-    if (!map || departInfo.departAirport === "") return;
-    // 서비스 객체
+    if (!map || (searchDepartAirport === "" && searchArrivalAirport === ""))
+      return;
+    var queryKeyword = "";
+    if (searchAirport === 1) {
+      queryKeyword = searchDepartAirport;
+    } else if (searchAirport === 2) {
+      queryKeyword = searchArrivalAirport;
+    } else {
+      return;
+    }
     const mapService = new window.google.maps.places.PlacesService(map);
 
-    // 요청 정보 담는 객체
     const request = {
-      query: departInfo.departAirport,
+      location: {
+        lat: Number(regionInfo.regionLatitude),
+        lng: Number(regionInfo.regionLongitude),
+      },
+      radius: 500,
+      query: queryKeyword,
       fields: ["name", "geometry", "place_id", "formatted_address", "photos"],
       language: "ko",
     };
+
+    markerArr.forEach((marker) => {
+      marker.setMap(null);
+    });
 
     // 검색 실행
     mapService.textSearch(request, (resultList, status) => {
@@ -194,20 +215,27 @@ const ForeignPlanMap = (props) => {
         status === window.google.maps.places.PlacesServiceStatus.OK &&
         resultList
       ) {
+        const bounds = new window.google.maps.LatLngBounds();
         // 마커 추가
-        resultList.map((place, index) => {
+        const newMarkerArr = resultList.map((place, index) => {
           const marker = new window.google.maps.Marker({
             position: place.geometry.location,
             map: map,
           });
+          bounds.extend(marker.position);
+          return marker;
         });
-        console.log(resultList);
+        setMarkerArr(newMarkerArr);
         setSearchPlaceList(resultList);
+        setSearchDepartAirport("");
+        setSearchArrivalAirport("");
       } else {
         setSearchPlaceList([]);
+        setSearchDepartAirport("");
+        setSearchArrivalAirport("");
       }
     });
-  }, [departInfo.departAirport]);
+  }, [searchDepartAirport, searchArrivalAirport]);
 
   return (
     <div className="plan-map-wrap">

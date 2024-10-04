@@ -17,6 +17,10 @@ public interface BoardDao {
 
 	List selectBoardList(PageInfo pi);
 
+	int searchTotalCount(@Param("searchTerm") String searchTerm, @Param("searchFilter") String searchFilter);
+	
+	List selectBoardSearchList(@Param("pi") PageInfo pi, @Param("searchTerm") String searchTerm, @Param("searchFilter") String searchFilter);
+	
 	int insertBoard(BoardDTO board);
 
 	int insertBoardFile(BoardFileDTO boardFile);
@@ -33,7 +37,7 @@ public interface BoardDao {
 
 	List<BoardFileDTO> selectBoardFile(int[] delBoardFileNo);
 
-	int deleteBoarFile(int[] delBoardFileNo);
+	int deleteBoardFile(int[] delBoardFileNo);
 
 	int insertLike(@Param("userNick") String userNick, @Param("boardNo") int boardNo);
 
@@ -72,6 +76,10 @@ public interface BoardDao {
 
 	//오건하 작성 2024-10-04
 	List selectMyBoardList(PageInfo pi);
+
+	
+
+	
 
 	
 

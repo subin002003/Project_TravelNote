@@ -61,7 +61,10 @@ const BoardWrite = () => {
 
   return (
     <section className="board-wrap">
-      <div className="board-title" style={{ marginBottom: "40px" }}>
+      <div
+        className="board-title"
+        style={{ marginBottom: "40px", fontWeight: "bold" }}
+      >
         자유게시판 작성
       </div>
 

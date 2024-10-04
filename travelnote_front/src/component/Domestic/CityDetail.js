@@ -24,13 +24,12 @@ const CityDetail = () => {
 
   // 도시 정보와 날씨 정보를 가져오는 useEffect
   useEffect(() => {
-    // 도시 정보 가져오기
+    console.log("Fetching city info..."); // 시작 로그
     axios
       .get(`${backServer}/domestic/view/${regionNo}`)
       .then((res) => {
+        console.log("City info fetched:", res.data); // 성공 로그
         setCityInfo(res.data);
-
-        // 도시 정보를 기반으로 날씨를 가져오는 함수 호출
         getWeatherForCity(res.data.regionName);
       })
       .catch((err) => {
@@ -142,7 +141,7 @@ const CityDetail = () => {
                   <input
                     type="date"
                     value={startDate}
-                    min={today} // 오늘 날짜 이후의 날짜만 선택 가능
+                    min={today}
                     onChange={(e) => setStartDate(e.target.value)}
                   />
                 </label>
@@ -162,7 +161,7 @@ const CityDetail = () => {
             </form>
           </>
         ) : (
-          <p>Loading...</p>
+          <p></p>
         )}
       </div>
     </div>

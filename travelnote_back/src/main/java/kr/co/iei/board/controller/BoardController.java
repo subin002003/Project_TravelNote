@@ -53,13 +53,26 @@ public class BoardController {
 	public String root;
 	
 	
-	
+	// 게시물 전체 조회
 	@GetMapping(value = "/list/{reqPage}")
 	public ResponseEntity<Map> list(@PathVariable int reqPage){
 		//조회결과는 게시물목록, pageNavi생성 시 필요한 데이터들
 		Map map = boardService.selectBoardList(reqPage);
 		return ResponseEntity.ok(map);
 	}
+	
+	// 게시물 검색 조회
+	@GetMapping(value = "/search/{reqPage}")
+	public ResponseEntity<Map> searchlist(@PathVariable int reqPage,  // URL 경로에서 페이지 번호 받기
+											@RequestParam String searchTerm, // 쿼리 파라미터에서 검색어 받기
+	        								@RequestParam String searchFilter) // 쿼리 파라미터에서 필터 타입 받기)
+	{
+		// 조회결과는 게시물 목록과 pageNavi 생성 시 필요한 데이터들
+		Map<String, Object> map = boardService.selectBoardSearchList(reqPage, searchTerm, searchFilter);
+	    return ResponseEntity.ok(map); // 결과를 JSON 형식으로 반환
+	}
+	
+	// 토스트에디터에서 이미지 삽입
 	@PostMapping(value="/editorImage")//formData()로 데이터를 보내면 @ModelAttribute로 받음 
 	public ResponseEntity<String> editorImage (@ModelAttribute MultipartFile image){
 		String savepath = root + "/editor/";
@@ -67,6 +80,7 @@ public class BoardController {
 		return ResponseEntity.ok("/editor/"+filepath);
 	}
 	
+	// 게시물 등록
 	@PostMapping
 	public ResponseEntity<Boolean> insertBoard(@ModelAttribute BoardDTO board, @ModelAttribute MultipartFile[] boardFile){
 		
@@ -86,12 +100,14 @@ public class BoardController {
 		return ResponseEntity.ok(result == 1+boardFileList.size());
 	}
 	
+	// 한 게시물 상세보기
 	@GetMapping(value = "/boardNo/{boardNo}")
 	public ResponseEntity<BoardDTO> selectOneBoard(@PathVariable int boardNo){
 		BoardDTO board = boardService.selectOneBoard(boardNo);
 		return ResponseEntity.ok(board);
 	}
 	
+	// 파일 다운로드
 	@GetMapping(value="/file/{boardFileNo}")
 	public ResponseEntity<Resource> filedown(@PathVariable int boardFileNo) throws FileNotFoundException{
 		BoardFileDTO boardFile = boardService.getBoardFile(boardFileNo);
@@ -113,6 +129,8 @@ public class BoardController {
 				.contentType(MediaType.APPLICATION_OCTET_STREAM)
 				.body(resource);
 	}
+	
+	// 게시물 삭제
 	@DeleteMapping(value="/{boardNo}")
 	public ResponseEntity<Integer> deleteBoard(@PathVariable int boardNo){
 		List<BoardFileDTO> delFileList = boardService.deleteBoard(boardNo);
@@ -127,6 +145,7 @@ public class BoardController {
 			return ResponseEntity.ok(0);
 		}
 	}
+	// 게시물 수정
 	@PatchMapping
 	public ResponseEntity<Boolean> updateBoard(@ModelAttribute BoardDTO board,
 												@ModelAttribute MultipartFile[] boardFile){
@@ -157,7 +176,7 @@ public class BoardController {
 		}
 	}
 	
-	//좋아요
+	// 좋아요
 	@PostMapping("/like/{boardNo}")
     public ResponseEntity<Map<String, Object>> toggleLike(
     	@PathVariable int boardNo,
@@ -179,7 +198,7 @@ public class BoardController {
         return ResponseEntity.ok(response);
     }
 	
-	//조회수
+	// 조회수
 	@GetMapping("/view/{boardNo}")
 	public BoardDTO getBoard(@PathVariable int boardNo) {
 		// 조회수를 증가시키고 게시판 정보를 반환
@@ -218,14 +237,16 @@ public class BoardController {
         return ResponseEntity.ok("Update success");
     }
     
-    // 신고하기
+   // 신고
    @PostMapping("/report/{boardNo}")
    public ResponseEntity<String> boardViewReport(@RequestBody UserDTO userDTO, @PathVariable int boardNo){
 	   String userNick = userDTO.getUserNick();
 	   boardService.boardViewReport(userNick, boardNo);
 	   return ResponseEntity.ok("Report Success");
    }
-    
+   
+  
+   	
 }
 
 

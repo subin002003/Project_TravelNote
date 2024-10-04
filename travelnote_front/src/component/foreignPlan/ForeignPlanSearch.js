@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ForeignPlaceItem from "./ForeignPlaceItem";
 import axios from "axios";
 import ForeignAirportItem from "./ForeignAirportItem";
+import Swal from "sweetalert2";
 
 const ForeignPlanSearch = (props) => {
   const {
@@ -27,6 +28,12 @@ const ForeignPlanSearch = (props) => {
     timeOptionsArr,
     isNextDayButtonChecked,
     setIsNextDayButtonChecked,
+    searchDepartAirport,
+    setSearchDepartAirport,
+    searchArrivalAirport,
+    setSearchArrivalAirport,
+    searchAirport,
+    setSearchAirport,
   } = props;
   const [category, setCategory] = useState(1); // 1일 때 항공편, 2일 때 장소
 
@@ -48,17 +55,76 @@ const ForeignPlanSearch = (props) => {
 
   // 출발 항공편 인풋 핸들러
   const changeDepartInfo = (e) => {
+    if (e.target.id === "planTime") {
+      if (checkTime) {
+        console.log(1);
+      }
+    }
     setDepartInfo({ ...departInfo, [e.target.id]: e.target.value });
+    if (e.keyCode === 13) {
+      setSearchDepartAirport(e.target.value);
+      setSearchAirport(1);
+    }
   };
 
   // 도착 항공편 인풋 핸들러
   const changeArrivalInfo = (e) => {
     setArrivalInfo({ ...arrivalInfo, [e.target.id]: e.target.value });
+    if (e.keyCode === 13) {
+      setSearchArrivalAirport(e.target.value);
+      setSearchAirport(2);
+    }
   };
 
-  // 항공편 검색
+  // 시간 정보 검증 함수
+  const checkTime = () => {
+    // const departTime = Number((departInfo.planTime + "").trim().slice(0, 2));
+    // const arrivalTime = Number((arrivalInfo.planTime + "").trim().slice(0, 2));
+    // if (departTime > arrivalTime) {
+    //   console.log("출발 시간이 더 느림!!!!");
+    //   return;
+    // } else if (departTime === arrivalTime) {
+    //   console.log("분 비교할 것");
+    //   return;
+    // } else {
+    //   console.log("통과");
+    // }
+    return true;
+  };
+
+  // 항공편 정보 저장
   const addFlightInfo = () => {
-    console.log(1);
+    var warningType;
+    var warningName;
+
+    // 공항 정보 입력 여부 검증
+    if (
+      departInfo.planName &&
+      departInfo.planTime &&
+      arrivalInfo.planName &&
+      arrivalInfo.planTime
+    ) {
+      console.log("서버 작업");
+      return;
+    } else if (!departInfo.planName || !arrivalInfo.planName) {
+      warningName = "공항";
+      if (!departInfo.planName) {
+        warningType = "출발";
+      } else {
+        warningType = "도착";
+      }
+    } else if (!departInfo.planTime || !arrivalInfo.planTime) {
+      warningName = "시간";
+      if (!departInfo.planTime) {
+        warningType = "출발";
+      } else if (!arrivalInfo.planTime) {
+        warningType = "도착";
+      }
+    }
+    Swal.fire({
+      icon: "warning",
+      text: warningType + " " + warningName + "을 설정해 주세요.",
+    });
   };
 
   return (
@@ -78,6 +144,7 @@ const ForeignPlanSearch = (props) => {
             className={category === 2 ? "selected" : ""}
             onClick={() => {
               setCategory(2);
+              setSearchPlaceList([]);
             }}
           >
             일정 추가
@@ -104,6 +171,9 @@ const ForeignPlanSearch = (props) => {
           searchPlaceList={searchPlaceList}
           setSelectedPosition={setSelectedPosition}
           setPlaceInfo={setPlaceInfo}
+          searchAirport={searchAirport}
+          setSearchAirport={setSearchAirport}
+          setSearchPlaceList={setSearchPlaceList}
         />
       ) : (
         <PlaceSearchBox
@@ -148,6 +218,9 @@ const FlightInputBox = (props) => {
     changeArrivalInfo,
     setSelectedPosition,
     setPlaceInfo,
+    searchAirport,
+    setSearchAirport,
+    setSearchPlaceList,
   } = props;
 
   return (
@@ -168,18 +241,18 @@ const FlightInputBox = (props) => {
           id="arrivalAirport"
           placeholder="도착 공항을 입력해 주세요."
           value={arrivalInfo.arrivalAirport}
-          onChange={setArrivalInfo}
-          onKeyUp={setArrivalInfo}
+          onChange={changeArrivalInfo}
+          onKeyUp={changeArrivalInfo}
         ></input>
       </div>
       <div className="flight-input-box">
         <h4>출발 시간</h4>
         <div className="flight-time">
           <select
-            id="departTime"
+            id="planTime"
             onClick={changeDepartInfo}
-            key={departInfo.departTime}
-            defaultValue={departInfo.departTime}
+            key={departInfo.planTime}
+            defaultValue={departInfo.planTime}
           >
             {timeOptionsArr.map((time, index) => {
               return (
@@ -195,10 +268,10 @@ const FlightInputBox = (props) => {
         <h4>도착 시간</h4>
         <div className="flight-time">
           <select
-            id="arrivalTime"
+            id="planTime"
             onClick={changeArrivalInfo}
-            key={arrivalInfo.arrivalTime}
-            defaultValue={arrivalInfo.arrivalTime}
+            key={arrivalInfo.planTime}
+            defaultValue={arrivalInfo.planTime}
           >
             {timeOptionsArr.map((time, index) => {
               return (
@@ -236,23 +309,41 @@ const FlightInputBox = (props) => {
         </div>
       </div>
       <div className="airport-list-box">
-        <div className="airport-list">
-          {searchPlaceList.map((place, index) => {
-            return (
-              <ForeignAirportItem
-                key={"foreign-place-item-" + index}
-                place={place}
-                setSelectedPosition={setSelectedPosition}
-                setPlaceInfo={setPlaceInfo}
-                itineraryNo={itineraryNo}
-                selectedDay={selectedDay}
-                backServer={backServer}
-                totalPlanDates={totalPlanDates}
-                setIsPlanAdded={setIsPlanAdded}
-              />
-            );
-          })}
-        </div>
+        {searchPlaceList.length > 0 ? (
+          <div className="airport-list">
+            <div className="airport-list-title">
+              {searchAirport === 1
+                ? "출발 공항 설정하기"
+                : searchAirport === 2
+                ? "도착 공항 설정하기"
+                : ""}
+            </div>
+            {searchPlaceList.map((place, index) => {
+              return (
+                <ForeignAirportItem
+                  key={"foreign-place-item-" + index}
+                  place={place}
+                  setSelectedPosition={setSelectedPosition}
+                  setPlaceInfo={setPlaceInfo}
+                  itineraryNo={itineraryNo}
+                  selectedDay={selectedDay}
+                  backServer={backServer}
+                  totalPlanDates={totalPlanDates}
+                  setIsPlanAdded={setIsPlanAdded}
+                  departInfo={departInfo}
+                  setDepartInfo={setDepartInfo}
+                  arrivalInfo={arrivalInfo}
+                  setArrivalInfo={setArrivalInfo}
+                  searchAirport={searchAirport}
+                  setSearchAirport={setSearchAirport}
+                  setSearchPlaceList={setSearchPlaceList}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          ""
+        )}
       </div>
       <div className="flight-submit-box">
         <button onClick={addFlightInfo} id="flight-submit-button">

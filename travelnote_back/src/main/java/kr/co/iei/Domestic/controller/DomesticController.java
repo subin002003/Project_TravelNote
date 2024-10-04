@@ -31,6 +31,7 @@ public class DomesticController {
     // 여행지 정보 조회 
     @GetMapping("/view/{regionNo}")
     public ResponseEntity<RegionDTO> view(@PathVariable int regionNo) {
+    	 System.out.println("Received request for regionNo: " + regionNo); // 로그 추가
     	RegionDTO region = domesticService.selectRegion(regionNo);
     	return ResponseEntity.ok(region);
     }
@@ -76,6 +77,18 @@ public class DomesticController {
     	domesticService.deletePlans(planNo);
     	return ResponseEntity.ok(planNo);
     }
-   
-
+    
+    //불러온 여행 일정 조회
+    @GetMapping(value="/itinerary/{regionNo}")
+    public ResponseEntity<List<ItineraryDTO>> scheduleUpdate(@PathVariable int regionNo) {
+        List<ItineraryDTO> region = domesticService.scheduleUpdate(regionNo);
+        return ResponseEntity.ok(region);
+    }
+    
+    //불러온여행 일정 수정
+    @PatchMapping(value="/itinerary/{itineraryNo}")
+    public ResponseEntity<String> updateItinerary(@PathVariable int itineraryNo, @RequestBody ItineraryDTO itineraryDTO) {
+        domesticService.updateItinerary(itineraryNo, itineraryDTO);
+        return ResponseEntity.ok("일정이 성공적으로 수정되었습니다.");
+    }
 }

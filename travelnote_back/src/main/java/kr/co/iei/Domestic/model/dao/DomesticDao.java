@@ -33,6 +33,12 @@ public interface DomesticDao {
 
 	int insertPlan(PlanDTO plan);
 
+	List<ItineraryDTO> scheduleUpdate(int regionNo);
+
+	void updateItinerary(int itineraryNo, ItineraryDTO itineraryDTO);
+
+
+
 	
 
 }

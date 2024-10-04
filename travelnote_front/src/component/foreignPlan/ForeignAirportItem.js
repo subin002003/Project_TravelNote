@@ -1,4 +1,5 @@
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const ForeignAirportItem = (props) => {
   const {
@@ -10,6 +11,13 @@ const ForeignAirportItem = (props) => {
     backServer,
     totalPlanDates,
     setIsPlanAdded,
+    departInfo,
+    setDepartInfo,
+    arrivalInfo,
+    setArrivalInfo,
+    searchAirport,
+    setSearchAirport,
+    setSearchPlaceList,
   } = props;
 
   // 클릭 시 지도 이동
@@ -24,29 +32,70 @@ const ForeignAirportItem = (props) => {
   };
 
   // 추가 버튼 클릭 시 DB에 저장하고 일정 목록에 추가
-  const addPlace = () => {
-    const placeObj = {
-      itineraryNo: itineraryNo,
-      planDay: selectedDay,
-      planDate: totalPlanDates[selectedDay - 1],
-      planAddress: place.formatted_address,
-      planLatitude: place.geometry.location.lat(),
-      planLongitude: place.geometry.location.lng(),
-      planImage: place.photos[0].getUrl(),
-      planType: 1,
-      planName: place.name,
-      planId: place.place_id,
-    };
-    axios
-      .post(`${backServer}/foreign/addFlight`, placeObj)
-      .then((res) => {
-        if (res.data > 0) {
-          setIsPlanAdded(true);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
+  const addAirport = () => {
+    console.log(1);
+    console.log(arrivalInfo);
+    console.log(2);
+    console.log(departInfo);
+    console.log(3);
+    console.log(place.place_id);
+    if (
+      (arrivalInfo.planId &&
+        arrivalInfo.planId.trim() == place.place_id.trim()) ||
+      (departInfo.planId && departInfo.planId.trim() == place.place_id.trim())
+    ) {
+      console.log(4);
+      Swal.fire({
+        icon: "warning",
+        text: "출발 공항과 도착 공항은 동일하게 설정할 수 없습니다.",
       });
+      return;
+    }
+    if (searchAirport === 1) {
+      // 출발 공항 설정
+      setDepartInfo({
+        ...departInfo,
+        itineraryNo: itineraryNo,
+        planDay: selectedDay,
+        planDate: totalPlanDates[selectedDay - 1],
+        planAddress: place.formatted_address,
+        planLatitude: place.geometry.location.lat(),
+        planLongitude: place.geometry.location.lng(),
+        planImage: place.photos[0].getUrl(),
+        planType: 2,
+        planName: place.name,
+        planId: place.place_id,
+        departAirport: place.name,
+      });
+      setSearchAirport(0);
+      Swal.fire({
+        icon: "success",
+        text: "출발 공항으로 설정되었습니다.",
+      });
+      setSearchPlaceList([]);
+    } else if (searchAirport === 2) {
+      // 도착 공항 설정
+      setArrivalInfo({
+        ...arrivalInfo,
+        itineraryNo: itineraryNo,
+        planDay: selectedDay,
+        planDate: totalPlanDates[selectedDay - 1],
+        planAddress: place.formatted_address,
+        planLatitude: place.geometry.location.lat(),
+        planLongitude: place.geometry.location.lng(),
+        planImage: place.photos[0].getUrl(),
+        planType: 2,
+        planName: place.name,
+        planId: place.place_id,
+        arrivalAirport: place.name,
+      });
+      setSearchAirport(0);
+      Swal.fire({
+        icon: "success",
+        text: "도착 공항으로 설정되었습니다.",
+      });
+      setSearchPlaceList([]);
+    }
   };
 
   return (
@@ -68,8 +117,8 @@ const ForeignAirportItem = (props) => {
         <div className="place-item-address">{place.formatted_address}</div>
       </div>
       <div className="place-item-add">
-        <div onClick={addPlace} className="place-add-button">
-          +
+        <div onClick={addAirport} className="airport-add-button">
+          <span className="material-icons">done</span>
         </div>
       </div>
     </div>

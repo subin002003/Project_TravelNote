@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.co.iei.board.model.dao.BoardDao">
+  	
+  	<!-- 전체 게시물 수 조회 -->
   	<select id="totalCount" resultType="int">
   		select count(*) from board where board_status = 1 and board_type = 1
   	</select>
   	
+  	<!-- 전체 게시물 조회 -->
   	<select id="selectBoardList" resultType="board">  		
 	  	select * from 
 	  		(select rownum as rnum, b.* from 
@@ -16,10 +19,57 @@
 	  				to_char(board_date,'yyyy-mm-dd') as board_date,
 	  				board_readCount,
 	  				like_count
-	  				from board where board_status = 1 and board_type = 1 order by board_no desc)b) 
+	  				from board 
+	  				where board_status = 1 and board_type = 1 
+	  				order by board_no desc)b) 
 	  				where rnum between #{start} and #{end}
   	</select>
   	
+  	<!-- 검색 게시물 조회 -->
+	<select id="selectBoardSearchList" resultType="board">
+	    select * from 
+	    (
+	        select rownum as rnum, b.* from 
+	        (
+	            select 
+	                board_no,
+	                board_writer,
+	                board_title,
+	                board_category,
+	                to_char(board_date, 'yyyy-mm-dd') as board_date,
+	                board_readCount,
+	                like_count
+	            from board 
+	            where board_status = 1 and board_type = 1 
+	            <if test="searchFilter == 'title'">
+	                and board_title like '%' || #{searchTerm} || '%'
+	            </if>
+	            <if test="searchFilter == 'writer'">
+	                and board_writer like '%' || #{searchTerm} || '%'
+	            </if>
+	            <if test="searchFilter == 'category'">
+	                and board_category like '%' || #{searchTerm} || '%'
+	            </if>
+	            order by board_no desc) b) 
+	    		where rnum between #{pi.start} and #{pi.end}
+	</select>
+
+	<!-- 검색된 게시물 수 조회 -->
+	<select id="searchTotalCount" resultType="int">
+	    select count(*) from board 
+	    where board_status = 1 and board_type = 1 
+	    <if test="searchFilter == 'title'">
+	        and board_title like '%' || #{searchTerm} || '%'
+	    </if>
+	    <if test="searchFilter == 'writer'">
+	        and board_writer like '%' || #{searchTerm} || '%'
+	    </if>
+	    <if test="searchFilter == 'category'">
+	        and board_category like '%' || #{searchTerm} || '%'
+	    </if>
+	</select>
+  	
+  	<!-- 게시물 등록 -->
   	<insert id="insertBoard">
   		insert into board 
   		values (
@@ -38,6 +88,8 @@
 			select max(board_no) from board
 		</selectKey>
   	</insert>
+  	
+  	<!-- 게시물 파일 등록 -->
   	<insert id="insertBoardFile">
   		insert into board_file 
   		values(
@@ -48,6 +100,7 @@
   		)
   	</insert>
   	
+  	<!-- 한 게시물 조회 -->
   	<select id="selectOneBoard" resultMap="getBoard">
 		select 
 			board_no,
@@ -61,6 +114,8 @@
 			to_char(board_date,'yyyy-mm-dd') as board_date
 		from board where board_no=#{boardNo}
 	</select>
+	
+	<!-- 게시물 번호로 파일 조회 -->
   	<select id="selectOneBoardFileList" resultType="boardFile">
   		select * from board_file where board_no=#{boardNo}
   	</select>
@@ -83,14 +138,17 @@
 		></collection>
 	</resultMap>
 	
+	<!-- 파일 조회 -->
 	<select id="getBoardFile" resultType="boardFile">
 		select * from board_file where board_file_no=#{boardFileNo}
 	</select>
 	
+	<!-- 게시물 삭제 -->
 	<delete id="deleteBoard">
 		delete from board where board_no=#{boardNo}
 	</delete>
 	
+	<!-- 게시물 수정 -->
 	<update id="updateBoard">
 		update board set 
 			board_title=#{boardTitle},
@@ -99,6 +157,7 @@
 			where board_no=#{boardNo}
 	</update>
 	
+	<!-- 파일 여러개 조회 -->
 	<select id="selectBoardFile" resultType="boardFile">
 		select * from board_file
 		where board_file_no in
@@ -107,7 +166,8 @@
 		</foreach>
 	</select>
 	
-	<delete id="deleteBoarFile">
+	<!-- 파일 삭제 -->
+	<delete id="deleteBoardFile">
 		delete from board_file
 		where board_file_no in
 		<foreach collection="array" item="boardFileNo" open="(" close=")" separator=",">
@@ -115,7 +175,7 @@
 		</foreach>
 	</delete>
 	
-	<!-- 좋아요 -->
+	<!-- 게시물 좋아요 등록 -->
 	<insert id="insertLike">
         insert into board_like (user_nick, board_no)
         values (
@@ -123,36 +183,43 @@
 	         #{boardNo}
          )
     </insert>
-
+    
+ 	<!-- 게시물 좋아요 취소 -->
     <delete id="deleteLike">
         delete FROM board_like
         where user_nick = #{userNick} and board_no = #{boardNo}
     </delete>
 
+	<!-- 게시물 좋아요 수 증가 -->
     <update id="incrementLikeCount">
         update board
         set like_count = like_count + 1
         where board_no = #{boardNo}
     </update>
 
+	<!-- 게시물 좋아요 수 감소 -->
     <update id="decrementLikeCount">
         update board
         set like_count = like_count - 1
         where board_no = #{boardNo}
     </update>
 	
+	<!-- 게시물 조회수 -->
 	<update id="updateViewCount">
 		update board
 		set board_readCount = board_readCount + 1
 		where board_no = #{boardNo}
 	</update>
 	
+	<!-- id로 게시물 조회 -->
 	<select id="selectBoardById" resultType="board">
 		select * 
 		from board 
 		where board_no = #{boardNo}
 	</select>
 	
+	
+	<!-- 댓글 등록 -->
 	 <insert id="addComment">
 		insert into board_comment 
 		values (
@@ -164,22 +231,26 @@
 		)
 	</insert>
 	
+	<!-- 댓글 목록 조회 -->
 	<select id="getComments" resultType="boardComment">
 		select * from board_comment 
 		where board_ref = #{boardRef} order by board_comment_no
 	</select>
 	
+	<!-- 댓글 삭제 -->
 	<delete id="deleteComment">
 		delete from board_comment 
 		where board_comment_no = #{boardCommentNo}
 	</delete> 
 	
+	<!-- 댓글 수정 -->
 	<update id="updateComment">
     	update board_comment
     	set board_comment_content = #{boardCommentContent}
     	where board_ref = #{boardNo} and board_comment_no = #{commentNo}
 	</update>
 	
+	<!-- 신고 -->
 	<insert id="boardViewReport">
 		insert into board_report 
 		values (
