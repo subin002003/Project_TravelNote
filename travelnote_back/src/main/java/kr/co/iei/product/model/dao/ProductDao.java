@@ -47,6 +47,8 @@ public interface ProductDao {
 
 	int insertReview(ReviewDTO review);
 
+	int insertReviewComment(ReviewDTO review);
+
 	int updateReview(ReviewDTO review);
 
 	int deleteReview(ReviewDTO review);
@@ -72,5 +74,9 @@ public interface ProductDao {
 	int selectParentreview(int reviewCommentRef);
 
 	int checkProductExists(int productNo);
+
+	List selectProductListMostLiked(PageInfo pi, String userEmail);
+
+	List selectProductListNewest(PageInfo pi, String userEmail);
 
 }

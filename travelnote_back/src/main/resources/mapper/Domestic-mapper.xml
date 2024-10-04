@@ -43,12 +43,15 @@
 	<update id="updatePlan">
 		update plan set plan_memo = #{planMemo}, plan_time = #{planTime} where plan_no = #{planNo}
 	</update>
-
-    <select id="selectAllRegions" resultType="Region">
-        SELECT region_no AS regionNo,
-               region_name AS regionName,
-               country_name AS countryName,
-               region_img AS regionImg
-        FROM region
-    </select>
+    
+    <delete id="deletePlans" parameterType="int">
+    	 DELETE FROM plan WHERE plan_no = #{planNo}
+    </delete>
+    
+      <insert id="insertPlan" parameterType="plan">
+        INSERT INTO plan VALUES (plan_no_seq.nextval, #{itineraryNo}, #{planDay}, #{planDate},  
+        (SELECT NVL(MAX(plan_seq), 0) + 1 FROM plan WHERE itinerary_no = #{itineraryNo}), #{planAddress}, 
+        #{planLatitude}, #{planLongitude}, null, null, null, 1, #{planName},null)
+    </insert>
+    
 </mapper>

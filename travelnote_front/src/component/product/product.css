@@ -30,6 +30,7 @@ ul {
 p {
   margin: 0;
 }
+
 a:hover {
   text-decoration: none;
 }
@@ -37,6 +38,7 @@ a:hover {
 .content {
   margin: 30px 0;
 }
+
 .section {
   margin: 0 auto;
   /* padding: 15px; */
@@ -45,6 +47,7 @@ a:hover {
   max-width: 1200px;
   overflow: hidden;
 }
+
 .section-title {
   text-align: left;
   margin-bottom: 65px;
@@ -56,7 +59,8 @@ a:hover {
   padding: 10px;
   text-align: center;
 }
-.button-box > button {
+
+.button-box>button {
   width: auto !important;
   margin: 0 10px;
 }
@@ -71,11 +75,13 @@ a:hover {
   border-radius: 24px;
   transition: all 0.35s;
 }
+
 .channelTalkBtn:hover {
   background-color: var(--main-color);
   opacity: 0.8;
 }
-.channelTalkBtn > img {
+
+.channelTalkBtn>img {
   position: absolute;
   top: 0;
   left: 0;
@@ -84,8 +90,9 @@ a:hover {
 }
 
 .product-list-wrap {
-  margin: 20px 0;
+  margin: 30px 0;
 }
+
 .writeBtn {
   padding: 0 !important;
   display: flex;
@@ -94,6 +101,7 @@ a:hover {
   width: 105px;
   height: 40px;
 }
+
 .pagination {
   list-style-type: none;
   display: flex;
@@ -101,7 +109,8 @@ a:hover {
   align-items: center;
   box-sizing: border-box;
 }
-.pagination > li {
+
+.pagination>li {
   width: 40px;
   height: 40px;
   text-align: center;
@@ -109,46 +118,56 @@ a:hover {
   overflow: hidden;
   transition: all 0.3s;
 }
-.pagination > li:hover {
+
+.pagination>li:hover {
   background-color: rgba(71, 181, 255, 0.8);
 }
-.pagination.circle-style > li {
+
+.pagination.circle-style>li {
   border-radius: 50%;
 }
-.pagination > li > span.page-item {
+
+.pagination>li>span.page-item {
   cursor: pointer;
   display: block;
   width: 100%;
   height: 100%;
   font-size: 18px;
 }
-.pagination > li > span.page-item.material-icons {
+
+.pagination>li>span.page-item.material-icons {
   display: block;
   width: 100%;
   height: 100%;
   line-height: 40px;
 }
+
 .pagination .page-item.active-page {
   background-color: var(--main-color);
   color: #fff;
 }
+
 .posting-item {
   /* margin-bottom: 20px; */
   /* padding: 30px 35px; */
 }
+
 .posting-item:last-child {
   margin-bottom: 0;
 }
+
 .posting-info-left {
   width: 87%;
   cursor: pointer;
   float: left;
 }
+
 .posting-info-right {
   width: 13%;
   position: relative;
   float: left;
 }
+
 .posting-img {
   box-sizing: border-box;
   margin: 0 auto;
@@ -158,11 +177,13 @@ a:hover {
   align-items: center;
   justify-content: center;
 }
-.posting-img > img {
+
+.posting-img>img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
 .like-icon-box {
   position: absolute;
   width: 100%;
@@ -171,17 +192,20 @@ a:hover {
   left: 0px;
   /* background: rgba(255, 255, 255, 0.3); */
 }
-.like-icon-box > span.product-like-checked,
-.like-icon-box > span.product-like-unchecked {
+
+.like-icon-box>span.product-like-checked,
+.like-icon-box>span.product-like-unchecked {
   position: absolute;
   top: 7px;
   right: 9px;
   cursor: pointer;
 }
-.like-icon-box > span > i {
+
+.like-icon-box>span>i {
   font-size: 20px;
   color: #ff1a51;
 }
+
 .price {
   float: right;
   color: var(--main-color);
@@ -195,17 +219,21 @@ a:hover {
   max-width: 1200px;
   margin: 150px auto;
 }
+
 .line {
   border: 1px solid var(--gray);
 }
+
 .product-thumbnail-swiper {
   margin-bottom: 20px;
 }
+
 .view-btn-box {
   margin-top: 150px;
   display: flex;
   gap: 10px;
 }
+
 .date-picker,
 .people {
   width: 530px;
@@ -219,22 +247,26 @@ a:hover {
   box-shadow: 0px 0px 12px var(--gray);
   transition: all 0.25s;
 }
+
 .date-picker {
   margin-right: 40px;
   float: left;
   color: var(--main-color);
 }
+
 .date-picker:hover {
   background-color: var(--white);
   box-shadow: 0px 0px 12px #b3b3b3;
 }
+
 #count:focus {
   box-shadow: none;
 }
+
 /* .input-item > label {
   margin-bottom: 20px;
 } */
-.input-item > input {
+.input-item>input {
   padding-left: 10px;
   width: 100%;
   height: 35px;
@@ -244,46 +276,56 @@ a:hover {
   margin-top: 20px;
   transition: all 0.35s;
 }
-.input-item > input:focus {
+
+.input-item>input:focus {
   border-color: var(--main-color);
   outline: none;
 }
+
 .review {
   margin-bottom: 0;
 }
+
 .posting-review-info {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
 }
+
 /* .reviewWriter {
   margin-right: 5px;
 } */
 .posting-review-content {
   margin-top: 5px;
 }
+
 .review-info-right {
   font-size: 14px !important;
 }
+
 .review-update-btn {
   border-color: var(--base-color) !important;
   background-color: var(--base-color) !important;
   color: var(--main-color) !important;
   margin-right: 3px !important;
 }
+
 .review-update-btn,
 .review-delete-btn {
   padding: 3px 7px !important;
   border-radius: 10px !important;
 }
+
 .review-link-box {
   float: right;
 }
+
 .review-like-checked,
 .review-like-unchecked {
   margin-right: 10px !important;
 }
-.review-link-box > span > span {
+
+.review-link-box>span>span {
   margin-left: 2px;
 }
 
@@ -292,22 +334,27 @@ a:hover {
   width: 90%;
   margin: 0 auto;
 }
+
 .mt {
   margin-top: 150px !important;
 }
+
 .mb {
   margin-bottom: 150px !important;
 }
+
 .product-write-frm .product-info-wrap1 {
   width: 90%;
   margin: 0 auto;
   display: flex;
   gap: 20px;
 }
+
 .product-input-wrap {
   width: 68%;
   height: 100%;
 }
+
 .product-thumb-wrap {
   box-sizing: border-box;
   margin: 0 auto;
@@ -319,14 +366,17 @@ a:hover {
   align-items: center;
   justify-content: center;
 }
-.product-thumb-wrap > img {
+
+.product-thumb-wrap>img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
 .product-file-wrap {
   margin-top: 20px;
 }
+
 .product-file-list {
   margin-top: 20px;
   padding: 5px 10px;
@@ -334,16 +384,19 @@ a:hover {
   border-radius: 10px;
   min-height: 40px;
 }
+
 .del-file-icon {
   margin-left: 5px;
 }
+
 .product-info {
   width: 90%;
   margin: 0 auto;
   display: flex;
   gap: 26px;
 }
-.product-info > div {
+
+.product-info>div {
   width: calc(100% / 3);
 }
 
@@ -359,72 +412,90 @@ a:hover {
   box-sizing: border-box;
   transition: all 0.3s;
 }
+
 .btn-primary {
   border: 1px solid var(--main-color);
   background-color: var(--main-color);
   color: var(--white);
 }
+
 .btn-primary:hover {
   background-color: rgba(19, 99, 223, 0.9);
 }
+
 .btn-secondary {
   border: 1px solid var(--gray);
   background-color: var(--gray);
   color: var(--text-color);
 }
+
 .btn-secondary:hover {
   background-color: rgba(221, 221, 221, 0.9);
 }
+
 .btn-point {
   border: 1px solid var(--point-color);
   background-color: var(--point-color);
   color: var(--text-color);
 }
+
 .btn-point:hover {
   background-color: rgba(197, 124, 255, 0.9);
 }
+
 .btn-base {
   border: 1px solid var(--base-color);
   background-color: var(--base-color);
   color: var(--sub-color);
 }
+
 .btn-base:hover {
   background-color: rgba(223, 246, 255, 0.9);
 }
+
 /* /// */
 .btn-primary.outline {
   color: var(--main-color);
   background-color: var(--text-color);
 }
+
 .btn-primary.outline:hover {
   background-color: rgba(101, 146, 254, 0.2);
 }
+
 .btn-secondary.outline {
   color: var(--gray);
   background-color: var(--text-color);
 }
+
 .btn-secondary.outline:hover {
   background-color: rgba(143, 143, 143, 0.2);
 }
+
 .btn-point.outline {
   color: var(--point-color);
   background-color: var(--text-color);
 }
+
 .btn-point.outline:hover {
   background-color: rgba(140, 97, 255, 0.2);
 }
+
 .btn-base.outline {
   color: var(--base-color);
   background-color: var(--sub-color);
 }
+
 .btn-pobaseint.outline:hover {
   background-color: rgba(97, 179, 255, 0.2);
 }
+
 [class^="btn-"].sm {
   padding: 5px 10px;
   font-family: ns-r;
   font-size: 12px;
 }
+
 [class^="btn-"].lg {
   padding: 12px 25px;
   font-size: 16px;

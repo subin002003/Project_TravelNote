@@ -20,7 +20,7 @@ const DomesticMain = () => {
         setRegionList((prevList) => [...prevList, ...koreanRegions]);
       })
       .catch((err) => {
-        console.error("Error fetching regions:", err);
+        console.error("에러발생:", err);
       });
   }, [reqPage, backServer]);
 

@@ -26,7 +26,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
 import DateRangePickerComponent from "./DatePickerComponent ";
-import Review from "./review/ReviewWrite";
+import Review from "./review/Review";
 import Swal from "sweetalert2";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
@@ -71,7 +71,7 @@ const ProductView = () => {
           icon: "error",
         });
       });
-  }, [backServer, productNo, userEmail, product.reviews]);
+  }, [productNo, userEmail]);
 
   // 날짜 범위 상태
   const [startDate, setStartDate] = useState(null);
@@ -434,7 +434,7 @@ const ReviewItem = (props) => {
   const product = props.product;
   const productNo = product.productNo;
   const review = props.review;
-  // console.log(review);
+
   const parentReviewNo = props.reviewCommentRef;
 
   // 로그인 회원 정보
@@ -453,10 +453,12 @@ const ReviewItem = (props) => {
 
   // 리뷰 작성 다이얼로그
   const [openReviewDialog, setOpenReviewDialog] = useState(false); // 다이얼로그 상태
+  const [dialogType, setDialogType] = useState("");
 
   // 리뷰 작성 팝업 열기
-  const handleOpenReviewDialog = () => {
+  const handleOpenReviewDialog = (type) => {
     setOpenReviewDialog(true);
+    setDialogType(type); // 'register', 'update', 'reply' 타입 설정
     // 여기에 parentReviewId를 사용하는 로직 추가
     console.log("Parent Review ID:", parentReviewNo);
   };
@@ -465,27 +467,6 @@ const ReviewItem = (props) => {
   const handleCloseReviewDialog = () => {
     setOpenReviewDialog(false);
   };
-
-  // 리뷰 수정
-  // const updateReview = () => {
-  //   setOpenReviewDialog(true);
-
-  //   axios
-  //     .patch(`${backServer}/product/updateReview/${review.reviewNo}`)
-  //     .then((res) => {
-  //       console.log(res);
-  //       if (res.data === 1) {
-  //         Swal.fire({
-  //           title: "리뷰가 수정되었습니다.",
-  //           icon: "success",
-  //         });
-  //         navigate(`/product/view/${product.productNo}`);
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
 
   // 리뷰 삭제
   const deleteReview = () => {
@@ -554,14 +535,14 @@ const ReviewItem = (props) => {
       const newLikeStatus = !reviewLike; // 좋아요 상태 토글
       const request = newLikeStatus
         ? axios.post(
-            // 리뷰 좋아요
-            `${backServer}/product/${review.reviewNo}/insertReviewLike/${userEmail}`,
-            { reviewLike: 1 }
-          )
+          // 리뷰 좋아요
+          `${backServer}/product/${review.reviewNo}/insertReviewLike/${userEmail}`,
+          { reviewLike: 1 }
+        )
         : axios.delete(
-            // 리뷰 좋아요 취소
-            `${backServer}/product/${review.reviewNo}/deleteReviewLike/${userEmail}?reviewLike=1`
-          );
+          // 리뷰 좋아요 취소
+          `${backServer}/product/${review.reviewNo}/deleteReviewLike/${userEmail}?reviewLike=1`
+        );
 
       request
         .then((res) => {
@@ -595,12 +576,9 @@ const ReviewItem = (props) => {
             <span className="reviewDate">{review.reviewDate}</span>
           </div>
           <div className="review-info-right">
-            {/* <Link className="btn-secondary sm" to={`/product/updateReview`}>
-              수정
-            </Link> */}
             <button
               className="btn-secondary sm review-update-btn"
-              onClick={handleOpenReviewDialog}
+              onClick={() => handleOpenReviewDialog("update")}
             >
               수정
             </button>
@@ -644,12 +622,30 @@ const ReviewItem = (props) => {
           </span>
           <span className="reviewReComment-btn">
             <i className="fa-solid fa-comment-dots"></i>
-            <Link className="recShow">답글</Link>
+            {/* <Link className="recShow">답글</Link> */}
+            {/* 답글 버튼 */}
+            <button
+              style={{
+                padding: "0",
+                border: "none",
+                outline: "none",
+                borderRadius: "10px",
+                background: "transparent",
+                color: "var(--gray2)",
+                fontSize: "16px",
+              }}
+              className="btn-secondary sm"
+              onClick={() => handleOpenReviewDialog("reply")} // 답글 처리
+            >
+              답글
+            </button>
             <span className="reviewReCommentCount">0</span>
           </span>
         </div>
       </div>
+
       <div style={{ margin: "30px 0" }} className="line"></div>
+
       {/* 리뷰 작성 다이얼로그 */}
       <div className="inputCommentBox">
         <Dialog
@@ -661,14 +657,26 @@ const ReviewItem = (props) => {
           maxWidth={false} // maxWidth 기본값을 사용하지 않도록 설정
           fullWidth={true} // 다이얼로그가 지정된 너비를 채우도록 설정
         >
-          <DialogTitle>리뷰 수정</DialogTitle>
+          <DialogTitle>
+            {dialogType === "update"
+              ? "리뷰 수정"
+              : dialogType === "reply"
+                ? "답글 작성"
+                : "리뷰 작성"}
+          </DialogTitle>
           <DialogContent>
             <Review
+              productNo={productNo}
+              review={dialogType === "update" ? review : null} // 리뷰 수정인 경우에만 review 전달
+              parentReviewNo={dialogType === "reply" ? review.reviewNo : null} // 답글인 경우 parentReviewNo 전달
+              handleClose={handleCloseReviewDialog}
+            />
+            {/* <Review
               productNo={productNo}
               open={openReviewDialog}
               handleClose={handleCloseReviewDialog}
               review={review}
-            />
+            /> */}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseReviewDialog} color="primary">

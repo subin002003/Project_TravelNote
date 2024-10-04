@@ -21,9 +21,8 @@ const BoardView = () => {
   const [comments, setComments] = useState([]); // 댓글 상태
   const [newComment, setNewComment] = useState(""); // 새 댓글 입력 상태
   const [reset, setReset] = useState(false);
-  // ... 기존 상태 정의
   const [editingComment, setEditingComment] = useState(null); // 수정 중인 댓글 상태
-
+  const [reported, setReported] = useState(false); // 신고 상태
   const handleCommentEditChange = (e) => {
     console.log(editingComment.content);
     setEditingComment({ ...editingComment, content: e.target.value });
@@ -215,6 +214,21 @@ const BoardView = () => {
     }
   };
 
+  const boardViewReport = () => {
+    axios
+      .post(`${backServer}/board/report/${boardNo}`, { userNick: userNick })
+      .then((res) => {
+        console.log(res);
+        Swal.fire({
+          title: "신고 처리 완료",
+          icon: "success",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <section className="board-wrap">
       <h1
@@ -318,12 +332,17 @@ const BoardView = () => {
               </div>
             </div>
           </div>
-          <p
-            className="board-button-link-report"
-            style={{ marginLeft: "auto" }}
-          >
-            신고하기
-          </p>
+          {isLogin ? (
+            <p
+              className="board-button-link-report"
+              style={{ marginLeft: "auto" }}
+              onClick={boardViewReport}
+            >
+              신고하기
+            </p>
+          ) : (
+            ""
+          )}
         </div>
         <div style={{ marginTop: "50px" }}>
           {board.boardContent ? (
