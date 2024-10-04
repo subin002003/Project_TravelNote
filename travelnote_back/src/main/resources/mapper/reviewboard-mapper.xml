@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.iei.reviewboard.model.dao.ReviewBoardDao">
+	<!-- 전체 게시물 수 조회 -->
+  	<select id="totalCount" resultType="int">
+  		select count(*) from board where board_status = 1 and board_type = 1
+  	</select>
+
+	
+	<!-- 전체 게시물 조회 -->
+  	<select id="selectReviewBoardList" resultType="reviewBoard">  		
+	  	select * from 
+	  		(select rownum as rnum, b.* from 
+	  			(select 
+	  				review_board_no,
+	  				review_board_writer,
+	  				review_board_title,
+	  				review_board_category,
+	  				to_char(review_board_date,'yyyy-mm-dd') as review_board_date,
+	  				review_board_readCount,
+	  				review_board_thumbNail,
+	  				review_board_subContent,
+	  				like_count
+	  				from review_board 
+	  				where review_board_status = 1 
+	  				order by review_board_no desc)b) 
+	  				where rnum between #{start} and #{end}
+  	</select>
+  	
+  	<!-- 검색된 게시물 수 조회 -->
+	<select id="searchReviewTotalCount" resultType="int">
+	    select count(*) from review_board 
+	    where review_board_status = 1 
+	    <if test="searchFilter == 'title'">
+	        and review_board_title like '%' || #{searchTerm} || '%'
+	    </if>
+	    <if test="searchFilter == 'writer'">
+	        and review_board_writer like '%' || #{searchTerm} || '%'
+	    </if>
+	    <if test="searchFilter == 'category'">
+	        and review_board_category like '%' || #{searchTerm} || '%'
+	    </if>
+	</select>
+  	
+  	<!-- 검색된 게시물 조회 -->
+	<select id="selectReviewBoardSearchList" resultType="reviewBoard">
+	    select * from 
+	    (
+	        select rownum as rnum, b.* from 
+	        (
+	            select 
+	                review_board_no,
+	                review_board_writer,
+	                review_board_title,
+	                review_board_category,
+	                to_char(review_board_date, 'yyyy-mm-dd') as review_board_date,
+	                review_board_readCount,
+	                review_board_thumbNail,
+                    review_board_subContent,
+	                like_count
+	            from review_board 
+	            where review_board_status = 1
+	            <if test="searchFilter == 'title'">
+	                and review_board_title like '%' || #{searchTerm} || '%'
+	            </if>
+	            <if test="searchFilter == 'writer'">
+	                and review_board_writer like '%' || #{searchTerm} || '%'
+	            </if>
+	            <if test="searchFilter == 'category'">
+	                and review_board_category like '%' || #{searchTerm} || '%'
+	            </if>
+	            order by review_board_no desc) b) 
+	    		where rnum between #{pi.start} and #{pi.end}
+	</select>
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

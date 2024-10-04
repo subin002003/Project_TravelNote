@@ -182,7 +182,7 @@ public class BoardController {
     	@PathVariable int boardNo,
     	@RequestBody Map<String, String> requestBody){
 		String userNick = requestBody.get("userNick");
-		String action = requestBody.get("action");         
+		String action = requestBody.get("action");
         boolean success = false;
         String message = "";
         if ("add".equals(action)) {
@@ -218,7 +218,6 @@ public class BoardController {
     @GetMapping("/{boardNo}")
     public ResponseEntity<List<BoardCommentDTO>> getComments(@PathVariable int boardNo) {
         List<BoardCommentDTO> comments = boardService.getComments(boardNo);
-        System.out.println(comments);
         return ResponseEntity.ok(comments);
     }
 	
@@ -228,7 +227,6 @@ public class BoardController {
         boardService.deleteComment(commentNo);
         return ResponseEntity.ok("Comment deleted successfully");
     }
-    
     
     // 댓글 수정
     @PutMapping("/{boardNo}/comments/{commentNo}")

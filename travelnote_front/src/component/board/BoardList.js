@@ -190,7 +190,3 @@ const BoardItem = (props) => {
   );
 };
 export default BoardList;
-
-// onClick={() => {
-//   navigate(`/board/view/${board.boardNo}`);
-// }}
