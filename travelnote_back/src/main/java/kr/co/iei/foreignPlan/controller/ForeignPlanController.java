@@ -84,6 +84,6 @@ public class ForeignPlanController {
 		int result = foreignPlanService.insertPlace(plan);
 		return ResponseEntity.ok(result);
 	}
-
+	
 	
 }
