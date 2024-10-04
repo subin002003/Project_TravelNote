@@ -64,8 +64,14 @@ public interface BoardDao {
 	//오건하 작성 2024-10-04
 	List selectReportBoard(PageInfo pi);
 	
-	//오건하 작성
+	//오건하 작성 2024-10-04
 	int updateBoardStatus(int boardNo);
+	
+	//오건하 작성 2024-10-04
+	int myBoardTotalCount(String userNick);
+
+	//오건하 작성 2024-10-04
+	List selectMyBoardList(PageInfo pi);
 
 	
 

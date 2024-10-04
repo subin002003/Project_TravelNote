@@ -296,3 +296,11 @@ th,
 td {
   text-align: center;
 }
+
+.myboard-list > table {
+  width: 100%;
+  margin-top: 20px;
+}
+.myboard-page-navi {
+  margin-bottom: 20px;
+}
