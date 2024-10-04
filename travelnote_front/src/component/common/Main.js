@@ -246,7 +246,7 @@ const Main = () => {
           margin: "20px 0",
           position: "absolute",
           top: "36%",
-          left: "14.5%",
+          left: "4.5%",
           gap: "1630px",
         }}
       >
