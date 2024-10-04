@@ -75,4 +75,8 @@ public interface ProductDao {
 
 	int checkProductExists(int productNo);
 
+	List selectProductListMostLiked(PageInfo pi, String userEmail);
+
+	List selectProductListNewest(PageInfo pi, String userEmail);
+
 }
