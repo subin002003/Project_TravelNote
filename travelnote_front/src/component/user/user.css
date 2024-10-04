@@ -304,3 +304,20 @@ td {
 .myboard-page-navi {
   margin-bottom: 20px;
 }
+
+.myreview-list {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.myreview-content p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 200px;
+  margin: 0 auto;
+}
+
+.myreview-list > td {
+  width: 200px;
+}

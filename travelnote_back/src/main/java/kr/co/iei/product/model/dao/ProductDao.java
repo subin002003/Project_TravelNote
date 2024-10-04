@@ -79,4 +79,10 @@ public interface ProductDao {
 
 	List selectProductListNewest(PageInfo pi, String userEmail);
 
+	//오건하 작성 2024-10-04
+	int myReviewTotalCount(String userNick);
+
+	//오건하 작성 2024-10-04
+	List myReviewList(PageInfo pi);
+
 }

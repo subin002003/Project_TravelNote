@@ -146,7 +146,10 @@ const CustomerBoardList = () => {
                   />
                 </div>
 
-                <button onClick={navigatePersonalBoardWrite}>
+                <button
+                  style={{ marginTop: "10px" }}
+                  onClick={navigatePersonalBoardWrite}
+                >
                   1대1 문의 작성하기
                 </button>
               </div>

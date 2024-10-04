@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.iei.board.model.service.BoardService;
+import kr.co.iei.product.model.service.ProductService;
 import kr.co.iei.user.model.dto.LoginUserDTO;
 import kr.co.iei.user.model.dto.UserDTO;
 import kr.co.iei.user.model.dto.VerifyInfoDTO;
@@ -34,6 +35,8 @@ public class UserController {
 	private EmailSender sender;
 	@Autowired
 	private BoardService boardService;
+	@Autowired
+	private ProductService productService;
 	
 	@GetMapping(value="/checkEmail/{userEmail}")
 	public ResponseEntity<Integer> checkEmail(@PathVariable String userEmail){
@@ -171,6 +174,13 @@ public class UserController {
 	@GetMapping(value = "/myBoardList/{userNick}/{boardReqPage}")
 	public ResponseEntity<Map> myBoardList(@PathVariable String userNick,@PathVariable int boardReqPage){
 		Map map = boardService.selectMyBoardList(userNick, boardReqPage);
+		return ResponseEntity.ok(map);
+	}
+	
+	@GetMapping(value = "/myReviewList/{userNick}/{reqPage}")
+	public ResponseEntity<Map> myReviewList(@PathVariable String userNick, @PathVariable int reqPage){
+		Map map = productService.myReviewList(userNick, reqPage);
+		System.out.println("리뷰 리스트 : "+map.get("list"));
 		return ResponseEntity.ok(map);
 	}
 	

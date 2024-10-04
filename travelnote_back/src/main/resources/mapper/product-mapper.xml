@@ -334,4 +334,13 @@
   	select count(*) from wish where product_no=#{productNo}
   </select>
   
+  <!-- 오건하 작성 2024-10-04 -->
+  <select id="myReviewTotalCount" resultType="int">
+  	select count(*) from review join user_tbl on(review_writer = user_email) where user_nick = #{userNick}
+  </select>
+  
+  <!-- 오건하 작성 2024-10-04 -->
+  <select id="myReviewList" resultType="review">
+  	select product_no, review_writer, review_score,product_name,review_content, review_date from review join user_tbl on(review_writer = user_email) join product using(product_no) where user_nick = #{userNick}
+  </select>
 </mapper>

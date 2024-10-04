@@ -118,7 +118,8 @@ td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 100%;
+  width: 200px;
+  margin: 0 auto;
 }
 .view-title:hover {
   cursor: pointer;

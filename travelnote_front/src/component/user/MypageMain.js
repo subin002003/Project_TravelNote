@@ -11,6 +11,7 @@ import PersonalBoardAnswerUpdate from "./PersonalBoardAnswerUpdate";
 import ManageBoard from "./ManageBoard";
 import ManageUser from "./ManageUser";
 import MyBoard from "./MyBoard";
+import MyReview from "./MyReview";
 
 const MypageMain = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const MypageMain = () => {
     { url: "#", text: "내 일정" },
     { url: "#", text: "공유된 일정" },
     { url: "myboard", text: "내가 작성한 글" },
+    { url: "myReview", text: "내가 작성한 리뷰" },
   ]);
 
   // 로그인 상태 체크 및 리다이렉트
@@ -95,6 +97,7 @@ const MypageMain = () => {
             <Routes>
               <Route path="info" element={<MyInfo />} />
               <Route path="myboard" element={<MyBoard />} />
+              <Route path="myReview" element={<MyReview />} />
               <Route path="admin/manageBoard" element={<ManageBoard />} />
               <Route path="admin/manageUser" element={<ManageUser />} />
 

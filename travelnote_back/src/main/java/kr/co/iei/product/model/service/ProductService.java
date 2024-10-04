@@ -267,4 +267,18 @@ public class ProductService {
 		return productLikeCount;
 	}
 
+	//오건하 작성 2024-10-04
+	public Map myReviewList(String userNick, int reqPage) {
+		int numPerPage = 15;
+		int pageNaviSize = 5;
+		int totalCount = productDao.myReviewTotalCount(userNick);
+		PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
+		pi.setUserNick(userNick);
+		List list = productDao.myReviewList(pi);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list",list);
+		map.put("pi", pi);
+		return map;
+	}
+
 }
