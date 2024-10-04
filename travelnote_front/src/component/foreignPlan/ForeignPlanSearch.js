@@ -35,9 +35,19 @@ const ForeignPlanSearch = (props) => {
     searchAirport,
     setSearchAirport,
   } = props;
-  const [category, setCategory] = useState(1); // 1일 때 항공편, 2일 때 장소
+  const [category, setCategory] = useState(2); // 1일 때 항공편, 2일 때 장소
 
   // 추천 명소로 저장된 정보 목록 조회
+
+  // 날짜 변경 시 입력값 리셋
+  useEffect(() => {
+    setDepartInfo({});
+    setArrivalInfo({});
+    setIsNextDayButtonChecked(false);
+    setSearchDepartAirport();
+    setSearchArrivalAirport();
+    setSearchAirport();
+  }, [selectedDay]);
 
   // 장소 검색 인풋에 엔터 입력 시 검색
   const changeSearchInput = (e) => {
@@ -156,14 +166,20 @@ const ForeignPlanSearch = (props) => {
     const flightsInfo = [departInfo, arrivalInfo];
     axios
       .post(`${backServer}/foreign/addFlights`, flightsInfo)
-      .then(() => {})
-      .catch(() => {});
-    // const checkInputResult = checkInput();
-    // console.log(checkInputResult);
-    // if (checkInputResult) {
-    // }
-    // const checkTimeResult = checkTime();
-    // console.log(checkTimeResult);
+      .then((res) => {
+        if (res.data) {
+          setIsPlanAdded(true);
+          setDepartInfo({ departAirport: "" });
+          setArrivalInfo({ arrivalAirport: "" });
+          setIsNextDayButtonChecked(false);
+          setSearchDepartAirport("");
+          setSearchArrivalAirport("");
+          setSearchAirport("");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

@@ -70,7 +70,7 @@
 		<selectKey resultType="int" keyProperty="planSeq" order="BEFORE">
 			select coalesce(max(plan_seq) + 1, 1) from plan where itinerary_no = #{itineraryNo} and plan_day = #{planDay}
 		</selectKey>
-		insert into plan values(plan_no_seq.nextval, #{itineraryNo}, #{planDay}, #{planDate}, #{planSeq}, #{planAddress}, #{planLatitude}, #{planLongitude}, null, null, null, 1, #{planName}, #{planId})
+		insert into plan values(plan_no_seq.nextval, #{itineraryNo}, #{planDay}, #{planDate}, #{planSeq}, #{planAddress}, #{planLatitude}, #{planLongitude}, #{planTime}, #{planMemo}, #{planImage}, 1, #{planName}, #{planId})
 	</insert>
 
 

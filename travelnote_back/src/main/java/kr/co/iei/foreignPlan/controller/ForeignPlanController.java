@@ -87,9 +87,9 @@ public class ForeignPlanController {
 	
 	// 일정에 항공편 추가
 	@PostMapping(value="/addFlights")
-	public ResponseEntity<Integer> addFlights(@RequestBody ArrayList<ForeignPlanDTO> flightInfo) {
-		int result = foreignPlanService.insertFlights(flightInfo);
-		return ResponseEntity.ok(0);
+	public ResponseEntity<Boolean> addFlights(@RequestBody ArrayList<ForeignPlanDTO> flightInfo) {
+		boolean result = foreignPlanService.insertFlights(flightInfo);
+		return ResponseEntity.ok(result);
 	}
 	
 	
