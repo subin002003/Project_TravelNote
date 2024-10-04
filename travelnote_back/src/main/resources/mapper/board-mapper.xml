@@ -25,7 +25,23 @@
 	  				where rnum between #{start} and #{end}
   	</select>
   	
-  	<!-- 검색 게시물 조회 -->
+  	<!-- 검색된 게시물 수 조회 -->
+	<select id="searchTotalCount" resultType="int">
+	    select count(*) from board 
+	    where board_status = 1 and board_type = 1 
+	    <if test="searchFilter == 'title'">
+	        and board_title like '%' || #{searchTerm} || '%'
+	    </if>
+	    <if test="searchFilter == 'writer'">
+	        and board_writer like '%' || #{searchTerm} || '%'
+	    </if>
+	    <if test="searchFilter == 'category'">
+	        and board_category like '%' || #{searchTerm} || '%'
+	    </if>
+	</select>
+  	
+  	
+  	<!-- 검색된 게시물 조회 -->
 	<select id="selectBoardSearchList" resultType="board">
 	    select * from 
 	    (
@@ -54,20 +70,7 @@
 	    		where rnum between #{pi.start} and #{pi.end}
 	</select>
 
-	<!-- 검색된 게시물 수 조회 -->
-	<select id="searchTotalCount" resultType="int">
-	    select count(*) from board 
-	    where board_status = 1 and board_type = 1 
-	    <if test="searchFilter == 'title'">
-	        and board_title like '%' || #{searchTerm} || '%'
-	    </if>
-	    <if test="searchFilter == 'writer'">
-	        and board_writer like '%' || #{searchTerm} || '%'
-	    </if>
-	    <if test="searchFilter == 'category'">
-	        and board_category like '%' || #{searchTerm} || '%'
-	    </if>
-	</select>
+	
   	
   	<!-- 게시물 등록 -->
   	<insert id="insertBoard">
