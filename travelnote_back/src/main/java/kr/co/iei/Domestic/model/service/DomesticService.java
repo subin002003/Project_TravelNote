@@ -18,7 +18,6 @@ import kr.co.iei.Domestic.model.dto.ItineraryDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
 import kr.co.iei.Domestic.model.dto.PlanDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
-import kr.co.iei.foreignPlan.model.dto.ForeignEditPlanDTO;
 
 
 @Service
@@ -82,11 +81,14 @@ public class DomesticService {
 		int result = domesticDao.insertPlan(plan);
 		return result;
 	}
-	public List<ItineraryDTO> scheduleUpdate(int regionNo) {
-		List<ItineraryDTO> regions = domesticDao.scheduleUpdate(regionNo);
-		return regions;
+	
+	public ItineraryDTO scheduleUpdate(int itineraryNo) {
+		ItineraryDTO itinerary = domesticDao.scheduleUpdate(itineraryNo);
+		return itinerary;
 	}
+	
 	public void updateItinerary(int itineraryNo, ItineraryDTO itineraryDTO) {
+		itineraryDTO.setItineraryNo(itineraryNo);
 	    domesticDao.updateItinerary(itineraryNo, itineraryDTO);
 	}
 

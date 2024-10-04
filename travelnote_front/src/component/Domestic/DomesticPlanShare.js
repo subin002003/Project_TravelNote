@@ -1,140 +1,164 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { useRecoilState } from "recoil";
-import { loginEmailState } from "../utils/RecoilData";
 
 const DomesticPlanShare = () => {
-  const backServer = process.env.REACT_APP_BACK_SERVER;
   const params = useParams();
-  const cityName = params.cityName;
-  const regionNo = params.regionNo;
-  const itineraryNo = params.itineraryNo;
-  const navigate = useNavigate();
-  const [loginEmail] = useRecoilState(loginEmailState);
-  const [tripTitle, setTripTitle] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [cityInfo, setCityInfo] = useState(null);
+  const itineraryNo = params.itineraryNo; // URL에서 itineraryNo 가져오기
+  const [tripDetails, setTripDetails] = useState(null);
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
-
-  console.log(regionNo, regionNo);
-  console.log(cityName, cityName);
-  console.log(itineraryNo, itineraryNo);
-  // 현재 날짜를 YYYY-MM-DD 형식으로 가져오기
+  const [tripTitle, setTripTitle] = useState(""); // 여행 제목 상태 추가
+  const [startDate, setStartDate] = useState(""); // 시작 날짜 상태 추가
+  const [endDate, setEndDate] = useState(""); // 종료 날짜 상태 추가
+  const [email, setEmail] = useState(""); // 동행자 이메일 상태 추가
+  const [showInvite, setShowInvite] = useState(false); // 초대 폼 표시 상태
   const today = new Date().toISOString().split("T")[0];
 
-  // 도시 정보와 기존 여행 일정 정보 가져오기
   useEffect(() => {
-    const fetchData = () => {
-      // 도시 정보 가져오기
-      axios
-        .get(`${backServer}/domestic/view/${regionNo}`)
-        .then((cityResponse) => {
-          setCityInfo(cityResponse.data);
+    const backServer = process.env.REACT_APP_BACK_SERVER;
 
-          // 기존 여행 일정 정보 가져오기
-          return axios.get(`${backServer}/domestic/itinerary/${itineraryNo}`); // itineraryNo 사용
-        })
-        .then((itineraryResponse) => {
-          const itinerary = itineraryResponse.data;
-          setTripTitle(itinerary.itineraryTitle); // 기존 제목 설정
-          setStartDate(itinerary.itineraryStartDate); // 기존 시작 날짜 설정
-          setEndDate(itinerary.itineraryEndDate); // 기존 종료 날짜 설정
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-          Swal.fire({
-            icon: "error",
-            text: "여행 일정을 가져오는 데 실패했습니다.",
-          });
-        })
-        .finally(() => {
-          setLoading(false); // 로딩 완료
-        });
-    };
-
-    fetchData();
-  }, [backServer, regionNo, itineraryNo]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const obj = {
-      userEmail: loginEmail,
-      regionNo: regionNo,
-      itineraryStartDate: startDate,
-      itineraryEndDate: endDate,
-      itineraryTitle: tripTitle.trim() || `${cityName} 여행`,
-    };
-
+    // 여행 계획 정보를 가져오는 API 호출
     axios
-      .patch(`${backServer}/domestic/itinerary/${itineraryNo}`, obj) // itineraryNo를 URL에 포함
-      .then((response) => {
-        Swal.fire({
-          icon: "success",
-          text: "여행 일정 수정이 성공적으로 저장되었습니다.",
-        });
-        navigate(`/schedule/${itineraryNo}`); // 수정된 일정 ID로 리디렉션
+      .get(`${backServer}/domestic/Schedule/${itineraryNo}`)
+      .then((res) => {
+        console.log("Trip details fetched:", res.data); // 성공 로그
+        setTripDetails(res.data);
+        setTripTitle(res.data.itineraryTitle); // 제목 설정
+        setStartDate(res.data.itineraryStartDate); // 시작 날짜 설정
+        setEndDate(res.data.itineraryEndDate); // 종료 날짜 설정
+        setLoading(false); // 로딩 완료
       })
-      .catch((error) => {
-        console.error("Error saving itinerary:", error);
+      .catch((err) => {
+        console.error("Error fetching trip details:", err);
         Swal.fire({
           icon: "error",
-          text: "여행 일정 수정에 실패했습니다.",
+          text: "여행 계획 정보를 가져오는 데 실패했습니다.",
+        });
+        setLoading(false); // 로딩 완료
+      });
+  }, [itineraryNo]);
+
+  // 여행 계획 수정하기 버튼 클릭 시 실행되는 함수
+  const handleUpdate = () => {
+    const backServer = process.env.REACT_APP_BACK_SERVER;
+
+    // 수정된 내용 서버에 제출
+    axios
+      .patch(`${backServer}/domestic/itinerary/${itineraryNo}`, {
+        itineraryTitle: tripTitle,
+        itineraryStartDate: startDate,
+        itineraryEndDate: endDate,
+      })
+      .then((res) => {
+        Swal.fire({
+          icon: "success",
+          text: res.data,
+        });
+      })
+      .catch((err) => {
+        console.error("Error updating trip details:", err);
+        Swal.fire({
+          icon: "error",
+          text: "여행 계획 수정에 실패했습니다.",
         });
       });
   };
 
+  // 동행자 추가 버튼 클릭 시 실행되는 함수
+  const handleAddCompanion = () => {
+    const backServer = process.env.REACT_APP_BACK_SERVER;
+
+    // 이메일 서버에 전송
+    axios
+      .post(`${backServer}/domestic/invite`, {
+        itineraryNo,
+        email,
+      })
+      .then((res) => {
+        Swal.fire({
+          icon: "success",
+          text: `${email}을(를) 초대했습니다.`,
+        });
+        setEmail(""); // 입력 필드 초기화
+        setShowInvite(false); // 초대 폼 숨기기
+      })
+      .catch((err) => {
+        console.error("Error inviting companion:", err);
+        Swal.fire({
+          icon: "error",
+          text: "동행자 초대에 실패했습니다.",
+        });
+      });
+  };
+
+  if (loading) {
+    return <p>여행 계획 정보를 로드 중입니다...</p>;
+  }
+
+  if (!tripDetails) {
+    return <p>여행 계획 정보를 찾을 수 없습니다.</p>;
+  }
+
   return (
-    <div className="city-detail">
-      <div className="detail-content">
-        {cityInfo && (
+    <div className="trip-share-container">
+      <div className="invite-container">
+        <button
+          className="companion-btn"
+          onClick={() => setShowInvite(!showInvite)}
+        >
+          {showInvite ? "취소" : "동행자 추가"}
+        </button>
+        {showInvite && (
           <>
-            <h1>{cityInfo.regionName}</h1>
-            <img
-              src={`/images/${cityInfo.regionName}.jpg`}
-              alt={cityInfo.regionName}
-              className="city-detail-image"
+            <input
+              type="email"
+              placeholder="동행자 이메일을 입력해주세요"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} // 이메일 변경 시 상태 업데이트
+              className="email-input"
             />
-            <form className="trip-form" onSubmit={handleSubmit}>
-              <label>
-                여행 제목 입력:
-                <input
-                  type="text"
-                  placeholder="여행 제목 (수정 가능)"
-                  value={tripTitle}
-                  onChange={(e) => setTripTitle(e.target.value)}
-                />
-              </label>
-              <div className="date-inputs">
-                <label>
-                  여행 시작 날짜:
-                  <input
-                    type="date"
-                    value={startDate}
-                    min={today}
-                    onChange={(e) => setStartDate(e.target.value)}
-                  />
-                </label>
-                <label>
-                  여행 종료 날짜:
-                  <input
-                    type="date"
-                    value={endDate}
-                    min={today}
-                    onChange={(e) => setEndDate(e.target.value)}
-                  />
-                </label>
-              </div>
-              <button className="trip-btn" type="submit">
-                여행 일정 수정하기
-              </button>
-            </form>
+            <button onClick={handleAddCompanion} className="add-companion-btn">
+              초대하기
+            </button>
           </>
         )}
       </div>
+      <div className="trip-details">
+        <label>
+          여행 제목 입력:
+          <input
+            type="text"
+            placeholder="여행 제목을 입력해주세요"
+            value={tripTitle}
+            onChange={(e) => setTripTitle(e.target.value)} // 제목 변경 시 상태 업데이트
+          />
+        </label>
+        <div className="date-inputs">
+          <label>
+            여행 시작 날짜:
+            <input
+              type="date"
+              value={startDate}
+              min={today}
+              onChange={(e) => setStartDate(e.target.value)} // 시작 날짜 변경 시 상태 업데이트
+            />
+          </label>
+          <label>
+            여행 종료 날짜:
+            <input
+              type="date"
+              value={endDate}
+              min={today}
+              onChange={(e) => setEndDate(e.target.value)} // 종료 날짜 변경 시 상태 업데이트
+            />
+          </label>
+        </div>
+      </div>
+      {/* 수정된 내용을 제출할 수 있는 버튼 추가 */}
+      <button className="Plan-btn" onClick={handleUpdate}>
+        여행 계획 수정하기
+      </button>
     </div>
   );
 };

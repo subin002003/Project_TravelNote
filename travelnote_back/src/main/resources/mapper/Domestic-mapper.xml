@@ -4,20 +4,26 @@
 
 	<!-- 지역 리스트 가져오기 -->
 	<select id="getAllRegions" resultType="region">
-		SELECT reg.*, time_zone, currency_code
+		SELECT reg.*, time_zone,
+		currency_code
 		FROM (SELECT * FROM (SELECT ROWNUM AS rnum, r.* FROM
-		(SELECT * FROM region WHERE country_name != '국가명' ORDER BY region_no DESC) r)
+		(SELECT * FROM region WHERE country_name != '국가명' ORDER BY region_no
+		DESC) r)
 		WHERE rnum BETWEEN #{startNum} AND #{endNum}) reg
-		LEFT JOIN region_info ON reg.region_no = region_info.region_no
+		LEFT JOIN
+		region_info ON reg.region_no = region_info.region_no
 	</select>
 
 	<!-- 일정 저장 -->
 	<insert id="saveItinerary">
 		INSERT INTO itinerary (itinerary_no, user_no, region_no,
 		itinerary_start_date, itinerary_end_date, itinerary_title)
-		VALUES (itinerary_no_seq.NEXTVAL,
-		(SELECT user_no FROM user_tbl WHERE user_email = #{userEmail}),
-		#{regionNo}, #{itineraryStartDate}, #{itineraryEndDate}, #{itineraryTitle})
+		VALUES
+		(itinerary_no_seq.NEXTVAL,
+		(SELECT user_no FROM user_tbl WHERE
+		user_email = #{userEmail}),
+		#{regionNo}, #{itineraryStartDate},
+		#{itineraryEndDate}, #{itineraryTitle})
 		<selectKey resultType="int" keyProperty="itineraryNo"
 			order="AFTER">
 			SELECT MAX(itinerary_no) FROM itinerary
@@ -26,17 +32,23 @@
 
 	<!-- 일정 상세조회 메서드 -->
 	<select id="getItinerary" resultType="itineraryInfo">
-		select i.*, region_name, country_name from
-		(select itinerary_no, region_no, itinerary_start_date, itinerary_end_date,
-		itinerary_title from itinerary where itinerary_no = #{itineraryNo})i
-		join (region)r on i.region_no = r.region_no
+		select i.*, region_name,
+		country_name from
+		(select itinerary_no, region_no,
+		itinerary_start_date, itinerary_end_date,
+		itinerary_title from
+		itinerary where itinerary_no = #{itineraryNo})i
+		join (region)r on
+		i.region_no = r.region_no
 	</select>
 
 	<!-- 여행지 정보 조회 -->
 	<select id="selectRegion" resultType="Region">
-		SELECT r.region_no, r.region_name, r.country_name, r.region_img
+		SELECT r.region_no,
+		r.region_name, r.country_name, r.region_img
 		FROM region r
-		WHERE r.region_no = #{regionNo}
+		WHERE
+		r.region_no = #{regionNo}
 	</select>
 
 	<select id="selectPlan" resultType="Plan">
@@ -50,27 +62,36 @@
 	</update>
 
 	<delete id="deletePlans" parameterType="int">
-		DELETE FROM plan WHERE plan_no = #{planNo}
+		DELETE FROM plan WHERE
+		plan_no = #{planNo}
 	</delete>
 
 	<insert id="insertPlan" parameterType="plan">
-		INSERT INTO plan VALUES (plan_no_seq.nextval, #{itineraryNo}, #{planDay},
+		INSERT INTO plan VALUES
+		(plan_no_seq.nextval, #{itineraryNo}, #{planDay},
 		#{planDate},
-		(SELECT NVL(MAX(plan_seq), 0) + 1 FROM plan WHERE itinerary_no =
+		(SELECT
+		NVL(MAX(plan_seq), 0) + 1 FROM plan WHERE itinerary_no =
 		#{itineraryNo}), #{planAddress},
-		#{planLatitude}, #{planLongitude}, null, null, null, 1, #{planName},null)
+		#{planLatitude}, #{planLongitude},
+		null, null, null, 1, #{planName},null)
 	</insert>
 
 	<select id="scheduleUpdate" resultType="Itinerary">
-		select * from Itinerary where region_No = #{regionNo}
+		SELECT itinerary_no, itinerary_title, itinerary_start_date,
+		itinerary_end_date
+		FROM Itinerary
+		WHERE itinerary_no = #{itineraryNo}
 	</select>
 
 	<update id="updateItinerary" parameterType="Itinerary">
-		UPDATE Itinerary SET itinerary_title = #{itineraryTitle},
-		itinerary_start_date = #{itineraryStartDate},
-		itinerary_end_date = #{itineraryEndDate}
-		WHERE itinerary_no = #{itineraryNo}
-	</update>
+    UPDATE Itinerary SET 
+        itinerary_title = #{itineraryDTO.itineraryTitle},
+        itinerary_start_date = #{itineraryDTO.itineraryStartDate},
+        itinerary_end_date = #{itineraryDTO.itineraryEndDate} 
+    WHERE itinerary_no = #{itineraryNo}
+</update>
+
 
 
 </mapper>

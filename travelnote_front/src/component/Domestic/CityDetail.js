@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { useRecoilState } from "recoil";
 import { loginEmailState } from "../utils/RecoilData";
 import WeatherDescKo from "./WeatherDescKo";
+import jejuImage from "../common/images/mainImage/jeju.jpg";
 
 const CityDetail = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -18,6 +19,21 @@ const CityDetail = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [cityInfo, setCityInfo] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const API_KEYS = {
+    weather: "a33e108aafd2700b393505935a10c98e", // OpenWeatherMap API 키
+  };
+
+  const locations = [
+    {
+      name: "Jeju",
+      currency: "KRW",
+      description:
+        "제주는 한국의 아름다운 섬으로, 독특한 자연경관과 풍부한 문화유산을 자랑합니다.",
+      images: jejuImage,
+    },
+  ];
 
   // 현재 날짜를 YYYY-MM-DD 형식으로 가져오기
   const today = new Date().toISOString().split("T")[0];
@@ -46,7 +62,7 @@ const CityDetail = () => {
     try {
       // 도시 이름으로 날씨를 가져오는 API 호출
       const res = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric`
+        `/api/data/2.5/weather?q=${locations[currentIndex].name}&appid=${API_KEYS.weather}&units=metric`
       );
       const weatherId = res.data.weather[0].id;
       const weatherKo = WeatherDescKo[weatherId];
