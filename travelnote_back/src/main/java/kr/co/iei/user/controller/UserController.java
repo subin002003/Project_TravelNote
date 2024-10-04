@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.iei.board.model.service.BoardService;
+import kr.co.iei.pay.model.dto.PayDTO;
+import kr.co.iei.pay.model.service.PayService;
 import kr.co.iei.product.model.service.ProductService;
 import kr.co.iei.user.model.dto.LoginUserDTO;
 import kr.co.iei.user.model.dto.UserDTO;
@@ -37,6 +39,8 @@ public class UserController {
 	private BoardService boardService;
 	@Autowired
 	private ProductService productService;
+	@Autowired
+	private PayService payService;
 	
 	@GetMapping(value="/checkEmail/{userEmail}")
 	public ResponseEntity<Integer> checkEmail(@PathVariable String userEmail){
@@ -184,4 +188,15 @@ public class UserController {
 		return ResponseEntity.ok(map);
 	}
 	
+	@GetMapping(value = "/myReservation/{userNick}/{reqPage}")
+	public ResponseEntity<Map> myReservation(@PathVariable String userNick, @PathVariable int reqPage){
+		Map map = payService.myReservation(userNick, reqPage);
+		return ResponseEntity.ok(map);
+	}
+	
+	@GetMapping(value = "/reservationInfo/{orderNo}")
+	public ResponseEntity<PayDTO> reservationInfo(@PathVariable int orderNo){
+		PayDTO reservationInfo = payService.reservationInfo(orderNo);
+		return ResponseEntity.ok(reservationInfo);
+	}
 }

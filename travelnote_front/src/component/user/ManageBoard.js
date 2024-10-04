@@ -90,9 +90,11 @@ const ReportBoardItem = (props) => {
     <tr>
       <td>{reportBoard.boardNo}</td>
       <td>
-        <Link to={`/board/view/${reportBoard.boardNo}`}>
-          {reportBoard.boardTitle}
-        </Link>
+        <p className="manageboard-title">
+          <Link to={`/board/view/${reportBoard.boardNo}`}>
+            {reportBoard.boardTitle}
+          </Link>
+        </p>
       </td>
       <td>{reportBoard.boardWriter}</td>
       <td>{reportBoard.boardDate}</td>

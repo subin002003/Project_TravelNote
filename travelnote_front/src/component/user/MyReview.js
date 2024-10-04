@@ -3,6 +3,7 @@ import { useRecoilState } from "recoil";
 import { userNickState } from "../utils/RecoilData";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import PageNavi from "../utils/PagiNavi";
 
 const MyReview = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -22,7 +23,7 @@ const MyReview = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [reqPage]);
+  }, [reqPage, userNick]);
 
   return (
     <div className="myreview-content">
@@ -41,6 +42,9 @@ const MyReview = () => {
             })}
           </tbody>
         </table>
+        <div style={{ marginTop: "20px" }}>
+          <PageNavi pi={pi} reqPage={reqPage} setReqPage={setReqPage} />
+        </div>
       </div>
     </div>
   );

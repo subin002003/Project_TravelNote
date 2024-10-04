@@ -12,6 +12,8 @@ import ManageBoard from "./ManageBoard";
 import ManageUser from "./ManageUser";
 import MyBoard from "./MyBoard";
 import MyReview from "./MyReview";
+import MyReservation from "./MyReservation";
+import ReservationView from "./ReservationView";
 
 const MypageMain = () => {
   const navigate = useNavigate();
@@ -22,7 +24,7 @@ const MypageMain = () => {
   const [menus, setMenus] = useState([
     { url: "info", text: "내 정보 수정" },
     { url: "changePw", text: "비밀번호 변경" },
-    { url: "#", text: "내 예약" },
+    { url: "myReservation", text: "내 예약" },
     { url: "#", text: "내 일정" },
     { url: "#", text: "공유된 일정" },
     { url: "myboard", text: "내가 작성한 글" },
@@ -98,14 +100,17 @@ const MypageMain = () => {
               <Route path="info" element={<MyInfo />} />
               <Route path="myboard" element={<MyBoard />} />
               <Route path="myReview" element={<MyReview />} />
+              <Route path="myReservation" element={<MyReservation />} />
+              <Route
+                path="myReservation/:orderNo"
+                element={<ReservationView />}
+              />
               <Route path="admin/manageBoard" element={<ManageBoard />} />
               <Route path="admin/manageUser" element={<ManageUser />} />
-
               <Route
                 path="admin/personalBoardList"
                 element={<PersonalBoardList />}
               />
-
               <Route
                 path="admin/personalBoardList/writeAnswer/:personalBoardNo"
                 element={<PersonalBoardAnswerWrite />}

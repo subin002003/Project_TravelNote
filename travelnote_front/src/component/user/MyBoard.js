@@ -70,7 +70,9 @@ const BoardItem = (props) => {
   return (
     <tr>
       <td>
-        <Link to={`/board/view/${board.boardNo}`}>{board.boardTitle}</Link>
+        <p className="myboard-title">
+          <Link to={`/board/view/${board.boardNo}`}>{board.boardTitle}</Link>
+        </p>
       </td>
       <td>{board.boardCategory}</td>
       <td>{board.boardDate}</td>
