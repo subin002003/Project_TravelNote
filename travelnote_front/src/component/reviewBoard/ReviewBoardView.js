@@ -6,7 +6,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { userNickState, isLoginState } from "../utils/RecoilData";
 import Swal from "sweetalert2";
 
-const BoardView = () => {
+const ReviewBoardView = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
   const params = useParams();
@@ -568,4 +568,4 @@ const FileItem = (props) => {
     </div>
   );
 };
-export default BoardView;
+export default ReviewBoardView;

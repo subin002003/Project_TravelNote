@@ -1,16 +1,20 @@
 package kr.co.iei.Domestic.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import kr.co.iei.Domestic.model.dto.CompanionDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
 import kr.co.iei.Domestic.model.dto.PlanDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
 import kr.co.iei.Domestic.model.service.DomesticService;
+import kr.co.iei.user.model.dto.UserDTO;
 
 
 @CrossOrigin("*")  // CORS 설정
@@ -79,10 +83,10 @@ public class DomesticController {
     }
     
     //불러온 여행 일정 조회
-    @GetMapping(value="/itinerary/{regionNo}")
-    public ResponseEntity<List<ItineraryDTO>> scheduleUpdate(@PathVariable int regionNo) {
-        List<ItineraryDTO> region = domesticService.scheduleUpdate(regionNo);
-        return ResponseEntity.ok(region);
+    @GetMapping(value="/Schedule/{itineraryNo}")
+    public ResponseEntity<ItineraryDTO> scheduleUpdate(@PathVariable int itineraryNo) {
+        ItineraryDTO itinerary = domesticService.scheduleUpdate(itineraryNo);
+        return ResponseEntity.ok(itinerary);
     }
     
     //불러온여행 일정 수정
@@ -91,4 +95,30 @@ public class DomesticController {
         domesticService.updateItinerary(itineraryNo, itineraryDTO);
         return ResponseEntity.ok("일정이 성공적으로 수정되었습니다.");
     }
+    
+    @PostMapping("/invite")
+    public ResponseEntity<String> inviteCompanion(@RequestBody Map<String, String> request) {
+        String userEmail = request.get("email");  // 초대할 동행자의 이메일
+        int itineraryNo = Integer.parseInt(request.get("itineraryNo"));
+
+        // 이메일을 통해 사용자 정보 조회 (이미 등록된 사용자인지 확인)
+        UserDTO user = userService.findUserByEmail(userEmail);
+        
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
+        }
+
+        // 이미 동행자로 추가된 사용자인지 확인
+        CompanionDTO companion = domesticService.findCompanion(itineraryNo, user.getUserNo());
+        if (companion != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 동행자로 등록된 사용자입니다.");
+        }
+
+        // 동행자 추가
+        CompanionDTO newCompanion = new CompanionDTO(0, itineraryNo, user.getUserNo());
+        domesticService.addCompanion(newCompanion);
+
+        return ResponseEntity.ok("동행자를 성공적으로 초대했습니다.");
+    }
+
 }
