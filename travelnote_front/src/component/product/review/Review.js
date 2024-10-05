@@ -106,8 +106,8 @@ const Review = ({ productNo, open, handleClose, review, parentReviewNo }) => {
               title: review
                 ? "리뷰가 수정되었습니다."
                 : reviewCommentRef > 0
-                ? "리뷰 답글이 등록되었습니다."
-                : "리뷰가 등록되었습니다.",
+                  ? "리뷰 답글이 등록되었습니다."
+                  : "리뷰가 등록되었습니다.",
               icon: "success",
             });
             handleClose(); // 다이얼로그 닫기

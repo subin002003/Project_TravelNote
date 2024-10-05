@@ -35,6 +35,16 @@ import {
   userTypeState,
 } from "../utils/RecoilData";
 import ChannelTalk from "./ChannelTalk";
+// mui-select
+import OutlinedInput from '@mui/material/OutlinedInput';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
+const sortOptions = [
+  { label: '좋아요순', value: 'mostLiked' },
+  { label: '최신순', value: 'newest' },
+];
 
 const ProductView = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -43,9 +53,14 @@ const ProductView = () => {
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
   const userEmail = loginEmail;
   const [userType, setUserType] = useRecoilState(userTypeState);
+
   const params = useParams();
   const productNo = params.productNo;
-  const [product, setProduct] = useState({ fileList: [], reviews: [] });
+  // const [product, setProduct] = useState({ fileList: [], reviews: [] });
+  const [product, setProduct] = useState({ productFileList: [], productReviewList: [] });
+  const [productFileList, setProductFileList] = useState([]);
+  const [productReviewList, setProductReviewList] = useState([]);
+
   const navigate = useNavigate();
   const [people, setPeople] = useState(1); // 초기 수량을 1로 설정
   const [dateRange, setDateRange] = useState("여행 날짜를 선택하세요."); // 선택된 날짜 범위를 상태로 관리
@@ -60,8 +75,10 @@ const ProductView = () => {
     axios
       .get(`${backServer}/product/productNo/${productNo}/${userEmail}`)
       .then((res) => {
-        // console.log(res.data);
-        setProduct(res.data);
+        console.log(res.data);
+        setProduct(res.data.product);
+        setProductFileList(res.data.productFileList); // 첨부파일 관리
+        setProductReviewList(res.data.productReviewList); // 리뷰 관리
       })
       .catch((err) => {
         console.log("Error:", err.response ? err.response.data : err.message);
@@ -72,6 +89,24 @@ const ProductView = () => {
         });
       });
   }, [productNo, userEmail]);
+
+  // 각 정렬 옵션에 따른 클릭 이벤트 처리
+  const handleSortClick = (sortOption) => {
+    console.log(sortOption);
+
+    axios.get(`${backServer}/product/productNo/${productNo}/${userEmail}/${sortOption}`)
+      .then((res) => {
+        console.log(res.data); // 응답 데이터 로그
+        const newReviews = res.data.productReviewList; // 새 리뷰 리스트
+        setProductReviewList(newReviews); // 리뷰 관리
+        console.log(newReviews); // 새 리뷰 리스트 출력
+        console.log(productReviewList);
+      })
+      .catch((err) => {
+        console.error('Axios error:', err);
+        console.error('Error response data:', err.response ? err.response.data : 'No response data');
+      });
+  };
 
   // 날짜 범위 상태
   const [startDate, setStartDate] = useState(null);
@@ -147,7 +182,10 @@ const ProductView = () => {
 
   const minus = () => {
     if (people === 1) {
-      alert("최소 구매 수량은 1개 입니다.");
+      Swal.fire({
+        title: "최소 구매 수량은 1개 입니다.",
+        icon: "warning",
+      });
     } else {
       setPeople((prevCount) => prevCount - 1); // 이전 값을 기반으로 상태 업데이트
     }
@@ -155,7 +193,10 @@ const ProductView = () => {
 
   const plus = () => {
     if (people === 10) {
-      alert("최대 구매 수량은 10개 입니다.");
+      Swal.fire({
+        title: "최대 구매 수량은 10개 입니다.",
+        icon: "warning",
+      });
     } else {
       setPeople((prevCount) => prevCount + 1); // 이전 값을 기반으로 상태 업데이트
     }
@@ -190,8 +231,8 @@ const ProductView = () => {
               }}
               autoplay={{ delay: 2500 }}
             >
-              {product.fileList && product.fileList.length > 0 ? (
-                product.fileList.map((file, i) => (
+              {productFileList && productFileList.length > 0 ? (
+                productFileList.map((file, i) => (
                   <SwiperSlide key={"file-" + i}>
                     <img
                       src={`${backServer}/product/${file.filepath}`}
@@ -293,7 +334,7 @@ const ProductView = () => {
             {product.productInfo ? (
               <Viewer initialValue={product.productInfo} />
             ) : (
-              ""
+              <p>여행지 정보가 없습니다.</p>
             )}
           </div>
         </div>
@@ -307,12 +348,13 @@ const ProductView = () => {
           style={{
             display: "flex",
             justifyContent: "space-between",
+            alignItems: "center",
             marginBottom: "0px",
           }}
           className="section-title"
         >
           <span style={{ fontSize: "20px" }}>
-            <strong>리뷰({product.reviews.length}개)</strong>
+            <strong>리뷰({productReviewList.length}개)</strong>
             {/* <strong>리뷰({reviews.length}개)</strong> */}
           </span>
           <button
@@ -329,6 +371,25 @@ const ProductView = () => {
             </span>
             리뷰 작성
           </button>
+          {/* 정렬을 위한 Select 대신 직접적인 클릭 이벤트 처리 */}
+          <FormControl sx={{ m: 1, width: '150px' }}>
+            <Select
+              displayEmpty
+              input={<OutlinedInput />}
+              defaultValue="" // 기본값 설정
+              renderValue={() => <em>정렬 기준 선택</em>}
+            >
+              {sortOptions.map((option) => (
+                <MenuItem
+                  key={option.value}
+                  value={option.value}
+                  onClick={() => handleSortClick(option.value)} // onClick으로 axios 요청
+                >
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </div>
 
         <div className="line" style={{ margin: "30px 0" }}></div>
@@ -337,18 +398,8 @@ const ProductView = () => {
         <div className="commentBox">
           <div className="posting-review-wrap">
             <ul>
-              {/* {product.reviews.map((review, i) => {
-                return (
-                  <ReviewItem
-                    key={"review-" + i}
-                    product={product}
-                    review={review}
-                  />
-                );
-              })} */}
-
-              {product.reviews.length > 0 ? (
-                product.reviews.map((review, i) => (
+              {productReviewList.length > 0 ? (
+                productReviewList.map((review, i) => (
                   <ReviewItem
                     key={`review-${i}`}
                     product={product}
@@ -504,23 +555,6 @@ const ReviewItem = (props) => {
       }
     });
   };
-
-  // 리뷰 좋아요 상태가 변경될 때 리뷰 좋아요 수 다시 조회 함수
-  // useEffect(() => {
-  //   axios
-  //     .get(`${backServer}/product/${review.reviewNo}/likeCount`)
-  //     .then((res) => {
-  //       setReviewLikeCount(res.data.likeCount); // 최신 좋아요 수로 업데이트
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       Swal.fire({
-  //         title: "좋아요 수를 가져오는 데 실패했습니다.",
-  //         text: err.message,
-  //         icon: "error",
-  //       });
-  //     });
-  // }, [reviewLike]);
 
   const handleLikeToggle = () => {
     if (!isLogin) {

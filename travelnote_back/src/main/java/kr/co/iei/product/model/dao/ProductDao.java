@@ -15,19 +15,30 @@ public interface ProductDao {
 
 	int totalCount();
 
-	List selectProductList(PageInfo pi);
+	List<ProductDTO> selectProductList(PageInfo pi);
 
-	List selectProductListEmail(PageInfo pi, String userEmail);
+	List<ProductDTO> selectProductListEmail(PageInfo pi, String userEmail);
 
 	int insertProduct(ProductDTO product);
 
 	int insertProductFile(ProductFileDTO productFile);
 
-	ProductDTO selectOneProduct(int productNo);
+	// 상품 기본 정보 조회
+    ProductDTO selectOneProduct(int productNo);
 
-	List<ProductFileDTO> selectOneProductFileList(int productNo);
+    // 상품 파일 리스트 조회
+    List<ProductFileDTO> selectOneProductFileList(int productNo);
 
-	List<ReviewDTO> selectOneProductReviews(int productNo, int userNo);
+    // 사용자 번호 조회
+    int selectOneUser(String userEmail);
+
+	// 리뷰 리스트 조회
+    List<ReviewDTO> selectOneProductReviews(int productNo, int userNo);
+    
+    // 리뷰 리스트 (좋아요 순 정렬)
+    List<ReviewDTO> selectReviewListMostLiked(int productNo, int userNo);
+    // 리뷰 리스트 (최신순 정렬)
+    List<ReviewDTO> selectReviewListNewest(int productNo, int userNo);
 
 	ProductFileDTO getProductFile(int productFileNo);
 
@@ -38,8 +49,6 @@ public interface ProductDao {
 	List<ProductFileDTO> selectProductFile(int[] delProductFileNo);
 
 	int deleteProductFile(int[] delProductFileNo);
-
-	int selectOneUser(String userEmail);
 	
 	int insertWish(int productNo, List<UserDTO> user);
 	int deleteWish(int productNo, List<UserDTO> user);
@@ -75,8 +84,7 @@ public interface ProductDao {
 
 	int checkProductExists(int productNo);
 
-	List selectProductListMostLiked(PageInfo pi, String userEmail);
-
-	List selectProductListNewest(PageInfo pi, String userEmail);
-
+	// 상품 정렬
+	List<ProductDTO> selectProductListMostLiked(PageInfo pi, String userEmail);
+	List<ProductDTO> selectProductListNewest(PageInfo pi, String userEmail);
 }
