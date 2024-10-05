@@ -100,29 +100,29 @@ const ForeignPlanMap = (props) => {
     infoWindowRef.current = infoWindow;
 
     // 닫기 기능 추가
-    setTimeout(() => {
-      const closeButton = document.getElementById("info-window-close-button");
-      if (closeButton) {
-        closeButton.addEventListener("click", closeInfoWindow);
-      }
-    }, 100);
+    // setTimeout(() => {
+    //   const closeButton = document.getElementById("info-window-close-button");
+    //   if (closeButton) {
+    //     closeButton.addEventListener("click", closeInfoWindow);
+    //   }
+    // }, 100);
 
-    return () => {
-      if (infoWindowRef.current) {
-        infoWindowRef.current.close();
-      }
-      const closeButton = document.getElementById("info-window-close-button");
-      if (closeButton) {
-        closeButton.removeEventListener("click", closeInfoWindow);
-      }
-    };
+    // return () => {
+    //   if (infoWindowRef.current) {
+    //     infoWindowRef.current.close();
+    //   }
+    //   const closeButton = document.getElementById("info-window-close-button");
+    //   if (closeButton) {
+    //     closeButton.removeEventListener("click", closeInfoWindow);
+    //   }
+    // };
   }, [placeInfo]);
 
-  const closeInfoWindow = () => {
-    if (infoWindowRef.current) {
-      infoWindowRef.current.close();
-    }
-  };
+  // const closeInfoWindow = () => {
+  //   if (infoWindowRef.current) {
+  //     infoWindowRef.current.close();
+  //   }
+  // };
 
   // 장소 검색
   useEffect(() => {
@@ -139,6 +139,7 @@ const ForeignPlanMap = (props) => {
       language: "ko",
     };
 
+    // 기존 마커 지우기
     markerArr.forEach((marker) => {
       marker.setMap(null);
     });
@@ -159,6 +160,8 @@ const ForeignPlanMap = (props) => {
           bounds.extend(marker.position);
           marker.addListener("click", () => {
             map.setZoom(15);
+            console.log(2);
+
             map.setCenter(place.geometry.location);
             setPlaceInfo({
               placeName: place.name,
@@ -205,6 +208,7 @@ const ForeignPlanMap = (props) => {
       language: "ko",
     };
 
+    // 기존 마커 지우기
     markerArr.forEach((marker) => {
       marker.setMap(null);
     });

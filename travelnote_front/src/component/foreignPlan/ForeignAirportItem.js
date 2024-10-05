@@ -10,7 +10,6 @@ const ForeignAirportItem = (props) => {
     selectedDay,
     backServer,
     totalPlanDates,
-    setIsPlanAdded,
     departInfo,
     setDepartInfo,
     arrivalInfo,
@@ -20,7 +19,7 @@ const ForeignAirportItem = (props) => {
     setSearchPlaceList,
   } = props;
 
-  // 클릭 시 지도 이동
+  // 클릭 시 지도의 중심으로 위치 표시
   const viewPlace = () => {
     setSelectedPosition(place.geometry.location);
     setPlaceInfo({

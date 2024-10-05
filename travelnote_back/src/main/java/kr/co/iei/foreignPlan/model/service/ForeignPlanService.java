@@ -104,5 +104,12 @@ public class ForeignPlanService {
 		return (result == 2);
 	}
 
+	// 일정 삭제
+	@Transactional
+	public int deletePlan(int planNo) {
+		int result = foreignPlanDao.deletePlan(planNo);
+		return result;
+	}
+
 
 }

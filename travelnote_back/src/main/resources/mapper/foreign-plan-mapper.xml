@@ -72,7 +72,10 @@
 		</selectKey>
 		insert into plan values(plan_no_seq.nextval, #{itineraryNo}, #{planDay}, #{planDate}, #{planSeq}, #{planAddress}, #{planLatitude}, #{planLongitude}, #{planTime}, #{planMemo}, #{planImage}, 1, #{planName}, #{planId})
 	</insert>
-
+	
+	<delete id="deletePlan">
+		delete from plan where plan_no = #{planNo}
+	</delete>
 
 
 </mapper>

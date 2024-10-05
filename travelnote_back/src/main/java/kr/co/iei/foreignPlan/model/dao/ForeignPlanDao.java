@@ -29,5 +29,7 @@ public interface ForeignPlanDao {
 
 	int insertPlan(ForeignPlanDTO plan);
 
+	int deletePlan(int planNo);
+
 
 }

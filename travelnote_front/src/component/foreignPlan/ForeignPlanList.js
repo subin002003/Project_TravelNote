@@ -16,12 +16,14 @@ const ForeignPlanList = (props) => {
     setPlanPageOption,
     planList,
     setPlanList,
-    isPlanAdded,
-    setIsPlanAdded,
+    isPlanDiffered,
+    setIsPlanDiffered,
     timeOptionsArr,
+    setSelectedPosition,
+    setPlaceInfo,
+    backServer,
   } = props;
 
-  const backServer = process.env.REACT_APP_BACK_SERVER;
   const selectedDate = totalPlanDates[selectedDay - 1];
   const [edited, setEdited] = useState(false);
   const [editPlanList, setEditPlanList] = useState([]); // 수정할 일정 목록
@@ -43,13 +45,13 @@ const ForeignPlanList = (props) => {
         })
         .then((res) => {
           setPlanList(res.data);
-          setIsPlanAdded(false);
+          setIsPlanDiffered(false);
         })
         .catch((err) => {
           console.log(err);
         });
     }
-  }, [itinerary, selectedDate, isPlanAdded]);
+  }, [itinerary, selectedDate, isPlanDiffered]);
 
   // 일정 수정 버튼 클릭 시 일정 수정 적용
   const editPlan = () => {
@@ -134,6 +136,10 @@ const ForeignPlanList = (props) => {
                     editPlanList={editPlanList}
                     setEditPlanList={setEditPlanList}
                     planPageOption={planPageOption}
+                    setSelectedPosition={setSelectedPosition}
+                    setPlaceInfo={setPlaceInfo}
+                    backServer={backServer}
+                    setIsPlanDiffered={setIsPlanDiffered}
                   />
                 );
               })

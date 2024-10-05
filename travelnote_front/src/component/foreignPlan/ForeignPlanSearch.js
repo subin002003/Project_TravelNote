@@ -20,7 +20,7 @@ const ForeignPlanSearch = (props) => {
     setPlanList,
     backServer,
     totalPlanDates,
-    setIsPlanAdded,
+    setIsPlanDiffered,
     departInfo,
     setDepartInfo,
     arrivalInfo,
@@ -66,6 +66,7 @@ const ForeignPlanSearch = (props) => {
   // 출발 항공편 인풋 핸들러
   const changeDepartInfo = (e) => {
     setDepartInfo({ ...departInfo, [e.target.id]: e.target.value });
+    // e.keyCode가 13일 때 (엔터 쳤을 때) 검색 실행
     if (e.keyCode === 13) {
       setSearchDepartAirport(e.target.value);
       setSearchAirport(1);
@@ -75,6 +76,7 @@ const ForeignPlanSearch = (props) => {
   // 도착 항공편 인풋 핸들러
   const changeArrivalInfo = (e) => {
     setArrivalInfo({ ...arrivalInfo, [e.target.id]: e.target.value });
+    // e.keyCode가 13일 때 (엔터 쳤을 때) 검색 실행
     if (e.keyCode === 13) {
       setSearchArrivalAirport(e.target.value);
       setSearchAirport(2);
@@ -168,13 +170,17 @@ const ForeignPlanSearch = (props) => {
       .post(`${backServer}/foreign/addFlights`, flightsInfo)
       .then((res) => {
         if (res.data) {
-          setIsPlanAdded(true);
+          setIsPlanDiffered(true);
           setDepartInfo({ departAirport: "" });
           setArrivalInfo({ arrivalAirport: "" });
           setIsNextDayButtonChecked(false);
           setSearchDepartAirport("");
           setSearchArrivalAirport("");
           setSearchAirport("");
+          Swal.fire({
+            icon: "success",
+            text: "항공편이 일정에 추가되었습니다.",
+          });
         }
       })
       .catch((err) => {
@@ -212,7 +218,7 @@ const ForeignPlanSearch = (props) => {
           totalPlanDates={totalPlanDates}
           itineraryNo={itineraryNo}
           backServer={backServer}
-          setIsPlanAdded={setIsPlanAdded}
+          setIsPlanDiffered={setIsPlanDiffered}
           departInfo={departInfo}
           setDepartInfo={setDepartInfo}
           arrivalInfo={arrivalInfo}
@@ -245,7 +251,7 @@ const ForeignPlanSearch = (props) => {
           setPlanList={setPlanList}
           backServer={backServer}
           totalPlanDates={totalPlanDates}
-          setIsPlanAdded={setIsPlanAdded}
+          setIsPlanDiffered={setIsPlanDiffered}
         />
       )}
     </div>
@@ -259,7 +265,7 @@ const FlightInputBox = (props) => {
     totalPlanDates,
     itineraryNo,
     backServer,
-    setIsPlanAdded,
+    setIsPlanDiffered,
     addFlightInfo,
     timeOptionsArr,
     isNextDayButtonChecked,
@@ -281,26 +287,6 @@ const FlightInputBox = (props) => {
   return (
     <div className="flight-info-form">
       <div className="flight-input-box">
-        <h4>출발 공항</h4>
-        <input
-          id="departAirport"
-          placeholder="지도에서 출발 공항 찾기"
-          value={departInfo.departAirport}
-          onChange={changeDepartInfo}
-          onKeyUp={changeDepartInfo}
-        ></input>
-      </div>
-      <div className="flight-input-box">
-        <h4>도착 공항</h4>
-        <input
-          id="arrivalAirport"
-          placeholder="지도에서 도착 공항 찾기"
-          value={arrivalInfo.arrivalAirport}
-          onChange={changeArrivalInfo}
-          onKeyUp={changeArrivalInfo}
-        ></input>
-      </div>
-      <div className="flight-input-box">
         <h4>출발 시간</h4>
         <div className="flight-time">
           <select
@@ -318,6 +304,16 @@ const FlightInputBox = (props) => {
             })}
           </select>
         </div>
+      </div>
+      <div className="flight-input-box">
+        <h4>출발 공항</h4>
+        <input
+          id="departAirport"
+          placeholder="지도에서 출발 공항 찾기"
+          value={departInfo.departAirport}
+          onChange={changeDepartInfo}
+          onKeyUp={changeDepartInfo}
+        ></input>
       </div>
       <div className="flight-input-box">
         <h4>도착 시간</h4>
@@ -338,6 +334,18 @@ const FlightInputBox = (props) => {
           </select>
         </div>
       </div>
+
+      <div className="flight-input-box">
+        <h4>도착 공항</h4>
+        <input
+          id="arrivalAirport"
+          placeholder="지도에서 도착 공항 찾기"
+          value={arrivalInfo.arrivalAirport}
+          onChange={changeArrivalInfo}
+          onKeyUp={changeArrivalInfo}
+        ></input>
+      </div>
+
       <div className="flight-input-box next-day-checkbox">
         {selectedDay != totalPlanDates.length ? (
           <div>
@@ -388,7 +396,7 @@ const FlightInputBox = (props) => {
                   selectedDay={selectedDay}
                   backServer={backServer}
                   totalPlanDates={totalPlanDates}
-                  setIsPlanAdded={setIsPlanAdded}
+                  setIsPlanDiffered={setIsPlanDiffered}
                   departInfo={departInfo}
                   setDepartInfo={setDepartInfo}
                   arrivalInfo={arrivalInfo}
@@ -426,7 +434,7 @@ const PlaceSearchBox = (props) => {
     itineraryNo,
     backServer,
     totalPlanDates,
-    setIsPlanAdded,
+    setIsPlanDiffered,
   } = props;
 
   return (
@@ -456,7 +464,7 @@ const PlaceSearchBox = (props) => {
                   selectedDay={selectedDay}
                   backServer={backServer}
                   totalPlanDates={totalPlanDates}
-                  setIsPlanAdded={setIsPlanAdded}
+                  setIsPlanDiffered={setIsPlanDiffered}
                 />
               );
             })
