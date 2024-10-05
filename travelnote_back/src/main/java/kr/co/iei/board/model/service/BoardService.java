@@ -57,6 +57,24 @@ public class BoardService {
 	    return map;
 	}
 	
+	// 한 게시물 조회
+	public BoardDTO selectOneBoard(int boardNo) {
+		BoardDTO board = boardDao.selectOneBoard(boardNo);
+		List<BoardFileDTO> fileList = boardDao.selectOneBoardFileList(boardNo);
+		board.setFileList(fileList);
+		return board;
+	}
+	
+	// 조회수 
+	@Transactional
+	public void incrementViewCount(int boardNo) {
+        boardDao.updateViewCount(boardNo);
+    }
+	// 아이디로 게시물 조회
+	public BoardDTO getBoardById(int boardNo) {
+		return boardDao.selectBoardById(boardNo);
+	}
+	
 	// 게시물 등록
 	@Transactional
 	public int insertBoard(BoardDTO board, List<BoardFileDTO> boardFileList) {
@@ -69,19 +87,15 @@ public class BoardService {
 		return result;
 	}
 
-	// 한 게시물 조회
-	public BoardDTO selectOneBoard(int boardNo) {
-		BoardDTO board = boardDao.selectOneBoard(boardNo);
-		List<BoardFileDTO> fileList = boardDao.selectOneBoardFileList(boardNo);
-		board.setFileList(fileList);
-		return board;
-	}
 
 	// 파일 조회
 	public BoardFileDTO getBoardFile(int boardFileNo) {
 		BoardFileDTO board = boardDao.getBoardFile(boardFileNo);
 		return board;
 	}
+	
+	
+	
 	// 게시물 삭제
 	@Transactional
 	public List<BoardFileDTO> deleteBoard(int boardNo) {
@@ -93,6 +107,7 @@ public class BoardService {
 			return null;
 		}
 	}
+	
 	
 	// 게시물 수정
 	@Transactional
@@ -147,17 +162,9 @@ public class BoardService {
         return false;
 	}
 	
-	// 조회수 
-	@Transactional
-	public void incrementViewCount(int boardNo) {
-        boardDao.updateViewCount(boardNo);
-    }
-	// 아이디로 게시물 조회
-	public BoardDTO getBoardById(int boardNo) {
-		return boardDao.selectBoardById(boardNo);
-	}
 	
-	// 댓글 추가
+	
+	// 댓글 등록
 	@Transactional
 	public void addComment(BoardCommentDTO comment) {
 		boardDao.addComment(comment);

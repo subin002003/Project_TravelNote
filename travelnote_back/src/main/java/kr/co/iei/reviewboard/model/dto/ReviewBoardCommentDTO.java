@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Alias(value = "reviewBoardComment")
 public class ReviewBoardCommentDTO {
 	private int reviewBoardCommentNo;
-	private int reviewBoardNo; // 게시물 번호
+	private int reviewBoardRef; // 게시물 번호
 	private String ReivewBoardCommentWriter; // 작성자
 	private String ReviewBoardCommentContent; // 댓글 내용
 	private String boardCommentDate; // 댓글 작성일

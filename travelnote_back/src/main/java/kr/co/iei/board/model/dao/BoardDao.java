@@ -21,13 +21,13 @@ public interface BoardDao {
 	
 	List selectBoardSearchList(@Param("pi") PageInfo pi, @Param("searchTerm") String searchTerm, @Param("searchFilter") String searchFilter);
 	
+	BoardDTO selectOneBoard(int boardNo);
+	
+	List<BoardFileDTO> selectOneBoardFileList(int boardNo);
+	
 	int insertBoard(BoardDTO board);
 
 	int insertBoardFile(BoardFileDTO boardFile);
-
-	BoardDTO selectOneBoard(int boardNo);
-
-	List<BoardFileDTO> selectOneBoardFileList(int boardNo);
 
 	BoardFileDTO getBoardFile(int boardFileNo);
 

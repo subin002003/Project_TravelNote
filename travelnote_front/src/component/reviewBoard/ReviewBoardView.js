@@ -10,8 +10,8 @@ const ReviewBoardView = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
   const params = useParams();
-  const boardNo = params.boardNo;
-  const [board, setBoard] = useState({});
+  const reviewBoardNo = params.reviewBoardNo;
+  const [reviewBoard, setReviewBoard] = useState({});
   const [userNick, setUserNick] = useRecoilState(userNickState);
 
   const isLogin = useRecoilValue(isLoginState); // 로그인 상태 확인
@@ -29,9 +29,9 @@ const ReviewBoardView = () => {
   useEffect(() => {
     // 게시물 가져오기
     axios
-      .get(`${backServer}/board/boardNo/${boardNo}`)
+      .get(`${backServer}/reviewBoard/reviewBoardNo/${reviewBoardNo}`)
       .then((res) => {
-        setBoard(res.data);
+        setReviewBoard(res.data);
         setLikeCount(res.data.likeCount || 0); // 초기 좋아요 수, res.data.likeCount 값 존재:그 값을 setLikeCount에 전달 / 존재x or null 등 일 때 : 0을 setLikeCount에 전달
         setLiked(res.data.liked || false); // 초기 좋아요 상태
       })
@@ -41,7 +41,7 @@ const ReviewBoardView = () => {
 
     // 댓글 목록 가져오기
     axios
-      .get(`${backServer}/board/${boardNo}`)
+      .get(`${backServer}/reviewBoard/${reviewBoardNo}`)
       .then((res) => {
         console.log(res.data);
         setComments(res.data);
@@ -65,7 +65,7 @@ const ReviewBoardView = () => {
     const action = liked ? "remove" : "add"; // 좋아요 추가 또는 제거
     //좋아요
     axios
-      .post(`${backServer}/board/like/${boardNo}`, {
+      .post(`${backServer}/reviewBoard/like/${reviewBoardNo}`, {
         userNick: userNick,
         action: action,
       })
@@ -86,16 +86,16 @@ const ReviewBoardView = () => {
       });
   };
 
-  const deleteBoard = () => {
+  const deleteReviewBoard = () => {
     axios
-      .delete(`${backServer}/board/${board.boardNo}`)
+      .delete(`${backServer}/reviewBoard/${reviewBoard.reviewBoardNo}`)
       .then((res) => {
         if (res.data === 1) {
           Swal.fire({
             title: "삭제완료",
             icon: "success",
           }).then(() => {
-            navigate("/board/list");
+            navigate("/reviewBoard/list");
           });
         } else {
           Swal.fire({
@@ -129,12 +129,12 @@ const ReviewBoardView = () => {
     const formattedComment = newComment.replace(/\n/g, "<br />");
 
     const commentData = {
-      boardCommentWriter: userNick,
-      boardCommentContent: formattedComment,
+      reviewBoardCommentWriter: userNick,
+      reviewBoardCommentContent: formattedComment,
     };
 
     axios
-      .post(`${backServer}/board/${boardNo}/comments`, commentData) // boardNo에 대한 댓글 추가
+      .post(`${backServer}/reviewBoard/${reviewBoardNo}/comments`, commentData) // reviewBoardNo에 대한 댓글 추가
       .then((res) => {
         if (res.status === 201) {
           reset ? setReset(false) : setReset(true); // useEffect의 두번째 매개변수 값을 변경해서 다시 작동시킴
@@ -155,7 +155,9 @@ const ReviewBoardView = () => {
 
   const deleteComment = (commentNo) => {
     axios
-      .delete(`${backServer}/board/${boardNo}/comments/${commentNo}`) // 댓글 삭제 API 경로
+      .delete(
+        `${backServer}/reviewBoard/${reviewBoardNo}/comments/${commentNo}`
+      ) // 댓글 삭제 API 경로
       .then((res) => {
         if (res.status === 200) {
           reset ? setReset(false) : setReset(true); // useEffect의 두번째 매개변수 값을 변경해서 다시 작동시킴
@@ -183,12 +185,12 @@ const ReviewBoardView = () => {
       // 수정된 댓글을 서버로 전송
       const updatedCommentData = {
         ...editingComment,
-        boardCommentContent: editingComment.content,
+        reviewBoardCommentContent: editingComment.content,
       };
 
       axios
         .put(
-          `${backServer}/board/${boardNo}/comments/${updatedCommentData.boardCommentNo}`,
+          `${backServer}/reviewBoard/${reviewBoardNo}/comments/${updatedCommentData.reviewBoardCommentNo}`,
           updatedCommentData
         )
         .then((res) => {
@@ -213,9 +215,11 @@ const ReviewBoardView = () => {
     }
   };
 
-  const boardViewReport = () => {
+  const reviewBoardViewReport = () => {
     axios
-      .post(`${backServer}/board/report/${boardNo}`, { userNick: userNick })
+      .post(`${backServer}/reviewBoard/report/${reviewBoardNo}`, {
+        userNick: userNick,
+      })
       .then((res) => {
         console.log(res);
         Swal.fire({
@@ -229,27 +233,27 @@ const ReviewBoardView = () => {
   };
 
   return (
-    <section className="board-wrap">
+    <section className="review-board-wrap">
       <h1
-        className="board-title"
+        className="review-board-title"
         style={{ textAlign: "center", margin: "30px" }}
       >
-        {board.boardTitle}
+        {reviewBoard.reviewBoardTitle}
       </h1>
       <div>
-        <div className="board-horizontal-between-space">
-          {userNick === board.boardWriter ? (
+        <div className="review-board-horizontal-between-space">
+          {userNick === reviewBoard.reviewBoardWriter ? (
             <div style={{ marginTop: "50px" }}>
               <Link
-                to={`/board/update/${board.boardNo}`}
-                className="board-button-link-view-update"
+                to={`/reviewBoard/update/${reviewBoard.reviewBoardNo}`}
+                className="review-board-button-link-view-update"
               >
                 수정
               </Link>
               <button
                 type="button"
-                onClick={deleteBoard}
-                className="board-button-link-view-delete"
+                onClick={deleteReviewBoard}
+                className="review-board-button-link-view-delete"
               >
                 삭제
               </button>
@@ -259,21 +263,21 @@ const ReviewBoardView = () => {
           )}
 
           <table
-            className="board-table-bordor-none"
+            className="review-board-table-bordor-none"
             style={{ marginLeft: "auto" }}
           >
             <tbody>
               <tr>
                 <th>조회수</th>
-                <td>{board.boardReadCount}</td>
+                <td>{reviewBoard.reviewBoardReadCount}</td>
               </tr>
               <tr>
                 <th>작성일자</th>
-                <td>{board.boardDate}</td>
+                <td>{reviewBoard.reviewBoardDate}</td>
               </tr>
               <tr>
                 <th>작성자</th>
-                <td>{board.boardWriter}</td>
+                <td>{reviewBoard.reviewBoardWriter}</td>
               </tr>
             </tbody>
           </table>
@@ -286,7 +290,7 @@ const ReviewBoardView = () => {
             width: "100%",
           }}
         ></div>
-        <div className="board-horizontal-between-space">
+        <div className="review-board-horizontal-between-space">
           <div
             style={{
               display: "flex",
@@ -310,10 +314,10 @@ const ReviewBoardView = () => {
               </span>
               <span style={{ marginLeft: "2px" }}>{likeCount}</span>
             </p>
-            <div className="board-center">
+            <div className="review-board-center">
               <p style={{ fontSize: "20px", fontWeight: "bolder" }}>카테고리</p>
-              <p>{board.boardCategory}</p>
-              <div className="board-horizontal-between-space">
+              <p>{reviewBoard.reviewBoardCategory}</p>
+              <div className="review-board-horizontal-between-space">
                 <p
                   style={{
                     fontSize: "20px",
@@ -323,8 +327,8 @@ const ReviewBoardView = () => {
                 >
                   첨부파일
                 </p>
-                {board.fileList
-                  ? board.fileList.map((file, i) => {
+                {reviewBoard.fileList
+                  ? reviewBoard.fileList.map((file, i) => {
                       return <FileItem key={"file-" + i} file={file} />;
                     })
                   : ""}
@@ -333,9 +337,9 @@ const ReviewBoardView = () => {
           </div>
           {isLogin ? (
             <p
-              className="board-button-link-report"
+              className="review-board-button-link-report"
               style={{ marginLeft: "auto" }}
-              onClick={boardViewReport}
+              onClick={reviewBoardViewReport}
             >
               신고하기
             </p>
@@ -344,8 +348,8 @@ const ReviewBoardView = () => {
           )}
         </div>
         <div style={{ marginTop: "50px" }}>
-          {board.boardContent ? (
-            <Viewer initialValue={board.boardContent} /> //토스트 editor에서 기본적으로 제공하는 viewer
+          {reviewBoard.reviewBoardContent ? (
+            <Viewer initialValue={reviewBoard.reviewBoardContent} /> //토스트 editor에서 기본적으로 제공하는 viewer
           ) : (
             ""
           )}
@@ -391,7 +395,7 @@ const ReviewBoardView = () => {
             <button
               type="button"
               onClick={addComment} // 버튼 클릭 시 댓글 등록
-              className="board-button-link-view-comment-regist"
+              className="review-board-button-link-view-comment-regist"
               style={{ margin: "15px", width: "100px" }}
             >
               등록
@@ -404,7 +408,7 @@ const ReviewBoardView = () => {
         <div>
           {comments.map((comment) => (
             <div
-              key={comment.boardCommentNo}
+              key={comment.reviewBoardCommentNo}
               style={{
                 margin: "20px",
                 borderBottom: "1px solid #ccc",
@@ -418,12 +422,13 @@ const ReviewBoardView = () => {
                 }}
               >
                 <p style={{ marginRight: "15px", fontWeight: "bold" }}>
-                  {comment.boardCommentWriter}
+                  {comment.reviewBoardCommentWriter}
                 </p>
-                <p>{comment.boardCommentDate}</p>
+                <p>{comment.reviewBoardCommentDate}</p>
               </div>
 
-              {editingComment?.boardCommentNo === comment.boardCommentNo ? (
+              {editingComment?.reviewBoardCommentNo ===
+              comment.reviewBoardCommentNo ? (
                 <div
                   style={{
                     display: "flex",
@@ -478,7 +483,7 @@ const ReviewBoardView = () => {
                     }}
                     // 이 기능 사용 시, 다른 자식 요소를 추가 X /해당 속성만 사용해야 함
                     dangerouslySetInnerHTML={{
-                      __html: comment.boardCommentContent,
+                      __html: comment.reviewBoardCommentContent,
                     }}
                   />
                   <div
@@ -490,7 +495,7 @@ const ReviewBoardView = () => {
                     }}
                   >
                     {/* 로그인한 유저와 댓글 작성자가 같은 경우에만 수정 및 삭제 버튼을 보여줌 */}
-                    {userNick === comment.boardCommentWriter && (
+                    {userNick === comment.reviewBoardCommentWriter && (
                       <div>
                         <button
                           onClick={() => updateComment(comment)}
@@ -503,7 +508,9 @@ const ReviewBoardView = () => {
                           수정
                         </button>
                         <button
-                          onClick={() => deleteComment(comment.boardCommentNo)}
+                          onClick={() =>
+                            deleteComment(comment.reviewBoardCommentNo)
+                          }
                           style={{
                             marginLeft: "10px",
                             backgroundColor: "transparent",
@@ -530,7 +537,7 @@ const FileItem = (props) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const filedown = () => {
     axios
-      .get(`${backServer}/board/file/${file.boardFileNo}`, {
+      .get(`${backServer}/reviewBoard/file/${file.reviewBoardFileNo}`, {
         //axios 는 기본적으로 응답을 json으로 처리
         //현재 요청은 일반적인 json타입의 응답을 받을게 아니라 파일을 받아야함
         //일반적인 json으로 처리 불가능 -> 파일로 결과를 받는 설정
@@ -560,7 +567,7 @@ const FileItem = (props) => {
       });
   };
   return (
-    <div className="board-file">
+    <div className="review-board-file">
       <span className="material-icons file-icon" onClick={filedown}>
         file_download
       </span>
