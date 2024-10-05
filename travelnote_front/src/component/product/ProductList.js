@@ -18,8 +18,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 const sortOptions = [
-  { label: '상품 찜이 많은 순', value: 'mostLiked' },
-  { label: '등록 최신 순', value: 'newest' },
+  { label: '좋아요순', value: 'mostLiked' },
+  { label: '최신순', value: 'newest' },
 ];
 
 const ProductList = () => {
@@ -35,22 +35,7 @@ const ProductList = () => {
   const [userType, setUserType] = useRecoilState(userTypeState);
 
   // 상품 리스트 조회
-  const fetchProductList = (sortOption) => {
-    const requestUrl = `${backServer}/product/list/${reqPage}?sort=${sortOption}`; // 정렬 조건에 따른 URL 설정
-    axios.get(requestUrl)
-      .then((res) => {
-        setProductList(res.data.list); // 상품 목록 업데이트
-        setPi(res.data.pi); // 페이지 정보 업데이트
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  // 상품 리스트 조회
   useEffect(() => {
-    fetchProductList('newest'); // 처음에 '등록 최신 순'으로 데이터 요청
-
     const request =
       isLogin && userEmail
         ? axios.get(`${backServer}/product/list/${reqPage}/${userEmail}`)
@@ -65,58 +50,54 @@ const ProductList = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [userEmail, reqPage, sortOptions]); // sortOption이나 reqPage가 변경될 때마다 실행
+  }, [userEmail, reqPage]);
 
   // 각 정렬 옵션에 따른 클릭 이벤트 처리
   const handleSortClick = (sortOption) => {
     console.log(sortOption);
+    setReqPage(1); // 페이지를 1로 리셋
 
-    if (sortOption === "mostLiked") {
-      axios.get(`${backServer}/product/list/${reqPage}/${userEmail}/${sortOption}`)
-        .then((res) => {
-          console.log(res.data);
-          setProductList(res.data.list);
-          setPi(res.data.pi);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-
-    }
-    fetchProductList(sortOption); // 해당 정렬 조건으로 상품 목록 요청
+    axios.get(`${backServer}/product/list/${reqPage}/${userEmail}/${sortOption}`)
+      .then((res) => {
+        console.log(res.data);
+        setProductList(res.data.list);
+        setPi(res.data.pi);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <section style={{ margin: "50px auto" }} className="section product-list">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        {isLogin === true && userType === 2 ? (
+      {isLogin === true && userType === 2 ? (
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Link to="/product/write" className="btn-primary writeBtn">
             상품 등록
           </Link>
-        ) : (
-          ""
-        )}
-        {/* 정렬을 위한 Select 대신 직접적인 클릭 이벤트 처리 */}
-        <FormControl sx={{ m: 1, width: '150px' }}>
-          <Select
-            displayEmpty
-            input={<OutlinedInput />}
-            defaultValue="" // 기본값 설정
-            renderValue={() => <em>정렬 기준 선택</em>}
-          >
-            {sortOptions.map((option) => (
-              <MenuItem
-                key={option.value}
-                value={option.value}
-                onClick={() => handleSortClick(option.value)} // onClick으로 axios 요청
-              >
-                {option.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </div>
+          {/* 정렬을 위한 Select 대신 직접적인 클릭 이벤트 처리 */}
+          <FormControl sx={{ m: 1, width: '150px' }}>
+            <Select
+              displayEmpty
+              input={<OutlinedInput />}
+              defaultValue="" // 기본값 설정
+              renderValue={() => <em>정렬 기준 선택</em>}
+            >
+              {sortOptions.map((option) => (
+                <MenuItem
+                  key={option.value}
+                  value={option.value}
+                  onClick={() => handleSortClick(option.value)} // onClick으로 axios 요청
+                >
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
+      ) : (
+        ""
+      )}
 
       {/* 상품 리스트 */}
       <div className="product-list-wrap">
@@ -141,26 +122,28 @@ const ProductList = () => {
   );
 };
 
-const ProductItem = (props) => {
+const ProductItem = ({ product }) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   // 로그인 회원 정보
   const isLogin = useRecoilValue(isLoginState);
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
-  const product = props.product;
+  // const product = props.product;
   const productNo = product.productNo;
   const userEmail = loginEmail;
   const navigate = useNavigate();
 
   // 상품의 좋아요 상태와 좋아요 수
-  const [productLike, setProductLike] = useState(product.productLike === 1); // 좋아요 상태 (1: 좋아요, 0: 비활성화)
-  const [productLikeCount, setProductLikeCount] = useState(
-    product.productLikeCount
-  ); // 좋아요 수
+  // const [productLike, setProductLike] = useState(product.productLike === 1); // 좋아요 상태 (1: 좋아요, 0: 비활성화)
+  // const [productLikeCount, setProductLikeCount] = useState(
+  //   product.productLikeCount
+  // ); // 좋아요 수
+
+  // 좋아요 상태와 좋아요 수를 props에서 직접 받음
+  const productLike = product.productLike === 1; // 좋아요 상태 (1: 좋아요, 0: 비활성화)
+  const productLikeCount = product.productLikeCount; // 좋아요 수
+
   const newLikeState = productLike ? 0 : 1; // 좋아요 상태를 토글
   const newCount = productLike ? productLikeCount - 1 : productLikeCount + 1; // 좋아요 수 업데이트
-
-  // console.log(isLogin);
-  // console.log(loginEmail);
 
   const handleLikeToggle = () => {
     if (!isLogin) {
@@ -187,11 +170,11 @@ const ProductItem = (props) => {
 
       request
         .then((res) => {
-          console.log(res.data);
-          setProductLike(newLikeStatus); // 좋아요 상태 업데이트
-          setProductLikeCount((prevCount) =>
-            newLikeStatus ? prevCount + 1 : prevCount - 1
-          ); // 좋아요 수 업데이트
+          // console.log(res.data);
+          // setProductLike(newLikeStatus); // 좋아요 상태 업데이트
+          // setProductLikeCount((prevCount) =>
+          //   newLikeStatus ? prevCount + 1 : prevCount - 1
+          // ); // 좋아요 수 업데이트
         })
         .catch((err) => {
           console.log(err);
@@ -245,7 +228,7 @@ const ProductItem = (props) => {
             ></i>
           </span>
           {/* 좋아요 수 출력 */}
-          {/* <span className="productLikeCount">{productLikeCount}</span> */}
+          <span className="productLikeCount">{productLikeCount}</span>
         </div>
         <span className="price">{product.productPrice.toLocaleString()}원</span>
       </div>
