@@ -10,8 +10,8 @@ const ReviewBoardMain = () => {
     <Routes>
       <Route path="list" element={<ReviewBoardList />} />
       <Route path="write" element={<ReviewBoardWrite />} />
-      <Route path="view:boardNo" element={<ReviewBoardView />} />
-      <Route path="update/:boardNo" element={<ReviewBoardUpdate />} />
+      <Route path="view/:reviewBoardNo" element={<ReviewBoardView />} />
+      <Route path="update/:reviewBoardNo" element={<ReviewBoardUpdate />} />
     </Routes>
   );
 };

@@ -72,6 +72,22 @@ public class BoardController {
 	    return ResponseEntity.ok(map); // 결과를 JSON 형식으로 반환
 	}
 	
+	
+	// 한 게시물 상세보기
+	@GetMapping(value = "/boardNo/{boardNo}")
+	public ResponseEntity<BoardDTO> selectOneBoard(@PathVariable int boardNo){
+		BoardDTO board = boardService.selectOneBoard(boardNo);
+		return ResponseEntity.ok(board);
+	}
+	
+	// 조회수
+	@GetMapping("/view/{boardNo}")
+	public BoardDTO getBoard(@PathVariable int boardNo) {
+		// 조회수를 증가시키고 게시판 정보를 반환
+		boardService.incrementViewCount(boardNo);
+		return boardService.getBoardById(boardNo);
+	}
+	
 	// 토스트에디터에서 이미지 삽입
 	@PostMapping(value="/editorImage")//formData()로 데이터를 보내면 @ModelAttribute로 받음 
 	public ResponseEntity<String> editorImage (@ModelAttribute MultipartFile image){
@@ -100,12 +116,6 @@ public class BoardController {
 		return ResponseEntity.ok(result == 1+boardFileList.size());
 	}
 	
-	// 한 게시물 상세보기
-	@GetMapping(value = "/boardNo/{boardNo}")
-	public ResponseEntity<BoardDTO> selectOneBoard(@PathVariable int boardNo){
-		BoardDTO board = boardService.selectOneBoard(boardNo);
-		return ResponseEntity.ok(board);
-	}
 	
 	// 파일 다운로드
 	@GetMapping(value="/file/{boardFileNo}")
@@ -145,6 +155,7 @@ public class BoardController {
 			return ResponseEntity.ok(0);
 		}
 	}
+	
 	// 게시물 수정
 	@PatchMapping
 	public ResponseEntity<Boolean> updateBoard(@ModelAttribute BoardDTO board,
@@ -198,13 +209,7 @@ public class BoardController {
         return ResponseEntity.ok(response);
     }
 	
-	// 조회수
-	@GetMapping("/view/{boardNo}")
-	public BoardDTO getBoard(@PathVariable int boardNo) {
-		// 조회수를 증가시키고 게시판 정보를 반환
-		boardService.incrementViewCount(boardNo);
-		return boardService.getBoardById(boardNo);
-	}
+	
 	
 	// 댓글 등록
 	@PostMapping("/{boardNo}/comments")
@@ -214,7 +219,7 @@ public class BoardController {
 		return ResponseEntity.status(HttpStatus.CREATED).body("Comment added successfully");
 	}
 
-	// 댓글 목록 조회
+	// 댓글 조회
     @GetMapping("/{boardNo}")
     public ResponseEntity<List<BoardCommentDTO>> getComments(@PathVariable int boardNo) {
         List<BoardCommentDTO> comments = boardService.getComments(boardNo);
