@@ -238,7 +238,7 @@ const ReviewBoardView = () => {
         className="review-board-title"
         style={{ textAlign: "center", margin: "30px" }}
       >
-        {reviewBoard.reviewBoardTitle}
+        여행 후기
       </h1>
       <div>
         <div className="review-board-horizontal-between-space">
@@ -282,6 +282,25 @@ const ReviewBoardView = () => {
             </tbody>
           </table>
         </div>
+        <div
+          className="review-board-thumbnail-and-subcontent"
+          style={{ display: "flex" }}
+        >
+          <div className="review-board-thumbnail">
+            <img
+              src={
+                reviewBoard.reviewBoardThumb
+                  ? `${backServer}/reviewBoard/thumb/${reviewBoard.reviewBoardThumb}`
+                  : "/image/default_img.png"
+              }
+            />
+          </div>
+          <div>
+            <h1>여행 제목 : {reviewBoard.reviewBoardTitle}</h1>
+            <p>{reviewBoard.reviewBoardSubContent}</p>
+          </div>
+        </div>
+
         <div
           style={{
             borderTop: "1px solid black",

@@ -226,7 +226,7 @@ public class BoardController {
         return ResponseEntity.ok(comments);
     }
 	
-    //댓글 삭제
+    // 댓글 삭제
     @DeleteMapping("/{boardNo}/comments/{commentNo}")
     public ResponseEntity<String> deleteComment(@PathVariable int boardNo, @PathVariable int commentNo) {
         boardService.deleteComment(commentNo);
@@ -246,10 +246,7 @@ public class BoardController {
 	   String userNick = userDTO.getUserNick();
 	   boardService.boardViewReport(userNick, boardNo);
 	   return ResponseEntity.ok("Report Success");
-   }
-   
-  
-   	
+   } 	
 }
 
 

@@ -209,7 +209,7 @@
 	
 	<!-- 게시물 좋아요 수 증가 -->
     <update id="incrementLikeCount">
-        update reviewBoard
+        update review_board
         set like_count = like_count + 1
         where review_board_no = #{reviewBoardNo}
     </update>
@@ -255,7 +255,7 @@
 	<update id="updateComment">
     	update review_board_comment
     	set review_board_comment_content = #{reviewBoardCommentContent}
-    	where review_board_ref = #{reviewBoardNo} and reviewBoard_comment_no = #{commentNo}
+    	where review_board_ref = #{reviewBoardNo} and review_board_comment_no = #{commentNo}
 	</update>
 	
 	<!-- 신고 -->

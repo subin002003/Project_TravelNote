@@ -223,7 +223,7 @@ public class ReviewBoardController {
         return ResponseEntity.ok(comments);
     }
 	
-    //댓글 삭제
+    // 댓글 삭제
     @DeleteMapping("/{reviewBoardNo}/comments/{commentNo}")
     public ResponseEntity<String> deleteComment(@PathVariable int reviewBoardNo, @PathVariable int commentNo) {
         reviewBoardService.deleteComment(commentNo);
