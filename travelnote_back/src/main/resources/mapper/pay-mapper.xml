@@ -49,4 +49,10 @@
 		where 
 		    o.order_no = #{orderNo}
   </select>
+  <select id="myPaymentTotalCount" resultType="int">
+  	select count(*) from order_pay o join product p using(product_no) join user_tbl u on(p.product_writer = u.user_email) where user_nick = #{userNick}
+  </select>
+  <select id="myPaymentList" resultType="pay">
+select order_no,order_date,product_name,user_nick as seller_nick from order_pay o join product p using(product_no) join user_tbl u on(p.product_writer = u.user_email) where user_nick= #{userNick}
+  </select>
 </mapper>

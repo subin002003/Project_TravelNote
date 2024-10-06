@@ -14,6 +14,8 @@ import MyBoard from "./MyBoard";
 import MyReview from "./MyReview";
 import MyReservation from "./MyReservation";
 import ReservationView from "./ReservationView";
+import MyProduct from "./MyProduct";
+import MyPayment from "./MyPayment";
 
 const MypageMain = () => {
   const navigate = useNavigate();
@@ -66,8 +68,8 @@ const MypageMain = () => {
       setMenus([
         { url: "#", text: "여행사 정보 수정" },
         { url: "#", text: "비밀번호 변경" },
-        { url: "#", text: "판매중인 상품" },
-        { url: "#", text: "결제 내역 확인" },
+        { url: "myProduct", text: "판매중인 상품" },
+        { url: "myPayment", text: "판매 내역 확인" },
       ]);
     }
   }, [userType]);
@@ -105,6 +107,10 @@ const MypageMain = () => {
                 path="myReservation/:orderNo"
                 element={<ReservationView />}
               />
+
+              <Route path="myProduct" element={<MyProduct />} />
+              <Route path="myPayment" element={<MyPayment />} />
+
               <Route path="admin/manageBoard" element={<ManageBoard />} />
               <Route path="admin/manageUser" element={<ManageUser />} />
               <Route

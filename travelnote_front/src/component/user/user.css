@@ -386,3 +386,27 @@ td {
 .reservation-info-table tr:hover {
   background-color: #f1f1f1;
 }
+
+.myproduct-list {
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+.myproduct-content {
+  height: 100%;
+}
+.myproduct-thumb {
+  width: 200px;
+  height: 200px;
+}
+.myproduct-img {
+  width: 100%;
+  height: 100%;
+}
+.myproduct-content > table {
+  width: 100%;
+}
+.myproduct-content > table > tr {
+  text-align: center;
+}

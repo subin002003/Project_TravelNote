@@ -199,4 +199,16 @@ public class UserController {
 		PayDTO reservationInfo = payService.reservationInfo(orderNo);
 		return ResponseEntity.ok(reservationInfo);
 	}
+	
+	@GetMapping(value = "/myProduct/{userNick}/{reqPage}")
+	public ResponseEntity<Map> myProduct(@PathVariable String userNick, @PathVariable int reqPage){
+		Map map = productService.myProduct(userNick, reqPage);
+		return ResponseEntity.ok(map);
+	}
+	
+	@GetMapping(value = "/myPayment/{userNick}/{reqPage}")
+	public ResponseEntity<Map> myPayment(@PathVariable String userNick, @PathVariable int reqPage){
+		Map map = payService.myPayment(userNick, reqPage);
+		return ResponseEntity.ok(map);
+	}
 }

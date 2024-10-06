@@ -23,4 +23,10 @@ public interface PayDao {
 	//오건하 작성 2024-10-04
 	PayDTO reservationInfo(int orderNo);
 
+	//오건하 작성 2024-10-04
+	int myPaymentTotalCount(String userNick);
+	
+	//오건하 작성 2024-10-04
+	List myPaymentList(PageInfo pi);
+
 }

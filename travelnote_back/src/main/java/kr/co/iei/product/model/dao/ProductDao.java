@@ -84,5 +84,11 @@ public interface ProductDao {
 
 	//오건하 작성 2024-10-04
 	List myReviewList(PageInfo pi);
+	
+	//오건하 작성 2024-10-04
+	int myProductTotalCount(String userNick);
+	
+	//오건하 작성 2024-10-04
+	List myProductList(PageInfo pi);
 
 }

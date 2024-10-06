@@ -45,4 +45,18 @@ public class PayService {
 		PayDTO reservationInfo = payDao.reservationInfo(orderNo);
 		return reservationInfo;
 	}
+	
+	//오건하 작성 2024-10-04
+	public Map myPayment(String userNick, int reqPage) {
+		int numPerPage = 10;
+		int pageNaviSize = 5;
+		int totalCount = payDao.myPaymentTotalCount(userNick);
+		PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
+		pi.setUserNick(userNick);
+		List list = payDao.myPaymentList(pi);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list", list);
+		map.put("pi", pi);
+		return map;
+	}
 }
