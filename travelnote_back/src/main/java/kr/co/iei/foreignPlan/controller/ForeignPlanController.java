@@ -100,4 +100,17 @@ public class ForeignPlanController {
 		return ResponseEntity.ok(result);
 	}
 	
+	// 여행 일정 삭제
+	@PostMapping(value="/editItinerary")
+	public ResponseEntity<Integer> editItinerary(@RequestBody ForeignItineraryDTO itinerary) {
+		int result = foreignPlanService.updateItinerary(itinerary);
+		return ResponseEntity.ok(result);
+	}
+	
+	// 여행 일정 삭제
+	@DeleteMapping(value="/deleteItinerary/{itineraryNo}")
+	public ResponseEntity<Boolean> deleteItinerary(@PathVariable int itineraryNo){
+		boolean result = foreignPlanService.deleteItinerary(itineraryNo);
+		return ResponseEntity.ok(result);
+	}
 }

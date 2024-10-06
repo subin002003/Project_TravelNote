@@ -49,7 +49,7 @@ public class ForeignPlanService {
 	// 여행 일정 생성
 	@Transactional
 	public int insertItinerary(ForeignItineraryDTO itinerary) {
-		int result = foreignPlanDao.insertItinerary(itinerary);
+		foreignPlanDao.insertItinerary(itinerary);
 		return itinerary.getItineraryNo();
 	}
 
@@ -119,6 +119,28 @@ public class ForeignPlanService {
 		result += foreignPlanDao.deletePlan(planNo);
 		// 결과 처리
 		if (result == delPlan.getChangeSeqList().size() + 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// 일정 수정
+	@Transactional
+	public int updateItinerary(ForeignItineraryDTO itinerary) {
+		int result = foreignPlanDao.updateItinerary(itinerary);
+		return result;
+	}
+	
+	// 일정 삭제
+	@Transactional
+	public boolean deleteItinerary(int itineraryNo) {
+		int totalPlan = foreignPlanDao.selectTotalPlanCount(itineraryNo);
+		int result = foreignPlanDao.deleteItinerary(itineraryNo);
+		if (totalPlan > 0) {
+			result += foreignPlanDao.deleteItineraryPlan(itineraryNo);
+		}
+		if (totalPlan > 0 ? result == totalPlan + 1 : result == 1) {
 			return true;
 		} else {
 			return false;

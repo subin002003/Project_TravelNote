@@ -10,13 +10,10 @@ const ForeignMain = () => {
   return (
     <Routes>
       <Route path="list" element={<ForeignList />}></Route>
-      <Route
-        path="createItinerary/:regionNo"
-        element={<ItineraryForm />}
-      ></Route>
+      <Route path="itinerary/:regionNo" element={<ItineraryForm />}></Route>
       <Route path="plan/:itineraryNo" element={<ForeignPlanMain />}></Route>
       <Route
-        path="editItinerary/:itineraryNo"
+        path="edit/:itineraryNo"
         element={<ForeignEditItinerary />}
       ></Route>
     </Routes>

@@ -136,7 +136,6 @@
   padding: 30px 0;
 }
 .create-button-box > button {
-  margin-left: 20px;
   width: 500px;
   height: 50px;
   box-sizing: border-box;
@@ -630,4 +629,29 @@
 }
 .gm-style-iw-d > div {
   margin-top: 10px;
+}
+
+/* ForeignEditItineray */
+.companion-button {
+  width: 150px;
+  display: inline-block;
+  text-align: center;
+  background-color: var(--main-color);
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 13px;
+}
+.companion-button:hover {
+  background-color: var(--sub-color);
+}
+.delete-itinerary-box {
+  display: block;
+  text-align: center;
+  font-size: 13px;
+}
+.delete-itinerary-box:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
