@@ -413,3 +413,40 @@ td {
 .mypayment-content > table {
   width: 100%;
 }
+.paymentInfo-table {
+  width: 80%;
+  background-color: var(--background-color);
+  margin: 0 auto;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.paymentInfo-table > table {
+  border-collapse: collapse;
+  width: 80%;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+.paymentInfo-table th,
+.paymentInfo-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.paymentInfo-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.paymentInfo-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.paymentInfo-table tr:hover {
+  background-color: #f1f1f1;
+}

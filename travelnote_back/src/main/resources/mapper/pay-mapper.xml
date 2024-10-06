@@ -60,5 +60,17 @@
   </select>
   <!-- 오건하 작성 2024-10-06 -->
   <select id="getPaymentInfo" resultType="pay">
+  	select order_no,
+  		   order_date,
+  		   to_char(start_date,'yyyy-mm-dd') as start_date, 
+  		   to_char(end_date,'yyyy-mm-dd') as end_date, 
+  		   people, 
+  		   price, 
+  		   payment_type,
+  		   o.product_no,
+  		   p.product_name,
+  		   u.user_name as buyerName ,
+  		   u.user_phone as buyerPhone 
+	from order_pay o join product p on(p.product_no = o.product_no)  join user_tbl u on(o.user_email = u.user_email) where order_no = #{orderNo}
   </select>
 </mapper>
