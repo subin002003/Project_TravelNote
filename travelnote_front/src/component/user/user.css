@@ -410,3 +410,6 @@ td {
 .myproduct-content > table > tr {
   text-align: center;
 }
+.mypayment-content > table {
+  width: 100%;
+}

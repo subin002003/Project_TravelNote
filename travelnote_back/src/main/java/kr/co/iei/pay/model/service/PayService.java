@@ -54,6 +54,7 @@ public class PayService {
 		PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
 		pi.setUserNick(userNick);
 		List list = payDao.myPaymentList(pi);
+		System.out.println("결제정보 : "+list);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list);
 		map.put("pi", pi);

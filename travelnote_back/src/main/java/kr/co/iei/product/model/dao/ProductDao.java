@@ -85,9 +85,6 @@ public interface ProductDao {
 	int checkProductExists(int productNo);
 
 
-	List selectProductListMostLiked(PageInfo pi, String userEmail);
-
-	List selectProductListNewest(PageInfo pi, String userEmail);
 
 	//오건하 작성 2024-10-04
 	int myReviewTotalCount(String userNick);
