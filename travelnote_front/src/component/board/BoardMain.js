@@ -4,6 +4,7 @@ import BoardList from "./BoardList";
 import BoardWrite from "./BoardWrite";
 import BoardView from "./BoardView";
 import BoardUpdate from "./BoardUpdate";
+
 const BoardMain = () => {
   return (
     <Routes>

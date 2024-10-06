@@ -302,7 +302,7 @@ const Schedule = () => {
             </div>
           )}
         </div>
-        <div id="map" style={{ height: "100%", width: "100%" }}></div>
+        <div id="map" style={{ height: "100%", width: "90%" }}></div>
       </div>
     </div>
   );

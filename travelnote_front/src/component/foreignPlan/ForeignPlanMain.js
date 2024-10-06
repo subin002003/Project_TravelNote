@@ -34,7 +34,7 @@ const ForeignPlanMain = () => {
   const [searchPlaceList, setSearchPlaceList] = useState([]);
   const [selectedPosition, setSelectedPosition] = useState();
   const [placeInfo, setPlaceInfo] = useState();
-  const [isPlanAdded, setIsPlanAdded] = useState(false);
+  const [isPlanDiffered, setIsPlanDiffered] = useState(false);
   const [departInfo, setDepartInfo] = useState({});
   const [arrivalInfo, setArrivalInfo] = useState({});
   const [searchDepartAirport, setSearchDepartAirport] = useState("");
@@ -119,9 +119,12 @@ const ForeignPlanMain = () => {
         setPlanPageOption={setPlanPageOption}
         planList={planList}
         setPlanList={setPlanList}
-        isPlanAdded={isPlanAdded}
-        setIsPlanAdded={setIsPlanAdded}
+        isPlanDiffered={isPlanDiffered}
+        setIsPlanDiffered={setIsPlanDiffered}
         timeOptionsArr={timeOptionsArr}
+        setSelectedPosition={setSelectedPosition}
+        setPlaceInfo={setPlaceInfo}
+        backServer={backServer}
       />
       {planPageOption === 1 ? (
         <ForeignRegionInfo />
@@ -141,7 +144,7 @@ const ForeignPlanMain = () => {
           backServer={backServer}
           totalPlanDates={totalPlanDates}
           itineraryNo={itineraryNo}
-          setIsPlanAdded={setIsPlanAdded}
+          setIsPlanDiffered={setIsPlanDiffered}
           departInfo={departInfo}
           setDepartInfo={setDepartInfo}
           arrivalInfo={arrivalInfo}

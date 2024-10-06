@@ -275,21 +275,44 @@
   margin: 15px 0;
 }
 .plan-item > div {
-  justify-content: center;
+  justify-content: left;
   align-items: center;
   height: 70px;
   display: flex;
   flex-wrap: wrap;
 }
-.plan-seq-info-box {
+.plan-item-info > div {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+.plan-seq-box {
   width: 70px;
 }
 .plan-seq-icon {
-  border: 1px solid var(--text-color);
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
+  border: 1px solid var(--main-color);
+  color: var(--main-color);
+  width: 30px;
+  height: 30px;
+  line-height: 28px;
   border-radius: 20px;
+  margin: 0 auto;
+}
+.plan-seq-icon:hover {
+  background-color: var(--main-color);
+  color: white;
+  cursor: pointer;
+}
+.plan-name-box {
+  width: 170px;
+  display: flex;
+  justify-content: left;
+  align-items: centers;
+  text-align: left;
+  padding: 0 7px;
+}
+.plan-place-name:hover {
+  cursor: pointer;
 }
 .plan-time > select {
   width: 70px;
@@ -303,14 +326,7 @@
 .plan-time > select:hover {
   cursor: pointer;
 }
-.plan-info-box {
-  width: 160px;
-}
-.plan-name {
-  text-align: left;
-  line-height: 40px;
-  width: 100%;
-}
+
 .plan-memo {
   width: 100%;
 }
@@ -320,14 +336,23 @@
   background-color: transparent;
   font-family: "SUITE-Regular";
   width: 100%;
+  padding-left: 7px;
 }
 .plan-image-box {
   width: 70px;
-  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .plan-image-box > img {
-  width: 100%;
   height: 100%;
+  width: 70px;
+  object-fit: cover;
+  object-position: center;
+  max-height: 70px;
+}
+.plan-image-box > img:hover {
+  cursor: pointer;
 }
 .plan-item-list > h5 {
   margin: 30px auto;

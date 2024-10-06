@@ -46,6 +46,7 @@ public class ProductController {
 	public String root;
 	
 	// 패키지 상품 목록(이메일 없으면)
+	@SuppressWarnings("rawtypes")
 	@GetMapping(value="/list/{reqPage}")
 	public ResponseEntity<Map> list(@PathVariable int reqPage){
 		// 조회 결과는 게시물목록, pageNavi생성 시 필요한 데이터들
@@ -61,7 +62,7 @@ public class ProductController {
 		return ResponseEntity.ok(map);
 	}
 	
-	// 패키지 상품 목록(이메일 있으면)
+	// 상품 정렬
 	@GetMapping(value="/list/{reqPage}/{userEmail}/{sortOption}")
 	public ResponseEntity<Map> list(@PathVariable int reqPage, @PathVariable String userEmail, @PathVariable String sortOption){
 		// 조회 결과는 게시물목록, pageNavi생성 시 필요한 데이터들
@@ -140,12 +141,21 @@ public class ProductController {
 //		ProductDTO product = productService.selectOneProduct(productNo);
 //		return ResponseEntity.ok(product);
 //	}
+
+	// 상품 상세페이지
+    @GetMapping(value="/productNo/{productNo}/{userEmail}")
+    public ResponseEntity<Map> selectOneProduct(@PathVariable int productNo, @PathVariable String userEmail) {
+        Map<String, Object> productDetails = productService.selectOneProduct(productNo, userEmail);
+        return ResponseEntity.ok(productDetails);
+    }
 	
-	@GetMapping(value="/productNo/{productNo}/{userEmail}")
-	public ResponseEntity<ProductDTO> selectOneProduct(@PathVariable int productNo, @PathVariable String userEmail) {
-	    ProductDTO product = productService.selectOneProduct(productNo, userEmail);
-	    return ResponseEntity.ok(product);
-	}
+	// 패키지 상품 목록(이메일 없으면)
+//	@GetMapping(value="/list/{reqPage}")
+//	public ResponseEntity<Map> list(@PathVariable int reqPage){
+//		// 조회 결과는 게시물목록, pageNavi생성 시 필요한 데이터들
+//		Map map = productService.selectProductList(reqPage);
+//		return ResponseEntity.ok(map);
+//	}
 	
 	// 패키지 상품 삭제
 	@DeleteMapping(value="/{productNo}")
@@ -196,6 +206,13 @@ public class ProductController {
 			return ResponseEntity.ok(false);
 		}
 	}
+	
+	// 리뷰 정렬
+    @GetMapping(value="/productNo/{productNo}/{userEmail}/{sortOption}")
+    public ResponseEntity<Map> selectReview(@PathVariable int productNo, @PathVariable String userEmail, @PathVariable String sortOption) {
+        Map<String, Object> sortedReviews = productService.selectReviewListSortOption(productNo, userEmail, sortOption);
+        return ResponseEntity.ok(sortedReviews);
+    }
 	
 	// 리뷰 등록
 	@PostMapping(value="/insertReview")

@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.iei.reviewboard.model.dao.ReviewBoardDao">
+	<!-- 전체 게시물 수 조회 -->
+  	<select id="totalCount" resultType="int">
+  		select count(*) from review_board where review_board_status = 1
+  	</select>
+
+	
+	<!-- 전체 게시물 조회 -->
+  	<select id="selectReviewBoardList" resultType="reviewBoard">  		
+	  	select * from 
+	  		(select rownum as rnum, b.* from 
+	  			(select 
+	  				review_board_no,
+	  				review_board_writer,
+	  				review_board_title,
+	  				review_board_category,
+	  				to_char(review_board_date,'yyyy-mm-dd') as review_board_date,
+	  				review_board_readCount,
+	  				review_board_thumbNail,
+	  				review_board_subContent,
+	  				like_count
+	  				from review_board 
+	  				where review_board_status = 1 
+	  				order by review_board_no desc)b) 
+	  				where rnum between #{start} and #{end}
+  	</select>
+  	
+  	<!-- 검색된 게시물 수 조회 -->
+	<select id="searchReviewTotalCount" resultType="int">
+	    select count(*) from review_board 
+	    where review_board_status = 1 
+	    <if test="searchFilter == 'title'">
+	        and review_board_title like '%' || #{searchTerm} || '%'
+	    </if>
+	    <if test="searchFilter == 'writer'">
+	        and review_board_writer like '%' || #{searchTerm} || '%'
+	    </if>
+	    <if test="searchFilter == 'category'">
+	        and review_board_category like '%' || #{searchTerm} || '%'
+	    </if>
+	</select>
+  	
+  	<!-- 검색된 게시물 조회 -->
+	<select id="selectReviewBoardSearchList" resultType="reviewBoard">
+	    select * from 
+	    (
+	        select rownum as rnum, b.* from 
+	        (
+	            select 
+	                review_board_no,
+	                review_board_writer,
+	                review_board_title,
+	                review_board_category,
+	                to_char(review_board_date, 'yyyy-mm-dd') as review_board_date,
+	                review_board_readCount,
+	                review_board_thumbNail,
+                    review_board_subContent,
+	                like_count
+	            from review_board 
+	            where review_board_status = 1
+	            <if test="searchFilter == 'title'">
+	                and review_board_title like '%' || #{searchTerm} || '%'
+	            </if>
+	            <if test="searchFilter == 'writer'">
+	                and review_board_writer like '%' || #{searchTerm} || '%'
+	            </if>
+	            <if test="searchFilter == 'category'">
+	                and review_board_category like '%' || #{searchTerm} || '%'
+	            </if>
+	            order by review_board_no desc) b) 
+	    		where rnum between #{pi.start} and #{pi.end}
+	</select>
+	
+	<!-- 한 게시물 조회 -->
+  	<select id="selectOneReviewBoard" resultMap="getReviewBoard">
+		select 
+			review_board_no,
+			review_board_title,
+			review_board_content,
+			review_board_writer,
+			review_board_status,
+			review_board_readCount,
+			review_board_category,
+			like_count,
+			review_board_thumbNail,
+			review_board_subContent,
+			to_char(review_board_date,'yyyy-mm-dd') as review_board_date
+		from review_board where review_board_no=#{reviewBoardNo}
+	</select>
+	
+	<!-- 게시물 번호로 파일 조회 -->
+  	<select id="selectOneReviewBoardFileList" resultType="reviewBoardFile">
+  		select * from review_board_file where review_board_no=#{reviewBoardNo}
+  	</select>
+	
+	<resultMap type="reviewBoard" id="getReviewBoard">
+	<result column="review_board_no" property="reviewBoardNo"/>
+	<result column="review_board_title" property="reviewBoardTitle" />
+	<result column="review_board_content" property="reviewBoardContent" />
+	<result column="review_board_writer" property="reviewBoardWriter"/>
+	<result column="review_board_status" property="reviewBoardStatus"/>
+	<result column="review_board_date" property="reviewBoardDate"/>
+	<result column="review_board_readCount" property="reviewBoardReadCount"/>
+	<result column="review_board_category" property="reviewBoardCategory"/>
+	<result column="review_board_thumbNail" property="reviewBoardThumbNail"/>
+	<result column="review_board_subContent" property="reviewBoardSubContent"/>
+	<result column="like_count" property="likeCount"/>
+	<collection property="fileList"
+		 select="selectOneReviewBoardFileList"
+		 column="review_board_no"
+		 javaType="java.util.List"
+		 ofType="reviewBoardFile"
+		></collection>
+	</resultMap>
+	
+	<!-- 게시물 조회수 -->
+	<update id="updateViewCount">
+		update review_board
+		set review_board_readCount = review_board_readCount + 1
+		where review_board_no = #{reviewBoardNo}
+	</update>
+	
+	<!-- id로 게시물 조회 -->
+	<select id="selectReviewBoardById" resultType="reviewBoard">
+		select * 
+		from review_board 
+		where review_board_no = #{reviewBoardNo}
+	</select>
+	
+	<!-- 게시물 등록 -->
+  	<insert id="insertReviewBoard">
+  		insert into review_board 
+  		values (
+	  		review_board_seq.nextval,
+	  		#{reviewBoardWriter},
+	  		#{reviewBoardTitle},
+	  		#{reviewBoardContent},
+	  		sysdate,
+	  		#{reviewBoardCategory},
+	  		0,
+	  		1,
+	  		#{reviewBoardThumbNail},
+	  		#{reviewBoardSubContent},
+	  		0
+  		)
+		<selectKey resultType="int" keyProperty="reviewBoardNo" order="AFTER" >
+			select max(review_board_no) from review_board
+		</selectKey>
+  	</insert>
+	
+	<!-- 게시물 파일 등록 -->
+  	<insert id="insertReviewBoardFile">
+  		insert into review_board_file 
+  		values(
+	  		review_board_file_seq.nextval,
+	  		#{reviewBoardNo},
+	  		#{filename},
+	  		#{filepath}
+  		)
+  	</insert>
+	
+	<!-- 파일 조회 -->
+	<select id="getReviewBoardFile" resultType="reviewBoardFile">
+		select * from review_board_file where review_board_file_no=#{reviewBoardFileNo}
+	</select>
+	
+	<!-- 게시물 삭제 -->
+	<delete id="deleteReviewBoard">
+		delete from review_board where review_board_no=#{reviewBoardNo}
+	</delete>
+	
+	<!-- 게시물 수정 -->
+	<update id="updateReviewBoard">
+		update review_board set 
+			review_board_title=#{reviewBoardTitle},
+			review_board_content=#{reviewBoardContent},
+			review_board_category=#{reviewBoardCategory}
+			where review_board_no=#{reviewBoardNo}
+	</update>
+	
+	<!-- 파일 여러개 조회 -->
+	<select id="selectReviewBoardFile" resultType="reviewBoardFile">
+		select * from review_board_file
+		where review_board_file_no in
+		<foreach collection="array" item="reviewBoardFileNo" open="(" close=")" separator=",">
+			#{reviewBoardFileNo}
+		</foreach>
+	</select>
+	
+	<!-- 파일 삭제 -->
+	<delete id="deleteReviewBoardFile">
+		delete from review_board_file
+		where review_board_file_no in
+		<foreach collection="array" item="reviewBoardFileNo" open="(" close=")" separator=",">
+			#{reviewBoardFileNo}
+		</foreach>
+	</delete>
+	
+	<!-- 게시물 좋아요 등록 -->
+	<insert id="insertLike">
+        insert into review_board_like (user_nick, review_board_no)
+        values (
+	       	 #{userNick},
+	         #{reviewBoardNo}
+         )
+    </insert>
+	
+	<!-- 게시물 좋아요 수 증가 -->
+    <update id="incrementLikeCount">
+        update reviewBoard
+        set like_count = like_count + 1
+        where review_board_no = #{reviewBoardNo}
+    </update>
+    
+	<!-- 게시물 좋아요 취소 -->
+    <delete id="deleteLike">
+        delete from review_board_like
+        where user_nick = #{userNick} and review_board_no = #{reviewBoardNo}
+    </delete>
+	
+	<!-- 게시물 좋아요 수 감소 -->
+    <update id="decrementLikeCount">
+        update review_board
+        set like_count = like_count - 1
+        where review_board_no = #{reviewBoardNo}
+    </update>
+	
+	<!-- 댓글 등록 -->
+	 <insert id="addComment">
+		insert into review_board_comment 
+		values (
+			review_board_comment_seq.nextval,
+			#{reviewBoardRef},
+			#{reviewBoardCommentWriter},
+			#{reviewBoardCommentContent},
+			to_char(sysdate, 'yyyy-mm-dd')
+		)
+	</insert>
+	
+	<!-- 댓글 목록 조회 -->
+	<select id="getComments" resultType="reviewBoardComment">
+		select * from review_board_comment 
+		where review_board_ref = #{reviewBoardRef} order by review_board_comment_no
+	</select>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="deleteComment">
+		delete from review_board_comment 
+		where review_board_comment_no = #{reviewBoardCommentNo}
+	</delete> 
+	
+	<!-- 댓글 수정 -->
+	<update id="updateComment">
+    	update review_board_comment
+    	set review_board_comment_content = #{reviewBoardCommentContent}
+    	where review_board_ref = #{reviewBoardNo} and reviewBoard_comment_no = #{commentNo}
+	</update>
+	
+	<!-- 신고 -->
+	<insert id="reviewBoardViewReport">
+		insert into review_board_report 
+		values (
+			#{userNick},
+			#{reviewBoardNo}
+		)
+	</insert>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

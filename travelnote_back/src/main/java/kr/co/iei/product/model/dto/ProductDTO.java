@@ -24,11 +24,11 @@ public class ProductDTO {
 	private String productWriter;
 	private int productStatus;
 	private String enrollDate;
-	private List<ProductFileDTO> fileList;
+	private List<ProductFileDTO> productFileList;
 	private int[] delProductFileNo;
 	// 위시 상품
 	private int productLike;
 	private int productLikeCount;
 	// 리뷰
-	private List<ReviewDTO> reviews;
+	private List<ReviewDTO> productReviewList;
 }

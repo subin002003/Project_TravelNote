@@ -20,7 +20,7 @@ const ForeignPlanSearch = (props) => {
     setPlanList,
     backServer,
     totalPlanDates,
-    setIsPlanAdded,
+    setIsPlanDiffered,
     departInfo,
     setDepartInfo,
     arrivalInfo,
@@ -35,9 +35,19 @@ const ForeignPlanSearch = (props) => {
     searchAirport,
     setSearchAirport,
   } = props;
-  const [category, setCategory] = useState(1); // 1일 때 항공편, 2일 때 장소
+  const [category, setCategory] = useState(2); // 1일 때 항공편, 2일 때 장소
 
   // 추천 명소로 저장된 정보 목록 조회
+
+  // 날짜 변경 시 입력값 리셋
+  useEffect(() => {
+    setDepartInfo({});
+    setArrivalInfo({});
+    setIsNextDayButtonChecked(false);
+    setSearchDepartAirport();
+    setSearchArrivalAirport();
+    setSearchAirport();
+  }, [selectedDay]);
 
   // 장소 검색 인풋에 엔터 입력 시 검색
   const changeSearchInput = (e) => {
@@ -55,12 +65,8 @@ const ForeignPlanSearch = (props) => {
 
   // 출발 항공편 인풋 핸들러
   const changeDepartInfo = (e) => {
-    if (e.target.id === "planTime") {
-      if (checkTime) {
-        console.log(1);
-      }
-    }
     setDepartInfo({ ...departInfo, [e.target.id]: e.target.value });
+    // e.keyCode가 13일 때 (엔터 쳤을 때) 검색 실행
     if (e.keyCode === 13) {
       setSearchDepartAirport(e.target.value);
       setSearchAirport(1);
@@ -70,42 +76,41 @@ const ForeignPlanSearch = (props) => {
   // 도착 항공편 인풋 핸들러
   const changeArrivalInfo = (e) => {
     setArrivalInfo({ ...arrivalInfo, [e.target.id]: e.target.value });
+    // e.keyCode가 13일 때 (엔터 쳤을 때) 검색 실행
     if (e.keyCode === 13) {
       setSearchArrivalAirport(e.target.value);
       setSearchAirport(2);
     }
   };
 
-  // 시간 정보 검증 함수
-  const checkTime = () => {
-    // const departTime = Number((departInfo.planTime + "").trim().slice(0, 2));
-    // const arrivalTime = Number((arrivalInfo.planTime + "").trim().slice(0, 2));
-    // if (departTime > arrivalTime) {
-    //   console.log("출발 시간이 더 느림!!!!");
-    //   return;
-    // } else if (departTime === arrivalTime) {
-    //   console.log("분 비교할 것");
-    //   return;
-    // } else {
-    //   console.log("통과");
-    // }
-    return true;
-  };
+  // 익일 도착 선택 버튼
+  useEffect(() => {
+    if (isNextDayButtonChecked) {
+      setArrivalInfo({
+        ...arrivalInfo,
+        planDay: selectedDay + 1,
+        planDate: totalPlanDates[selectedDay],
+      });
+    } else {
+      setArrivalInfo({
+        ...arrivalInfo,
+        planDay: selectedDay,
+        planDate: totalPlanDates[selectedDay - 1],
+      });
+    }
+  }, [isNextDayButtonChecked]);
 
-  // 항공편 정보 저장
-  const addFlightInfo = () => {
+  // 입력값 확인
+  const checkInput = () => {
     var warningType;
     var warningName;
-
-    // 공항 정보 입력 여부 검증
     if (
       departInfo.planName &&
       departInfo.planTime &&
       arrivalInfo.planName &&
       arrivalInfo.planTime
     ) {
-      console.log("서버 작업");
-      return;
+      return true;
     } else if (!departInfo.planName || !arrivalInfo.planName) {
       warningName = "공항";
       if (!departInfo.planName) {
@@ -125,6 +130,62 @@ const ForeignPlanSearch = (props) => {
       icon: "warning",
       text: warningType + " " + warningName + "을 설정해 주세요.",
     });
+    return false;
+  };
+
+  // 시간 입력값 유효성 검사
+  const checkTime = () => {
+    const departTime = Number((departInfo.planTime + "").trim().slice(0, 2));
+    const arrivalTime = Number((arrivalInfo.planTime + "").trim().slice(0, 2));
+    if (departTime < arrivalTime) {
+      return true;
+    } else if (isNextDayButtonChecked) {
+      return true;
+    } else if (departTime === arrivalTime) {
+      const departMin = Number((departInfo.planTime + "").trim().slice(3, 5));
+      const arrivalMin = Number((arrivalInfo.planTime + "").trim().slice(3, 5));
+      if (departMin < arrivalMin) {
+        return true;
+      } else if (departMin === arrivalMin) {
+        Swal.fire({
+          icon: "info",
+          html: "출발 시간과 도착 시간이 동일합니다.<br>익일 도착인 경우 익일 도착을 체크해 주세요.",
+        });
+        return false;
+      }
+    }
+    Swal.fire({
+      icon: "info",
+      html: "출발 시간이 도착 시간보다 느립니다.<br>익일 도착인 경우 익일 도착을 체크해 주세요.",
+    });
+    return false;
+  };
+
+  // 항공편 정보 저장
+  const addFlightInfo = () => {
+    if (!checkInput()) return;
+    if (!checkTime()) return;
+    const flightsInfo = [departInfo, arrivalInfo];
+    axios
+      .post(`${backServer}/foreign/addFlights`, flightsInfo)
+      .then((res) => {
+        if (res.data) {
+          setIsPlanDiffered(true);
+          setDepartInfo({ departAirport: "" });
+          setArrivalInfo({ arrivalAirport: "" });
+          setIsNextDayButtonChecked(false);
+          setSearchDepartAirport("");
+          setSearchArrivalAirport("");
+          setSearchAirport("");
+          Swal.fire({
+            icon: "success",
+            text: "항공편이 일정에 추가되었습니다.",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -157,7 +218,7 @@ const ForeignPlanSearch = (props) => {
           totalPlanDates={totalPlanDates}
           itineraryNo={itineraryNo}
           backServer={backServer}
-          setIsPlanAdded={setIsPlanAdded}
+          setIsPlanDiffered={setIsPlanDiffered}
           departInfo={departInfo}
           setDepartInfo={setDepartInfo}
           arrivalInfo={arrivalInfo}
@@ -190,7 +251,7 @@ const ForeignPlanSearch = (props) => {
           setPlanList={setPlanList}
           backServer={backServer}
           totalPlanDates={totalPlanDates}
-          setIsPlanAdded={setIsPlanAdded}
+          setIsPlanDiffered={setIsPlanDiffered}
         />
       )}
     </div>
@@ -204,7 +265,7 @@ const FlightInputBox = (props) => {
     totalPlanDates,
     itineraryNo,
     backServer,
-    setIsPlanAdded,
+    setIsPlanDiffered,
     addFlightInfo,
     timeOptionsArr,
     isNextDayButtonChecked,
@@ -226,26 +287,6 @@ const FlightInputBox = (props) => {
   return (
     <div className="flight-info-form">
       <div className="flight-input-box">
-        <h4>출발 공항</h4>
-        <input
-          id="departAirport"
-          placeholder="출발 공항을 입력해 주세요."
-          value={departInfo.departAirport}
-          onChange={changeDepartInfo}
-          onKeyUp={changeDepartInfo}
-        ></input>
-      </div>
-      <div className="flight-input-box">
-        <h4>도착 공항</h4>
-        <input
-          id="arrivalAirport"
-          placeholder="도착 공항을 입력해 주세요."
-          value={arrivalInfo.arrivalAirport}
-          onChange={changeArrivalInfo}
-          onKeyUp={changeArrivalInfo}
-        ></input>
-      </div>
-      <div className="flight-input-box">
         <h4>출발 시간</h4>
         <div className="flight-time">
           <select
@@ -263,6 +304,16 @@ const FlightInputBox = (props) => {
             })}
           </select>
         </div>
+      </div>
+      <div className="flight-input-box">
+        <h4>출발 공항</h4>
+        <input
+          id="departAirport"
+          placeholder="지도에서 출발 공항 찾기"
+          value={departInfo.departAirport}
+          onChange={changeDepartInfo}
+          onKeyUp={changeDepartInfo}
+        ></input>
       </div>
       <div className="flight-input-box">
         <h4>도착 시간</h4>
@@ -283,30 +334,46 @@ const FlightInputBox = (props) => {
           </select>
         </div>
       </div>
+
+      <div className="flight-input-box">
+        <h4>도착 공항</h4>
+        <input
+          id="arrivalAirport"
+          placeholder="지도에서 도착 공항 찾기"
+          value={arrivalInfo.arrivalAirport}
+          onChange={changeArrivalInfo}
+          onKeyUp={changeArrivalInfo}
+        ></input>
+      </div>
+
       <div className="flight-input-box next-day-checkbox">
-        <div>
-          <label className="next-day-check">
-            <input
-              id="next-day-check"
-              name="arriveNextDay"
-              type="checkbox"
-              checked={isNextDayButtonChecked}
-              onChange={() => {
-                setIsNextDayButtonChecked(!isNextDayButtonChecked);
-              }}
-            ></input>
-            <div>
-              <p>익일 도착</p>
-            </div>
-            <div
-              className={
-                "check-icon" + (isNextDayButtonChecked ? " icon-checked" : "")
-              }
-            >
-              <span className="material-icons">done</span>
-            </div>
-          </label>
-        </div>
+        {selectedDay != totalPlanDates.length ? (
+          <div>
+            <label className="next-day-check">
+              <input
+                id="next-day-check"
+                name="arriveNextDay"
+                type="checkbox"
+                checked={isNextDayButtonChecked}
+                onChange={() => {
+                  setIsNextDayButtonChecked(!isNextDayButtonChecked);
+                }}
+              ></input>
+              <div>
+                <p>익일 도착</p>
+              </div>
+              <div
+                className={
+                  "check-icon" + (isNextDayButtonChecked ? " icon-checked" : "")
+                }
+              >
+                <span className="material-icons">done</span>
+              </div>
+            </label>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
       <div className="airport-list-box">
         {searchPlaceList.length > 0 ? (
@@ -329,7 +396,7 @@ const FlightInputBox = (props) => {
                   selectedDay={selectedDay}
                   backServer={backServer}
                   totalPlanDates={totalPlanDates}
-                  setIsPlanAdded={setIsPlanAdded}
+                  setIsPlanDiffered={setIsPlanDiffered}
                   departInfo={departInfo}
                   setDepartInfo={setDepartInfo}
                   arrivalInfo={arrivalInfo}
@@ -367,7 +434,7 @@ const PlaceSearchBox = (props) => {
     itineraryNo,
     backServer,
     totalPlanDates,
-    setIsPlanAdded,
+    setIsPlanDiffered,
   } = props;
 
   return (
@@ -397,7 +464,7 @@ const PlaceSearchBox = (props) => {
                   selectedDay={selectedDay}
                   backServer={backServer}
                   totalPlanDates={totalPlanDates}
-                  setIsPlanAdded={setIsPlanAdded}
+                  setIsPlanDiffered={setIsPlanDiffered}
                 />
               );
             })

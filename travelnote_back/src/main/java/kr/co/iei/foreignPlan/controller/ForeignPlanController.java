@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -85,5 +86,18 @@ public class ForeignPlanController {
 		return ResponseEntity.ok(result);
 	}
 	
+	// 일정에 항공편 추가
+	@PostMapping(value="/addFlights")
+	public ResponseEntity<Boolean> addFlights(@RequestBody ArrayList<ForeignPlanDTO> flightInfo) {
+		boolean result = foreignPlanService.insertFlights(flightInfo);
+		return ResponseEntity.ok(result);
+	}
+	
+	// 일정 삭제
+	@DeleteMapping(value="/deletePlan/{planNo}")
+	public ResponseEntity<Boolean> deletePlan(@PathVariable int planNo){
+		boolean result = foreignPlanService.deletePlan(planNo);
+		return ResponseEntity.ok(result);
+	}
 	
 }

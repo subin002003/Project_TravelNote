@@ -1,4 +1,5 @@
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const ForeignPlaceItem = (props) => {
   const {
@@ -9,7 +10,7 @@ const ForeignPlaceItem = (props) => {
     selectedDay,
     backServer,
     totalPlanDates,
-    setIsPlanAdded,
+    setIsPlanDiffered,
   } = props;
 
   // 클릭 시 지도 이동
@@ -41,7 +42,11 @@ const ForeignPlaceItem = (props) => {
       .post(`${backServer}/foreign/addPlace`, placeObj)
       .then((res) => {
         if (res.data > 0) {
-          setIsPlanAdded(true);
+          setIsPlanDiffered(true);
+          Swal.fire({
+            icon: "success",
+            text: "장소가 일정에 추가되었습니다.",
+          });
         }
       })
       .catch((err) => {

@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import kr.co.iei.foreignPlan.model.dto.ForeignEditPlanDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignItineraryDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignItineraryInfoDTO;
+import kr.co.iei.foreignPlan.model.dto.ForeignPlanChangeSeqDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignPlanDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignRegionDTO;
 
@@ -27,6 +28,15 @@ public interface ForeignPlanDao {
 
 	int updatePlanInfo(ForeignEditPlanDTO foreignEditPlanDTO);
 
-	int insertPlace(ForeignPlanDTO plan);
+	int insertPlan(ForeignPlanDTO plan);
+
+	int deletePlan(int planNo);
+
+	ForeignPlanDTO selectChangeList(int planNo);
+
+	int changeSeq(ForeignPlanChangeSeqDTO changePlan);
+
+
+
 
 }

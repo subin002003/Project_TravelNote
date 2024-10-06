@@ -1,4 +1,4 @@
-package kr.co.iei.board.controller;
+package kr.co.iei.reviewboard.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.type.Alias;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -17,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,17 +34,19 @@ import org.springframework.web.multipart.MultipartFile;
 import kr.co.iei.board.model.dto.BoardCommentDTO;
 import kr.co.iei.board.model.dto.BoardDTO;
 import kr.co.iei.board.model.dto.BoardFileDTO;
-
-import kr.co.iei.board.model.service.BoardService;
+import kr.co.iei.reviewboard.model.dto.ReviewBoardCommentDTO;
+import kr.co.iei.reviewboard.model.dto.ReviewBoardDTO;
+import kr.co.iei.reviewboard.model.dto.ReviewBoardFileDTO;
+import kr.co.iei.reviewboard.model.service.ReviewBoardService;
 import kr.co.iei.user.model.dto.UserDTO;
 import kr.co.iei.util.FileUtils;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/board")
-public class BoardController {
+@RequestMapping("/reviewBoard")
+public class ReviewBoardController {
 	@Autowired
-	private BoardService boardService;
+	private ReviewBoardService reviewBoardService;
 	
 	@Autowired
 	private FileUtils fileUtil;
@@ -52,12 +54,11 @@ public class BoardController {
 	@Value("${file.root}")
 	public String root;
 	
-	
 	// 게시물 전체 조회
 	@GetMapping(value = "/list/{reqPage}")
 	public ResponseEntity<Map> list(@PathVariable int reqPage){
 		//조회결과는 게시물목록, pageNavi생성 시 필요한 데이터들
-		Map map = boardService.selectBoardList(reqPage);
+		Map map = reviewBoardService.selectReviewBoardList(reqPage);
 		return ResponseEntity.ok(map);
 	}
 	
@@ -68,24 +69,23 @@ public class BoardController {
 	        								@RequestParam String searchFilter) // 쿼리 파라미터에서 필터 타입 받기)
 	{
 		// 조회결과는 게시물 목록과 pageNavi 생성 시 필요한 데이터들
-		Map<String, Object> map = boardService.selectBoardSearchList(reqPage, searchTerm, searchFilter);
+		Map<String, Object> map = reviewBoardService.selectReviewBoardSearchList(reqPage, searchTerm, searchFilter);
 	    return ResponseEntity.ok(map); // 결과를 JSON 형식으로 반환
 	}
 	
-	
 	// 한 게시물 상세보기
-	@GetMapping(value = "/boardNo/{boardNo}")
-	public ResponseEntity<BoardDTO> selectOneBoard(@PathVariable int boardNo){
-		BoardDTO board = boardService.selectOneBoard(boardNo);
-		return ResponseEntity.ok(board);
+	@GetMapping(value = "/reviewBoardNo/{reviewBoardNo}")
+	public ResponseEntity<ReviewBoardDTO> selectOneReviewBoard(@PathVariable int reviewBoardNo){
+		ReviewBoardDTO reviewBoard = reviewBoardService.selectOneReviewBoard(reviewBoardNo);
+		return ResponseEntity.ok(reviewBoard);
 	}
 	
 	// 조회수
-	@GetMapping("/view/{boardNo}")
-	public BoardDTO getBoard(@PathVariable int boardNo) {
+	@GetMapping("/view/{reviewBoardNo}")
+	public ReviewBoardDTO getReviewBoard(@PathVariable int reviewBoardNo) {
 		// 조회수를 증가시키고 게시판 정보를 반환
-		boardService.incrementViewCount(boardNo);
-		return boardService.getBoardById(boardNo);
+		reviewBoardService.incrementViewCount(reviewBoardNo);
+		return reviewBoardService.getReviewBoardById(reviewBoardNo);
 	}
 	
 	// 토스트에디터에서 이미지 삽입
@@ -98,31 +98,30 @@ public class BoardController {
 	
 	// 게시물 등록
 	@PostMapping
-	public ResponseEntity<Boolean> insertBoard(@ModelAttribute BoardDTO board, @ModelAttribute MultipartFile[] boardFile){
+	public ResponseEntity<Boolean> insertReviewBoard(@ModelAttribute ReviewBoardDTO reviewBoard, @ModelAttribute MultipartFile[] reviewBoardFile){
 		
-		List<BoardFileDTO> boardFileList = new ArrayList<BoardFileDTO>();
-		if(boardFile != null) {
-			String savepath = root+"/board/";
-			for(MultipartFile file : boardFile) {
-				BoardFileDTO fileDTO = new BoardFileDTO();
+		List<ReviewBoardFileDTO> reviewBoardFileList = new ArrayList<ReviewBoardFileDTO>();
+		if(reviewBoardFile != null) {
+			String savepath = root+"/reviewBoard/";
+			for(MultipartFile file : reviewBoardFile) {
+				ReviewBoardFileDTO fileDTO = new ReviewBoardFileDTO();
 				String filename = file.getOriginalFilename();
 				String filepath = fileUtil.upload(savepath, file);
 				fileDTO.setFilename(filename);
 				fileDTO.setFilepath(filepath);
-				boardFileList.add(fileDTO);
+				reviewBoardFileList.add(fileDTO);
 			}
 		}
-		int result = boardService.insertBoard(board, boardFileList);
-		return ResponseEntity.ok(result == 1+boardFileList.size());
+		int result = reviewBoardService.insertReviewBoard(reviewBoard, reviewBoardFileList);
+		return ResponseEntity.ok(result == 1+reviewBoardFileList.size());
 	}
 	
-	
 	// 파일 다운로드
-	@GetMapping(value="/file/{boardFileNo}")
-	public ResponseEntity<Resource> filedown(@PathVariable int boardFileNo) throws FileNotFoundException{
-		BoardFileDTO boardFile = boardService.getBoardFile(boardFileNo);
-		String savepath = root+"/board/";
-		File file = new File(savepath+boardFile.getFilepath());
+	@GetMapping(value="/file/{reviewBoardFileNo}")
+	public ResponseEntity<Resource> filedown(@PathVariable int reviewBoardFileNo) throws FileNotFoundException{
+		ReviewBoardFileDTO reviewBoardFile = reviewBoardService.getReviewBoardFile(reviewBoardFileNo);
+		String savepath = root+"/reviewBoard/";
+		File file = new File(savepath+reviewBoardFile.getFilepath());
 		
 		Resource resource = new InputStreamResource(new FileInputStream(file));
 		//파일다운로드를 위한 헤더 설정
@@ -141,13 +140,13 @@ public class BoardController {
 	}
 	
 	// 게시물 삭제
-	@DeleteMapping(value="/{boardNo}")
-	public ResponseEntity<Integer> deleteBoard(@PathVariable int boardNo){
-		List<BoardFileDTO> delFileList = boardService.deleteBoard(boardNo);
+	@DeleteMapping(value="/{reviewBoardNo}")
+	public ResponseEntity<Integer> deleteReviewBoard(@PathVariable int reviewBoardNo){
+		List<ReviewBoardFileDTO> delFileList = reviewBoardService.deleteReviewBoard(reviewBoardNo);
 		if(delFileList != null) {
-			String savepath = root+"/board/";
-			for(BoardFileDTO boardFile :delFileList) {
-				File delFile = new File(savepath + boardFile.getFilepath());
+			String savepath = root+"/reviewBoard/";
+			for(ReviewBoardFileDTO reviewBoardFile :delFileList) {
+				File delFile = new File(savepath + reviewBoardFile.getFilepath());
 				delFile.delete();
 			}
 			return ResponseEntity.ok(1);
@@ -158,26 +157,26 @@ public class BoardController {
 	
 	// 게시물 수정
 	@PatchMapping
-	public ResponseEntity<Boolean> updateBoard(@ModelAttribute BoardDTO board,
-												@ModelAttribute MultipartFile[] boardFile){
+	public ResponseEntity<Boolean> updateReviewBoard(@ModelAttribute ReviewBoardDTO reviewBoard,
+												@ModelAttribute MultipartFile[] reviewBoardFile){
 		
-		List<BoardFileDTO> boardFileList = new ArrayList<BoardFileDTO>();
-		if(boardFile != null) {
-			String savepath = root+"/board/";
-			for(MultipartFile file : boardFile) {
-				BoardFileDTO boardFileDTO = new BoardFileDTO();
+		List<ReviewBoardFileDTO> reviewBoardFileList = new ArrayList<ReviewBoardFileDTO>();
+		if(reviewBoardFile != null) {
+			String savepath = root+"/reviewBoard/";
+			for(MultipartFile file : reviewBoardFile) {
+				ReviewBoardFileDTO reviewBoardFileDTO = new ReviewBoardFileDTO();
 				String filename = file.getOriginalFilename();
 				String filepath = fileUtil.upload(savepath, file);
-				boardFileDTO.setFilename(filename);
-				boardFileDTO.setFilepath(filepath);
-				boardFileDTO.setBoardNo(board.getBoardNo());
-				boardFileList.add(boardFileDTO);
+				reviewBoardFileDTO.setFilename(filename);
+				reviewBoardFileDTO.setFilepath(filepath);
+				reviewBoardFileDTO.setReviewBoardNo(reviewBoard.getReviewBoardNo());
+				reviewBoardFileList.add(reviewBoardFileDTO);
 			}
 		}
-		List<BoardFileDTO> delFileList = boardService.updateBoard(board,boardFileList);
+		List<ReviewBoardFileDTO> delFileList = reviewBoardService.updateReviewBoard(reviewBoard,reviewBoardFileList);
 		if(delFileList != null) {
-			String savepath = root+"/board/";
-			for(BoardFileDTO deleteFile : delFileList) {
+			String savepath = root+"/reviewBoard/";
+			for(ReviewBoardFileDTO deleteFile : delFileList) {
 				File delFile = new File(savepath + deleteFile.getFilepath());
 				delFile.delete();
 			}
@@ -188,19 +187,19 @@ public class BoardController {
 	}
 	
 	// 좋아요
-	@PostMapping("/like/{boardNo}")
+	@PostMapping("/like/{reviewBoardNo}")
     public ResponseEntity<Map<String, Object>> toggleLike(
-    	@PathVariable int boardNo,
+    	@PathVariable int reviewBoardNo,
     	@RequestBody Map<String, String> requestBody){
 		String userNick = requestBody.get("userNick");
 		String action = requestBody.get("action");
         boolean success = false;
         String message = "";
         if ("add".equals(action)) {
-            success = boardService.addLike(userNick, boardNo);
+            success = reviewBoardService.addLike(userNick, reviewBoardNo);
             message = success ? "좋아요 추가 성공" : "좋아요 추가 실패";
         } else if ("remove".equals(action)) {
-            success = boardService.removeLike(userNick, boardNo);
+            success = reviewBoardService.removeLike(userNick, reviewBoardNo);
             message = success ? "좋아요 제거 성공" : "좋아요 제거 실패";
         }
         Map<String, Object> response = new HashMap<>();
@@ -209,48 +208,55 @@ public class BoardController {
         return ResponseEntity.ok(response);
     }
 	
-	
-	
 	// 댓글 등록
-	@PostMapping("/{boardNo}/comments")
-	public ResponseEntity<String> addComment(@PathVariable int boardNo, @RequestBody BoardCommentDTO comment) {
-		comment.setBoardRef(boardNo);
-		boardService.addComment(comment);
+	@PostMapping("/{reviewBoardNo}/comments")
+	public ResponseEntity<String> addComment(@PathVariable int reviewBoardNo, @RequestBody ReviewBoardCommentDTO comment) {
+		comment.setReviewBoardRef(reviewBoardNo);
+		reviewBoardService.addComment(comment);
 		return ResponseEntity.status(HttpStatus.CREATED).body("Comment added successfully");
 	}
 
-	// 댓글 조회
-    @GetMapping("/{boardNo}")
-    public ResponseEntity<List<BoardCommentDTO>> getComments(@PathVariable int boardNo) {
-        List<BoardCommentDTO> comments = boardService.getComments(boardNo);
+	// 댓글 목록 조회
+    @GetMapping("/{reviewBoardNo}")
+    public ResponseEntity<List<ReviewBoardCommentDTO>> getComments(@PathVariable int reviewBoardNo) {
+        List<ReviewBoardCommentDTO> comments = reviewBoardService.getComments(reviewBoardNo);
         return ResponseEntity.ok(comments);
     }
 	
     //댓글 삭제
-    @DeleteMapping("/{boardNo}/comments/{commentNo}")
-    public ResponseEntity<String> deleteComment(@PathVariable int boardNo, @PathVariable int commentNo) {
-        boardService.deleteComment(commentNo);
+    @DeleteMapping("/{reviewBoardNo}/comments/{commentNo}")
+    public ResponseEntity<String> deleteComment(@PathVariable int reviewBoardNo, @PathVariable int commentNo) {
+        reviewBoardService.deleteComment(commentNo);
         return ResponseEntity.ok("Comment deleted successfully");
     }
-    
+	
     // 댓글 수정
-    @PutMapping("/{boardNo}/comments/{commentNo}")
-    public ResponseEntity<String> updateComment(@PathVariable int boardNo, @PathVariable int commentNo, @RequestBody BoardCommentDTO boardCommentDTO) {
-        boardService.updateComment(boardNo, commentNo, boardCommentDTO);
+    @PutMapping("/{reviewBoardNo}/comments/{commentNo}")
+    public ResponseEntity<String> updateComment(@PathVariable int reviewBoardNo, @PathVariable int commentNo, @RequestBody ReviewBoardCommentDTO reviewBoardCommentDTO) {
+        reviewBoardService.updateComment(reviewBoardNo, commentNo, reviewBoardCommentDTO);
         return ResponseEntity.ok("Update success");
     }
-    
-   // 신고
-   @PostMapping("/report/{boardNo}")
-   public ResponseEntity<String> boardViewReport(@RequestBody UserDTO userDTO, @PathVariable int boardNo){
+	
+	// 신고
+	@PostMapping("/report/{reviewBoardNo}")
+	public ResponseEntity<String> reviewBoardViewReport(@RequestBody UserDTO userDTO, @PathVariable int reviewBoardNo){
 	   String userNick = userDTO.getUserNick();
-	   boardService.boardViewReport(userNick, boardNo);
+	   reviewBoardService.reviewBoardViewReport(userNick, reviewBoardNo);
 	   return ResponseEntity.ok("Report Success");
-   }
-   
-  
-   	
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

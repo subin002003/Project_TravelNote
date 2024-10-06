@@ -66,12 +66,31 @@
 		#{planTime} where plan_no = #{planNo}
 	</update>
 
-	<insert id="insertPlace">
+	<insert id="insertPlan">
 		<selectKey resultType="int" keyProperty="planSeq" order="BEFORE">
 			select coalesce(max(plan_seq) + 1, 1) from plan where itinerary_no = #{itineraryNo} and plan_day = #{planDay}
 		</selectKey>
-		insert into plan values(plan_no_seq.nextval, #{itineraryNo}, #{planDay}, #{planDate}, #{planSeq}, #{planAddress}, #{planLatitude}, #{planLongitude}, null, null, null, 1, #{planName}, #{planId})
+		insert into plan values(plan_no_seq.nextval, #{itineraryNo}, #{planDay}, #{planDate}, #{planSeq}, #{planAddress}, #{planLatitude}, #{planLongitude}, #{planTime}, #{planMemo}, #{planImage}, 1, #{planName}, #{planId})
 	</insert>
-
-
+	
+	<delete id="deletePlan">
+		delete from plan where plan_no = #{planNo}
+	</delete>
+	
+	<select id="selectChangeList" resultMap="getChangeList">
+		select plan_no, itinerary_no, plan_day, plan_seq from plan where plan_no = #{planNo}
+	</select>
+	
+	<resultMap id="getChangeList" type="foreignPlan">
+		<collection property="changeSeqList" select="selectChangeSeqPlan" column="{itineraryNo=itinerary_no, planDay=plan_day, planSeq=plan_seq}" javaType="java.util.List" ofType="foreignPlanChangeSeq"/>
+	</resultMap>
+	
+	<select id="selectChangeSeqPlan" resultType="foreignPlanChangeSeq">
+		select plan_no, itinerary_no, plan_day, plan_seq from plan where itinerary_no = #{itineraryNo} and plan_day = #{planDay} and plan_seq > #{planSeq}
+	</select>
+	
+	<update id="changeSeq">
+		update plan set plan_seq = plan_seq - 1 where plan_no = #{planNo}
+	</update>
+	
 </mapper>
