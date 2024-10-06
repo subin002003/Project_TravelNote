@@ -16,6 +16,7 @@ import kr.co.iei.foreignPlan.model.dao.ForeignPlanDao;
 import kr.co.iei.foreignPlan.model.dto.ForeignEditPlanDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignItineraryDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignItineraryInfoDTO;
+import kr.co.iei.foreignPlan.model.dto.ForeignPlanChangeSeqDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignPlanDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignRegionDTO;
 
@@ -106,9 +107,22 @@ public class ForeignPlanService {
 
 	// 일정 삭제
 	@Transactional
-	public int deletePlan(int planNo) {
-		int result = foreignPlanDao.deletePlan(planNo);
-		return result;
+	public boolean deletePlan(int planNo) {
+		int result = 0;
+		// planNo와 같은 itineraryNo, planDay를 가지면서 planSeq이 planNo보다 큰 일정들의 planSeq 조정
+		ForeignPlanDTO delPlan = foreignPlanDao.selectChangeList(planNo);
+		for (int i = 0; i < delPlan.getChangeSeqList().size(); i++) {
+			ForeignPlanChangeSeqDTO changePlan = delPlan.getChangeSeqList().get(i);
+			result += foreignPlanDao.changeSeq(changePlan);
+		}
+		// 해당 일정 삭제
+		result += foreignPlanDao.deletePlan(planNo);
+		// 결과 처리
+		if (result == delPlan.getChangeSeqList().size() + 1) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 

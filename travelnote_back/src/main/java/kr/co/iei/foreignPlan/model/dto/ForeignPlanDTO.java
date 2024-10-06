@@ -1,5 +1,7 @@
 package kr.co.iei.foreignPlan.model.dto;
 
+import java.util.List;
+
 import org.apache.ibatis.type.Alias;
 
 import lombok.AllArgsConstructor;
@@ -25,4 +27,6 @@ public class ForeignPlanDTO {
 	private int planType;
 	private String planName;
 	private String planId;
+	private List<ForeignPlanChangeSeqDTO> changeSeqList;
+	
 }

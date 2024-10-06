@@ -95,9 +95,8 @@ public class ForeignPlanController {
 	
 	// 일정 삭제
 	@DeleteMapping(value="/deletePlan/{planNo}")
-	public ResponseEntity<Integer> deletePlan(@PathVariable int planNo){
-		System.out.println(planNo);
-		int result = foreignPlanService.deletePlan(planNo);
+	public ResponseEntity<Boolean> deletePlan(@PathVariable int planNo){
+		boolean result = foreignPlanService.deletePlan(planNo);
 		return ResponseEntity.ok(result);
 	}
 	

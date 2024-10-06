@@ -60,20 +60,31 @@ const PlanItem = (props) => {
 
   // seq-icon 클릭 시 삭제
   const deletePlan = () => {
-    axios
-      .delete(`${backServer}/foreign/deletePlan/${plan.planNo}`)
-      .then((res) => {
-        if (res.data > 0) {
-          setIsPlanDiffered(true);
-          Swal.fire({
-            icon: "success",
-            text: "일정에서 삭제되었습니다.",
+    Swal.fire({
+      icon: "warning",
+      text: "일정에서 삭제할까요?",
+      showCancelButton: true,
+      confirmButtonText: "삭제",
+      cancelButtonText: "취소",
+    }).then((confirm) => {
+      if (confirm.isConfirmed) {
+        // 삭제 버튼을 클릭한 경우 DB 삭제 진행
+        axios
+          .delete(`${backServer}/foreign/deletePlan/${plan.planNo}`)
+          .then((res) => {
+            if (res.data == true) {
+              setIsPlanDiffered(true);
+              Swal.fire({
+                icon: "success",
+                text: "일정에서 삭제되었습니다.",
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err.data);
           });
-        }
-      })
-      .catch((err) => {
-        console.log(err.data);
-      });
+      }
+    });
   };
 
   return (
