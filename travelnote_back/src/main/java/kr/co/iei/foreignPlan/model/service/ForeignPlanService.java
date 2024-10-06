@@ -146,6 +146,8 @@ public class ForeignPlanService {
 			return false;
 		}
 	}
+	
+	// 동행자 초대 보내기
 
 
 }

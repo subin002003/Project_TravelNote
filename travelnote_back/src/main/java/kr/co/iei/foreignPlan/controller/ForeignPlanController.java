@@ -21,6 +21,7 @@ import kr.co.iei.foreignPlan.model.dto.ForeignItineraryInfoDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignPlanDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignRegionDTO;
 import kr.co.iei.foreignPlan.model.service.ForeignPlanService;
+import kr.co.iei.user.model.service.UserService;
 
 @RestController
 @CrossOrigin("*")
@@ -28,6 +29,8 @@ import kr.co.iei.foreignPlan.model.service.ForeignPlanService;
 public class ForeignPlanController {
 	@Autowired
 	private ForeignPlanService foreignPlanService;
+	@Autowired
+	private UserService userService;
 	
 	// 여행지 개수 조회
 	@GetMapping(value="/totalCount")
@@ -111,6 +114,17 @@ public class ForeignPlanController {
 	@DeleteMapping(value="/deleteItinerary/{itineraryNo}")
 	public ResponseEntity<Boolean> deleteItinerary(@PathVariable int itineraryNo){
 		boolean result = foreignPlanService.deleteItinerary(itineraryNo);
+		return ResponseEntity.ok(result);
+	}
+
+	// 동행자 초대 보내기
+	@GetMapping(value="/inviteCompanion")
+	public ResponseEntity<Integer> inviteCompanion(@RequestParam String memberEmail, String userEmail){
+		int result = -1;
+		int userCount = userService.findUserByEmail(memberEmail);
+		if (userCount > 0) {
+			 result = userService.sendInvitation(memberEmail, userEmail); // 발송 성공 시 1, 실패 시 0 받아 옴
+		}
 		return ResponseEntity.ok(result);
 	}
 }

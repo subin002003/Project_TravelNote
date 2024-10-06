@@ -40,4 +40,24 @@ public class EmailSender {
 			e.printStackTrace();
 		}
 	}
+	
+	public int sendInvitation(String emailTitle, String receiver, String emailContent) {
+		MimeMessage message = sender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+		
+		try {
+			helper.setSentDate(new Date());
+			helper.setFrom(new InternetAddress("travelnote0919@gmail.com", "TravelNote 초대 메일"));
+			helper.setTo(receiver);
+			helper.setSubject(emailTitle);
+			helper.setText(emailContent, true);
+			sender.send(message);
+			return 1;
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
 }

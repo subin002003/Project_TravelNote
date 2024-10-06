@@ -632,7 +632,8 @@
 }
 
 /* ForeignEditItineray */
-.companion-button {
+.companion-button,
+.invitation-button {
   width: 150px;
   display: inline-block;
   text-align: center;
@@ -643,7 +644,8 @@
   color: white;
   font-size: 13px;
 }
-.companion-button:hover {
+.companion-button:hover,
+.invitation-button:hover {
   background-color: var(--sub-color);
 }
 .delete-itinerary-box {
@@ -654,4 +656,15 @@
 .delete-itinerary-box:hover {
   text-decoration: underline;
   cursor: pointer;
+}
+.invitation-input {
+  width: 260px;
+  outline: none;
+  border: none;
+  border-bottom: 2px solid var(--main-color);
+  background-color: transparent;
+  line-height: 45px;
+  font-size: 15px;
+  padding-left: 10px;
+  font-family: "SUITE-Regular";
 }

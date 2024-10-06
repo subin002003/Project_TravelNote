@@ -17,13 +17,14 @@ const ForeignEditItinerary = () => {
   const [itinerary, setItinerary] = useState({});
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [isInvitationAvailable, setIsInvitationAvailable] = useState(false);
+  const [emailInput, setEmailInput] = useState("");
 
   // 여행 정보 조회
   useEffect(() => {
     axios
       .get(`${backServer}/foreign/getItineraryInfo/${itineraryNo}`)
       .then((res) => {
-        console.log(itinerary);
         setItinerary(res.data);
         setStartDate(res.data.itineraryStartDate);
         setEndDate(res.data.itineraryEndDate);
@@ -116,6 +117,51 @@ const ForeignEditItinerary = () => {
     });
   };
 
+  // 초대 이메일 입력 핸들러
+  const changeEmailInput = (e) => {
+    setEmailInput(e.target.value);
+  };
+
+  // 초대 발송
+  const sendInvitation = () => {
+    const memberEmail = emailInput.trim();
+    if (memberEmail === "") return;
+    if (memberEmail === loginEmail) {
+      Swal.fire({
+        icon: "info",
+        text: "초대 받을 다른 회원의 이메일을 입력해 주세요.",
+      });
+    } else {
+      axios
+        .get(`${backServer}/foreign/inviteCompanion`, {
+          params: {
+            memberEmail: memberEmail,
+            userEmail: loginEmail,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          // 발송 성공 시 1, 실패 시 0, 회원이 없을 시 -1 받아 옴
+          if (res.data > 0) {
+            setIsInvitationAvailable(false);
+          } else if (res.data === 0) {
+            Swal.fire({
+              icon: "error",
+              html: "메일 발송 중 오류가 발생했습니다.<br>잠시 후 다시 시도해 주세요.",
+            });
+          } else {
+            Swal.fire({
+              icon: "warning",
+              html: "해당 이메일로 회원을 찾을 수 없습니다..<br>다른 이메일을 입력해 주세요.",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
   return (
     <>
       {/* 다시 여행 조회로 이동 버튼 만들기 */}
@@ -125,7 +171,6 @@ const ForeignEditItinerary = () => {
           className="itinerary-form"
           onSubmit={(e) => {
             e.preventDefault();
-            editItinerary();
           }}
         >
           {/* 여행지 정보 */}
@@ -134,14 +179,32 @@ const ForeignEditItinerary = () => {
               {region.countryName} {region.regionName}
             </h2>
             <div className="region-info-box">
-              <span
-                className="companion-button"
-                onClick={() => {
-                  navigate("/foreign/companion/" + itineraryNo);
-                }}
-              >
-                동행자 관리하기
-              </span>
+              {isInvitationAvailable ? (
+                <>
+                  <input
+                    className="invitation-input"
+                    placeholder="초대를 받을 분의 이메일을 입력해 주세요."
+                    value={emailInput}
+                    onChange={changeEmailInput}
+                  ></input>
+                  <span
+                    className="invitation-button"
+                    id="invitation-button"
+                    onClick={sendInvitation}
+                  >
+                    초대 발송하기
+                  </span>
+                </>
+              ) : (
+                <span
+                  className="companion-button"
+                  onClick={() => {
+                    setIsInvitationAvailable(true);
+                  }}
+                >
+                  동행자 추가하기
+                </span>
+              )}
             </div>
           </div>
 
@@ -201,7 +264,11 @@ const ForeignEditItinerary = () => {
 
           {/* 버튼 */}
           <div className="create-button-box">
-            <button id="itinerary-edit-button" type="submit">
+            <button
+              id="itinerary-edit-button"
+              type="button"
+              onClick={editItinerary}
+            >
               여행 일정 수정하기
             </button>
           </div>
