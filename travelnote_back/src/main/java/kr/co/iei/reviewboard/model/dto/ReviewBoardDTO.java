@@ -19,7 +19,7 @@ public class ReviewBoardDTO {
 	private String reviewBoardTitle;
 	private String reviewBoardContent;
 	private String reviewBoardDate;
-	private String ReviewBoardCategory;
+	private String reviewBoardCategory;
 	private int reviewBoardReadCount;
 	private int reviewBoardStatus;
 	private String reviewBoardThumbnail;

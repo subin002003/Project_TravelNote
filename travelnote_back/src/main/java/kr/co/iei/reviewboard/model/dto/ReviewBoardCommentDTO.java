@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class ReviewBoardCommentDTO {
 	private int reviewBoardCommentNo;
 	private int reviewBoardRef; // 게시물 번호
-	private String ReivewBoardCommentWriter; // 작성자
-	private String ReviewBoardCommentContent; // 댓글 내용
+	private String reivewBoardCommentWriter; // 작성자
+	private String reviewBoardCommentContent; // 댓글 내용
 	private String boardCommentDate; // 댓글 작성일
 }
