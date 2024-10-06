@@ -31,9 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import kr.co.iei.board.model.dto.BoardCommentDTO;
-import kr.co.iei.board.model.dto.BoardDTO;
-import kr.co.iei.board.model.dto.BoardFileDTO;
+
 import kr.co.iei.reviewboard.model.dto.ReviewBoardCommentDTO;
 import kr.co.iei.reviewboard.model.dto.ReviewBoardDTO;
 import kr.co.iei.reviewboard.model.dto.ReviewBoardFileDTO;
