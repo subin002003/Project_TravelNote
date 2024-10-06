@@ -145,3 +145,24 @@
 .review-board-center p {
   margin: 0 10px; /* 카테고리와 첨부파일 간의 간격 */
 }
+
+.review-board-thumb-and-subContent {
+  display: flex;
+  justify-content: space-between;
+}
+
+.review-board-thumb-wrap {
+  width: 400px; /* 원하는 너비 */
+  overflow: hidden; /* 넘치는 부분 숨김 */
+  position: relative; /* 자식 요소를 절대 위치에 놓기 위한 설정 */
+  margin-right: 50px;
+}
+.review-board-thumb-wrap img {
+  width: 100%; /* 부모 요소에 맞춰 크기 조정 */
+  height: auto; /* 비율 유지 */
+  position: absolute; /* 절대 위치 설정 */
+  top: 50%; /* 중앙 정렬 */
+  left: 50%; /* 중앙 정렬 */
+  transform: translate(-50%, -50%); /* 중앙으로 이동 */
+  object-fit: cover; /* 이미지의 중앙 부분만 보이게 설정 */
+}

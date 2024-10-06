@@ -24,9 +24,7 @@ const ReviewBoardWrite = () => {
   const inputCategory = (e) => {
     setReviewBoardCategory(e.target.value);
   };
-  const inputSubContent = (e) => {
-    setReviewBoardSubContent(e.target.value);
-  };
+
   const writeReviewBoard = () => {
     if (reviewBoardTitle !== "" && reviewBoardContent !== "") {
       const form = new FormData();
@@ -79,8 +77,8 @@ const ReviewBoardWrite = () => {
 
       <form
         onSubmit={(e) => {
-          e.preventDefault();
-          writeReviewBoard();
+          e.preventDefault(); // 기본 폼 제출 방지
+          writeReviewBoard(); // 리뷰 게시글 작성 함수 호출
         }}
       >
         <ReviewBoardFrm
@@ -94,7 +92,7 @@ const ReviewBoardWrite = () => {
           thumbnail={thumbnail}
           setThumbnail={setThumbnail}
           reviewBoardSubContent={reviewBoardSubContent}
-          setReviewBoardSubContent={inputSubContent}
+          setReviewBoardSubContent={setReviewBoardSubContent}
         />
         <div>
           <ReviewBoardToastEditor

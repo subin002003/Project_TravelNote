@@ -10,6 +10,9 @@ const ReviewBoardFrm = (props) => {
   const setReviewBoardFile = props.setReviewBoardFile;
   const reviewBoardCategory = props.reviewBoardCategory;
   const setReviewBoardCategory = props.setReviewBoardCategory;
+  const reviewBoardSubContent = props.reviewBoardSubContent;
+  const setReviewBoardSubContent = props.setReviewBoardSubContent;
+
   //수정인 경우에 추가로 전송되는 데이터
   const reviewBoardThumbNail = props.reviewBoardThumbNail;
   const setReviewBoardThumbNail = props.setReviewBoardThumbNail;
@@ -26,27 +29,31 @@ const ReviewBoardFrm = (props) => {
   // -> 화면에 썸네일을 미리보기하는 state  -> 초기값이 무조건 null
   // reviewBoardImg		->null
   // setReviewBoardImg
-  const thumbnailRef = useRef(null);
+  const thumbnailRef = useRef(null); // 썸네일 파일 입력 참조
   //썸네일 미리보기용 state(데이터 전송하지 않음)
-  const [reviewBoardImg, setReviewBoardImg] = useState(null);
+  const [reviewBoardImg, setReviewBoardImg] = useState(null); // 썸네일 미리보기 상태
 
   //썸네일 이미지 첨부파일이 변경되면 동작할 함수
   const changeThumbnail = (e) => {
     //요소들이 겹쳐있는 상태에서 해당 요소를 선택할 때는 currentTarget(target을 사용하면 여러요소가 한번에 선택)
     const files = e.currentTarget.files;
     if (files.length !== 0 && files[0] !== 0) {
-      //썸네일 파일 객체를 글작성 시 전송하기 위한 값 저장
-      setThumbnail(files[0]);
+      setThumbnail(files[0]); // 썸네일 파일 저장
       //화면에 썸네일 미리보기
       const reader = new FileReader();
       reader.readAsDataURL(files[0]);
       reader.onloadend = () => {
-        setReviewBoardImg(reader.result);
+        setReviewBoardImg(reader.result); // 미리보기용 이미지 설정
       };
     } else {
       setThumbnail(null);
       setReviewBoardImg(null);
     }
+  };
+
+  // 텍스트 영역에서 입력된 내용을 업데이트하는 함수
+  const handleSubContentChange = (e) => {
+    setReviewBoardSubContent(e.target.value); // 상태 업데이트
   };
 
   //첨부파일 화면에 띄울 state
@@ -65,43 +72,74 @@ const ReviewBoardFrm = (props) => {
   };
   return (
     <div>
-      <div className="review-board-thumb-wrap">
-        {reviewBoardImg ? (
-          <img
-            onClick={() => {
-              thumbnailRef.current.click();
+      <div
+        style={{
+          borderTop: "1px solid black",
+          // 상단, 우측, 하단, 좌측 여백
+          margin: "20px 0px 40px 0px",
+          width: "100%",
+        }}
+      ></div>
+      <div className="review-board-thumb-and-subContent">
+        <div className="review-board-thumb-wrap">
+          {reviewBoardImg ? (
+            <img
+              onClick={() => {
+                thumbnailRef.current.click();
+              }}
+              src={reviewBoardImg}
+              alt="Thumbnail" //이미지 표시 안될 때 대신 표시될 텍스트
+            />
+          ) : reviewBoardThumbNail ? (
+            <img
+              src={`${backServer}/reviewBoard/thumb/${reviewBoardThumbNail}`}
+              onClick={() => {
+                thumbnailRef.current.click();
+              }}
+              alt="Thumbnail"
+            />
+          ) : (
+            <img
+              onClick={() => {
+                thumbnailRef.current.click();
+              }}
+              src="/image/default_img.png"
+              alt="Default"
+            ></img>
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={changeThumbnail}
+            ref={thumbnailRef}
+          ></input>
+        </div>
+        <div
+          style={{
+            width: "1120px",
+            height: "300px",
+            border: "1px solid black",
+          }}
+        >
+          <textarea
+            value={reviewBoardSubContent} // textarea의 값
+            onChange={handleSubContentChange} // 텍스트 영역 상태 업데이트
+            style={{
+              width: "100%",
+              height: "100%",
+              boxSizing: "border-box", // 패딩과 보더를 포함한 크기 계산
+              resize: "none", // 사용자가 크기를 조절하지 못하게 설정
             }}
-            src={reviewBoardImg}
-          />
-        ) : reviewBoardThumbNail ? (
-          <img
-            src={`${backServer}/reviewBoard/thumb/${reviewBoardThumbNail}`}
-            onClick={() => {
-              thumbnailRef.current.click();
-            }}
-          />
-        ) : (
-          <img
-            onClick={() => {
-              thumbnailRef.current.click();
-            }}
-            src="/image/default_img.png"
-          ></img>
-        )}
-        <input
-          type="file"
-          accept="image/*"
-          style={{ display: "none" }}
-          onChange={changeThumbnail}
-          ref={thumbnailRef}
-        ></input>
+          ></textarea>
+        </div>
       </div>
 
       <table className="review-boardList-table-no-border">
         <tbody>
           <tr>
             <th>
-              <label htmlFor="review-boardTitle" style={{ fontSize: "30px" }}>
+              <label htmlFor="review-boardTitle" style={{ fontSize: "20px" }}>
                 제목
               </label>
             </th>
@@ -124,11 +162,11 @@ const ReviewBoardFrm = (props) => {
           </tr>
           <tr>
             <th>
-              <label htmlFor="reviewBoardCategory" style={{ fontSize: "21px" }}>
+              <label htmlFor="reviewBoardCategory" style={{ fontSize: "15px" }}>
                 카테고리
               </label>
             </th>
-            <td>
+            <td style={{ textAlign: "left" }}>
               <input
                 type="text"
                 id="reviewBoardCategory"
@@ -147,11 +185,9 @@ const ReviewBoardFrm = (props) => {
           </tr>
           <tr>
             <th>
-              <label htmlFor="reviewBoardFile" style={{ fontSize: "20px" }}>
-                첨부파일
-              </label>
+              <label style={{ fontSize: "15px" }}>첨부파일</label>
             </th>
-            <td>
+            <td style={{ textAlign: "left" }}>
               <input
                 type="file"
                 id="reviewBoardFile"
@@ -162,7 +198,7 @@ const ReviewBoardFrm = (props) => {
           </tr>
           <tr>
             <th style={{ fontSize: "15px" }}>첨부파일 목록</th>
-            <td>
+            <td style={{ textAlign: "left" }}>
               <div>
                 {fileList
                   ? fileList.map((reviewBoardFile, i) => {
