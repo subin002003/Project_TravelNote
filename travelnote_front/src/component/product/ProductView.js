@@ -36,15 +36,15 @@ import {
 } from "../utils/RecoilData";
 import ChannelTalk from "./ChannelTalk";
 // mui-select
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import OutlinedInput from "@mui/material/OutlinedInput";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 import GoogleMap from "./GoogleMap";
 
 const sortOptions = [
-  { label: '좋아요순', value: 'mostLiked' },
-  { label: '최신순', value: 'newest' },
+  { label: "좋아요순", value: "mostLiked" },
+  { label: "최신순", value: "newest" },
 ];
 
 const ProductView = () => {
@@ -58,7 +58,10 @@ const ProductView = () => {
   const params = useParams();
   const productNo = params.productNo;
   // const [product, setProduct] = useState({ fileList: [], reviews: [] });
-  const [product, setProduct] = useState({ productFileList: [], productReviewList: [] });
+  const [product, setProduct] = useState({
+    productFileList: [],
+    productReviewList: [],
+  });
   const [productFileList, setProductFileList] = useState([]);
   const [productReviewList, setProductReviewList] = useState([]);
 
@@ -95,7 +98,10 @@ const ProductView = () => {
   const handleSortClick = (sortOption) => {
     console.log(sortOption);
 
-    axios.get(`${backServer}/product/productNo/${productNo}/${userEmail}/${sortOption}`)
+    axios
+      .get(
+        `${backServer}/product/productNo/${productNo}/${userEmail}/${sortOption}`
+      )
       .then((res) => {
         console.log(res.data); // 응답 데이터 로그
 
@@ -109,11 +115,17 @@ const ProductView = () => {
         console.log(productReviewList);
       })
       .catch((err) => {
-        console.error('Axios error:', err);
-        console.error('Error response data:', err.response ? err.response.data : 'No response data');
+        console.error("Axios error:", err);
+        console.error(
+          "Error response data:",
+          err.response ? err.response.data : "No response data"
+        );
       });
   };
 
+  useEffect(() => {
+    console.log("리뷰 리스트가 업데이트되었습니다:", productReviewList);
+  }, [productReviewList]); // productReviewList가 변경될 때마다 콜백이 실행
   // 날짜 범위 상태
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -340,7 +352,9 @@ const ProductView = () => {
             {product.productInfo ? (
               <Viewer initialValue={product.productInfo} />
             ) : (
-              <p style={{ textAlign: "center", color: "gray" }}>여행지 정보가 없습니다.</p>
+              <p style={{ textAlign: "center", color: "gray" }}>
+                여행지 정보가 없습니다.
+              </p>
             )}
           </div>
         </div>
@@ -353,9 +367,14 @@ const ProductView = () => {
       <div id="map" className="sec product-google-map">
         <h3 className="section-title">지도</h3>
         {product.productLatitude && product.productLongitude ? (
-          <GoogleMap latitude={product.productLatitude} longitude={product.productLongitude} />
+          <GoogleMap
+            latitude={product.productLatitude}
+            longitude={product.productLongitude}
+          />
         ) : (
-          <p style={{ textAlign: "center", color: "gray" }}>위치 정보가 없습니다.</p>
+          <p style={{ textAlign: "center", color: "gray" }}>
+            위치 정보가 없습니다.
+          </p>
         )}
       </div>
 
@@ -392,7 +411,7 @@ const ProductView = () => {
               리뷰 작성
             </button>
             {/* 정렬을 위한 Select 대신 직접적인 클릭 이벤트 처리 */}
-            <FormControl sx={{ m: 1, width: '150px' }}>
+            <FormControl sx={{ m: 1, width: "150px" }}>
               <Select
                 displayEmpty
                 input={<OutlinedInput />}
@@ -590,14 +609,14 @@ const ReviewItem = (props) => {
       const newLikeStatus = !reviewLike; // 좋아요 상태 토글
       const request = newLikeStatus
         ? axios.post(
-          // 리뷰 좋아요
-          `${backServer}/product/${review.reviewNo}/insertReviewLike/${userEmail}`,
-          { reviewLike: 1 }
-        )
+            // 리뷰 좋아요
+            `${backServer}/product/${review.reviewNo}/insertReviewLike/${userEmail}`,
+            { reviewLike: 1 }
+          )
         : axios.delete(
-          // 리뷰 좋아요 취소
-          `${backServer}/product/${review.reviewNo}/deleteReviewLike/${userEmail}?reviewLike=1`
-        );
+            // 리뷰 좋아요 취소
+            `${backServer}/product/${review.reviewNo}/deleteReviewLike/${userEmail}?reviewLike=1`
+          );
 
       request
         .then((res) => {
@@ -716,8 +735,8 @@ const ReviewItem = (props) => {
             {dialogType === "update"
               ? "리뷰 수정"
               : dialogType === "reply"
-                ? "답글 작성"
-                : "리뷰 작성"}
+              ? "답글 작성"
+              : "리뷰 작성"}
           </DialogTitle>
           <DialogContent>
             <Review

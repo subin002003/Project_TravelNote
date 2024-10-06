@@ -16,6 +16,7 @@ import MyReservation from "./MyReservation";
 import ReservationView from "./ReservationView";
 import MyProduct from "./MyProduct";
 import MyPayment from "./MyPayment";
+import PaymentInfo from "./PaymentInfo";
 
 const MypageMain = () => {
   const navigate = useNavigate();
@@ -110,6 +111,10 @@ const MypageMain = () => {
 
               <Route path="myProduct" element={<MyProduct />} />
               <Route path="myPayment" element={<MyPayment />} />
+              <Route
+                path="myPayment/paymentInfo/:orderNo"
+                element={<PaymentInfo />}
+              />
 
               <Route path="admin/manageBoard" element={<ManageBoard />} />
               <Route path="admin/manageUser" element={<ManageUser />} />
