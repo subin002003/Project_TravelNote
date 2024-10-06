@@ -151,6 +151,7 @@ public class UserController {
 
 	@PatchMapping
 	public ResponseEntity<Integer> updateUser(@RequestBody UserDTO user){
+		System.out.println("업데이터 유저 : "+user);
 		int result = userService.updateUser(user);
 		return ResponseEntity.ok(result);
 	}

@@ -56,9 +56,9 @@ public class PersonalBoardController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Boolean> insertPersonalBoard(@RequestParam("personalBoardTitle") String personalBoardTitle,
-	        @RequestParam("personalBoardContent") String personalBoardContent,
-	        @RequestParam("personalBoardWriter") String personalBoardWriter,
+	public ResponseEntity<Boolean> insertPersonalBoard(@RequestParam(value = "personalBoardTitle") String personalBoardTitle,
+	        @RequestParam(value = "personalBoardContent") String personalBoardContent,
+	        @RequestParam(value = "personalBoardWriter") String personalBoardWriter,
 	        @RequestParam(value = "personalBoardFileList", required = false) MultipartFile[] personalBoardFileList) {
 
 	    PersonalBoardDTO personalBoard = new PersonalBoardDTO();

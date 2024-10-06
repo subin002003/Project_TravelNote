@@ -48,7 +48,10 @@ const MypageMain = () => {
 
   // 현재 경로가 '/mypage'일 때만 'info'로 이동, 다른 경로일 경우 유지
   useEffect(() => {
-    if (isLogin && location.pathname === "/mypage" && userType === 1) {
+    if (
+      (isLogin && location.pathname === "/mypage" && userType === 1) ||
+      userType === 2
+    ) {
       navigate("info"); // 기본 페이지로 이동
     } else if (isLogin && location.pathname === "/mypage" && userType === 3) {
       navigate("admin/manageBoard");
@@ -97,7 +100,7 @@ const MypageMain = () => {
             <SideMenu menus={menus} />
           </section>
         </div>
-        <div className="mypage-content">
+        <div style={{ padding: "20px" }} className="mypage-content">
           <section className="section">
             <Routes>
               <Route path="info" element={<MyInfo />} />
