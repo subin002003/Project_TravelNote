@@ -1,210 +1,366 @@
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Viewer } from "@toast-ui/react-editor";
+import "react-day-picker/dist/style.css";
 import axios from "axios";
-import { useEffect } from "react";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import PageNavi from "../utils/PagiNavi";
+import "./product.css";
+
+// Import MUI components
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+    Rating,
+} from "@mui/material";
+
+// Import Swiper core and required modules
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "./swiper.css";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/autoplay";
+import DateRangePickerComponent from "./DatePickerComponent";
+import Review from "./review/Review";
+import Swal from "sweetalert2";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
     isLoginState,
     loginEmailState,
     userTypeState,
 } from "../utils/RecoilData";
-import { useRecoilState, useRecoilValue } from "recoil";
-import Swal from "sweetalert2";
 import ChannelTalk from "./ChannelTalk";
-// mui-select
+// MUI select
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import GoogleMap from "./GoogleMap";
 
 const sortOptions = [
     { label: '좋아요순', value: 'mostLiked' },
     { label: '최신순', value: 'newest' },
 ];
 
-const ProductList = () => {
+const ProductView = () => {
     const backServer = process.env.REACT_APP_BACK_SERVER;
-    const [productList, setProductList] = useState([]);
-    const [reqPage, setReqPage] = useState(1);
-    const [pi, setPi] = useState({});
-
     // 로그인 회원 정보
     const isLogin = useRecoilValue(isLoginState);
     const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
     const userEmail = loginEmail;
     const [userType, setUserType] = useRecoilState(userTypeState);
 
-    // 상품 리스트 조회
-    useEffect(() => {
-        const request =
-            isLogin && userEmail
-                ? axios.get(`${backServer}/product/list/${reqPage}/${userEmail}`)
-                : axios.get(`${backServer}/product/list/${reqPage}`);
+    const params = useParams();
+    const productNo = params.productNo;
+    const [product, setProduct] = useState({ productFileList: [], productReviewList: [] });
+    const [productFileList, setProductFileList] = useState([]);
+    const [productReviewList, setProductReviewList] = useState([]);
 
-        request
+    const navigate = useNavigate();
+    const [people, setPeople] = useState(1); // 초기 수량을 1로 설정
+    const [dateRange, setDateRange] = useState("여행 날짜를 선택하세요."); // 선택된 날짜 범위를 상태로 관리
+    const [openReviewDialog, setOpenReviewDialog] = useState(false); // 다이얼로그 상태
+
+    useEffect(() => {
+        if (!productNo || !userEmail) {
+            console.error("productNo 또는 userEmail이 유효하지 않습니다.");
+            return;
+        }
+
+        axios
+            .get(`${backServer}/product/productNo/${productNo}/${userEmail}`)
             .then((res) => {
                 console.log(res.data);
-                setProductList(res.data.list);
-                setPi(res.data.pi);
+                setProduct(res.data.product);
+                setProductFileList(res.data.productFileList); // 첨부파일 관리
+                setProductReviewList(res.data.productReviewList); // 리뷰 관리
             })
             .catch((err) => {
-                console.log(err);
+                console.log("Error:", err.response ? err.response.data : err.message);
+                Swal.fire({
+                    title: "상품 정보를 불러오는 데 실패했습니다.",
+                    text: "다시 시도하세요.",
+                    icon: "error",
+                });
             });
-    }, [userEmail, reqPage]);
+    }, [productNo, userEmail]);
 
     // 각 정렬 옵션에 따른 클릭 이벤트 처리
     const handleSortClick = (sortOption) => {
         console.log(sortOption);
-        setReqPage(1); // 페이지를 1로 리셋
 
-        axios.get(`${backServer}/product/list/${reqPage}/${userEmail}/${sortOption}`)
+        axios.get(`${backServer}/product/productNo/${productNo}/${userEmail}/${sortOption}`)
             .then((res) => {
-                console.log(res.data);
-                // 상품 리스트를 업데이트할 때 상태를 리셋합니다.
-                setProductList(res.data.list.map(product => ({
-                    ...product,
-                    productLike: product.productLike, // 상품의 좋아요 상태
-                    productLikeCount: product.productLikeCount, // 상품의 좋아요 수
-                })));
-                setPi(res.data.pi);
+                console.log(res.data); // 응답 데이터 로그
+                const newReviews = res.data.productReviewList; // 새 리뷰 리스트
+                setProductReviewList(newReviews); // 리뷰 관리
             })
             .catch((err) => {
-                console.log(err);
+                console.error('Axios error:', err);
+                console.error('Error response data:', err.response ? err.response.data : 'No response data');
             });
     };
 
+    // 날짜 범위 상태
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+
+    // DatePicker로 선택된 날짜 처리
+    const handleDateRangeChange = (startDate, endDate) => {
+        if (startDate && endDate) {
+            const options = {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+            };
+            const startFormatted = new Date(startDate).toLocaleDateString(
+                "ko-KR",
+                options
+            );
+            const endFormatted = new Date(endDate).toLocaleDateString(
+                "ko-KR",
+                options
+            );
+
+            setDateRange(`선택된 날짜: ${startFormatted} ~ ${endFormatted}`);
+            setStartDate(startDate); // startDate 상태 업데이트
+            setEndDate(endDate); // endDate 상태 업데이트
+        }
+    };
+
+    // 패키지 상품 삭제
+    const deleteProduct = () => {
+        Swal.fire({
+            title: "상품을 삭제하시겠습니까?",
+            text: "삭제 후 복구할 수 없습니다.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "삭제",
+            cancelButtonText: "취소",
+        }).then((res) => {
+            if (res.isConfirmed) {
+                // 사용자가 삭제를 확인했을 경우에만 Axios 요청 실행
+                axios
+                    .delete(`${backServer}/product/${product.productNo}`)
+                    .then((res) => {
+                        // 응답 처리
+                        if (res.data === 1) {
+                            Swal.fire({
+                                title: "상품이 삭제되었습니다.",
+                                icon: "success",
+                            });
+                            navigate("/product/list");
+                        } else {
+                            Swal.fire({
+                                title: "상품 삭제에 실패했습니다.",
+                                text: "다시 시도해 주세요.",
+                                icon: "error",
+                            });
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        Swal.fire({
+                            title: "오류 발생",
+                            text: "상품 삭제 중 오류가 발생했습니다.",
+                            icon: "error",
+                        });
+                    });
+            }
+        });
+    };
+
+    const minus = () => {
+        if (people === 1) {
+            Swal.fire({
+                title: "최소 구매 수량은 1개 입니다.",
+                icon: "warning",
+            });
+        } else {
+            setPeople((prevCount) => prevCount - 1); // 이전 값을 기반으로 상태 업데이트
+        }
+    };
+
+    const plus = () => {
+        if (people === 10) {
+            Swal.fire({
+                title: "최대 구매 수량은 10개 입니다.",
+                icon: "warning",
+            });
+        } else {
+            setPeople((prevCount) => prevCount + 1); // 이전 값을 기반으로 상태 업데이트
+        }
+    };
+
+    // 리뷰 작성 팝업 열기
+    const handleOpenReviewDialog = () => {
+        setOpenReviewDialog(true);
+    };
+
+    // 리뷰 작성 팝업 닫기
+    const handleCloseReviewDialog = () => {
+        setOpenReviewDialog(false);
+    };
+
     return (
-        <section style={{ margin: "50px auto" }} className="section product-list">
-            {isLogin === true && userType === 2 ? (
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <Link to="/product/write" className="btn-primary writeBtn">
-                        상품 등록
-                    </Link>
-                    {/* 정렬을 위한 Select 대신 직접적인 클릭 이벤트 처리 */}
-                    <FormControl sx={{ m: 1, width: '150px' }}>
-                        <Select
-                            displayEmpty
-                            input={<OutlinedInput />}
-                            defaultValue="" // 기본값 설정
-                            renderValue={() => <em>정렬 기준 선택</em>}
+        <section className="section product-view-wrap">
+            <div className="product-view-content">
+                <div className="product-view-info">
+                    <div className="product-thumbnail-swiper">
+                        <Swiper
+                            modules={[Navigation, Pagination, Autoplay]}
+                            slidesPerView={1}
+                            pagination={{
+                                el: ".swiper-pagination",
+                                type: "fraction",
+                                clickable: true,
+                            }}
+                            navigation={{
+                                nextEl: ".swiper-button-next",
+                                prevEl: ".swiper-button-prev",
+                            }}
+                            autoplay={{ delay: 2500 }}
                         >
+                            {productFileList && productFileList.length > 0 ? (
+                                productFileList.map((file, i) => (
+                                    <SwiperSlide key={"file-" + i}>
+                                        <img
+                                            src={`${backServer}/product/${file.filepath}`}
+                                            alt={`Slide ${i}`}
+                                            style={{
+                                                height: "780px",
+                                                width: "100%",
+                                                objectFit: "cover",
+                                            }}
+                                        />
+                                    </SwiperSlide>
+                                ))
+                            ) : (
+                                <SwiperSlide>
+                                    <img src="/image/default_img.png" alt="기본 이미지" />
+                                </SwiperSlide>
+                            )}
+
+                            {/* Navigation 버튼 추가 */}
+                            <div className="swiper-button-next"></div>
+                            <div className="swiper-button-prev"></div>
+                            {/* Pagination 추가 */}
+                            <div className="swiper-pagination"></div>
+                        </Swiper>
+                    </div>
+                    <div className="product-view-preview">
+                        {/* 상품 정보 출력 */}
+                        <h2>{product.productName}</h2>
+                        <p>{product.productSubName}</p>
+                    </div>
+                </div>
+
+                <div className="line"></div>
+
+                <div className="sec product-view-reservation">
+                    <h3 className="section-title">여행 예약</h3>
+
+                    <DateRangePickerComponent onDateRangeChange={handleDateRangeChange} />
+
+                    <div className="people">
+                        <button className="btn-count" onClick={minus}>
+                            -
+                        </button>
+                        <span>{people}</span>
+                        <button className="btn-count" onClick={plus}>
+                            +
+                        </button>
+                    </div>
+                    <p>{dateRange}</p>
+
+                    <div className="actions">
+                        {userType === "관리자" && (
+                            <Button variant="contained" color="error" onClick={deleteProduct}>
+                                상품 삭제
+                            </Button>
+                        )}
+                        <Button variant="contained" color="primary" onClick={handleOpenReviewDialog}>
+                            리뷰 작성
+                        </Button>
+                    </div>
+                </div>
+
+                <div className="line"></div>
+
+                {/* 정렬 기능 추가 */}
+                <div className="review-sort">
+                    <FormControl variant="outlined">
+                        <Select
+                            value=""
+                            onChange={(e) => handleSortClick(e.target.value)} // 정렬 클릭 이벤트 처리
+                            displayEmpty
+                            inputProps={{ 'aria-label': 'Sort Reviews' }}
+                        >
+                            <MenuItem value="" disabled>리뷰 정렬</MenuItem>
                             {sortOptions.map((option) => (
-                                <MenuItem
-                                    key={option.value}
-                                    value={option.value}
-                                    onClick={() => handleSortClick(option.value)} // onClick으로 axios 요청
-                                >
+                                <MenuItem key={option.value} value={option.value}>
                                     {option.label}
                                 </MenuItem>
                             ))}
                         </Select>
                     </FormControl>
                 </div>
-            ) : (
-                ""
-            )}
 
-            {/* 상품 리스트 */}
-            <div className="product-list-wrap">
-                <ul className="posting-wrap">
-                    {productList.map((product, i) => {
-                        return <ProductItem key={"product-" + i} product={product} />;
-                    })}
-                </ul>
+                {/* 리뷰 출력 */}
+                <div className="commentBox">
+                    <div className="posting-review-wrap">
+                        <ul>
+                            {productReviewList.length > 0 ? (
+                                productReviewList.map((review, i) => (
+                                    <ReviewItem
+                                        key={`review-${i}`}
+                                        product={product}
+                                        review={review}
+                                        parentReviewNo={review.reviewNo} // 부모 리뷰 ID 전달
+                                    />
+                                ))
+                            ) : (
+                                <li style={{ textAlign: "center", color: "gray" }}>
+                                    등록된 리뷰가 없습니다.
+                                </li>
+                            )}
+                        </ul>
+                    </div>
+                    {/* 리뷰 전체보기 */}
+                </div>
+
+                <ChannelTalk />
             </div>
-            <div className="product-paging-wrap">
-                <PageNavi pi={pi} reqPage={reqPage} setReqPage={setReqPage} />
-            </div>
-            <ChannelTalk />
-            {isLogin ? (
-                <button className="channelTalkBtn">
-                    <img src="/image/logo2.png"></img>
-                </button>
-            ) : (
-                ""
-            )}
+
+            {/* 리뷰 작성 다이얼로그 */}
+            <Dialog open={openReviewDialog} onClose={handleCloseReviewDialog}>
+                <DialogTitle>리뷰 작성</DialogTitle>
+                <DialogContent>
+                    <Review
+                        productNo={productNo}
+                        onClose={handleCloseReviewDialog}
+                        setProductReviewList={setProductReviewList} // 리뷰 리스트 업데이트를 위한 함수 전달
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseReviewDialog} color="primary">
+                        취소
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Google Map 컴포넌트 */}
+            <GoogleMap latitude={product.latitude} longitude={product.longitude} />
         </section>
     );
 };
 
-const ProductItem = ({ product }) => {
-    const backServer = process.env.REACT_APP_BACK_SERVER;
-    const isLogin = useRecoilValue(isLoginState);
-    const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
-    const productNo = product.productNo;
-    const userEmail = loginEmail;
-    const navigate = useNavigate();
-
-    // 좋아요 상태와 좋아요 수를 props에서 직접 받음
-    const productLike = product.productLike === 1; // 좋아요 상태 (1: 좋아요, 0: 비활성화)
-    const productLikeCount = product.productLikeCount; // 좋아요 수
-    const newLikeState = productLike ? 0 : 1; // 좋아요 상태를 토글
-
-    const handleLikeToggle = () => {
-        if (!isLogin) {
-            Swal.fire({
-                title: "로그인 후 이용이 가능합니다.",
-                icon: "info",
-            });
-            return;
-        }
-
-        if (isLogin === true) {
-            const newLikeStatus = !productLike; // 좋아요 상태 토글
-            const request = newLikeStatus
-                ? axios.post(`${backServer}/product/${productNo}/insertWishLike/${userEmail}`, { productLike: 1 })
-                : axios.delete(`${backServer}/product/${productNo}/deleteWishLike/${userEmail}?productLike=1`);
-
-            request
-                .then((res) => {
-                    console.log(res.data);
-                    // 좋아요 수 업데이트는 ProductList에서 처리하므로 이곳에서는 필요 없음
-                })
-                .catch((err) => {
-                    console.log(err);
-                    Swal.fire({
-                        title: newLikeStatus ? "좋아요 추가에 실패했습니다." : "좋아요 취소에 실패했습니다.",
-                        text: err.message,
-                        icon: "error",
-                    });
-                });
-        }
-    };
-
-    return (
-        <li style={{ marginBottom: "20px" }} className="posting-item">
-            <div
-                className="posting-info-left"
-                onClick={() => navigate(`/product/view/${product.productNo}`)}
-            >
-                <div className="posting-title">
-                    <p>{product.productName}</p>
-                </div>
-                <div className="posting-title">
-                    <p>{product.productSubName}</p>
-                </div>
-            </div>
-            <div className="posting-info-right">
-                <div className="posting-img">
-                    <img
-                        style={{ width: "150px" }}
-                        src={product.productThumb
-                            ? `${backServer}/product/thumb/${product.productThumb}`
-                            : "/image/default_img.png"}
-                    />
-                </div>
-                <div className="like-icon-box" onClick={handleLikeToggle}>
-                    <span className={productLike ? "product-like-checked" : "product-like-unchecked"}>
-                        <i className={productLike ? "fa-solid fa-heart" : "fa-regular fa-heart"}></i>
-                    </span>
-                    {/* 좋아요 수 출력 */}
-                    <span className="productLikeCount">{productLikeCount}</span>
-                </div>
-                <span className="price">{product.productPrice.toLocaleString()}원</span>
-            </div>
-            <div className="clear"></div>
-        </li>
-    );
-};
-
-export default ProductList;
+export default ProductView;

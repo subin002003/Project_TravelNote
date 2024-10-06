@@ -40,6 +40,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import GoogleMap from "./GoogleMap";
 
 const sortOptions = [
   { label: '좋아요순', value: 'mostLiked' },
@@ -97,9 +98,14 @@ const ProductView = () => {
     axios.get(`${backServer}/product/productNo/${productNo}/${userEmail}/${sortOption}`)
       .then((res) => {
         console.log(res.data); // 응답 데이터 로그
-        const newReviews = res.data.productReviewList; // 새 리뷰 리스트
-        setProductReviewList(newReviews); // 리뷰 관리
-        console.log(newReviews); // 새 리뷰 리스트 출력
+
+        // 새로운 리뷰 리스트를 가져옵니다.
+        const newProductReviewList = res.data.productReviewList;
+
+        // 기존 리뷰 리스트를 새로운 리뷰 리스트로 업데이트
+        setProductReviewList([...newProductReviewList]);
+
+        console.log(newProductReviewList); // 새 리뷰 리스트 출력
         console.log(productReviewList);
       })
       .catch((err) => {
@@ -334,10 +340,23 @@ const ProductView = () => {
             {product.productInfo ? (
               <Viewer initialValue={product.productInfo} />
             ) : (
-              <p>여행지 정보가 없습니다.</p>
+              <p style={{ textAlign: "center", color: "gray" }}>여행지 정보가 없습니다.</p>
             )}
           </div>
         </div>
+      </div>
+
+      <div className="clear"></div>
+      <div className="line"></div>
+      <div className="clear"></div>
+
+      <div id="map" className="sec product-google-map">
+        <h3 className="section-title">지도</h3>
+        {product.productLatitude && product.productLongitude ? (
+          <GoogleMap latitude={product.productLatitude} longitude={product.productLongitude} />
+        ) : (
+          <p style={{ textAlign: "center", color: "gray" }}>위치 정보가 없습니다.</p>
+        )}
       </div>
 
       <div className="clear"></div>
@@ -357,39 +376,41 @@ const ProductView = () => {
             <strong>리뷰({productReviewList.length}개)</strong>
             {/* <strong>리뷰({reviews.length}개)</strong> */}
           </span>
-          <button
-            style={{
-              borderRadius: "10px",
-              color: "var(--gray2)",
-              fontSize: "16px",
-            }}
-            className="btn-secondary lg"
-            onClick={handleOpenReviewDialog} // 다이얼로그 열기
-          >
-            <span style={{ marginRight: "5px" }}>
-              <i className="fa-solid fa-pen-to-square"></i>
-            </span>
-            리뷰 작성
-          </button>
-          {/* 정렬을 위한 Select 대신 직접적인 클릭 이벤트 처리 */}
-          <FormControl sx={{ m: 1, width: '150px' }}>
-            <Select
-              displayEmpty
-              input={<OutlinedInput />}
-              defaultValue="" // 기본값 설정
-              renderValue={() => <em>정렬 기준 선택</em>}
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <button
+              style={{
+                borderRadius: "10px",
+                color: "var(--gray2)",
+                fontSize: "16px",
+              }}
+              className="btn-secondary lg"
+              onClick={handleOpenReviewDialog} // 다이얼로그 열기
             >
-              {sortOptions.map((option) => (
-                <MenuItem
-                  key={option.value}
-                  value={option.value}
-                  onClick={() => handleSortClick(option.value)} // onClick으로 axios 요청
-                >
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+              <span style={{ marginRight: "5px" }}>
+                <i className="fa-solid fa-pen-to-square"></i>
+              </span>
+              리뷰 작성
+            </button>
+            {/* 정렬을 위한 Select 대신 직접적인 클릭 이벤트 처리 */}
+            <FormControl sx={{ m: 1, width: '150px' }}>
+              <Select
+                displayEmpty
+                input={<OutlinedInput />}
+                defaultValue="" // 기본값 설정
+                renderValue={() => <em>정렬 기준 선택</em>}
+              >
+                {sortOptions.map((option) => (
+                  <MenuItem
+                    key={option.value}
+                    value={option.value}
+                    onClick={() => handleSortClick(option.value)} // onClick으로 axios 요청
+                  >
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
         </div>
 
         <div className="line" style={{ margin: "30px 0" }}></div>
