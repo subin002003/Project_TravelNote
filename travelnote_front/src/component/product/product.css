@@ -66,6 +66,49 @@ a:hover {
 }
 
 /* ProductList */
+.product-search-box {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+#product-search {
+  box-sizing: border-box;
+  padding: 10px;
+  padding-left: 15px;
+  width: 75%;
+  height: 40px;
+  outline: none;
+  border: 2px solid #ddd;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  font-size: 18px;
+  transition: all 0.2s;
+}
+
+#product-search-button {
+  width: 25%;
+  height: 40px;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+  background: #0575E6;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #021B79, #0575E6);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #021B79, #0575E6);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  font-size: 18px;
+  font-weight: 900;
+  color: #fff;
+  float: right;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+#product-search-button:hover {
+  opacity: 0.8;
+}
+
 .channelTalkBtn {
   position: fixed;
   bottom: 24px;

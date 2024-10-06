@@ -41,6 +41,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import GoogleMap from "./GoogleMap";
+import PageNavi from "../utils/PagiNavi";
 
 const sortOptions = [
   { label: '좋아요순', value: 'mostLiked' },
@@ -61,6 +62,10 @@ const ProductView = () => {
   const [product, setProduct] = useState({ productFileList: [], productReviewList: [] });
   const [productFileList, setProductFileList] = useState([]);
   const [productReviewList, setProductReviewList] = useState([]);
+  // const [newProductReviewList, setNewProductReviewList] = useState([]);
+
+  const [reqPage, setReqPage] = useState(1);
+  const [pi, setPi] = useState({});
 
   const navigate = useNavigate();
   const [people, setPeople] = useState(1); // 초기 수량을 1로 설정
@@ -103,7 +108,8 @@ const ProductView = () => {
         const newProductReviewList = res.data.productReviewList;
 
         // 기존 리뷰 리스트를 새로운 리뷰 리스트로 업데이트
-        setProductReviewList([...newProductReviewList]);
+        // setProductReviewList(prevReviews => [...prevReviews, newReview]);
+        setProductReviewList(productReviewList => [...productReviewList, newProductReviewList]);
 
         console.log(newProductReviewList); // 새 리뷰 리스트 출력
         console.log(productReviewList);
@@ -435,6 +441,7 @@ const ProductView = () => {
               )}
             </ul>
           </div>
+          <PageNavi pi={pi} reqPage={reqPage} setReqPage={setReqPage} />
           {/* 리뷰 전체보기 */}
         </div>
       </div>

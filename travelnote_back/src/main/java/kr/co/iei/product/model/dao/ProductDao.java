@@ -14,6 +14,8 @@ import kr.co.iei.util.PageInfo;
 public interface ProductDao {
 
 	int totalCount();
+	
+	List<ProductDTO> searchProduct(PageInfo pi, String searchQuery);
 
 	List<ProductDTO> selectProductList(PageInfo pi);
 
@@ -87,4 +89,5 @@ public interface ProductDao {
 	// 상품 정렬
 	List<ProductDTO> selectProductListMostLiked(PageInfo pi, String userEmail);
 	List<ProductDTO> selectProductListNewest(PageInfo pi, String userEmail);
+
 }
