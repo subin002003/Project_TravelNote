@@ -15,6 +15,11 @@ const ReviewBoardUpdate = () => {
   const [reviewBoardTitle, setReviewBoardTitle] = useState("");
   const [reviewBoardCategory, setReviewBoardCategory] = useState("");
   const [reviewBoardContent, setReviewBoardContent] = useState("");
+  const [reviewBoardSubContent, setReviewBoardSubContent] = useState("");
+  //썸네일 파일을 새로 전송하기 위한 state
+  const [thumbnail, setThumbnail] = useState(null);
+  //조회해 온 썸네일을 화면에 보여주기 휘한 state
+  const [reviewBoardThumbNail, setReviewBoardThumbNail] = useState(null);
   //첨부파일을 새로 전송하기 위한 state
   const [reviewBoardFile, setReviewBoardFile] = useState([]);
   //조회해 온 파일목록을 화면에 보여주기 위한 state
@@ -28,6 +33,9 @@ const ReviewBoardUpdate = () => {
   const inputCategory = (e) => {
     setReviewBoardCategory(e.target.value);
   };
+  const inputSubContent = (e) => {
+    setReviewBoardSubContent(e.taget.value);
+  };
   useEffect(() => {
     axios
       .get(`${backServer}/reviewBoard/boardNo/${reviewBoardNo}`)
@@ -36,6 +44,8 @@ const ReviewBoardUpdate = () => {
         setReviewBoardTitle(res.data.reviewBoardTitle);
         setReviewBoardCategory(res.data.reviewBoardCategory);
         setReviewBoardContent(res.data.reviewBoardContent);
+        setReviewBoardThumbNail(res.data.reviewBoardThumbNail);
+        setReviewBoardSubContent(res.data.reviewBoardSubContent);
         setFileList(res.data.fileList);
       })
       .catch((err) => {
@@ -43,13 +53,23 @@ const ReviewBoardUpdate = () => {
       });
   }, []);
   const updateReviewBoard = () => {
-    if (reviewBoardTitle !== "" && reviewBoardContent !== "") {
+    if (
+      reviewBoardTitle !== "" &&
+      reviewBoardContent !== "" &&
+      reviewBoardSubContent !== ""
+    ) {
       const form = new FormData();
       form.append("reviewBoardTitle", reviewBoardTitle);
       form.append("reviewBoardCategory", reviewBoardCategory);
       form.append("reviewBoardContent", reviewBoardContent);
       form.append("reviewBoardNo", reviewBoardNo);
-
+      form.append("reviewBoardSubContent", reviewBoardSubContent);
+      if (thumbnail !== null) {
+        form.append("thumbnail", thumbnail);
+      }
+      if (reviewBoardThumbNail !== null) {
+        form.append("reviewBoardThumbNail", reviewBoardThumbNail);
+      }
       for (let i = 0; i < reviewBoardFile.length; i++) {
         form.append("reviewBoardFile", reviewBoardFile[i]);
       }
@@ -95,6 +115,12 @@ const ReviewBoardUpdate = () => {
           loginEmail={loginEmail}
           reviewBoardTitle={reviewBoardTitle}
           setReviewBoardTitle={inputTitle}
+          thumbnail={thumbnail}
+          setThumbnail={setThumbnail}
+          reviewBoardThumbNail={reviewBoardThumbNail}
+          setReviewBoardThumbNail={setReviewBoardThumbNail}
+          reviewBoardSubContent={reviewBoardSubContent}
+          setReviewBoardSubContent={inputSubContent}
           reviewBoardCategory={reviewBoardCategory}
           setReviewBoardCategory={inputCategory}
           reviewBoardFile={reviewBoardFile}
