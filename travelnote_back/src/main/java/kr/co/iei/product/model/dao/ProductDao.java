@@ -84,7 +84,23 @@ public interface ProductDao {
 
 	int checkProductExists(int productNo);
 
+
+
+	//오건하 작성 2024-10-04
+	int myReviewTotalCount(String userNick);
+
+	//오건하 작성 2024-10-04
+	List myReviewList(PageInfo pi);
+	
+	//오건하 작성 2024-10-04
+	int myProductTotalCount(String userNick);
+	
+	//오건하 작성 2024-10-04
+	List myProductList(PageInfo pi);
+
+
 	// 상품 정렬
 	List<ProductDTO> selectProductListMostLiked(PageInfo pi, String userEmail);
 	List<ProductDTO> selectProductListNewest(PageInfo pi, String userEmail);
+
 }

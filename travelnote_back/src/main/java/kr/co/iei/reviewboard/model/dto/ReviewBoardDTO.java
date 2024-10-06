@@ -19,10 +19,10 @@ public class ReviewBoardDTO {
 	private String reviewBoardTitle;
 	private String reviewBoardContent;
 	private String reviewBoardDate;
-	private String ReviewBoardCategory;
+	private String reviewBoardCategory;
 	private int reviewBoardReadCount;
 	private int reviewBoardStatus;
-	private String reviewBoardThumbnail;
+	private String reviewBoardThumbNail;
 	private String reviewBoardSubContent;
 	private String likeCount;
 	private List<ReviewBoardFileDTO> fileList;

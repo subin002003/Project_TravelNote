@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.co.iei.board.model.dao.BoardDao;
 import kr.co.iei.personalboard.model.dao.PersonalBoardDao;
 import kr.co.iei.personalboard.model.dto.PersonalBoardAnswerDTO;
 import kr.co.iei.personalboard.model.dto.PersonalBoardDTO;
@@ -22,7 +23,8 @@ public class PersonalBoardService {
 	private PersonalBoardDao personalBoardDao;
 	@Autowired
 	private PageUtil pageUtil;
-	
+	@Autowired
+	private BoardDao boardDao;
 	@Transactional
 	public int insertPersonalBoard(PersonalBoardDTO personalBoard, List<PersonalBoardFileDTO> personalBoardFileList) {
 		int result = personalBoardDao.insertPersonalBoard(personalBoard);
@@ -136,4 +138,5 @@ public class PersonalBoardService {
 		}
 		return null;
 	}
+
 }

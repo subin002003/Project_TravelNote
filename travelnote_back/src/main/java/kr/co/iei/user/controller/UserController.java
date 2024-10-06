@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.iei.board.model.service.BoardService;
+import kr.co.iei.pay.model.dto.PayDTO;
+import kr.co.iei.pay.model.service.PayService;
+import kr.co.iei.product.model.service.ProductService;
 import kr.co.iei.user.model.dto.LoginUserDTO;
 import kr.co.iei.user.model.dto.UserDTO;
 import kr.co.iei.user.model.dto.VerifyInfoDTO;
@@ -31,6 +35,12 @@ public class UserController {
 	private UserService userService;
 	@Autowired
 	private EmailSender sender;
+	@Autowired
+	private BoardService boardService;
+	@Autowired
+	private ProductService productService;
+	@Autowired
+	private PayService payService;
 	
 	@GetMapping(value="/checkEmail/{userEmail}")
 	public ResponseEntity<Integer> checkEmail(@PathVariable String userEmail){
@@ -64,12 +74,14 @@ public class UserController {
 	
 	@PostMapping
 	public ResponseEntity<Integer> joinUser(@RequestBody UserDTO user){
+		System.out.println("가입한 유저 정보 : "+user);
 		int result = userService.joinUser(user);
 		return ResponseEntity.ok(result);
 	}
 	
 	@PostMapping(value = "/login")
 	public ResponseEntity<LoginUserDTO> login(@RequestBody UserDTO user){
+		System.out.println("받아온 로그인 정보 : "+user);
 		LoginUserDTO loginUser = userService.login(user);
 		if(loginUser != null) {			
 			return ResponseEntity.ok(loginUser);
@@ -156,5 +168,54 @@ public class UserController {
 		String userNick = userService.getNick(token);
 		System.out.println("userNick 출력 : "+userNick);
 		return ResponseEntity.ok(userNick);
+	}
+	
+	@GetMapping(value = "/checkBusinessRegNo/{businessRegNo}")
+	public ResponseEntity<Integer> checkBusinessRegNo(@PathVariable String businessRegNo){
+		int result = userService.checkBusinessRegNo(businessRegNo);
+		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping(value = "/myBoardList/{userNick}/{boardReqPage}")
+	public ResponseEntity<Map> myBoardList(@PathVariable String userNick,@PathVariable int boardReqPage){
+		Map map = boardService.selectMyBoardList(userNick, boardReqPage);
+		return ResponseEntity.ok(map);
+	}
+	
+	@GetMapping(value = "/myReviewList/{userNick}/{reqPage}")
+	public ResponseEntity<Map> myReviewList(@PathVariable String userNick, @PathVariable int reqPage){
+		Map map = productService.myReviewList(userNick, reqPage);
+		System.out.println("리뷰 리스트 : "+map.get("list"));
+		return ResponseEntity.ok(map);
+	}
+	
+	@GetMapping(value = "/myReservation/{userNick}/{reqPage}")
+	public ResponseEntity<Map> myReservation(@PathVariable String userNick, @PathVariable int reqPage){
+		Map map = payService.myReservation(userNick, reqPage);
+		return ResponseEntity.ok(map);
+	}
+	
+	@GetMapping(value = "/reservationInfo/{orderNo}")
+	public ResponseEntity<PayDTO> reservationInfo(@PathVariable int orderNo){
+		PayDTO reservationInfo = payService.reservationInfo(orderNo);
+		return ResponseEntity.ok(reservationInfo);
+	}
+	
+	@GetMapping(value = "/myProduct/{userNick}/{reqPage}")
+	public ResponseEntity<Map> myProduct(@PathVariable String userNick, @PathVariable int reqPage){
+		Map map = productService.myProduct(userNick, reqPage);
+		return ResponseEntity.ok(map);
+	}
+	
+	@GetMapping(value = "/myPayment/{userNick}/{reqPage}")
+	public ResponseEntity<Map> myPayment(@PathVariable String userNick, @PathVariable int reqPage){
+		Map map = payService.myPayment(userNick, reqPage);
+		return ResponseEntity.ok(map);
+	}
+	
+	@GetMapping(value = "/paymentInfo/{orderNo}")
+	public ResponseEntity<PayDTO> paymentInfo(@PathVariable int orderNo){
+		PayDTO paymentInfo = payService.getPaymentInfo(orderNo);
+		return ResponseEntity.ok(paymentInfo);
 	}
 }

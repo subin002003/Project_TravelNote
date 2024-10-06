@@ -8,6 +8,15 @@ import MyInfo from "./MyInfo";
 import PersonalBoardList from "./PersonalBoardList";
 import PersonalBoardAnswerWrite from "./PersonalBoardAnswerWrite";
 import PersonalBoardAnswerUpdate from "./PersonalBoardAnswerUpdate";
+import ManageBoard from "./ManageBoard";
+import ManageUser from "./ManageUser";
+import MyBoard from "./MyBoard";
+import MyReview from "./MyReview";
+import MyReservation from "./MyReservation";
+import ReservationView from "./ReservationView";
+import MyProduct from "./MyProduct";
+import MyPayment from "./MyPayment";
+import PaymentInfo from "./PaymentInfo";
 
 const MypageMain = () => {
   const navigate = useNavigate();
@@ -18,10 +27,11 @@ const MypageMain = () => {
   const [menus, setMenus] = useState([
     { url: "info", text: "내 정보 수정" },
     { url: "changePw", text: "비밀번호 변경" },
-    { url: "#", text: "내 예약" },
+    { url: "myReservation", text: "내 예약" },
     { url: "#", text: "내 일정" },
     { url: "#", text: "공유된 일정" },
-    { url: "#", text: "내가 작성한 글" },
+    { url: "myboard", text: "내가 작성한 글" },
+    { url: "myReview", text: "내가 작성한 리뷰" },
   ]);
 
   // 로그인 상태 체크 및 리다이렉트
@@ -38,8 +48,10 @@ const MypageMain = () => {
 
   // 현재 경로가 '/mypage'일 때만 'info'로 이동, 다른 경로일 경우 유지
   useEffect(() => {
-    if (isLogin && location.pathname === "/mypage") {
+    if (isLogin && location.pathname === "/mypage" && userType === 1) {
       navigate("info"); // 기본 페이지로 이동
+    } else if (isLogin && location.pathname === "/mypage" && userType === 3) {
+      navigate("admin/manageBoard");
     }
   }, [isLogin, location.pathname, navigate]);
 
@@ -54,7 +66,12 @@ const MypageMain = () => {
         { url: "#", text: "관광지 등록하기" },
       ]);
     } else if (userType === 2) {
-      setMenus([...menus, { url: "/", text: "여행사 페이지" }]);
+      setMenus([
+        { url: "#", text: "여행사 정보 수정" },
+        { url: "#", text: "비밀번호 변경" },
+        { url: "myProduct", text: "판매중인 상품" },
+        { url: "myPayment", text: "판매 내역 확인" },
+      ]);
     }
   }, [userType]);
 
@@ -84,6 +101,23 @@ const MypageMain = () => {
           <section className="section">
             <Routes>
               <Route path="info" element={<MyInfo />} />
+              <Route path="myboard" element={<MyBoard />} />
+              <Route path="myReview" element={<MyReview />} />
+              <Route path="myReservation" element={<MyReservation />} />
+              <Route
+                path="myReservation/:orderNo"
+                element={<ReservationView />}
+              />
+
+              <Route path="myProduct" element={<MyProduct />} />
+              <Route path="myPayment" element={<MyPayment />} />
+              <Route
+                path="myPayment/paymentInfo/:orderNo"
+                element={<PaymentInfo />}
+              />
+
+              <Route path="admin/manageBoard" element={<ManageBoard />} />
+              <Route path="admin/manageUser" element={<ManageUser />} />
               <Route
                 path="admin/personalBoardList"
                 element={<PersonalBoardList />}

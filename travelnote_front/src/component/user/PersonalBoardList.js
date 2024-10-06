@@ -60,8 +60,9 @@ const PersonalBoardItem = (props) => {
   return (
     <tr>
       <td style={{ width: "45%" }} onClick={navigatePersonalBoardAnswerWrite}>
-        {board.personalBoardTitle}
+        <p className="personalboard-title">{board.personalBoardTitle}</p>
       </td>
+
       <td style={{ width: "20%" }}>{board.personalBoardWriter}</td>
       <td style={{ width: "20%" }}>{board.personalBoardWriteDate}</td>
       <td style={{ width: "15%" }}>{board.personalBoardStatus}</td>

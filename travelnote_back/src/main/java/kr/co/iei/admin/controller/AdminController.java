@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.iei.board.model.service.BoardService;
 import kr.co.iei.personalboard.model.dto.PersonalBoardAnswerDTO;
 import kr.co.iei.personalboard.model.dto.PersonalBoardDTO;
 import kr.co.iei.personalboard.model.service.PersonalBoardService;
@@ -25,6 +26,8 @@ import kr.co.iei.personalboard.model.service.PersonalBoardService;
 public class AdminController {
 	@Autowired
 	private PersonalBoardService personalBoardService;
+	@Autowired
+	private BoardService boardService;
 	
 	@GetMapping(value = "/personalBoardList/{reqPage}")
 	public ResponseEntity<Map> getPersonalBoardList(@PathVariable int reqPage){
@@ -52,4 +55,17 @@ public class AdminController {
 		int result = personalBoardService.updatePersonalBoardAnswer(personalBoardAnswer);
 		return ResponseEntity.ok(result);
 	}
+	
+	@GetMapping(value = "/reportBoardList/{boardReqPage}")
+	public ResponseEntity<Map> selectReportBoardList(@PathVariable int boardReqPage){
+		Map map = boardService.selectReportBoardList(boardReqPage);
+		return ResponseEntity.ok(map);
+	}
+	
+	@PatchMapping(value = "/updateBoardStatus/{boardNo}")
+	public ResponseEntity<Integer> updateBoardStatus(@PathVariable int boardNo){
+		int result = boardService.updateBoardStatus(boardNo);
+		return ResponseEntity.ok(result);
+	}
+	
 }

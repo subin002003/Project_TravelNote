@@ -246,6 +246,12 @@ public class UserService {
 	}
 
 
+	public int checkBusinessRegNo(String businessRegNo) {
+		int result = userDao.checkBusinessRegNo(businessRegNo);
+		return result;
+	}
+
+
 	
 
 

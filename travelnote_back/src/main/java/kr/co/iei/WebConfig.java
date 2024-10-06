@@ -37,11 +37,18 @@ public class WebConfig implements WebMvcConfigurer {
 		
 		// board 설정
 		registry
-		.addResourceHandler("/editor/**")
-		.addResourceLocations("file:///"+root+"/editor/");
-		registry
 		.addResourceHandler("/board/thumb/**")
 		.addResourceLocations("file:///"+root+"/board/thumb/");
-	
+		
+		// reviewBoard 설정
+		registry
+		.addResourceHandler("/reviewBoard/thumb/**")
+		.addResourceLocations("file:///"+root+"/reviewBoard/thumb/");
+		
+		// board, reviewBoard editor 설정
+		registry
+		.addResourceHandler("/editor/**")
+		.addResourceLocations("file:///"+root+"/editor/");
+		
 	}
 }

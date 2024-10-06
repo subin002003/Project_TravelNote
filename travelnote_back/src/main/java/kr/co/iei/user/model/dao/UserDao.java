@@ -29,4 +29,6 @@ public interface UserDao {
 
 	int deleteUser(String userEmail);
 
+	int checkBusinessRegNo(String businessRegNo);
+
 }

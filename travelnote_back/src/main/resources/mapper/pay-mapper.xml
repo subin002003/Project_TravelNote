@@ -10,4 +10,55 @@
   	insert into order_pay values(order_pay_seq.nextval, #{userEmail}, #{productNo}, sysdate, #{startDate}, #{endDate}, #{people}, #{price}, #{paymentType})
   </insert>
   
+  <!-- 오건하 작성 2024-10-04 -->
+  <select id="myReservationTotalCount" resultType="int">
+  	select count(*) from order_pay join user_tbl using(user_email) where user_nick = #{userNick} 
+  </select>
+  
+  <!-- 오건하 작성 2024-10-04 -->
+  <select id="selectMyReservation" resultType="pay">
+  	select order_no, user_email,product_no,people,price,product_name,user_nick,product_thumb from order_pay join product using(product_no) join user_tbl using(user_email) where user_nick = #{userNick}
+  </select>
+  
+  <!-- 오건하 작성 2024-10-04 -->
+  <select id="reservationInfo" resultType="pay">
+		 select
+		 p.product_writer,
+		 p.product_no,
+		 o.people,
+		 o.price,
+		 o.order_date,
+		 to_char(o.start_date,'yyyy-mm-dd') as start_date,
+		 to_char(o.end_date,'yyyy-mm-dd') as end_date,
+		 p.product_name,
+		 seller.user_nick as seller_nick,
+		 seller.user_phone as seller_phone,
+		 buyer.user_name as buyer_name, 
+		 buyer.user_phone as buyer_phone,   
+		 p.product_thumb,
+		 o.user_email,
+		 o.payment_type,
+		 o.order_no
+		from 
+		    order_pay o
+		join 
+		    product p on o.product_no = p.product_no
+		join 
+		    user_tbl seller on p.product_writer = seller.user_email 
+		join 
+		    user_tbl buyer on o.user_email = buyer.user_email 
+		where 
+		    o.order_no = #{orderNo}
+  </select>
+  <!-- 오건하 작성 2024-10-04 -->
+  <select id="myPaymentTotalCount" resultType="int">
+  	select count(*) from order_pay o join product p using(product_no) join user_tbl u on(p.product_writer = u.user_email) where user_nick = #{userNick}
+  </select>
+  <!-- 오건하 작성 2024-10-04 -->
+  <select id="myPaymentList" resultType="pay">
+	select order_no,order_date,product_name,user_nick as seller_nick from order_pay o join product p using(product_no) join user_tbl u on(p.product_writer = u.user_email) where user_nick= #{userNick}
+  </select>
+  <!-- 오건하 작성 2024-10-06 -->
+  <select id="getPaymentInfo" resultType="pay">
+  </select>
 </mapper>

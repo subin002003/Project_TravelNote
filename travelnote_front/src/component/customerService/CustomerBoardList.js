@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
+  isLoginState,
   loginEmailState,
   userNickState,
   userTypeState,
@@ -19,6 +20,7 @@ const CustomerBoardList = () => {
   const [reqPage, setReqPage] = useState(1);
   const [personalBoardReqPage, setPerosnalBoardReqPage] = useState(1);
   const [personalBoardList, setPersonaBoardList] = useState([]);
+  const isLogin = useRecoilValue(isLoginState);
   const navigate = useNavigate();
   useEffect(() => {
     axios
@@ -109,45 +111,57 @@ const CustomerBoardList = () => {
         <div className="mypage-title">
           <h3>1대1 문의</h3>
         </div>
-        <div className="personalboard-section">
-          <div className="personalboard-write-btn">
-            <button onClick={navigatePersonalBoardWrite}>
-              1대1 문의 작성하기
-            </button>
-          </div>
-          <div className="personalboard-list">
-            <table>
-              <tbody>
-                <tr style={{ height: "50px" }}>
-                  <th style={{ width: "55%" }}>제목</th>
-                  <th style={{ width: "20%" }}>작성일</th>
-                  <th style={{ width: "25%" }}>답변여부</th>
-                </tr>
-                {personalBoardList.length > 0 ? (
-                  personalBoardList.map((personalBoard, i) => {
-                    return (
-                      <PersonalBoardItem
-                        key={"personalBoard" + i}
-                        personalBoard={personalBoard}
-                      />
-                    );
-                  })
-                ) : (
-                  <tr>
-                    <td colSpan="3">1대1 문의 기록이 없습니다.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-            <div className="faqboard-page-navi">
-              <PageNavi
-                pi={personalBoardPi}
-                reqPage={personalBoardReqPage}
-                setReqPage={setPerosnalBoardReqPage}
-              />
+        {isLogin ? (
+          <>
+            <div className="personalboard-section">
+              <div className="personalboard-list">
+                <table>
+                  <tbody>
+                    <tr style={{ height: "50px" }}>
+                      <th style={{ width: "50%" }}>제목</th>
+                      <th style={{ width: "20%" }}>작성일</th>
+                      <th style={{ width: "30%" }}>답변여부</th>
+                    </tr>
+                    {personalBoardList.length > 0 ? (
+                      personalBoardList.map((personalBoard, i) => {
+                        return (
+                          <PersonalBoardItem
+                            key={"personalBoard" + i}
+                            personalBoard={personalBoard}
+                          />
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td colSpan="3">1대1 문의 기록이 없습니다.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+                <div className="faqboard-page-navi">
+                  <PageNavi
+                    pi={personalBoardPi}
+                    reqPage={personalBoardReqPage}
+                    setReqPage={setPerosnalBoardReqPage}
+                  />
+                </div>
+
+                <button
+                  style={{ marginTop: "10px" }}
+                  onClick={navigatePersonalBoardWrite}
+                >
+                  1대1 문의 작성하기
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        ) : (
+          <>
+            <div style={{ textAlign: "center", lineHeight: "500px" }}>
+              <p>1대1문의는 로그인 후 작성할 수 있습니다.</p>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

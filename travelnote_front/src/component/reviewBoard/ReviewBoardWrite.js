@@ -11,18 +11,22 @@ const ReviewBoardWrite = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
   //글 작성 시 전송할 데이터 선언
-  const [userNick, setUserNick] = useRecoilState(userNickState); // 로그인한 회원 이메일 값(입력할게 아니기때문에 state 사용 x , 변수로만 사용);
+  const [userNick, setUserNick] = useRecoilState(userNickState); // 로그인한 회원 닉네임(입력할게 아니기때문에 state 사용 x , 변수로만 사용);
   const [reviewBoardTitle, setReviewBoardTitle] = useState(""); //사용자가 입력할 제목
   const [reviewBoardCategory, setReviewBoardCategory] = useState(""); // 사용자가 입력할 카테고리
   const [reviewBoardContent, setReviewBoardContent] = useState(""); //사용자가 입력할 내용
   const [reviewBoardFile, setReviewBoardFile] = useState([]); //첨부파일(여러개일수 있으므로 배열로 처리)
+  const [thumbnail, setThumbnail] = useState(null); //썸네일은 첨부파일로 처리 //썸네일은 첨부파일로 처리
+  const [reviewBoardSubContent, setReviewBoardSubContent] = useState(""); // 썸네일 옆 내용
   const inputTitle = (e) => {
     setReviewBoardTitle(e.target.value);
   };
   const inputCategory = (e) => {
     setReviewBoardCategory(e.target.value);
   };
-
+  const inputSubContent = (e) => {
+    setReviewBoardSubContent(e.target.value);
+  };
   const writeReviewBoard = () => {
     if (reviewBoardTitle !== "" && reviewBoardContent !== "") {
       const form = new FormData();
@@ -30,6 +34,11 @@ const ReviewBoardWrite = () => {
       form.append("reviewBoardCategory", reviewBoardCategory);
       form.append("reviewBoardContent", reviewBoardContent);
       form.append("reviewBoardWriter", userNick);
+      form.append("reviewBoardSubContent", reviewBoardSubContent);
+      // 썸네일이 첨부된 경우에만 추가
+      if (thumbnail !== null) {
+        form.append("thumbnail", thumbnail);
+      }
       //첨부파일도 추가한 경우에만 등록(첨부파일은 여러개가 같은 name으로 전송)
       for (let i = 0; i < reviewBoardFile.length; i++) {
         form.append("reviewBoardFile", reviewBoardFile[i]);
@@ -65,7 +74,7 @@ const ReviewBoardWrite = () => {
         className="review-board-title"
         style={{ marginBottom: "40px", fontWeight: "bold" }}
       >
-        후기게시판 작성
+        여행 후기 작성
       </div>
 
       <form
@@ -82,6 +91,10 @@ const ReviewBoardWrite = () => {
           setReviewBoardCategory={inputCategory}
           reviewBoardFile={reviewBoardFile}
           setReviewBoardFile={setReviewBoardFile}
+          thumbnail={thumbnail}
+          setThumbnail={setThumbnail}
+          reviewBoardSubContent={reviewBoardSubContent}
+          setReviewBoardSubContent={inputSubContent}
         />
         <div>
           <ReviewBoardToastEditor

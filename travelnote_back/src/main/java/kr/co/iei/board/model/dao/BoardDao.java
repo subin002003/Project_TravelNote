@@ -59,7 +59,23 @@ public interface BoardDao {
 
 	void updateComment(int boardNo, int commentNo, String boardCommentContent);
 
+
 	void boardViewReport(String userNick, int boardNo);
+	
+	//오건하 작성 2024-10-04
+	int reportTotalCount();
+	
+	//오건하 작성 2024-10-04
+	List selectReportBoard(PageInfo pi);
+	
+	//오건하 작성 2024-10-04
+	int updateBoardStatus(int boardNo);
+	
+	//오건하 작성 2024-10-04
+	int myBoardTotalCount(String userNick);
+
+	//오건하 작성 2024-10-04
+	List selectMyBoardList(PageInfo pi);
 
 	
 
