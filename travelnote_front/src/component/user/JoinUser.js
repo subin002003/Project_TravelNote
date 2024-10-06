@@ -13,7 +13,7 @@ const JoinUser = () => {
     userName: "",
     userPhone: "",
     userNick: "",
-    userType: "0",
+    userType: "1",
     businessRegNo: "",
   });
   const [category, setCategory] = useState("user"); // 회원 유형 상태
@@ -36,7 +36,7 @@ const JoinUser = () => {
       userName: "",
       userPhone: "",
       userNick: "",
-      userType: selectedCategory === "agency" ? "2" : "1", // 카테고리에 따라 userType 설정
+      userType: 0, // 카테고리에 따라 userType 설정
     });
 
     // 여행사일 때 userNick을 userName과 동일하게 설정
@@ -332,6 +332,7 @@ const JoinUser = () => {
         nickState === 3 &&
         businessRegNoState === 3
       ) {
+        setUser({ userType: 2 });
         axios
           .post(`${backServer}/user`, user)
           .then((res) => {
@@ -359,6 +360,7 @@ const JoinUser = () => {
         nameState === 2 &&
         nickState === 3
       ) {
+        setUser({ userType: 1 });
         axios
           .post(`${backServer}/user`, user)
           .then((res) => {

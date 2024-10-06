@@ -28,5 +28,8 @@ public interface PayDao {
 	
 	//오건하 작성 2024-10-04
 	List myPaymentList(PageInfo pi);
+	
+	//오건하 작성 2024-10-06
+	PayDTO getPaymentInfo(int orderNo);
 
 }

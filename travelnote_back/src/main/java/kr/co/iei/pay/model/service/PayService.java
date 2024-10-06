@@ -60,4 +60,10 @@ public class PayService {
 		map.put("pi", pi);
 		return map;
 	}
+	
+	//오건하 작성 2024-10-06
+	public PayDTO getPaymentInfo(int orderNo) {
+		PayDTO paymentInfo = payDao.getPaymentInfo(orderNo);
+		return paymentInfo;
+	}
 }

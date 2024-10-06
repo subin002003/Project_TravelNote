@@ -81,6 +81,7 @@ public class UserController {
 	
 	@PostMapping(value = "/login")
 	public ResponseEntity<LoginUserDTO> login(@RequestBody UserDTO user){
+		System.out.println("받아온 로그인 정보 : "+user);
 		LoginUserDTO loginUser = userService.login(user);
 		if(loginUser != null) {			
 			return ResponseEntity.ok(loginUser);
@@ -210,5 +211,11 @@ public class UserController {
 	public ResponseEntity<Map> myPayment(@PathVariable String userNick, @PathVariable int reqPage){
 		Map map = payService.myPayment(userNick, reqPage);
 		return ResponseEntity.ok(map);
+	}
+	
+	@GetMapping(value = "/paymentInfo/{orderNo}")
+	public ResponseEntity<PayDTO> paymentInfo(@PathVariable int orderNo){
+		PayDTO paymentInfo = payService.getPaymentInfo(orderNo);
+		return ResponseEntity.ok(paymentInfo);
 	}
 }
