@@ -45,8 +45,14 @@ public class ProductController {
 	@Value("${file.root}")
 	public String root;
 	
+	// 상품 검색 기능
+	@GetMapping(value="/list/{reqPage}{searchQuery}")
+	public ResponseEntity<Map> searchProduct(@PathVariable int reqPage, @RequestParam(required = false) String searchQuery) {
+		Map map = productService.searchProduct(reqPage, searchQuery);
+		return ResponseEntity.ok(map);
+	}
+	
 	// 패키지 상품 목록(이메일 없으면)
-	@SuppressWarnings("rawtypes")
 	@GetMapping(value="/list/{reqPage}")
 	public ResponseEntity<Map> list(@PathVariable int reqPage){
 		// 조회 결과는 게시물목록, pageNavi생성 시 필요한 데이터들
