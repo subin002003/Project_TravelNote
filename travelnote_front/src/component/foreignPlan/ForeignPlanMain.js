@@ -127,7 +127,7 @@ const ForeignPlanMain = () => {
         backServer={backServer}
       />
       {planPageOption === 1 ? (
-        <ForeignRegionInfo />
+        <ForeignRegionInfo backServer={backServer} regionInfo={regionInfo} />
       ) : (
         <ForeignPlanSearch
           searchInput={searchInput}
