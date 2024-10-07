@@ -98,7 +98,7 @@ public class ReviewBoardController {
 	@PostMapping
 	public ResponseEntity<Boolean> insertReviewBoard(@ModelAttribute ReviewBoardDTO reviewBoard,@ModelAttribute MultipartFile reviewBoardThumbNail, @ModelAttribute MultipartFile[] reviewBoardFile){
 		if(reviewBoardThumbNail != null) {
-			String savepath = root + "/reviewBoard/thumb";
+			String savepath = root + "/reviewBoard/thumb/";
 			String filepath = fileUtil.upload(savepath, reviewBoardThumbNail);
 			reviewBoard.setReviewBoardThumbNail(filepath);
 		}
@@ -164,12 +164,12 @@ public class ReviewBoardController {
 												@ModelAttribute MultipartFile reviewBoardThumbNail,
 												@ModelAttribute MultipartFile[] reviewBoardFile){
 		
-		List<ReviewBoardFileDTO> reviewBoardFileList = new ArrayList<ReviewBoardFileDTO>();
 		if(reviewBoardThumbNail != null) {
-			String savepath = root + "/reviewBoard/thumb";
+			String savepath = root + "/reviewBoard/thumb/";
 			String filepath = fileUtil.upload(savepath, reviewBoardThumbNail);
 			reviewBoard.setReviewBoardThumbNail(filepath);
 		}
+		List<ReviewBoardFileDTO> reviewBoardFileList = new ArrayList<ReviewBoardFileDTO>();
 		if(reviewBoardFile != null) {
 			String savepath = root+"/reviewBoard/";
 			for(MultipartFile file : reviewBoardFile) {

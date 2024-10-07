@@ -289,13 +289,13 @@ const ReviewBoardView = () => {
           <div className="review-board-thumbnail">
             <img
               src={
-                reviewBoard.reviewBoardThumb
-                  ? `${backServer}/reviewBoard/thumb/${reviewBoard.reviewBoardThumb}`
+                reviewBoard.reviewBoardThumbNail
+                  ? `${backServer}/reviewBoard/thumb/${reviewBoard.reviewBoardThumbNail}`
                   : "/image/default_img.png"
               }
             />
           </div>
-          <div>
+          <div style={{ marginLeft: "50px" }}>
             <h1>여행 제목 : {reviewBoard.reviewBoardTitle}</h1>
             <p>{reviewBoard.reviewBoardSubContent}</p>
           </div>

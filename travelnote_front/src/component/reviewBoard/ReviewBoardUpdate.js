@@ -36,7 +36,7 @@ const ReviewBoardUpdate = () => {
 
   useEffect(() => {
     axios
-      .get(`${backServer}/reviewBoard/boardNo/${reviewBoardNo}`)
+      .get(`${backServer}/reviewBoard/reviewBoardNo/${reviewBoardNo}`)
       .then((res) => {
         console.log(res);
         setReviewBoardTitle(res.data.reviewBoardTitle);
@@ -113,12 +113,6 @@ const ReviewBoardUpdate = () => {
           loginEmail={loginEmail}
           reviewBoardTitle={reviewBoardTitle}
           setReviewBoardTitle={inputTitle}
-          thumbnail={thumbnail}
-          setThumbnail={setThumbnail}
-          reviewBoardThumbNail={reviewBoardThumbNail}
-          setReviewBoardThumbNail={setReviewBoardThumbNail}
-          reviewBoardSubContent={reviewBoardSubContent}
-          setReviewBoardSubContent={setReviewBoardSubContent}
           reviewBoardCategory={reviewBoardCategory}
           setReviewBoardCategory={inputCategory}
           reviewBoardFile={reviewBoardFile}
@@ -127,6 +121,12 @@ const ReviewBoardUpdate = () => {
           setFileList={setFileList}
           delReviewBoardFileNo={delReviewBoardFileNo}
           setDelReviewBoardFileNo={setDelReviewBoardFileNo}
+          thumbnail={thumbnail}
+          setThumbnail={setThumbnail}
+          reviewBoardThumbNail={reviewBoardThumbNail}
+          setReviewBoardThumbNail={setReviewBoardThumbNail}
+          reviewBoardSubContent={reviewBoardSubContent}
+          setReviewBoardSubContent={setReviewBoardSubContent}
         />
       </form>
       <div>

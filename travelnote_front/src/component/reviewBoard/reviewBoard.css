@@ -152,7 +152,7 @@
 }
 
 .review-board-thumb-wrap {
-  width: 400px; /* 원하는 너비 */
+  width: 300px; /* 원하는 너비 */
   overflow: hidden; /* 넘치는 부분 숨김 */
   position: relative; /* 자식 요소를 절대 위치에 놓기 위한 설정 */
   margin-right: 50px;
