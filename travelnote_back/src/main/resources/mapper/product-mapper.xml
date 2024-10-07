@@ -15,6 +15,28 @@
       OR product_info LIKE '%' || #{searchQuery} || '%')
   </select>
   
+  <select id="productList" resultType="product">
+    SELECT * FROM (
+        SELECT rownum AS rnum, p.* FROM (
+            SELECT
+                product_no,
+                product_name,
+                product_sub_name,
+                product_thumb,
+                product_price,
+                product_info,
+                product_latitude,
+                product_longitude,
+                product_writer,
+                product_status,
+                TO_CHAR(enroll_date, 'yyyy-mm-dd') AS enroll_date
+            FROM product
+            WHERE product_status = 1
+            ORDER BY enroll_date DESC  <!-- 최신 등록일 기준으로 정렬 -->
+        ) p
+    )
+  </select>
+  
   <select id="searchProduct" resultType="product">
     SELECT * FROM (
         SELECT rownum AS rnum, p.* 
@@ -39,7 +61,6 @@
             ORDER BY enroll_date DESC
         ) p
     )
-    WHERE rnum BETWEEN #{start} AND #{end}
   </select>
   
   <select id="selectProductList" resultType="product">
@@ -226,9 +247,31 @@
     FROM user_tbl 
     WHERE user_email = #{userEmail}
   </select>
+  
+  <!-- 유저 없이 리뷰 리스트 조회 -->
+  <select id="selectOneProductReviews" resultType="review">
+    SELECT r.*,
+       (SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO) AS REVIEW_LIKE_COUNT,
+       (SELECT COUNT(*) FROM REVIEW r2 WHERE r2.REVIEW_COMMENT_REF = r.REVIEW_NO) AS REVIEW_REPLY_COUNT -- 답글 수
+	FROM REVIEW r
+	WHERE PRODUCT_NO = #{productNo} 
+	  AND REVIEW_COMMENT_REF IS NULL
+	ORDER BY r.REVIEW_DATE DESC
+  </select>
+  
+  <!-- 유저 없이 리뷰 답글 리스트 조회 -->
+  <select id="selectOneProductReviewReCommentList" resultType="review">
+    SELECT r.*,
+       (SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO) AS REVIEW_LIKE_COUNT,
+       (SELECT COUNT(*) FROM REVIEW r2 WHERE r2.REVIEW_COMMENT_REF = r.REVIEW_NO) AS REVIEW_REPLY_COUNT -- 답글 수
+    FROM REVIEW r
+    WHERE PRODUCT_NO = #{productNo} 
+      AND REVIEW_COMMENT_REF IS NOT NULL
+    ORDER BY r.REVIEW_DATE DESC
+  </select>
 
   <!-- 리뷰 리스트 조회 -->
-  <select id="selectOneProductReviews" resultType="review">
+  <select id="selectOneProductUserReviews" resultType="review">
     SELECT r.*,
        (SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO) AS REVIEW_LIKE_COUNT,
        (SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO AND USER_NO = #{userNo}) AS REVIEW_LIKE,
@@ -240,7 +283,7 @@
   </select>
   
   <!-- 리뷰 답글 리스트 조회 -->
-  <select id="selectOneProductReviewReCommentList" resultType="review">
+  <select id="selectOneProductUserReviewReCommentList" resultType="review">
     SELECT r.*,
        (SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO) AS REVIEW_LIKE_COUNT,
        (SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO AND USER_NO = #{userNo}) AS REVIEW_LIKE,
@@ -424,10 +467,12 @@
     )
     where rnum &gt;= #{start}
   </select>
+  
   <!-- 오건하 작성 2024-10-07 -->
   <select id = "myWishTotalCount" resultType="int">
   	select count(*) from wish join user_tbl using(user_no) where user_nick = #{userNick}
   </select>
+  
   <select id = "myWishList" resultType="product">
 	select *
 	from (
@@ -448,4 +493,5 @@
 	)
 	where rnum &gt;= #{start}
   </select>
+  
 </mapper>

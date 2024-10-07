@@ -16,8 +16,10 @@ public interface ProductDao {
 	int totalCount();
 
 	int totalCountSearch(String searchQuery);
+
+	List<ProductDTO> productList();
 	
-	List<ProductDTO> searchProduct(PageInfo pi, String searchQuery);
+	List<ProductDTO> searchProduct(String searchQuery);
 
 	List<ProductDTO> selectProductList(PageInfo pi);
 
@@ -40,10 +42,15 @@ public interface ProductDao {
     // 사용자 번호 조회
     int selectOneUser(String userEmail);
 
-	// 리뷰 리스트 조회
-    List<ReviewDTO> selectOneProductReviews(int productNo, int userNo);
+    // 리뷰 리스트 조회(이메일 없을 때)
+	List<ReviewDTO> selectOneProductReviews(int productNo);
+    // 리뷰 답글 조회(이메일 없을 때)
+	List<ReviewDTO> selectOneProductReviewReCommentList(int productNo);
+	
+	// 리뷰 리스트 조회(이메일 있을 때)
+    List<ReviewDTO> selectOneProductUserReviews(int productNo, int userNo);
     // 리뷰 답글 조회
- 	List<ReviewDTO> selectOneProductReviewReCommentList(int productNo, int userNo);
+ 	List<ReviewDTO> selectOneProductUserReviewReCommentList(int productNo, int userNo);
  	
     // 리뷰 리스트 (좋아요 순 정렬)
     List<ReviewDTO> selectReviewListMostLiked(int productNo, int userNo);
@@ -113,4 +120,5 @@ public interface ProductDao {
 
 	//오건하 작성 2024-10-07
 	List myWishList(PageInfo pi);
+
 }

@@ -52,10 +52,10 @@ public class ProductController {
 //	}
 	
 	// 상품 검색 기능
-	@GetMapping(value="/list/{reqPage}{searchQuery}")
-	public ResponseEntity<Map> searchProduct(@PathVariable int reqPage, @RequestParam(required = false) String searchQuery) {
+	@GetMapping(value="/list{searchQuery}")
+	public ResponseEntity<Map> searchProduct(@RequestParam(required = false) String searchQuery) {
 		System.out.println("searchQuery : " + searchQuery);
-		Map map = productService.searchProduct(reqPage, searchQuery);
+		Map map = productService.searchProduct(searchQuery);
 		return ResponseEntity.ok(map);
 	}
 	
@@ -149,11 +149,11 @@ public class ProductController {
 	}
 	
 	// 패키지 상품 상세페이지
-//	@GetMapping(value="/productNo/{productNo}")
-//	public ResponseEntity<ProductDTO> selectOneProduct(@PathVariable int productNo) {
-//		ProductDTO product = productService.selectOneProduct(productNo);
-//		return ResponseEntity.ok(product);
-//	}
+	@GetMapping(value="/productNo/{productNo}")
+	public ResponseEntity<Map> selectOneProduct(@PathVariable int productNo) {
+		Map<String, Object> productDetails = productService.selectOneProduct(productNo);
+		return ResponseEntity.ok(productDetails);
+	}
 
 	// 상품 상세페이지
     @GetMapping(value="/productNo/{productNo}/{userEmail}")

@@ -82,13 +82,16 @@ const ProductView = () => {
   const [openReviewDialog, setOpenReviewDialog] = useState(false); // 다이얼로그 상태
 
   useEffect(() => {
-    if (!productNo || !loginEmail) {
-      console.error("productNo 또는 loginEmail 유효하지 않습니다.");
-      return;
-    }
+    // if (!productNo || !loginEmail) {
+    //   console.error("productNo 또는 loginEmail 유효하지 않습니다.");
+    //   return;
+    // }
 
-    axios
-      .get(`${backServer}/product/productNo/${productNo}/${loginEmail}`)
+    const request = loginEmail
+      ? axios.get(`${backServer}/product/productNo/${productNo}/${loginEmail}`)
+      : axios.get(`${backServer}/product/productNo/${productNo}`);
+
+    request
       .then((res) => {
         console.log(res.data);
         setProduct(res.data.product);
@@ -681,14 +684,14 @@ const ReviewItem = (props) => {
       const newLikeStatus = !reviewLike; // 좋아요 상태 토글
       const request = newLikeStatus
         ? axios.post(
-            // 리뷰 좋아요
-            `${backServer}/product/${review.reviewNo}/insertReviewLike/${loginEmail}`,
-            { reviewLike: 1 }
-          )
+          // 리뷰 좋아요
+          `${backServer}/product/${review.reviewNo}/insertReviewLike/${loginEmail}`,
+          { reviewLike: 1 }
+        )
         : axios.delete(
-            // 리뷰 좋아요 취소
-            `${backServer}/product/${review.reviewNo}/deleteReviewLike/${loginEmail}?reviewLike=1`
-          );
+          // 리뷰 좋아요 취소
+          `${backServer}/product/${review.reviewNo}/deleteReviewLike/${loginEmail}?reviewLike=1`
+        );
 
       request
         .then((res) => {
@@ -809,8 +812,8 @@ const ReviewItem = (props) => {
             {dialogType === "update"
               ? "리뷰 수정"
               : dialogType === "reply"
-              ? "답글 작성"
-              : "리뷰 작성"}
+                ? "답글 작성"
+                : "리뷰 작성"}
           </DialogTitle>
           <DialogContent>
             <Review
@@ -923,14 +926,14 @@ const ReviewReCommentItem = (props) => {
       const newLikeStatus = !reviewLike; // 좋아요 상태 토글
       const request = newLikeStatus
         ? axios.post(
-            // 리뷰 좋아요
-            `${backServer}/product/${review.reviewNo}/insertReviewLike/${loginEmail}`,
-            { reviewLike: 1 }
-          )
+          // 리뷰 좋아요
+          `${backServer}/product/${review.reviewNo}/insertReviewLike/${loginEmail}`,
+          { reviewLike: 1 }
+        )
         : axios.delete(
-            // 리뷰 좋아요 취소
-            `${backServer}/product/${review.reviewNo}/deleteReviewLike/${loginEmail}?reviewLike=1`
-          );
+          // 리뷰 좋아요 취소
+          `${backServer}/product/${review.reviewNo}/deleteReviewLike/${loginEmail}?reviewLike=1`
+        );
 
       request
         .then((res) => {
@@ -1053,8 +1056,8 @@ const ReviewReCommentItem = (props) => {
             {dialogType === "update"
               ? "리뷰 수정"
               : dialogType === "reply"
-              ? "답글 작성"
-              : "리뷰 작성"}
+                ? "답글 작성"
+                : "리뷰 작성"}
           </DialogTitle>
           <DialogContent>
             <Review

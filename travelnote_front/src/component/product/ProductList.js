@@ -79,13 +79,12 @@ const ProductList = () => {
     // setReqPage(1); // 검색 시 페이지를 초기화
 
     axios
-      .get(`${backServer}/product/list/${reqPage}?query=${searchQuery}`, {
+      .get(`${backServer}/product/list?query=${searchQuery}`, {
         params: { searchQuery }, // searchQuery를 params로 전달
       })
       .then((res) => {
         console.log(res.data);
         setProductList(res.data.list);
-        setPi(res.data.pi);
       })
       .catch((err) => {
         console.log(err);
@@ -149,11 +148,27 @@ const ProductList = () => {
       )}
 
       {/* 상품 리스트 */}
+      {/* <div className="product-list-wrap">
+        <ul className="posting-wrap">
+          {productList.length > 0 ? (
+            {
+              productList.map((product, i) => {
+                return <ProductItem key={"product-" + i} product={product} />;
+              })
+            }
+          ) : <li>검색한 상품이 없습니다.</li>}
+        </ul>
+      </div> */}
+
       <div className="product-list-wrap">
         <ul className="posting-wrap">
-          {productList.map((product, i) => {
-            return <ProductItem key={"product-" + i} product={product} />;
-          })}
+          {productList.length > 0 ? (
+            productList.map((product, i) => (
+              <ProductItem key={product.productNo} product={product} />
+            ))
+          ) : (
+            <li style={{ margin: "300px", textAlign: "center" }}>검색한 상품이 없습니다.</li>
+          )}
         </ul>
       </div>
       <div className="product-paging-wrap">
@@ -209,14 +224,14 @@ const ProductItem = ({ product }) => {
       const newLikeStatus = !productLike; // 좋아요 상태 토글
       const request = newLikeStatus
         ? axios.post(
-            // 리뷰 좋아요
-            `${backServer}/product/${productNo}/insertWishLike/${loginEmail}`,
-            { productLike: 1 }
-          )
+          // 리뷰 좋아요
+          `${backServer}/product/${productNo}/insertWishLike/${loginEmail}`,
+          { productLike: 1 }
+        )
         : axios.delete(
-            // 리뷰 좋아요 취소
-            `${backServer}/product/${productNo}/deleteWishLike/${loginEmail}?productLike=1`
-          );
+          // 리뷰 좋아요 취소
+          `${backServer}/product/${productNo}/deleteWishLike/${loginEmail}?productLike=1`
+        );
 
       request
         .then((res) => {
