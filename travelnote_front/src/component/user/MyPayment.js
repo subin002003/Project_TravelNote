@@ -39,9 +39,27 @@ const MyPayment = () => {
               <th style={{ width: "40%" }}>제품명</th>
               <th style={{ width: "40%" }}>결제 일시</th>
             </tr>
-            {myPaymentList.map((payment, i) => {
-              return <PaymentItem key={"payment" + i} payment={payment} />;
-            })}
+            {myPaymentList && myPaymentList.length > 0 ? (
+              myPaymentList.map((payment, i) => {
+                return <PaymentItem key={"payment" + i} payment={payment} />;
+              })
+            ) : (
+              <tr>
+                <th colSpan={3}>
+                  <div
+                    style={{
+                      marginTop: "20px",
+                      textAlign: "center",
+                      height: "100px",
+                      margin: "0 auto",
+                      lineHeight: "100px",
+                    }}
+                  >
+                    아직 판매된 상품이 없습니다.
+                  </div>
+                </th>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

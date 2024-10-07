@@ -1,5 +1,10 @@
-import { useRecoilValue } from "recoil";
-import { isLoginState, userTypeState } from "../utils/RecoilData";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  isLoginState,
+  loginEmailState,
+  userNickState,
+  userTypeState,
+} from "../utils/RecoilData";
 import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
@@ -29,7 +34,8 @@ const MypageMain = () => {
   const location = useLocation(); // 현재 경로를 확인
   const userType = useRecoilValue(userTypeState);
   const isLogin = useRecoilValue(isLoginState);
-
+  const [userNick, setUserNick] = useRecoilState(userNickState);
+  const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
   const [menus, setMenus] = useState([
     { url: "info", text: "내 정보 수정" },
     { url: "changePw", text: "비밀번호 변경" },
@@ -44,7 +50,9 @@ const MypageMain = () => {
   // 로그인 상태 체크 및 리다이렉트
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
-
+    console.log("userType : " + userType);
+    console.log("userNick : " + userNick);
+    console.log("userEmail : " + loginEmail);
     if (accessToken) {
       axios
         .get(`${backServer}/user/checkToken`, {
@@ -68,32 +76,36 @@ const MypageMain = () => {
         });
     } else {
       // 토큰이 없으면 바로 로그인 페이지로 리다이렉트
-      Swal.fire({
-        title: "로그인 후 이용해주세요",
-        icon: "warning",
-      }).then(() => {
-        navigate("/login");
-      });
+
+      if (!isLogin) {
+        Swal.fire({
+          title: "로그인 후 이용해주세요",
+          icon: "warning",
+        }).then(() => {
+          navigate("/login");
+        });
+      }
     }
-  }, [navigate, backServer]);
+  }, [navigate, backServer, isLogin, userNick, userType, loginEmail]);
 
   // 현재 경로가 '/mypage'일 때만 'info'로 이동, 다른 경로일 경우 유지
   useEffect(() => {
-    if (
-      (isLogin && location.pathname === "/mypage" && userType === 1) ||
-      userType === 2
-    ) {
-      navigate("info"); // 기본 페이지로 이동
-    } else if (isLogin && location.pathname === "/mypage" && userType === 3) {
-      navigate("admin/manageBoard");
+    if (isLogin && location.pathname === "/mypage") {
+      if (userType === 1) {
+        navigate("info");
+      } else if (userType === 2) {
+        navigate("info");
+      } else if (userType === 3) {
+        navigate("admin/manageBoard");
+      }
     }
-  }, [isLogin, location.pathname, navigate]);
+  }, [isLogin, location.pathname, navigate, userType]);
 
   // 관리자 메뉴 추가
   useEffect(() => {
     if (userType === 3) {
       setMenus([
-        { url: "#", text: "게시글 관리" },
+        { url: "/mypage/admin/manageBoard", text: "게시글 관리" },
         { url: "#", text: "회원 관리" },
         { url: "/mypage/admin/personalBoardList", text: "1대1문의 답변하기" },
         { url: "#", text: "여행지 등록하기" },
@@ -101,7 +113,7 @@ const MypageMain = () => {
       ]);
     } else if (userType === 2) {
       setMenus([
-        { url: "#", text: "여행사 정보 수정" },
+        { url: "info", text: "여행사 정보 수정" },
         { url: "changePw", text: "비밀번호 변경" },
         { url: "myProduct", text: "판매중인 상품" },
         { url: "myPayment", text: "판매 내역 확인" },

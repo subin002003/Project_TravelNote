@@ -48,6 +48,7 @@ const Login = () => {
           axios.defaults.headers.common["Authorization"] = res.data.accessToken;
           localStorage.setItem("accessToken", res.data.accessToken);
           window.localStorage.setItem("refreshToken", res.data.refreshToken);
+
           navigate("/");
         })
         .catch((err) => {
@@ -64,8 +65,6 @@ const Login = () => {
             });
           }
         });
-    } else {
-      setIsSocialLogin(true);
     }
   };
 

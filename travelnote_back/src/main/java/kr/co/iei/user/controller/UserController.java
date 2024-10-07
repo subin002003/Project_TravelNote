@@ -116,6 +116,7 @@ public class UserController {
 		 String token = request.getHeader("Authorization").substring(7);
 		 if (jwtUtil.validateToken(token)) {
 		        LoginUserDTO loginUser = jwtUtil.checkToken(token);
+		        System.out.println("토큰 정보 : "+loginUser);
 		        return ResponseEntity.ok(loginUser);
 		    } else {
 		        return ResponseEntity.ok(null);

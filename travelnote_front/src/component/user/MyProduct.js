@@ -32,9 +32,25 @@ const MyProduct = () => {
         내가 판매중인 상품
       </div>
       <div className="myproduct-list">
-        {myProductList.map((myProduct, i) => {
-          return <MyProductItem key={"myProduct" + i} myProduct={myProduct} />;
-        })}
+        {myProductList && myProductList.length > 0 ? (
+          myProductList.map((myProduct, i) => {
+            return (
+              <MyProductItem key={"myProduct" + i} myProduct={myProduct} />
+            );
+          })
+        ) : (
+          <div
+            style={{
+              marginTop: "20px",
+              textAlign: "center",
+              height: "100px",
+              margin: "0 auto",
+              lineHeight: "100px",
+            }}
+          >
+            <h3>아직 판매중인 상품이 없습니다.</h3>
+          </div>
+        )}
       </div>
       <div
         style={{ marginTop: "20px", marginBottom: "20px" }}
