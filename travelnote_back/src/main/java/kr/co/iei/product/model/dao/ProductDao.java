@@ -42,7 +42,9 @@ public interface ProductDao {
 
 	// 리뷰 리스트 조회
     List<ReviewDTO> selectOneProductReviews(int productNo, int userNo);
-    
+    // 리뷰 답글 조회
+ 	List<ReviewDTO> selectOneProductReviewReCommentList(int productNo, int userNo);
+ 	
     // 리뷰 리스트 (좋아요 순 정렬)
     List<ReviewDTO> selectReviewListMostLiked(int productNo, int userNo);
     // 리뷰 리스트 (최신순 정렬)

@@ -34,14 +34,13 @@ const ProductList = () => {
   // 로그인 회원 정보
   const isLogin = useRecoilValue(isLoginState);
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
-  const userEmail = loginEmail;
   const [userType, setUserType] = useRecoilState(userTypeState);
 
   // 상품 리스트 조회
   useEffect(() => {
     const request =
-      isLogin && userEmail
-        ? axios.get(`${backServer}/product/list/${reqPage}/${userEmail}`)
+      isLogin && loginEmail
+        ? axios.get(`${backServer}/product/list/${reqPage}/${loginEmail}`)
         : axios.get(`${backServer}/product/list/${reqPage}`);
 
     request
@@ -53,7 +52,7 @@ const ProductList = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [userEmail, reqPage]);
+  }, [loginEmail, reqPage]);
 
   // 각 정렬 옵션에 따른 클릭 이벤트 처리
   const handleSortClick = (sortOption) => {
@@ -61,7 +60,7 @@ const ProductList = () => {
     setReqPage(1); // 페이지를 1로 리셋
 
     axios
-      .get(`${backServer}/product/list/${reqPage}/${userEmail}/${sortOption}`)
+      .get(`${backServer}/product/list/${reqPage}/${loginEmail}/${sortOption}`)
       .then((res) => {
         console.log(res.data);
         setProductList(res.data.list);
@@ -179,7 +178,6 @@ const ProductItem = ({ product }) => {
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
   // const product = props.product;
   const productNo = product.productNo;
-  const userEmail = loginEmail;
   const navigate = useNavigate();
 
   // 상품의 좋아요 상태와 좋아요 수
@@ -212,12 +210,12 @@ const ProductItem = ({ product }) => {
       const request = newLikeStatus
         ? axios.post(
             // 리뷰 좋아요
-            `${backServer}/product/${productNo}/insertWishLike/${userEmail}`,
+            `${backServer}/product/${productNo}/insertWishLike/${loginEmail}`,
             { productLike: 1 }
           )
         : axios.delete(
             // 리뷰 좋아요 취소
-            `${backServer}/product/${productNo}/deleteWishLike/${userEmail}?productLike=1`
+            `${backServer}/product/${productNo}/deleteWishLike/${loginEmail}?productLike=1`
           );
 
       request

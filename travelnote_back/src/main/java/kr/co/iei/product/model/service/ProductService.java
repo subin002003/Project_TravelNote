@@ -154,15 +154,19 @@ public class ProductService {
         ProductDTO product = productDao.selectOneProduct(productNo);
         List<ProductFileDTO> productFileList = productDao.selectOneProductFileList(productNo);
         int userNo = productDao.selectOneUser(userEmail);
+        // 리뷰 리스트
         List<ReviewDTO> productReviewList = productDao.selectOneProductReviews(productNo, userNo);
-	    product.setProductFileList(productFileList);
-	    product.setProductReviewList(productReviewList);
+        // 리뷰 답글 리스트
+        List<ReviewDTO> productReviewReCommentList = productDao.selectOneProductReviewReCommentList(productNo, userNo);
+//	    product.setProductFileList(productFileList);
+//	    product.setProductReviewList(productReviewList);
 
         // 상품, 파일, 리뷰 정보를 맵에 담음
 	    Map<String, Object> map = new HashMap<String, Object>();
         map.put("product", product);
         map.put("productFileList", productFileList);
         map.put("productReviewList", productReviewList);
+        map.put("productReviewReCommentList", productReviewReCommentList);
 
         return map;
     }
