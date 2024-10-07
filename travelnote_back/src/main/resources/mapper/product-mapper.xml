@@ -6,6 +6,32 @@
   	select count(*) from product where product_status=1
   </select>
   
+  <select id="searchProduct" resultType="product">
+    SELECT * FROM (
+        SELECT rownum AS rnum, p.* FROM (
+            SELECT
+                product_no,
+                product_name,
+                product_sub_name,
+                product_thumb,
+                product_price,
+                product_info,
+                product_latitude,
+                product_longitude,
+                product_writer,
+                product_status,
+                TO_CHAR(enroll_date, 'yyyy-mm-dd') AS enroll_date
+            FROM product
+            WHERE product_status = 1
+              AND (product_name LIKE '%' || #{searchQuery} || '%' 
+                OR product_sub_name LIKE '%' || #{searchQuery} || '%' 
+                OR product_info LIKE '%' || #{searchQuery} || '%')
+            ORDER BY enroll_date DESC
+        ) p
+    )
+    WHERE rnum BETWEEN #{start} AND #{end}
+  </select>
+  
   <select id="selectProductList" resultType="product">
     SELECT * FROM (
         SELECT rownum AS rnum, p.* FROM (
@@ -28,7 +54,6 @@
     )
     WHERE rnum BETWEEN #{start} AND #{end}  <!-- 페이징 처리 -->
   </select>
-
 
   <select id="selectProductListEmail" resultType="product">
     SELECT p.*, 

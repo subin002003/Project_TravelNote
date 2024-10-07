@@ -31,9 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import kr.co.iei.board.model.dto.BoardCommentDTO;
-import kr.co.iei.board.model.dto.BoardDTO;
-import kr.co.iei.board.model.dto.BoardFileDTO;
+
 import kr.co.iei.reviewboard.model.dto.ReviewBoardCommentDTO;
 import kr.co.iei.reviewboard.model.dto.ReviewBoardDTO;
 import kr.co.iei.reviewboard.model.dto.ReviewBoardFileDTO;
@@ -98,7 +96,12 @@ public class ReviewBoardController {
 	
 	// 게시물 등록
 	@PostMapping
-	public ResponseEntity<Boolean> insertReviewBoard(@ModelAttribute ReviewBoardDTO reviewBoard, @ModelAttribute MultipartFile[] reviewBoardFile){
+	public ResponseEntity<Boolean> insertReviewBoard(@ModelAttribute ReviewBoardDTO reviewBoard,@ModelAttribute MultipartFile reviewBoardThumbNail, @ModelAttribute MultipartFile[] reviewBoardFile){
+		if(reviewBoardThumbNail != null) {
+			String savepath = root + "/reviewBoard/thumb";
+			String filepath = fileUtil.upload(savepath, reviewBoardThumbNail);
+			reviewBoard.setReviewBoardThumbNail(filepath);
+		}
 		
 		List<ReviewBoardFileDTO> reviewBoardFileList = new ArrayList<ReviewBoardFileDTO>();
 		if(reviewBoardFile != null) {
@@ -158,9 +161,15 @@ public class ReviewBoardController {
 	// 게시물 수정
 	@PatchMapping
 	public ResponseEntity<Boolean> updateReviewBoard(@ModelAttribute ReviewBoardDTO reviewBoard,
+												@ModelAttribute MultipartFile reviewBoardThumbNail,
 												@ModelAttribute MultipartFile[] reviewBoardFile){
 		
 		List<ReviewBoardFileDTO> reviewBoardFileList = new ArrayList<ReviewBoardFileDTO>();
+		if(reviewBoardThumbNail != null) {
+			String savepath = root + "/reviewBoard/thumb";
+			String filepath = fileUtil.upload(savepath, reviewBoardThumbNail);
+			reviewBoard.setReviewBoardThumbNail(filepath);
+		}
 		if(reviewBoardFile != null) {
 			String savepath = root+"/reviewBoard/";
 			for(MultipartFile file : reviewBoardFile) {

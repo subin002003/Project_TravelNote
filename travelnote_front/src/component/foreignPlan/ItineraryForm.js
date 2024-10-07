@@ -83,7 +83,6 @@ const ItineraryForm = () => {
       } else {
         obj.itineraryTitle = itineraryTitle.trim();
       }
-      console.log(obj);
       axios
         .post(`${backServer}/foreign/createItinerary`, obj)
         .then((res) => {

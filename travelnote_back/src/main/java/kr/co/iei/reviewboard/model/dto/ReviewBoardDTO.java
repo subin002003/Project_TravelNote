@@ -22,7 +22,7 @@ public class ReviewBoardDTO {
 	private String reviewBoardCategory;
 	private int reviewBoardReadCount;
 	private int reviewBoardStatus;
-	private String reviewBoardThumbnail;
+	private String reviewBoardThumbNail;
 	private String reviewBoardSubContent;
 	private String likeCount;
 	private List<ReviewBoardFileDTO> fileList;

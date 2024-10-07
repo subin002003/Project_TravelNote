@@ -103,7 +103,7 @@ const ForeignPlanList = (props) => {
           {itinerary.itineraryStartDate} ~ {itinerary.itineraryEndDate}
         </h5>
         <Link
-          to={"/foreign/editItinerary/" + itinerary.itineraryNo}
+          to={"/foreign/edit/" + itinerary.itineraryNo}
           className="edit-itinerary-button"
         >
           이 여행 정보 수정

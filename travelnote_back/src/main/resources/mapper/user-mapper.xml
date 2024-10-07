@@ -43,4 +43,8 @@
 	<select id="checkBusinessRegNo" resultType="int">
 		select count(*) from user_tbl where business_reg_no = #{businessRegNo}
 	</select>
+	
+	<select id="selectUserByEmail" resultType="int">
+		select count(*) from user_tbl where user_email = #{userEmail}
+	</select>
 </mapper>

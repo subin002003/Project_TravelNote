@@ -26,7 +26,7 @@ const ForeignPlanMain = () => {
   const [planDays, setPlanDays] = useState([]); // 현재 조회 중인 날 기준으로 보여주는 날짜 배열
   const [planList, setPlanList] = useState([]); // 해당 날짜의 일정 배열
   const [selectedDay, setSelectedDay] = useState(1); // 현재 조회 중인 날 (기본 1로 세팅)
-  const [planPageOption, setPlanPageOption] = useState(2); // 조회 페이지 옵션 (1 조회, 2 수정)
+  const [planPageOption, setPlanPageOption] = useState(1); // 조회 페이지 옵션 (1 조회, 2 수정)
   const [searchInput, setSearchInput] = useState("");
   const [map, setMap] = useState();
   const [regionInfo, setRegionInfo] = useState({});

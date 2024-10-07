@@ -36,6 +36,14 @@ public interface ForeignPlanDao {
 
 	int changeSeq(ForeignPlanChangeSeqDTO changePlan);
 
+	int updateItinerary(ForeignItineraryDTO itinerary);
+
+	int selectTotalPlanCount(int itineraryNo);
+
+	int deleteItinerary(int itineraryNo);
+
+	int deleteItineraryPlan(int itineraryNo);
+
 
 
 

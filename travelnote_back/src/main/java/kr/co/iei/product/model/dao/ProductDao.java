@@ -14,6 +14,8 @@ import kr.co.iei.util.PageInfo;
 public interface ProductDao {
 
 	int totalCount();
+	
+	List<ProductDTO> searchProduct(PageInfo pi, String searchQuery);
 
 	List<ProductDTO> selectProductList(PageInfo pi);
 

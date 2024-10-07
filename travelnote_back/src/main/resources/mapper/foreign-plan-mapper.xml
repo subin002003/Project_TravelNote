@@ -93,4 +93,20 @@
 		update plan set plan_seq = plan_seq - 1 where plan_no = #{planNo}
 	</update>
 	
+	<update id="updateItinerary">
+		update itinerary set itinerary_title = #{itineraryTitle}, itinerary_start_date = #{itineraryStartDate}, itinerary_end_date = #{itineraryEndDate} where itinerary_no = #{itineraryNo}
+	</update>
+	
+	<select id="selectTotalPlanCount" resultType="int">
+		select count(*) from plan where itinerary_no = #{itineraryNo}
+	</select>
+	
+	<delete id="deleteItinerary">
+		delete from itinerary where itinerary_no = #{itineraryNo}
+	</delete>
+	
+	<delete id="deleteItineraryPlan">
+		delete from plan where itinerary_no = #{itineraryNo}
+	</delete>
+	
 </mapper>

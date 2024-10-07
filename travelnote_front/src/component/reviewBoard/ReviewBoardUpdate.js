@@ -33,9 +33,7 @@ const ReviewBoardUpdate = () => {
   const inputCategory = (e) => {
     setReviewBoardCategory(e.target.value);
   };
-  const inputSubContent = (e) => {
-    setReviewBoardSubContent(e.taget.value);
-  };
+
   useEffect(() => {
     axios
       .get(`${backServer}/reviewBoard/boardNo/${reviewBoardNo}`)
@@ -103,7 +101,7 @@ const ReviewBoardUpdate = () => {
   return (
     <section className="review-board-wrap">
       <h1 className="review-board-title" style={{ marginBottom: "40px" }}>
-        자유게시판 수정
+        여행 후기 수정
       </h1>
 
       <form
@@ -120,7 +118,7 @@ const ReviewBoardUpdate = () => {
           reviewBoardThumbNail={reviewBoardThumbNail}
           setReviewBoardThumbNail={setReviewBoardThumbNail}
           reviewBoardSubContent={reviewBoardSubContent}
-          setReviewBoardSubContent={inputSubContent}
+          setReviewBoardSubContent={setReviewBoardSubContent}
           reviewBoardCategory={reviewBoardCategory}
           setReviewBoardCategory={inputCategory}
           reviewBoardFile={reviewBoardFile}
