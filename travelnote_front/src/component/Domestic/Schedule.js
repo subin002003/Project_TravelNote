@@ -9,6 +9,7 @@ const Schedule = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   const trainApiKey = process.env.REACT_APP_TRAIN_API_KEY;
+  const [plans, setPlans] = useState([]); // 사용자의 계획 리스트
   const [planDays, setPlanDays] = useState([]);
   const [selectedDay, setSelectedDay] = useState(1);
   const [planPageOption, setPlanPageOption] = useState(1);
@@ -80,13 +81,6 @@ const Schedule = () => {
     };
   }, [googleMapsApiKey, cityCoordinates]);
 
-  // 도시 중심 변경
-  useEffect(() => {
-    if (map) {
-      map.setCenter(cityCoordinates);
-    }
-  }, [map, cityCoordinates]);
-
   // 도시 좌표 설정
   useEffect(() => {
     const cityCoordinatesMap = {
@@ -98,6 +92,13 @@ const Schedule = () => {
       setCityCoordinates(cityCoordinatesMap[city]);
     }
   }, [city]);
+
+  // 도시 중심 변경
+  useEffect(() => {
+    if (map) {
+      map.setCenter(cityCoordinates);
+    }
+  }, [map, cityCoordinates]);
 
   // 장소 검색
   const handleSearch = (e) => {
@@ -130,7 +131,6 @@ const Schedule = () => {
     } else {
       setSearchResults([]);
       updateMarkers([]);
-      setMarkers([]);
     }
   };
 
@@ -179,13 +179,13 @@ const Schedule = () => {
       planName: plan.name,
       planId: plan.place_id,
     };
-
     axios
       .post(`${backServer}/domestic/insertPlan`, SchedulePlan)
       .then((response) => {
         console.log("일정이 추가되었습니다:", response.data);
 
-        setSelectedPlans((prev) => [...prev, SchedulePlan]);
+        setPlans((prev) => [...prev, SchedulePlan]);
+        setSelectedPlans((prev) => [...prev, SchedulePlan]); // 선택된 계획도 업데이트
       })
       .catch((error) => {
         console.error("일정 추가에 실패했습니다:", error);
@@ -239,6 +239,7 @@ const Schedule = () => {
               selectedPlans={selectedPlans}
               setSelectedPlans={setSelectedPlans}
               planInsert={planInsert}
+              plans={plans}
             />
           </div>
         </div>
@@ -280,11 +281,15 @@ const Schedule = () => {
                 placeholder="장소 추가"
                 onChange={handleSearch}
               />
+              <ul>
+                {selectedPlans.map((plan, index) => (
+                  <li key={index}>{plan.planName}</li>
+                ))}
+              </ul>
               <button className="search-add">검색</button>
               <ul>
                 {searchResults.map((result) => (
                   <li key={result.place_id}>
-                    {" "}
                     {result.name} - {result.formattedAddress}
                     <button
                       className="add-btn"
