@@ -5,6 +5,7 @@ import { useRecoilState } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
 import BoardToastEditor from "../utils/BoardToastEditor";
 import BoardFrm from "./BoardFrm";
+import Swal from "sweetalert2";
 
 const BoardUpdate = () => {
   const params = useParams();
@@ -43,42 +44,54 @@ const BoardUpdate = () => {
       });
   }, []);
   const updateBoard = () => {
-    if (boardTitle !== "" && boardContent !== "") {
-      const form = new FormData();
-      form.append("boardTitle", boardTitle);
-      form.append("boardCategory", boardCategory);
-      form.append("boardContent", boardContent);
-      form.append("boardNo", boardNo);
+    Swal.fire({
+      title: "수정하시겠습니까?",
+      icon: "warning",
+      showCancelButton: true, // 취소 버튼 표시
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "수정",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // 사용자가 '등록'를 클릭했을 경우
+        if (boardTitle !== "" && boardContent !== "") {
+          const form = new FormData();
+          form.append("boardTitle", boardTitle);
+          form.append("boardCategory", boardCategory);
+          form.append("boardContent", boardContent);
+          form.append("boardNo", boardNo);
 
-      for (let i = 0; i < boardFile.length; i++) {
-        form.append("boardFile", boardFile[i]);
-      }
-      for (let i = 0; i < delBoardFileNo.length; i++) {
-        form.append("delBoardFileNo", delBoardFileNo[i]);
-      }
-      for (let key of form.keys()) {
-        console.log(`${key}: ${form.get(key)}`);
-      }
-      console.log(delBoardFileNo);
-      axios
-        .patch(`${backServer}/board`, form, {
-          headers: {
-            contentType: "multipart/form-data",
-            processData: false,
-          },
-        })
-        .then((res) => {
-          console.log(res);
-          if (res.data === true) {
-            navigate(`/board/view/${boardNo}`);
-          } else {
-            //실패시 로직
+          for (let i = 0; i < boardFile.length; i++) {
+            form.append("boardFile", boardFile[i]);
           }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+          for (let i = 0; i < delBoardFileNo.length; i++) {
+            form.append("delBoardFileNo", delBoardFileNo[i]);
+          }
+          for (let key of form.keys()) {
+            console.log(`${key}: ${form.get(key)}`);
+          }
+          console.log(delBoardFileNo);
+          axios
+            .patch(`${backServer}/board`, form, {
+              headers: {
+                contentType: "multipart/form-data",
+                processData: false,
+              },
+            })
+            .then((res) => {
+              console.log(res);
+              if (res.data === true) {
+                navigate(`/board/view/${boardNo}`);
+              } else {
+                //실패시 로직
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      }
+    });
   };
   return (
     <section className="board-wrap">

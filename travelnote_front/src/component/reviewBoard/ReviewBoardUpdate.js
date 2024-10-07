@@ -5,6 +5,7 @@ import { useRecoilState } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
 import ReviewBoardFrm from "./ReviewBoardFrm";
 import ReviewBoardToastEditor from "../utils/ReviewBoardToastEditor";
+import Swal from "sweetalert2";
 
 const ReviewBoardUpdate = () => {
   const params = useParams();
@@ -51,52 +52,64 @@ const ReviewBoardUpdate = () => {
       });
   }, []);
   const updateReviewBoard = () => {
-    if (
-      reviewBoardTitle !== "" &&
-      reviewBoardContent !== "" &&
-      reviewBoardSubContent !== ""
-    ) {
-      const form = new FormData();
-      form.append("reviewBoardTitle", reviewBoardTitle);
-      form.append("reviewBoardCategory", reviewBoardCategory);
-      form.append("reviewBoardContent", reviewBoardContent);
-      form.append("reviewBoardNo", reviewBoardNo);
-      form.append("reviewBoardSubContent", reviewBoardSubContent);
-      if (thumbnail !== null) {
-        form.append("thumbnail", thumbnail);
-      }
-      if (reviewBoardThumbNail !== null) {
-        form.append("reviewBoardThumbNail", reviewBoardThumbNail);
-      }
-      for (let i = 0; i < reviewBoardFile.length; i++) {
-        form.append("reviewBoardFile", reviewBoardFile[i]);
-      }
-      for (let i = 0; i < delReviewBoardFileNo.length; i++) {
-        form.append("delReviewBoardFileNo", delReviewBoardFileNo[i]);
-      }
-      for (let key of form.keys()) {
-        console.log(`${key}: ${form.get(key)}`);
-      }
-      console.log(delReviewBoardFileNo);
-      axios
-        .patch(`${backServer}/reviewBoard`, form, {
-          headers: {
-            contentType: "multipart/form-data",
-            processData: false,
-          },
-        })
-        .then((res) => {
-          console.log(res);
-          if (res.data === true) {
-            navigate(`/reviewBoard/view/${reviewBoardNo}`);
-          } else {
-            //실패시 로직
+    Swal.fire({
+      title: "수정하시겠습니까?",
+      icon: "warning",
+      showCancelButton: true, // 취소 버튼 표시
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "수정",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // 사용자가 '등록'를 클릭했을 경우
+        if (
+          reviewBoardTitle !== "" &&
+          reviewBoardContent !== "" &&
+          reviewBoardSubContent !== ""
+        ) {
+          const form = new FormData();
+          form.append("reviewBoardTitle", reviewBoardTitle);
+          form.append("reviewBoardCategory", reviewBoardCategory);
+          form.append("reviewBoardContent", reviewBoardContent);
+          form.append("reviewBoardNo", reviewBoardNo);
+          form.append("reviewBoardSubContent", reviewBoardSubContent);
+          if (thumbnail !== null) {
+            form.append("thumbnail", thumbnail);
           }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+          if (reviewBoardThumbNail !== null) {
+            form.append("reviewBoardThumbNail", reviewBoardThumbNail);
+          }
+          for (let i = 0; i < reviewBoardFile.length; i++) {
+            form.append("reviewBoardFile", reviewBoardFile[i]);
+          }
+          for (let i = 0; i < delReviewBoardFileNo.length; i++) {
+            form.append("delReviewBoardFileNo", delReviewBoardFileNo[i]);
+          }
+          for (let key of form.keys()) {
+            console.log(`${key}: ${form.get(key)}`);
+          }
+          console.log(delReviewBoardFileNo);
+          axios
+            .patch(`${backServer}/reviewBoard`, form, {
+              headers: {
+                contentType: "multipart/form-data",
+                processData: false,
+              },
+            })
+            .then((res) => {
+              console.log(res);
+              if (res.data === true) {
+                navigate(`/reviewBoard/view/${reviewBoardNo}`);
+              } else {
+                //실패시 로직
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      }
+    });
   };
   return (
     <section className="review-board-wrap">
