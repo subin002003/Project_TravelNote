@@ -286,12 +286,9 @@ public class UserService {
 		int numPerPage = 3;
 		int pageNaviSize = 5;
 		int totalCount = domesticDao.myTravelTotalCount(userNick);
-		System.out.println("내일정 토탈카운트 : "+totalCount);
 		PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
 		pi.setUserNick(userNick);
-		System.out.println("내일정 페이지인포 : "+pi);
 		List list = domesticDao.myTravelList(pi);
-		System.out.println("내일정 리스트 : "+list);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list",list);
 		map.put("pi", pi);
@@ -303,7 +300,13 @@ public class UserService {
 		int numPerPage = 3;
 		int pageNaviSize = 5;
 		int totalCount = domesticDao.shareTravelTotalCount(userNick);
-		return null;
+		PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
+		pi.setUserNick(userNick);
+		List list = domesticDao.shareTravelList(pi);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list",list);
+		map.put("pi",pi);
+		return map;
 	}
 
 

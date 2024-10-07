@@ -157,4 +157,30 @@
 		join user_tbl u on c.user_no = u.user_no 
 		where u.user_nick = #{userNick}
 	</select> 
+	<select id = "shareTravelList" resultType="ItineraryInfo">
+		select * 
+		from (
+		    select rownum as rnum, result.*
+		    from (
+		        select 
+		            u.user_no,
+		            u.user_nick as receive_user, 
+		            u2.user_nick as send_user,
+		            r.region_name,
+		            r.region_img,
+		            r.country_name,
+		            i.itinerary_no, 
+		            i.itinerary_title, 
+		            i.itinerary_start_date, 
+		            i.itinerary_end_date
+		        from companion c 
+		        join user_tbl u on c.user_no = u.user_no
+		        join itinerary i on c.itinerary_no = i.itinerary_no
+		        join user_tbl u2 on u2.user_no = i.user_no
+		        join region r on r.region_no = i.region_no
+		        order by i.itinerary_no
+		    ) result
+		)
+		where (rnum between #{start} and #{end}) and receive_user = #{userNick} 
+	</select>
 </mapper>

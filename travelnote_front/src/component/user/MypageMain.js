@@ -34,7 +34,7 @@ const MypageMain = () => {
     { url: "myWish", text: "내가 찜한 목록" },
     { url: "myReservation", text: "내 예약" },
     { url: "myTravel", text: "내 일정" },
-    { url: "#", text: "공유된 일정" },
+    { url: "shareTravel", text: "공유된 일정" },
     { url: "myboard", text: "내가 작성한 글" },
     { url: "myReview", text: "내가 작성한 리뷰" },
   ]);
