@@ -9,6 +9,7 @@ import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
 import kr.co.iei.Domestic.model.dto.PlanDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
 import kr.co.iei.foreignPlan.model.dto.ForeignEditPlanDTO;
+import kr.co.iei.util.PageInfo;
 
 @Mapper
 public interface DomesticDao {
@@ -36,6 +37,12 @@ public interface DomesticDao {
 	ItineraryDTO scheduleUpdate(int itinerary);
 
 	void updateItinerary(int itineraryNo, ItineraryDTO itineraryDTO);
+
+	//오건하 작성 2024-10-07
+	int myTravelTotalCount(String userNick);
+
+	//오건하 작성 2024-10-07
+	List myTravelList(PageInfo pi);
 
 
 

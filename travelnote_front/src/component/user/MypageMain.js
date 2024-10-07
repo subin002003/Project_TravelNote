@@ -17,6 +17,9 @@ import ReservationView from "./ReservationView";
 import MyProduct from "./MyProduct";
 import MyPayment from "./MyPayment";
 import PaymentInfo from "./PaymentInfo";
+import Mywish from "./Mywish";
+import ChangePw from "./ChangePw";
+import MyTravel from "./MyTravel";
 
 const MypageMain = () => {
   const navigate = useNavigate();
@@ -27,8 +30,9 @@ const MypageMain = () => {
   const [menus, setMenus] = useState([
     { url: "info", text: "내 정보 수정" },
     { url: "changePw", text: "비밀번호 변경" },
+    { url: "myWish", text: "내가 찜한 목록" },
     { url: "myReservation", text: "내 예약" },
-    { url: "#", text: "내 일정" },
+    { url: "myTravel", text: "내 일정" },
     { url: "#", text: "공유된 일정" },
     { url: "myboard", text: "내가 작성한 글" },
     { url: "myReview", text: "내가 작성한 리뷰" },
@@ -44,7 +48,7 @@ const MypageMain = () => {
         navigate("/login"); // 경고 후 로그인 페이지로 리다이렉트
       });
     }
-  }, [isLogin, navigate]);
+  }, [navigate]);
 
   // 현재 경로가 '/mypage'일 때만 'info'로 이동, 다른 경로일 경우 유지
   useEffect(() => {
@@ -71,7 +75,7 @@ const MypageMain = () => {
     } else if (userType === 2) {
       setMenus([
         { url: "#", text: "여행사 정보 수정" },
-        { url: "#", text: "비밀번호 변경" },
+        { url: "changePw", text: "비밀번호 변경" },
         { url: "myProduct", text: "판매중인 상품" },
         { url: "myPayment", text: "판매 내역 확인" },
       ]);
@@ -111,6 +115,9 @@ const MypageMain = () => {
                 path="myReservation/:orderNo"
                 element={<ReservationView />}
               />
+              <Route path="myWish" element={<Mywish />} />
+              <Route path="changePw" element={<ChangePw />} />
+              <Route path="myTravel" element={<MyTravel />} />
 
               <Route path="myProduct" element={<MyProduct />} />
               <Route path="myPayment" element={<MyPayment />} />

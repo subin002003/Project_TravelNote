@@ -12,14 +12,14 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import Swal from "sweetalert2";
 import ChannelTalk from "./ChannelTalk";
 // mui-select
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import OutlinedInput from "@mui/material/OutlinedInput";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 const sortOptions = [
-  { label: '좋아요순', value: 'mostLiked' },
-  { label: '최신순', value: 'newest' },
+  { label: "좋아요순", value: "mostLiked" },
+  { label: "최신순", value: "newest" },
 ];
 
 const ProductList = () => {
@@ -60,7 +60,8 @@ const ProductList = () => {
     console.log(sortOption);
     setReqPage(1); // 페이지를 1로 리셋
 
-    axios.get(`${backServer}/product/list/${reqPage}/${userEmail}/${sortOption}`)
+    axios
+      .get(`${backServer}/product/list/${reqPage}/${userEmail}/${sortOption}`)
       .then((res) => {
         console.log(res.data);
         setProductList(res.data.list);
@@ -80,7 +81,7 @@ const ProductList = () => {
 
     axios
       .get(`${backServer}/product/list/${reqPage}?query=${searchQuery}`, {
-        params: { searchQuery } // searchQuery를 params로 전달
+        params: { searchQuery }, // searchQuery를 params로 전달
       })
       .then((res) => {
         console.log(res.data);
@@ -108,16 +109,24 @@ const ProductList = () => {
           }}
           placeholder="상품명 검색"
         />
-        <button id="product-search-button" onClick={handleSearchClick}>검색</button>
+        <button id="product-search-button" onClick={handleSearchClick}>
+          검색
+        </button>
       </div>
 
       {isLogin === true && userType === 2 ? (
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Link to="/product/write" className="btn-primary writeBtn">
             상품 등록
           </Link>
           {/* 정렬을 위한 Select 대신 직접적인 클릭 이벤트 처리 */}
-          <FormControl sx={{ m: 1, width: '150px' }}>
+          <FormControl sx={{ m: 1, width: "150px" }}>
             <Select
               displayEmpty
               input={<OutlinedInput />}
@@ -200,14 +209,14 @@ const ProductItem = ({ product }) => {
       const newLikeStatus = !productLike; // 좋아요 상태 토글
       const request = newLikeStatus
         ? axios.post(
-          // 리뷰 좋아요
-          `${backServer}/product/${productNo}/insertWishLike/${userEmail}`,
-          { productLike: 1 }
-        )
+            // 리뷰 좋아요
+            `${backServer}/product/${productNo}/insertWishLike/${userEmail}`,
+            { productLike: 1 }
+          )
         : axios.delete(
-          // 리뷰 좋아요 취소
-          `${backServer}/product/${productNo}/deleteWishLike/${userEmail}?productLike=1`
-        );
+            // 리뷰 좋아요 취소
+            `${backServer}/product/${productNo}/deleteWishLike/${userEmail}?productLike=1`
+          );
 
       request
         .then((res) => {

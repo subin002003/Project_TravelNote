@@ -193,6 +193,10 @@ const MyInfo = () => {
     });
   };
 
+  const navigateChangePw = () => {
+    navigate("/mypage/changePw");
+  };
+
   return (
     <div className="info-wrap">
       <div className="page-title-info">
@@ -320,7 +324,9 @@ const MyInfo = () => {
             </div>
             <div className="input-box">
               {user.socialType === null ? (
-                <button className="change-pw-btn">비밀번호 변경하기</button>
+                <button onClick={navigateChangePw} className="change-pw-btn">
+                  비밀번호 변경하기
+                </button>
               ) : (
                 <button className="change-pw-btn disable-btn" disabled>
                   소셜 로그인 유저는 비밀번호를 변경할 수 없습니다.
@@ -443,7 +449,9 @@ const MyInfo = () => {
             </div>
             <div className="input-box">
               {user.socialType === null ? (
-                <button className="change-pw-btn">비밀번호 변경하기</button>
+                <button onClick={navigateChangePw} className="change-pw-btn">
+                  비밀번호 변경하기
+                </button>
               ) : (
                 <button className="change-pw-btn disable-btn" disabled>
                   소셜 로그인 유저는 비밀번호를 변경할 수 없습니다.

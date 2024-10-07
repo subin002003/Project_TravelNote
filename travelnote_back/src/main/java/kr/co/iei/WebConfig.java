@@ -50,5 +50,9 @@ public class WebConfig implements WebMvcConfigurer {
 		.addResourceHandler("/editor/**")
 		.addResourceLocations("file:///"+root+"/editor/");
 		
+		registry
+		.addResourceHandler("/personalBoard/**")
+		.addResourceLocations("file:///"+root+"/personalBoard/");
 	}
+	
 }

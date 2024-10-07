@@ -1,6 +1,8 @@
 package kr.co.iei.user.model.service;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +16,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-
+import kr.co.iei.Domestic.model.dao.DomesticDao;
+import kr.co.iei.foreignPlan.model.dao.ForeignPlanDao;
 import kr.co.iei.user.model.dao.UserDao;
 import kr.co.iei.user.model.dto.LoginUserDTO;
 import kr.co.iei.user.model.dto.UserDTO;
 import kr.co.iei.user.model.dto.VerifyInfoDTO;
 import kr.co.iei.util.EmailSender;
 import kr.co.iei.util.JwtUtils;
+import kr.co.iei.util.PageInfo;
+import kr.co.iei.util.PageUtil;
 
 @Service
 public class UserService {
@@ -33,8 +38,15 @@ public class UserService {
 	private EmailSender emailSender;
 	@Autowired
 	private BCryptPasswordEncoder encoder;
+	@Autowired
+	private ForeignPlanDao foreignPlanDao;
+	@Autowired
+	private DomesticDao domesticDao;
+	@Autowired
+	private PageUtil pageUtil;
 	
 	private final String NAVER_USER_INFO_URL = "https://openapi.naver.com/v1/nid/me";
+	
 
 	public int checkEmail(String userEmail) {
 		int result = userDao.checkEmail(userEmail);
@@ -55,7 +67,7 @@ public class UserService {
 	public String sendVerificationCode(String userEmail) {
 		String verificationCode = createVerificationCode();
 		//이메일 보내는 로직
-		String emailTitle = "TravelNote 회원가입 인증 메일";
+		String emailTitle = "TravelNote 인증 메일";
 		String emailContent = "<h2>당신의 여행 기록지 TravelNote 입니다.</h2>"
 				+"<h3>귀하의 인증번호는 [ <span style='color:red;'>"
 				+verificationCode
@@ -265,6 +277,23 @@ public class UserService {
 				+"<h3>" + userEmail + "님이 초대를 보냈습니다. 지금 로그인하여 일정을 확인해 주세요.";
 		emailSender.sendInvitation(emailTitle, memberEmail, emailContent);
 		return 1;
+	}
+
+
+	public Map myTravel(String userNick, int reqPage) {
+		int numPerPage = 3;
+		int pageNaviSize = 5;
+		int totalCount = domesticDao.myTravelTotalCount(userNick);
+		System.out.println("내일정 토탈카운트 : "+totalCount);
+		PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
+		pi.setUserNick(userNick);
+		System.out.println("내일정 페이지인포 : "+pi);
+		List list = domesticDao.myTravelList(pi);
+		System.out.println("내일정 리스트 : "+list);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list",list);
+		map.put("pi", pi);
+		return map;
 	}
 
 

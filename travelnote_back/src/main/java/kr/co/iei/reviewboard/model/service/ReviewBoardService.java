@@ -194,6 +194,22 @@ public class ReviewBoardService {
 		
 	}
 	
+	//오건하 작성 2024-10-07
+	public Map myReviewBoardList(String userNick, int reviewBoardReqPage) {
+		int numPerPage = 3;
+		int pageNaviSize = 5;
+		int totalCount = reviewBoardDao.myReviewBoardTotalCount(userNick);
+		PageInfo pi = pageUtil.getPageInfo(reviewBoardReqPage, numPerPage, pageNaviSize, totalCount);
+		pi.setUserNick(userNick);
+		List list = reviewBoardDao.myReviewBoardList(pi);
+		System.out.println("리뷰게시판 내가 쓴글 페이지 인포 : "+pi);
+		System.out.println("리뷰게시판 내가 쓴글 : "+list);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list",list);
+		map.put("pi",pi);
+		return map;
+	}
+	
 	
 	
 	

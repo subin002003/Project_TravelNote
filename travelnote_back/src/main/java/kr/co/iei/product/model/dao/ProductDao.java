@@ -104,5 +104,11 @@ public interface ProductDao {
 	// 상품 정렬
 	List<ProductDTO> selectProductListMostLiked(PageInfo pi, String userEmail);
 	List<ProductDTO> selectProductListNewest(PageInfo pi, String userEmail);
+	
+	//오건하 작성 2024-10-07
+	int myWishTotalCount(String userNick);
+
+	//오건하 작성 2024-10-07
+	List myWishList(PageInfo pi);
 
 }

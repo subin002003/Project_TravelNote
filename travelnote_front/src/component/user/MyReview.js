@@ -29,7 +29,7 @@ const MyReview = () => {
     <div className="myreview-content">
       <div className="page-title-info">내가 작성한 리뷰</div>
       <div className="myreview-list">
-        <table>
+        <table style={{ margin: "0 auto" }}>
           <tbody>
             <tr>
               <th style={{ width: "20%" }}>리뷰 상품</th>
@@ -37,9 +37,22 @@ const MyReview = () => {
               <th style={{ width: "20%" }}>작성일</th>
               <th style={{ width: "10%" }}>리뷰 점수</th>
             </tr>
-            {reviewList.map((review, i) => {
-              return <ReviewItem key={"review" + i} review={review} />;
-            })}
+            {reviewList && reviewList.length > 0 ? (
+              reviewList.map((review, i) => {
+                return <ReviewItem key={"review" + i} review={review} />;
+              })
+            ) : (
+              <tr
+                style={{
+                  marginTop: "20px",
+                  marginBottom: "20px",
+                  textAlign: "center",
+                  height: "100px",
+                }}
+              >
+                <th colSpan={4}>아직 작성한 리뷰가 없습니다.</th>
+              </tr>
+            )}
           </tbody>
         </table>
         <div style={{ marginTop: "20px" }}>

@@ -30,14 +30,28 @@ const MyReservation = () => {
     >
       <div className="page-title-info">내 예약 내역 보기</div>
       <div className="myReservation-list">
-        {reservationList.map((reservation, i) => {
-          return (
-            <ReservationItem
-              key={"reservation" + i}
-              reservation={reservation}
-            />
-          );
-        })}
+        {reservationList && reservationList.length > 0 ? (
+          reservationList.map((reservation, i) => {
+            return (
+              <ReservationItem
+                key={"reservation" + i}
+                reservation={reservation}
+              />
+            );
+          })
+        ) : (
+          <div
+            style={{
+              marginTop: "20px",
+              textAlign: "center",
+              height: "100px",
+              margin: "0 auto",
+              lineHeight: "100px",
+            }}
+          >
+            <h3>아직 예약한 여행이 없습니다.</h3>
+          </div>
+        )}
       </div>
       <div className="myReservation-page-navi" style={{ marginTop: "20px" }}>
         <PageNavi pi={pi} reqPage={reqPage} setReqPage={setReqPage} />

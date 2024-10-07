@@ -456,5 +456,19 @@ public class ProductService {
 		map.put("pi", pi);
 		return map;
 	}
+
+	//오건하 작성 2024-10-07
+	public Map getMyWish(String userNick, int reqPage) {
+		int numPerPage = 5;
+		int pageNaviSize = 5;
+		int totalCount = productDao.myWishTotalCount(userNick);
+		PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
+		pi.setUserNick(userNick);
+		List list = productDao.myWishList(pi);
+		Map<String, Object> map = new HashMap<String, Object>(); 
+		map.put("list",list);
+		map.put("pi",pi);
+		return map;
+	}
 	
 }
