@@ -28,6 +28,9 @@ const ProductList = () => {
   const [reqPage, setReqPage] = useState(1);
   const [pi, setPi] = useState({});
 
+  // 상품 검색
+  const [searchQuery, setSearchQuery] = useState("");
+
   // 로그인 회원 정보
   const isLogin = useRecoilValue(isLoginState);
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
@@ -68,8 +71,46 @@ const ProductList = () => {
       });
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearchClick = () => {
+    setReqPage(1); // 검색 시 페이지를 초기화
+
+    axios
+      .get(`${backServer}/product/list/${reqPage}?query=${searchQuery}`, {
+        params: { searchQuery } // searchQuery를 params로 전달
+      })
+      .then((res) => {
+        console.log(res.data);
+        setProductList(res.data.list);
+        setPi(res.data.pi);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <section style={{ margin: "50px auto" }} className="section product-list">
+      {/* 검색창 */}
+      <div className="product-search-box">
+        <input
+          id="product-search"
+          type="text"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          onKeyUp={(e) => {
+            if (e.key === "Enter" || e.keyCode === 13) {
+              handleSearchClick();
+            }
+          }}
+          placeholder="상품명 검색"
+        />
+        <button id="product-search-button" onClick={handleSearchClick}>검색</button>
+      </div>
+
       {isLogin === true && userType === 2 ? (
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Link to="/product/write" className="btn-primary writeBtn">
