@@ -43,6 +43,11 @@ const ForeignPlanMain = () => {
   const [isNextDayButtonChecked, setIsNextDayButtonChecked] = useState(false);
   const [searchAirport, setSearchAirport] = useState(0); // 1이면 Departure, 2면 Arrival
 
+  // Api 관련
+  const currencyApiKey = "fca_live_EeFeNGdxZTuLBGhbi5zT4weOAZk1AgA4ahK7Q0EP";
+  const [exchangeRate, setExchangeRate] = useState();
+  const [regionApiInfo, setRegionApiInfo] = useState({});
+
   // 일정 정보 조회
   useEffect(() => {
     axios
@@ -107,6 +112,33 @@ const ForeignPlanMain = () => {
     }
   }, []);
 
+  // 환율 조회
+  useEffect(() => {
+    const getExchangeRate = async () => {
+      if (regionInfo.currencyCode === "") return;
+      try {
+        const response = await axios.get(
+          `https://api.freecurrencyapi.com/v1/latest?apikey=${currencyApiKey}&base_currency=${regionInfo.currencyCode}&currencies=KRW`
+        );
+        setExchangeRate(response.data.data["KRW"]);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getExchangeRate();
+  }, [regionInfo]);
+
+  // 현지 연락처 정보 조회
+  useEffect(() => {
+    if (regionInfo.countryName === "") return;
+    axios
+      .get(`${backServer}/api/regionInfoApi/${regionInfo.countryName}`)
+      .then((res) => {
+        setRegionApiInfo(res.data);
+      })
+      .catch(() => {});
+  }, [regionInfo]);
+
   return (
     <div className="plan-view-wrap">
       <ForeignPlanList
@@ -127,7 +159,12 @@ const ForeignPlanMain = () => {
         backServer={backServer}
       />
       {planPageOption === 1 ? (
-        <ForeignRegionInfo backServer={backServer} regionInfo={regionInfo} />
+        <ForeignRegionInfo
+          backServer={backServer}
+          regionInfo={regionInfo}
+          regionApiInfo={regionApiInfo}
+          exchangeRate={exchangeRate}
+        />
       ) : (
         <ForeignPlanSearch
           searchInput={searchInput}
