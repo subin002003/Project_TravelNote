@@ -53,7 +53,6 @@ const ProductView = () => {
   // 로그인 회원 정보
   const isLogin = useRecoilValue(isLoginState);
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
-  const userEmail = loginEmail;
   const [userType, setUserType] = useRecoilState(userTypeState);
 
   const params = useParams();
@@ -64,7 +63,12 @@ const ProductView = () => {
     productReviewList: [],
   });
   const [productFileList, setProductFileList] = useState([]);
+  // 리뷰 리스트
   const [productReviewList, setProductReviewList] = useState([]);
+  // 리뷰 답글 리스트
+  const [productReviewReCommentList, setProductReviewReCommentList] = useState(
+    []
+  );
   // const [newProductReviewList, setNewProductReviewList] = useState([]);
 
   const [reviews, setReviews] = useState(productReviewList); // 리뷰 리스트 상태
@@ -78,18 +82,19 @@ const ProductView = () => {
   const [openReviewDialog, setOpenReviewDialog] = useState(false); // 다이얼로그 상태
 
   useEffect(() => {
-    if (!productNo || !userEmail) {
-      console.error("productNo 또는 userEmail이 유효하지 않습니다.");
+    if (!productNo || !loginEmail) {
+      console.error("productNo 또는 loginEmail 유효하지 않습니다.");
       return;
     }
 
     axios
-      .get(`${backServer}/product/productNo/${productNo}/${userEmail}`)
+      .get(`${backServer}/product/productNo/${productNo}/${loginEmail}`)
       .then((res) => {
         console.log(res.data);
         setProduct(res.data.product);
         setProductFileList(res.data.productFileList); // 첨부파일 관리
         setProductReviewList(res.data.productReviewList); // 리뷰 관리
+        setProductReviewReCommentList(res.data.productReviewReCommentList);
       })
       .catch((err) => {
         console.log("Error:", err.response ? err.response.data : err.message);
@@ -99,7 +104,7 @@ const ProductView = () => {
           icon: "error",
         });
       });
-  }, [productNo, userEmail]);
+  }, [productNo, loginEmail]);
 
   // 각 정렬 옵션에 따른 클릭 이벤트 처리
   const handleSortClick = (sortOption) => {
@@ -107,7 +112,7 @@ const ProductView = () => {
 
     axios
       .get(
-        `${backServer}/product/productNo/${productNo}/${userEmail}/${sortOption}`
+        `${backServer}/product/productNo/${productNo}/${loginEmail}/${sortOption}`
       )
       .then((res) => {
         console.log(res.data); // 응답 데이터 로그
@@ -117,15 +122,6 @@ const ProductView = () => {
 
         // 기존 리뷰 리스트를 새로운 리뷰 리스트로 업데이트
         setProductReviewList(newProductReviewList);
-        // setProductReviewList(prevReviews => [...prevReviews, newReview]);
-
-        // setProductReviewList((productReviewList) => [
-        //   ...productReviewList,
-        //   newProductReviewList,
-        // ]);
-
-        // console.log(newProductReviewList); // 새 리뷰 리스트 출력
-        // console.log(productReviewList);
       })
       .catch((err) => {
         console.error("Axios error:", err);
@@ -221,7 +217,7 @@ const ProductView = () => {
   };
 
   // 리뷰 목록 갱신 함수
-  const fetchProductReviews = () => {
+  const fetchProductReviewList = () => {
     axios
       .get(`${backServer}/product/productNo/${productNo}/${loginEmail}`)
       .then((res) => {
@@ -229,6 +225,18 @@ const ProductView = () => {
       })
       .catch((err) => {
         console.error("리뷰 목록 불러오기 중 오류 발생:", err);
+      });
+  };
+
+  // 리뷰 답글 목록 갱신 함수
+  const fetchProductReviewReCommentList = () => {
+    axios
+      .get(`${backServer}/product/productNo/${productNo}/${loginEmail}`)
+      .then((res) => {
+        setProductReviewReCommentList(res.data.productReviewReCommentList); // 리뷰 리스트 갱신
+      })
+      .catch((err) => {
+        console.error("리뷰 답글 목록 불러오기 중 오류 발생:", err);
       });
   };
 
@@ -262,7 +270,8 @@ const ProductView = () => {
   // 리뷰 작성 팝업 닫기
   const handleCloseReviewDialog = () => {
     setOpenReviewDialog(false);
-    fetchProductReviews(); // 다이얼로그가 닫힐 때 리뷰 목록 갱신
+    fetchProductReviewList(); // 다이얼로그가 닫힐 때 리뷰 목록 갱신
+    fetchProductReviewReCommentList();
   };
 
   return (
@@ -471,19 +480,42 @@ const ProductView = () => {
 
         {/* 리뷰 출력 */}
         <div className="commentBox">
+          {/* 부모 리뷰에 해당하는 자식 리뷰가 하위에 오도록 출력 */}
+          {/* 부모 리뷰 출력 */}
           <div className="posting-review-wrap">
             <ul>
               {productReviewList.length > 0 ? (
-                productReviewList.map((review, i) => (
-                  <ReviewItem
-                    // key={`review-${i}`}
-                    key={review.reviewNo} // 고유한 리뷰 ID 사용
-                    product={product}
-                    review={review}
-                    parentReviewNo={review.reviewNo} // 부모 리뷰 ID 전달
-                    onDeleteReview={handleDeleteReview} // 삭제 핸들러 전달
-                    fetchProductReviews={fetchProductReviews} // 여기서 전달
-                  />
+                productReviewList.map((review) => (
+                  <li className="posting-item" key={review.reviewNo}>
+                    <ReviewItem
+                      product={product}
+                      review={review}
+                      parentReviewNo={review.reviewNo} // 부모 리뷰 ID 전달
+                      onDeleteReview={handleDeleteReview} // 삭제 핸들러 전달
+                      fetchProductReviewList={fetchProductReviewList} // 여기서 전달
+                    />
+                    {/* 해당 부모 리뷰의 자식 리뷰 출력 */}
+                    <ul>
+                      {productReviewReCommentList
+                        .filter(
+                          (reComment) =>
+                            reComment.reviewCommentRef === review.reviewNo
+                        ) // 부모 리뷰 ID와 일치하는 자식 리뷰 필터링
+                        .map((reComment) => (
+                          <li className="posting-item" key={reComment.reviewNo}>
+                            <ReviewReCommentItem
+                              product={product}
+                              review={reComment}
+                              parentReviewNo={reComment.reviewNo} // 부모 리뷰 ID 전달
+                              onDeleteReview={handleDeleteReview} // 삭제 핸들러 전달
+                              fetchProductReviewReCommentList={
+                                fetchProductReviewReCommentList
+                              } // 여기서 전달
+                            />
+                          </li>
+                        ))}
+                    </ul>
+                  </li>
                 ))
               ) : (
                 <li style={{ textAlign: "center", color: "gray" }}>
@@ -492,8 +524,6 @@ const ProductView = () => {
               )}
             </ul>
           </div>
-          {/* <PageNavi pi={pi} reqPage={reqPage} setReqPage={setReqPage} /> */}
-          {/* 리뷰 전체보기 */}
         </div>
       </div>
 
@@ -516,7 +546,8 @@ const ProductView = () => {
               productNo={productNo}
               open={openReviewDialog}
               handleClose={handleCloseReviewDialog}
-              fetchProductReviews={fetchProductReviews} // 리뷰 리스트 갱신 함수 전달
+              fetchProductReviewList={fetchProductReviewList} // 리뷰 리스트 갱신 함수 전달
+              fetchProductReviewReCommentList={fetchProductReviewReCommentList} // 리뷰 답글 리스트 갱신 함수 전달
             />
           </DialogContent>
           <DialogActions>
@@ -565,14 +596,13 @@ const ReviewItem = (props) => {
   const productNo = product.productNo;
   const review = props.review;
 
-  const { fetchProductReviews } = props;
+  const { fetchProductReviewList } = props;
 
   const parentReviewNo = props.reviewCommentRef;
 
   // 로그인 회원 정보
   const isLogin = useRecoilValue(isLoginState);
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
-  const userEmail = loginEmail;
 
   // 리뷰의 좋아요 상태와 좋아요 수
   const [reviewLike, setReviewLike] = useState(review.reviewLike === 1); // 좋아요 상태 (1: 좋아요, 0: 비활성화)
@@ -652,12 +682,12 @@ const ReviewItem = (props) => {
       const request = newLikeStatus
         ? axios.post(
             // 리뷰 좋아요
-            `${backServer}/product/${review.reviewNo}/insertReviewLike/${userEmail}`,
+            `${backServer}/product/${review.reviewNo}/insertReviewLike/${loginEmail}`,
             { reviewLike: 1 }
           )
         : axios.delete(
             // 리뷰 좋아요 취소
-            `${backServer}/product/${review.reviewNo}/deleteReviewLike/${userEmail}?reviewLike=1`
+            `${backServer}/product/${review.reviewNo}/deleteReviewLike/${loginEmail}?reviewLike=1`
           );
 
       request
@@ -682,7 +712,7 @@ const ReviewItem = (props) => {
   };
 
   return (
-    <li className="posting-item">
+    <>
       <div className="posting-review">
         <div className="posting-review-info">
           <div className="review-info-left">
@@ -706,18 +736,12 @@ const ReviewItem = (props) => {
             </button>
           </div>
         </div>
-        {/* <div>{review.reviewScore}</div> */}
         <Rating
           name={`rating-${review.reviewId}`}
           value={review.reviewScore} // 리뷰 점수
           precision={0.1} // 소수점 이하 1자리까지 표시
           readOnly // 읽기 전용
         />
-        {/* <Rating
-          name={`rating-${review.reviewId}`}
-          value={review.reviewScore} // 리뷰 점수
-          readOnly // 읽기 전용
-        /> */}
         <div className="posting-review-content">{review.reviewContent}</div>
         <div className="review-link-box">
           <span
@@ -744,10 +768,10 @@ const ReviewItem = (props) => {
           </span>
           <span className="reviewReComment-btn">
             <i className="fa-solid fa-comment-dots"></i>
-            {/* <Link className="recShow">답글</Link> */}
             {/* 답글 버튼 */}
             <button
               style={{
+                margin: "0 0 0 4px",
                 padding: "0",
                 border: "none",
                 outline: "none",
@@ -761,7 +785,9 @@ const ReviewItem = (props) => {
             >
               답글
             </button>
-            <span className="reviewReCommentCount">0</span>
+            <span className="reviewReCommentCount">
+              {review.reviewReplyCount}
+            </span>
           </span>
         </div>
       </div>
@@ -792,14 +818,8 @@ const ReviewItem = (props) => {
               review={dialogType === "update" ? review : null} // 리뷰 수정인 경우에만 review 전달
               parentReviewNo={dialogType === "reply" ? review.reviewNo : null} // 답글인 경우 parentReviewNo 전달
               handleClose={handleCloseReviewDialog}
-              fetchProductReviews={fetchProductReviews} // 여기서 다시 전달
+              fetchProductReviewList={fetchProductReviewList} // 여기서 다시 전달
             />
-            {/* <Review
-              productNo={productNo}
-              open={openReviewDialog}
-              handleClose={handleCloseReviewDialog}
-              review={review}
-            /> */}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseReviewDialog} color="primary">
@@ -808,7 +828,251 @@ const ReviewItem = (props) => {
           </DialogActions>
         </Dialog>
       </div>
-    </li>
+    </>
+  );
+};
+
+const ReviewReCommentItem = (props) => {
+  const backServer = process.env.REACT_APP_BACK_SERVER;
+  const product = props.product;
+  const productNo = product.productNo;
+  const review = props.review;
+
+  const { fetchProductReviewReCommentList } = props;
+
+  const parentReviewNo = props.reviewCommentRef;
+
+  // 로그인 회원 정보
+  const isLogin = useRecoilValue(isLoginState);
+  const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
+
+  // 리뷰의 좋아요 상태와 좋아요 수
+  const [reviewLike, setReviewLike] = useState(review.reviewLike === 1); // 좋아요 상태 (1: 좋아요, 0: 비활성화)
+  const [reviewLikeCount, setReviewLikeCount] = useState(
+    review.reviewLikeCount
+  ); // 좋아요 수
+
+  const newLikeState = reviewLike ? 0 : 1; // 좋아요 상태를 토글
+  const newCount = reviewLike ? reviewLikeCount - 1 : reviewLikeCount + 1; // 좋아요 수 업데이트
+
+  // 리뷰 작성 다이얼로그
+  const [openReviewDialog, setOpenReviewDialog] = useState(false); // 다이얼로그 상태
+  const [dialogType, setDialogType] = useState("");
+
+  // 리뷰 작성 팝업 열기
+  const handleOpenReviewDialog = (type) => {
+    setOpenReviewDialog(true);
+    setDialogType(type); // 'register', 'update', 'reply' 타입 설정
+    // 여기에 parentReviewId를 사용하는 로직 추가
+    console.log("Parent Review ID:", parentReviewNo);
+  };
+
+  // 리뷰 작성 팝업 닫기
+  const handleCloseReviewDialog = () => {
+    setOpenReviewDialog(false);
+  };
+
+  // 리뷰 삭제
+  const deleteReview = () => {
+    Swal.fire({
+      title: "답글을 삭제하시겠습니까?",
+      text: "삭제 후 복구할 수 없습니다.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "삭제",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`${backServer}/product/deleteReview/${review.reviewNo}`)
+          .then((res) => {
+            console.log(res);
+            if (res.data === 1) {
+              Swal.fire({
+                title: "답글이 삭제되었습니다.",
+                icon: "success",
+              });
+              props.onDeleteReview(review.reviewNo); // 삭제된 리뷰 번호를 상위 컴포넌트에 전달
+              // navigate(`/product/view/${productNo}`);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            Swal.fire({
+              title: "서버와의 통신 중 오류가 발생하였습니다.",
+              text: err.message,
+              icon: "error",
+            });
+          });
+      }
+    });
+  };
+
+  const handleLikeToggle = () => {
+    if (!isLogin) {
+      Swal.fire({
+        title: "로그인 후 이용이 가능합니다.",
+        icon: "info",
+      });
+      return;
+    }
+
+    if (isLogin) {
+      const newLikeStatus = !reviewLike; // 좋아요 상태 토글
+      const request = newLikeStatus
+        ? axios.post(
+            // 리뷰 좋아요
+            `${backServer}/product/${review.reviewNo}/insertReviewLike/${loginEmail}`,
+            { reviewLike: 1 }
+          )
+        : axios.delete(
+            // 리뷰 좋아요 취소
+            `${backServer}/product/${review.reviewNo}/deleteReviewLike/${loginEmail}?reviewLike=1`
+          );
+
+      request
+        .then((res) => {
+          console.log(res.data);
+          setReviewLike(newLikeStatus); // 좋아요 상태 업데이트
+          setReviewLikeCount((prevCount) =>
+            newLikeStatus ? prevCount + 1 : prevCount - 1
+          ); // 좋아요 수 업데이트
+        })
+        .catch((err) => {
+          console.log(err);
+          Swal.fire({
+            title: newLikeStatus
+              ? "좋아요 추가에 실패했습니다."
+              : "좋아요 취소에 실패했습니다.",
+            text: err.message,
+            icon: "error",
+          });
+        });
+    }
+  };
+
+  return (
+    <>
+      <div className="posting-review">
+        <div className="posting-review-info">
+          <div className="review-info-left">
+            <span style={{ display: "none" }}>{review.reviewNo}</span>
+            <span className="reviewWriter">{review.reviewWriter}</span>
+            <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+            <span className="reviewDate">{review.reviewDate}</span>
+          </div>
+          <div className="review-info-right">
+            <button
+              className="btn-secondary sm review-update-btn"
+              onClick={() => handleOpenReviewDialog("update")}
+            >
+              수정
+            </button>
+            <button
+              className="btn-secondary sm review-delete-btn"
+              onClick={deleteReview}
+            >
+              삭제
+            </button>
+          </div>
+        </div>
+        <div className="posting-review-content">
+          <span>
+            <i
+              style={{ margin: "0 10px", transform: "rotate(90deg)" }}
+              className="fa-solid fa-arrow-turn-up"
+            ></i>
+          </span>
+          {review.reviewContent}
+        </div>
+        <div className="review-link-box">
+          <span
+            className={
+              reviewLike && review.reviewWriter === loginEmail
+                ? "review-like-checked"
+                : "review-like-unchecked"
+            }
+            onClick={handleLikeToggle}
+          >
+            <i
+              className={
+                reviewLike && review.reviewWriter === loginEmail
+                  ? "fa-solid fa-thumbs-up"
+                  : "fa-regular fa-thumbs-up"
+              }
+            ></i>
+            <span
+              style={{ width: "12px", display: "inline-block" }}
+              className="reviewLikeCount"
+            >
+              {reviewLikeCount}
+            </span>
+          </span>
+          <span style={{ display: "none" }} className="reviewReComment-btn">
+            <i className="fa-solid fa-comment-dots"></i>
+            {/* 답글 버튼 */}
+            <button
+              style={{
+                margin: "0 0 0 4px",
+                padding: "0",
+                border: "none",
+                outline: "none",
+                borderRadius: "10px",
+                background: "transparent",
+                color: "var(--gray2)",
+                fontSize: "16px",
+              }}
+              className="btn-secondary sm"
+              onClick={() => handleOpenReviewDialog("reply")} // 답글 처리
+            >
+              답글
+            </button>
+            <span className="reviewReCommentCount">
+              {review.reviewReplyCount}
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <div style={{ margin: "30px 0" }} className="line"></div>
+
+      {/* 리뷰 답글 작성 다이얼로그 */}
+      <div className="inputCommentBox">
+        <Dialog
+          open={openReviewDialog}
+          onClose={handleCloseReviewDialog}
+          PaperProps={{
+            style: { width: "800px", zIndex: "10" }, // 다이얼로그의 가로 크기를 800px로 설정
+          }}
+          maxWidth={false} // maxWidth 기본값을 사용하지 않도록 설정
+          fullWidth={true} // 다이얼로그가 지정된 너비를 채우도록 설정
+        >
+          <DialogTitle>
+            {dialogType === "update"
+              ? "리뷰 수정"
+              : dialogType === "reply"
+              ? "답글 작성"
+              : "리뷰 작성"}
+          </DialogTitle>
+          <DialogContent>
+            <Review
+              productNo={productNo}
+              review={dialogType === "update" ? review : null} // 리뷰 수정인 경우에만 review 전달
+              parentReviewNo={dialogType === "reply" ? review.reviewNo : null} // 답글인 경우 parentReviewNo 전달
+              handleClose={handleCloseReviewDialog}
+              fetchProductReviewReCommentList={fetchProductReviewReCommentList} // 여기서 다시 전달
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseReviewDialog} color="primary">
+              닫기
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    </>
   );
 };
 

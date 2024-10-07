@@ -182,6 +182,7 @@
     WHERE rnum BETWEEN #{pi.start} AND #{pi.end}
   </select>
   
+  <!-- 상품 등록 -->
   <insert id="insertProduct">
   	insert into product values(product_seq.nextval, #{productName}, #{productSubName}, #{productThumb}, #{productPrice}, #{productInfo}, #{productLatitude}, #{productLongitude}, #{productWriter}, #{productStatus}, sysdate)
   	<selectKey resultType="int" keyProperty="productNo" order="AFTER">
@@ -189,6 +190,7 @@
   	</selectKey>
   </insert>
   
+  <!-- 상품 첨부파일 등록 -->
   <insert id="insertProductFile">
   	insert into product_file values(product_file_seq.nextval, #{productNo}, #{filename}, #{filepath})
   </insert>
@@ -228,11 +230,24 @@
   <!-- 리뷰 리스트 조회 -->
   <select id="selectOneProductReviews" resultType="review">
     SELECT r.*,
-           (SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO) AS REVIEW_LIKE_COUNT,
-           (SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO AND USER_NO = #{userNo}) AS REVIEW_LIKE
+       (SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO) AS REVIEW_LIKE_COUNT,
+       (SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO AND USER_NO = #{userNo}) AS REVIEW_LIKE,
+       (SELECT COUNT(*) FROM REVIEW r2 WHERE r2.REVIEW_COMMENT_REF = r.REVIEW_NO) AS REVIEW_REPLY_COUNT -- 답글 수
+	FROM REVIEW r
+	WHERE PRODUCT_NO = #{productNo} 
+	  AND REVIEW_COMMENT_REF IS NULL
+	ORDER BY r.REVIEW_DATE DESC
+  </select>
+  
+  <!-- 리뷰 답글 리스트 조회 -->
+  <select id="selectOneProductReviewReCommentList" resultType="review">
+    SELECT r.*,
+       (SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO) AS REVIEW_LIKE_COUNT,
+       (SELECT COUNT(*) FROM REVIEW_LIKE WHERE REVIEW_NO = r.REVIEW_NO AND USER_NO = #{userNo}) AS REVIEW_LIKE,
+       (SELECT COUNT(*) FROM REVIEW r2 WHERE r2.REVIEW_COMMENT_REF = r.REVIEW_NO) AS REVIEW_REPLY_COUNT -- 답글 수
     FROM REVIEW r
     WHERE PRODUCT_NO = #{productNo} 
-      AND REVIEW_COMMENT_REF IS NULL
+      AND REVIEW_COMMENT_REF IS NOT NULL
     ORDER BY r.REVIEW_DATE DESC
   </select>
   
