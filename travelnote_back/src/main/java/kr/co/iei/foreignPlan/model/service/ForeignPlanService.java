@@ -135,16 +135,37 @@ public class ForeignPlanService {
 	// 일정 삭제
 	@Transactional
 	public boolean deleteItinerary(int itineraryNo) {
-		int totalPlan = foreignPlanDao.selectTotalPlanCount(itineraryNo);
 		int result = foreignPlanDao.deleteItinerary(itineraryNo);
-		if (totalPlan > 0) {
-			result += foreignPlanDao.deleteItineraryPlan(itineraryNo);
-		}
-		if (totalPlan > 0 ? result == totalPlan + 1 : result == 1) {
+		if (result > 0) {
 			return true;
 		} else {
-			return false;
+		return false;
 		}
 	}
+
+	// 동행자 추가
+	@Transactional
+	public int insertCompanion(int itineraryNo, String memberEmail) {
+		int result = foreignPlanDao.insertCompanion(itineraryNo, memberEmail);
+		return result;
+	}
+
+	// 일정 조회 권한 확인
+	public int checkUser(int itineraryNo, String userEmail) {
+		System.out.println(itineraryNo + "" + userEmail);
+		int result = foreignPlanDao.checkUser(itineraryNo, userEmail);
+		System.out.println(result);
+		if (result > 0) {
+			return 1;
+		} else {
+			result = foreignPlanDao.checkCompanion(itineraryNo, userEmail);
+			System.out.println(result);
+			if (result > 0) {
+				return 0;
+			}
+		}
+		return -1;
+	}
+	
 
 }

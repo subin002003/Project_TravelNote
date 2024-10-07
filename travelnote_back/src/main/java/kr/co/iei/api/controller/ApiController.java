@@ -23,7 +23,6 @@ public class ApiController {
 	
 	@GetMapping(value="/regionInfoApi/{countryName}")
 	public ResponseEntity<RegionInfoDTO> regionInfoApi(@PathVariable String countryName) {
-		System.out.println(countryName);
 		String url = "http://apis.data.go.kr/1262000/LocalContactService2/getLocalContactList2";
 		String serviceKey = "w+YHFXUfIm1ox4RJBBw4OsWb3it3ymoD3Dx+zKFemzluHHcgLlVlbgYDiSp5m57samsQD9tXyUXzUjSdkTh5lA==";
 		String returnType = "json";
@@ -50,7 +49,6 @@ public class ApiController {
 			region.setContinentName(continentName);
 			region.setCountryName(countryName);
 			region.setWrtDate(wrtDate);
-			System.out.println(region);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

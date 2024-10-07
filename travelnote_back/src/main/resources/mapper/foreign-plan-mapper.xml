@@ -105,8 +105,15 @@
 		delete from itinerary where itinerary_no = #{itineraryNo}
 	</delete>
 	
-	<delete id="deleteItineraryPlan">
-		delete from plan where itinerary_no = #{itineraryNo}
-	</delete>
+	<insert id="insertCompanion">
+		insert into companion values(companion_no_seq.nextval, #{itineraryNo}, (select user_no from user_tbl where user_email = #{memberEmail}))
+	</insert>
 	
+	<select id="checkUser" resultType="int">
+		select count(*) from itinerary where itinerary_no = #{itineraryNo} and user_no = (select user_no from user_tbl where user_email = #{userEmail})
+	</select>
+	
+	<select id="checkCompanion" resultType="int">
+		select count(*) from companion where itinerary_no = #{itineraryNo} and user_no = (select user_no from user_tbl where user_email = #{userEmail})
+	</select>
 </mapper>

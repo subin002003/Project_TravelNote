@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ForeignPlanDaysButton from "./ForeignPlanDaysButton";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -22,6 +22,7 @@ const ForeignPlanList = (props) => {
     setSelectedPosition,
     setPlaceInfo,
     backServer,
+    userAuth,
   } = props;
 
   const selectedDate = totalPlanDates[selectedDay - 1];
@@ -148,17 +149,22 @@ const ForeignPlanList = (props) => {
             )}
           </div>
           <div className="edit-button-box">
-            {planPageOption == 1 ? (
-              <button className={"edit-button-active"} onClick={moveToEdit}>
-                일정 수정하기
-              </button>
+            {/* userAuth가 1이면 수정 가능, 0이면 수정 불가 */}
+            {userAuth === 1 ? (
+              planPageOption == 1 ? (
+                <button className={"edit-button-active"} onClick={moveToEdit}>
+                  일정 수정하기
+                </button>
+              ) : (
+                <button
+                  className={"edit-button" + (edited ? "-active" : "")}
+                  onClick={editPlan}
+                >
+                  {edited ? "메모/시간 저장" : "수정 끝내기"}
+                </button>
+              )
             ) : (
-              <button
-                className={"edit-button" + (edited ? "-active" : "")}
-                onClick={editPlan}
-              >
-                {edited ? "메모/시간 저장" : "수정 끝내기"}
-              </button>
+              ""
             )}
           </div>
         </div>

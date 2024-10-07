@@ -1,10 +1,6 @@
 import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  isLoginState,
-  loginEmailState,
-  userTypeState,
-} from "../utils/RecoilData";
-import { Route, Routes, useNavigate, useParams } from "react-router-dom";
+import { loginEmailState, userTypeState } from "../utils/RecoilData";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { getDate, getMonth, getYear } from "date-fns";
@@ -12,14 +8,14 @@ import ForeignPlanList from "./ForeignPlanList";
 import ForeignPlanSearch from "./ForeignPlanSearch";
 import ForeignRegionInfo from "./ForeignRegionInfo";
 import ForeignPlanMap from "./ForeignPlanMap";
+import Swal from "sweetalert2";
 
 // path: foreign/plan/:itineraryNo
 const ForeignPlanMain = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  const navigate = useNavigate();
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
   const [userType, setUserType] = useRecoilState(userTypeState);
-  const isLogin = useRecoilValue(isLoginState);
-  const navigate = useNavigate();
   const itineraryNo = useParams().itineraryNo; // 여행 일정 번호
   const [itinerary, setItinerary] = useState({}); // 여행 일정 정보 객체
   const [totalPlanDates, setTotalPlanDates] = useState([]); // 여행 일정표 용 날짜 배열
@@ -42,11 +38,43 @@ const ForeignPlanMain = () => {
   const [timeOptionsArr, setTimeOptionsArr] = useState([]); // 시간 선택 옵션 용 배열
   const [isNextDayButtonChecked, setIsNextDayButtonChecked] = useState(false);
   const [searchAirport, setSearchAirport] = useState(0); // 1이면 Departure, 2면 Arrival
+  const [userAuth, setUserAuth] = useState();
 
   // Api 관련
   const currencyApiKey = "fca_live_EeFeNGdxZTuLBGhbi5zT4weOAZk1AgA4ahK7Q0EP";
   const [exchangeRate, setExchangeRate] = useState();
   const [regionApiInfo, setRegionApiInfo] = useState({});
+
+  // 로그인한 유저가 해당 여행 일정 조회 권한이 있는지 조회 -> 1이면 해당 일정 주인, -1이면 권한 없음, 0이면 동행자
+  useEffect(() => {
+    if (loginEmail === "") return;
+    console.log(loginEmail);
+    axios
+      .get(`${backServer}/foreign/checkUser`, {
+        params: {
+          itineraryNo: itineraryNo,
+          userEmail: loginEmail,
+        },
+      })
+      .then((res) => {
+        // 1이면 해당 일정 주인, 0이면 동행자, -1이면 권한 없음
+        setUserAuth(res.data);
+        console.log(res.data);
+        if (res.data < 0) {
+          Swal.fire({
+            icon: "warning",
+            text: "조회 권한이 없습니다.",
+          });
+          // navigate("/foreign/list");
+        }
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          text: "서버 오류입니다.",
+        });
+      });
+  }, [loginEmail]);
 
   // 일정 정보 조회
   useEffect(() => {
@@ -115,7 +143,6 @@ const ForeignPlanMain = () => {
   // 환율 조회
   useEffect(() => {
     const getExchangeRate = async () => {
-      if (regionInfo.currencyCode === "") return;
       try {
         const response = await axios.get(
           `https://api.freecurrencyapi.com/v1/latest?apikey=${currencyApiKey}&base_currency=${regionInfo.currencyCode}&currencies=KRW`
@@ -125,12 +152,14 @@ const ForeignPlanMain = () => {
         console.log(err);
       }
     };
-    getExchangeRate();
+    if (regionInfo.currencyCode) {
+      getExchangeRate();
+    }
   }, [regionInfo]);
 
   // 현지 연락처 정보 조회
   useEffect(() => {
-    if (regionInfo.countryName === "") return;
+    if (!regionInfo.countryName) return;
     axios
       .get(`${backServer}/api/regionInfoApi/${regionInfo.countryName}`)
       .then((res) => {
@@ -157,6 +186,7 @@ const ForeignPlanMain = () => {
         setSelectedPosition={setSelectedPosition}
         setPlaceInfo={setPlaceInfo}
         backServer={backServer}
+        userAuth={userAuth}
       />
       {planPageOption === 1 ? (
         <ForeignRegionInfo
