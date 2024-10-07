@@ -378,7 +378,10 @@
   
   <!-- 오건하 작성 2024-10-04 -->
   <select id="myReviewList" resultType="review">
-  	select product_no, review_writer, review_score,product_name,review_content, review_date from review join user_tbl on(review_writer = user_email) join product using(product_no) where user_nick = #{userNick}
+  	select 
+  	product_no, review_writer, review_score,product_name,review_content, review_date 
+  	from review join user_tbl on(review_writer = user_email) join product using(product_no) 
+  	where user_nick = #{userNick}
   </select>
   
   <!-- 오건하 작성 2024-10-04 -->
@@ -405,5 +408,29 @@
         where rownum &lt;= #{end}
     )
     where rnum &gt;= #{start}
+  </select>
+  <!-- 오건하 작성 2024-10-07 -->
+  <select id = "myWishTotalCount" resultType="int">
+  	select count(*) from wish join user_tbl using(user_no) where user_nick = #{userNick}
+  </select>
+  <select id = "myWishList" resultType="product">
+	select *
+	from (
+	    select rownum as rnum, result.*
+	    from (
+	        select 
+	            p.product_no,
+	            p.product_name,
+	            p.product_thumb,
+	            p.product_price
+	        from user_tbl u
+	        join wish w on u.user_no = w.user_no
+	        join product p on w.product_no = p.product_no
+	        where u.user_nick = #{userNick}
+	        order by p.product_name
+	    ) result
+	    where rownum &lt;= #{end}
+	)
+	where rnum &gt;= #{start}
   </select>
 </mapper>

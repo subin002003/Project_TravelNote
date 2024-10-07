@@ -1,9 +1,10 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
 const DomesticPlanShare = () => {
+  const backServer = process.env.REACT_APP_BACK_SERVER;
   const params = useParams();
   const itineraryNo = params.itineraryNo; // URL에서 itineraryNo 가져오기
   const [tripDetails, setTripDetails] = useState(null);
@@ -14,10 +15,9 @@ const DomesticPlanShare = () => {
   const [email, setEmail] = useState(""); // 동행자 이메일 상태 추가
   const [showInvite, setShowInvite] = useState(false); // 초대 폼 표시 상태
   const today = new Date().toISOString().split("T")[0];
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const backServer = process.env.REACT_APP_BACK_SERVER;
-
     // 여행 계획 정보를 가져오는 API 호출
     axios
       .get(`${backServer}/domestic/Schedule/${itineraryNo}`)
@@ -41,9 +41,6 @@ const DomesticPlanShare = () => {
 
   // 여행 계획 수정하기 버튼 클릭 시 실행되는 함수
   const handleUpdate = () => {
-    const backServer = process.env.REACT_APP_BACK_SERVER;
-
-    // 수정된 내용 서버에 제출
     axios
       .patch(`${backServer}/domestic/itinerary/${itineraryNo}`, {
         itineraryTitle: tripTitle,
@@ -65,30 +62,66 @@ const DomesticPlanShare = () => {
       });
   };
 
+  // 여행 계획 삭제하기 버튼 클릭 시 실행되는 함수
+  const handleDelete = () => {
+    Swal.fire({
+      title: "정말 삭제하시겠습니까?",
+      text: "삭제 후에는 복구할 수 없습니다!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "삭제하기",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`${backServer}/domestic/planDelete/${itineraryNo}`)
+          .then((res) => {
+            Swal.fire({
+              icon: "success",
+              text: "여행 계획이 삭제되었습니다.",
+            });
+            navigate("/");
+          })
+          .catch((err) => {
+            console.error("Error deleting trip:", err);
+            Swal.fire({
+              icon: "error",
+              text: "여행 계획 삭제에 실패했습니다.",
+            });
+          });
+      }
+    });
+  };
+
   // 동행자 추가 버튼 클릭 시 실행되는 함수
   const handleAddCompanion = () => {
-    const backServer = process.env.REACT_APP_BACK_SERVER;
-
-    // 이메일 서버에 전송
     axios
       .post(`${backServer}/domestic/invite`, {
         itineraryNo,
-        email,
+        userEmail: email,
       })
       .then((res) => {
         Swal.fire({
           icon: "success",
           text: `${email}을(를) 초대했습니다.`,
         });
-        setEmail(""); // 입력 필드 초기화
-        setShowInvite(false); // 초대 폼 숨기기
+        setEmail("");
+        setShowInvite(false);
       })
       .catch((err) => {
         console.error("Error inviting companion:", err);
-        Swal.fire({
-          icon: "error",
-          text: "동행자 초대에 실패했습니다.",
-        });
+        const errorMessage =
+          err.response?.data?.message || "동행자 초대에 실패했습니다.";
+        if (errorMessage.includes("이미 추가된")) {
+          Swal.fire({
+            icon: "warning",
+            text: "이미 추가된 동행자입니다.",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            text: errorMessage,
+          });
+        }
       });
   };
 
@@ -131,7 +164,7 @@ const DomesticPlanShare = () => {
             type="text"
             placeholder="여행 제목을 입력해주세요"
             value={tripTitle}
-            onChange={(e) => setTripTitle(e.target.value)} // 제목 변경 시 상태 업데이트
+            onChange={(e) => setTripTitle(e.target.value)}
           />
         </label>
         <div className="date-inputs">
@@ -141,7 +174,7 @@ const DomesticPlanShare = () => {
               type="date"
               value={startDate}
               min={today}
-              onChange={(e) => setStartDate(e.target.value)} // 시작 날짜 변경 시 상태 업데이트
+              onChange={(e) => setStartDate(e.target.value)}
             />
           </label>
           <label>
@@ -150,15 +183,19 @@ const DomesticPlanShare = () => {
               type="date"
               value={endDate}
               min={today}
-              onChange={(e) => setEndDate(e.target.value)} // 종료 날짜 변경 시 상태 업데이트
+              onChange={(e) => setEndDate(e.target.value)}
             />
           </label>
         </div>
       </div>
-      {/* 수정된 내용을 제출할 수 있는 버튼 추가 */}
-      <button className="Plan-btn" onClick={handleUpdate}>
-        여행 계획 수정하기
-      </button>
+      <div className="button-content">
+        <button className="Plan-btn" onClick={handleUpdate}>
+          여행 계획 수정하기
+        </button>
+        <button className="Plan-del-btn" onClick={handleDelete}>
+          여행 계획 삭제하기
+        </button>
+      </div>
     </div>
   );
 };

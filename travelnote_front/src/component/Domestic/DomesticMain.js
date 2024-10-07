@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import "./DomesticMain.css"; // 스타일 파일도 필요에 따라 추가하세요
+import { Link, useNavigate } from "react-router-dom";
+import "./DomesticMain.css";
+import Swal from "sweetalert2";
+import { isLoginState } from "../utils/RecoilData";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 const DomesticMain = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  const isLogin = useRecoilValue(isLoginState);
+  const navigate = useNavigate();
   const [regionList, setRegionList] = useState([]);
   const [searchText, setSearchText] = useState("어디로 여행 떠날까요 ?");
   const [filteredRegions, setFilteredRegions] = useState([]);

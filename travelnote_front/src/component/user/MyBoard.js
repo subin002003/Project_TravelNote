@@ -11,7 +11,7 @@ const MyBoard = () => {
   const [boardList, setBoardList] = useState([]);
   const [reviewBoardList, setReviewBoardList] = useState([]);
   const [boardReqPage, setBoardReqPage] = useState(1);
-  const [reviewBoardReqPage, setReviewBoardReqPage] = useState();
+  const [reviewBoardReqPage, setReviewBoardReqPage] = useState(1);
   const [boardPi, setBoardPi] = useState({});
   const [reviewBoardPi, setReviewBoardPi] = useState({});
 
@@ -27,6 +27,20 @@ const MyBoard = () => {
         console.log(err);
       });
   }, [boardReqPage]);
+  useEffect(() => {
+    axios
+      .get(
+        `${backServer}/user/myReviewBoardList/${userNick}/${reviewBoardReqPage}`
+      )
+      .then((res) => {
+        console.log(res);
+        setReviewBoardList(res.data.list);
+        setReviewBoardPi(res.data.pi);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [reviewBoardReqPage]);
   return (
     <div className="myboard-content">
       <div className="page-title-info">
@@ -44,9 +58,22 @@ const MyBoard = () => {
               <th>작성일</th>
               <th>좋아요 수</th>
             </tr>
-            {boardList.map((board, i) => {
-              return <BoardItem key={"board" + i} board={board} />;
-            })}
+            {boardList && boardList.length > 0 ? (
+              boardList.map((board, i) => {
+                return <BoardItem key={"board" + i} board={board} />;
+              })
+            ) : (
+              <tr
+                style={{
+                  marginTop: "20px",
+                  marginBottom: "20px",
+                  textAlign: "center",
+                  height: "100px",
+                }}
+              >
+                <th colSpan={4}>아직 작성한 글이 없습니다.</th>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -59,6 +86,37 @@ const MyBoard = () => {
       </div>
       <div className="page-title-info">
         <h3>후기 게시판</h3>
+        <div className="myreviewboard-content">
+          {reviewBoardList && reviewBoardList.length > 0 ? (
+            reviewBoardList.map((reviewBoard, i) => {
+              return (
+                <ReviewBoardItem
+                  key={"reviewBoard" + i}
+                  reviewBoard={reviewBoard}
+                />
+              );
+            })
+          ) : (
+            <div
+              style={{
+                marginTop: "20px",
+                marginBottom: "20px",
+                textAlign: "center",
+                height: "100px",
+                margin: "0 auto",
+              }}
+            >
+              <h3>아직 작성한 글이 없습니다.</h3>
+            </div>
+          )}
+        </div>
+        <div style={{ marginTop: "20px" }} className="myreviewboard-page-navi">
+          <PageNavi
+            pi={reviewBoardPi}
+            reqPage={reviewBoardReqPage}
+            setReqPage={setReviewBoardReqPage}
+          />
+        </div>
       </div>
     </div>
   );
@@ -78,6 +136,24 @@ const BoardItem = (props) => {
       <td>{board.boardDate}</td>
       <td>{board.likeCount}</td>
     </tr>
+  );
+};
+
+const ReviewBoardItem = (props) => {
+  const reviewBoard = props.reviewBoard;
+  const naviaget = useNavigate();
+  return (
+    <div className="myreviewboard-item">
+      <div className="myreviewboard-thumb">
+        <img src="/image/logo1.png"></img>
+      </div>
+      <div className="myreviewboard-title">
+        <span>{reviewBoard.reviewBoardTitle}</span>
+      </div>
+      <div className="myreviewboard-date">
+        <span>{reviewBoard.reviewBoardDate}</span>
+      </div>
+    </div>
   );
 };
 

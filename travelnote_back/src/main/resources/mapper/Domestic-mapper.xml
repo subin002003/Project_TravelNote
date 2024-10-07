@@ -50,48 +50,137 @@
 		WHERE
 		r.region_no = #{regionNo}
 	</select>
-
+	
+	<!-- 상세 일정 조회 -->
 	<select id="selectPlan" resultType="Plan">
 		select * from plan where
 		itinerary_no = #{itineraryNo} and plan_day = #{planDay}
 	</select>
-
+	
+	<!-- 상세 일정 수정 -->
 	<update id="updatePlan">
 		update plan set plan_memo = #{planMemo}, plan_time =
 		#{planTime} where plan_no = #{planNo}
 	</update>
-
+	
+	<!-- 상세 일정 삭제 -->
 	<delete id="deletePlans" parameterType="int">
 		DELETE FROM plan WHERE
 		plan_no = #{planNo}
 	</delete>
-
+	
+	<!-- 상세 일정 삽입 -->
 	<insert id="insertPlan" parameterType="plan">
 		INSERT INTO plan VALUES
-		(plan_no_seq.nextval, #{itineraryNo}, #{planDay},
-		#{planDate},
-		(SELECT
-		NVL(MAX(plan_seq), 0) + 1 FROM plan WHERE itinerary_no =
+		(plan_no_seq.nextval, #{itineraryNo}, #{planDay}, #{planDate},
+		(SELECT NVL(MAX(plan_seq), 0) + 1 FROM plan WHERE itinerary_no =
 		#{itineraryNo}), #{planAddress},
 		#{planLatitude}, #{planLongitude},
 		null, null, null, 1, #{planName},null)
 	</insert>
-
+	
+	<!-- 여행 관리 조회 -->
 	<select id="scheduleUpdate" resultType="Itinerary">
-		SELECT itinerary_no, itinerary_title, itinerary_start_date,
+		SELECT itinerary_no,
+		itinerary_title, itinerary_start_date,
 		itinerary_end_date
 		FROM Itinerary
 		WHERE itinerary_no = #{itineraryNo}
 	</select>
-
+	
+	<!-- 여행 관리 수정 -->
 	<update id="updateItinerary" parameterType="Itinerary">
     UPDATE Itinerary SET 
         itinerary_title = #{itineraryDTO.itineraryTitle},
         itinerary_start_date = #{itineraryDTO.itineraryStartDate},
         itinerary_end_date = #{itineraryDTO.itineraryEndDate} 
     WHERE itinerary_no = #{itineraryNo}
-</update>
+	</update>
+	
 
 
+	
+	<!-- 여행 관리 삭제 -->
+	<delete id="planDelete" parameterType="int">
+		DELETE FROM Itinerary WHERE itinerary_no = #{itineraryNo}
+	</delete>
+	
+	<!-- 동행자 추가 -->
+	<insert id="insertCompanion">
+		INSERT INTO companion (companion_no, itinerary_no, user_no)
+		VALUES (companion_no_seq.NEXTVAL, #{itineraryNo}, #{userNo})
+	</insert>
+	
+	<!-- 동행자 조회 -->
+	<select id="selectCompanion" parameterType="map"
+		resultType="Companion">
+		SELECT companion_no, itinerary_no, user_no
+		FROM companion
+		WHERE itinerary_no = #{itineraryNo}
+		AND user_no = #{userNo}
+	</select>
+	
+	
 
+		<!-- 오건하 작성 2024-10-07 -->
+	<select id="myTravelTotalCount" resultType="int">
+		select count(*) from itinerary join user_tbl using(user_no)
+		where user_nick = #{userNick}
+	</select>
+	<!-- 오건하 작성 2024-10-07 -->
+	<select id="myTravelList" resultType="ItineraryInfo">
+			select *
+		from (
+		    select rownum as rnum, result.*
+		    from (
+		        select 
+		            i.itinerary_no,
+		            i.itinerary_start_date,
+		            i.itinerary_end_date,
+		            i.itinerary_title,
+		            u.user_nick,
+		            r.region_name,
+		            r.country_name,
+		            r.region_img
+		        from itinerary i
+		        join user_tbl u on i.user_no = u.user_no
+		        join region r on i.region_no = r.region_no
+		        where u.user_nick = #{userNick}
+		        order by i.itinerary_title
+		    ) result
+		    where rownum &lt;= #{end}
+		)
+		where rnum &gt;= #{start}
+	</select>
+	<select id="shareTravelTotalCount" resultType="int"	>
+		select count(*) from companion c 
+		join user_tbl u on c.user_no = u.user_no 
+		where u.user_nick = #{userNick}
+	</select> 
+	<select id = "shareTravelList" resultType="ItineraryInfo">
+		select * 
+		from (
+		    select rownum as rnum, result.*
+		    from (
+		        select 
+		            u.user_no,
+		            u.user_nick as receive_user, 
+		            u2.user_nick as send_user,
+		            r.region_name,
+		            r.region_img,
+		            r.country_name,
+		            i.itinerary_no, 
+		            i.itinerary_title, 
+		            i.itinerary_start_date, 
+		            i.itinerary_end_date
+		        from companion c 
+		        join user_tbl u on c.user_no = u.user_no
+		        join itinerary i on c.itinerary_no = i.itinerary_no
+		        join user_tbl u2 on u2.user_no = i.user_no
+		        join region r on r.region_no = i.region_no
+		        order by i.itinerary_no
+		    ) result
+		)
+		where (rnum between #{start} and #{end}) and receive_user = #{userNick} 
+	</select>
 </mapper>

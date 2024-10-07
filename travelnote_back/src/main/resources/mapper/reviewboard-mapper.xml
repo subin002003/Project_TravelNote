@@ -267,6 +267,26 @@
 		)
 	</insert>
 	
+	<!-- 오건하 2024-10-07 작성 -->
+	<select id="myReviewBoardTotalCount" resultType="int">
+		select count(*) from review_board where review_board_writer = #{userNick}
+	</select>
+	<!-- 오건하 2024-10-07 작성 -->
+	<select id="myReviewBoardList" resultType="reviewBoard">
+		select * from
+			(select rownum as rnum, b.* from
+			(select
+				review_board_no,
+				review_board_title,
+				review_board_writer,
+				review_board_category,
+				review_board_thumbnail,
+				to_char(review_board_date,'yyyy-mm-dd') as review_board_date,
+				like_count
+				from review_board
+				order by review_board_no desc)b)
+				where (rnum between #{start} and #{end}) and review_board_writer = #{userNick}
+	</select>
 </mapper>
 
 

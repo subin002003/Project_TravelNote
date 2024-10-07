@@ -61,7 +61,13 @@ public interface ReviewBoardDao {
 
 	void updateComment(int reviewBoardNo, int commentNo, String reviewBoardCommentContent);
 
-	void reviewBoardViewReport(String userNick, int reviewBoardNo);	
+	void reviewBoardViewReport(String userNick, int reviewBoardNo);
+
+	//오건하 2024-10-07 작성
+	int myReviewBoardTotalCount(String userNick);
+
+	//오건하 2024-10-07 작성
+	List myReviewBoardList(PageInfo pi);	
 	
 	
 }

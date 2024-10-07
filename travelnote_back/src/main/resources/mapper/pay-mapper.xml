@@ -17,7 +17,28 @@
   
   <!-- 오건하 작성 2024-10-04 -->
   <select id="selectMyReservation" resultType="pay">
-  	select order_no, user_email,product_no,people,price,product_name,user_nick,product_thumb from order_pay join product using(product_no) join user_tbl using(user_email) where user_nick = #{userNick}
+	  	select * 
+	from (
+	    select rownum as rnum, result.* 
+	    from (
+	        select 
+	            o.order_no, 
+	            o.user_email, 
+	            o.product_no, 
+	            o.people, 
+	            o.price, 
+	            p.product_name, 
+	            u.user_nick, 
+	            p.product_thumb 
+	        from order_pay o 
+	        join product p on o.product_no = p.product_no 
+	        join user_tbl u on p.product_writer = u.user_email 
+	        where u.user_nick = #{userNick}
+	        order by o.order_no
+	    ) result
+	) 
+	where rnum between #{start} and #{end}
+
   </select>
   
   <!-- 오건하 작성 2024-10-04 -->
@@ -56,7 +77,24 @@
   </select>
   <!-- 오건하 작성 2024-10-04 -->
   <select id="myPaymentList" resultType="pay">
-	select order_no,order_date,product_name,user_nick as seller_nick from order_pay o join product p using(product_no) join user_tbl u on(p.product_writer = u.user_email) where user_nick= #{userNick}
+	  select *
+	from (
+	    select rownum as rnum, result.*
+	    from (
+	        select 
+	            o.order_no,
+	            o.order_date,
+	            p.product_name,
+	            u.user_nick as seller_nick
+	        from order_pay o
+	        join product p using(product_no)
+	        join user_tbl u on p.product_writer = u.user_email
+	        where u.user_nick = #{userNick}
+	        order by o.order_date
+	    ) result
+	    where rownum &lt; #{end}
+	)
+	where rnum >= #{start}
   </select>
   <!-- 오건하 작성 2024-10-06 -->
   <select id="getPaymentInfo" resultType="pay">
