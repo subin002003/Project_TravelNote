@@ -33,6 +33,6 @@ public interface UserDao {
 
 	int selectUserByEmail(String memberEmail);
 	
-	UserDTO selectUserByEmail(String email);
+	UserDTO selectUserEmail(String email);
 
 }

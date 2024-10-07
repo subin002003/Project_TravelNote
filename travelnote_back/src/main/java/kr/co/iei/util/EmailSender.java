@@ -41,7 +41,7 @@ public class EmailSender {
 			e.printStackTrace();
 		}
 	}
-<<<<<<< HEAD
+
 	
 	public int sendInvitation(String emailTitle, String receiver, String emailContent) {
 		MimeMessage message = sender.createMimeMessage();
@@ -62,7 +62,7 @@ public class EmailSender {
 		}
 		return 0;
 	}
-=======
+
 
 	public void send(SimpleMailMessage message) {
         try {
@@ -73,5 +73,5 @@ public class EmailSender {
             e.printStackTrace();
         }
     }
->>>>>>> khj
+
 }

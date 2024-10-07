@@ -40,7 +40,7 @@
 	<delete id="deleteUser">
 		delete from user_tbl where user_email = #{userEmail}
 	</delete>
-<<<<<<< HEAD
+
 	<select id="checkBusinessRegNo" resultType="int">
 		select count(*) from user_tbl where business_reg_no = #{businessRegNo}
 	</select>
@@ -48,11 +48,11 @@
 	<select id="selectUserByEmail" resultType="int">
 		select count(*) from user_tbl where user_email = #{userEmail}
 	</select>
-=======
-	<select id="selectUserByEmail" parameterType="String" resultType="User">
+
+	<select id="selectUserEmail" parameterType="String" resultType="User">
         SELECT user_no, user_name, user_email
         FROM user_tbl
         WHERE user_email = #{email}
     </select>
->>>>>>> khj
+
 </mapper>

@@ -121,7 +121,7 @@ public class DomesticController {
         int itineraryNo = itinerary.getItineraryNo();
 
         // 이메일을 통해 사용자 정보 조회 (이미 등록된 사용자인지 확인)
-        UserDTO user = userService.findUserByEmail(userEmail);
+        UserDTO user = userService.UserByEmail(userEmail);
         
         if (user == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 이메일로 등록된 사용자가 없습니다.");
