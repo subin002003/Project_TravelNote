@@ -37,10 +37,14 @@ public interface DomesticDao {
 	ItineraryDTO scheduleUpdate(int itinerary);
 
 	void updateItinerary(int itineraryNo, ItineraryDTO itineraryDTO);
+	
+	void planDelete(int itineraryNo);
 
 	void insertCompanion(CompanionDTO companion);
 
 	CompanionDTO selectCompanion(int itineraryNo, int userNo);
+
+	
 
 
 

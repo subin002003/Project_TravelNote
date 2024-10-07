@@ -50,33 +50,36 @@
 		WHERE
 		r.region_no = #{regionNo}
 	</select>
-
+	
+	<!-- 상세 일정 조회 -->
 	<select id="selectPlan" resultType="Plan">
 		select * from plan where
 		itinerary_no = #{itineraryNo} and plan_day = #{planDay}
 	</select>
-
+	
+	<!-- 상세 일정 수정 -->
 	<update id="updatePlan">
 		update plan set plan_memo = #{planMemo}, plan_time =
 		#{planTime} where plan_no = #{planNo}
 	</update>
-
+	
+	<!-- 상세 일정 삭제 -->
 	<delete id="deletePlans" parameterType="int">
 		DELETE FROM plan WHERE
 		plan_no = #{planNo}
 	</delete>
-
+	
+	<!-- 상세 일정 삽입 -->
 	<insert id="insertPlan" parameterType="plan">
 		INSERT INTO plan VALUES
-		(plan_no_seq.nextval, #{itineraryNo}, #{planDay},
-		#{planDate},
-		(SELECT
-		NVL(MAX(plan_seq), 0) + 1 FROM plan WHERE itinerary_no =
+		(plan_no_seq.nextval, #{itineraryNo}, #{planDay}, #{planDate},
+		(SELECT NVL(MAX(plan_seq), 0) + 1 FROM plan WHERE itinerary_no =
 		#{itineraryNo}), #{planAddress},
 		#{planLatitude}, #{planLongitude},
 		null, null, null, 1, #{planName},null)
 	</insert>
-
+	
+	<!-- 여행 관리 조회 -->
 	<select id="scheduleUpdate" resultType="Itinerary">
 		SELECT itinerary_no,
 		itinerary_title, itinerary_start_date,
@@ -84,7 +87,8 @@
 		FROM Itinerary
 		WHERE itinerary_no = #{itineraryNo}
 	</select>
-
+	
+	<!-- 여행 관리 수정 -->
 	<update id="updateItinerary" parameterType="Itinerary">
 		UPDATE Itinerary SET
 		itinerary_title = #{itineraryDTO.itineraryTitle},
@@ -92,6 +96,11 @@
 		itinerary_end_date = #{itineraryDTO.itineraryEndDate}
 		WHERE itinerary_no = #{itineraryNo}
 	</update>
+	
+	<!-- 여행 관리 삭제 -->
+	<delete id="planDelete" parameterType="int">
+		DELETE FROM Itinerary WHERE itinerary_no = #{itineraryNo}
+	</delete>
 	
 	<!-- 동행자 추가 -->
 	<insert id="insertCompanion">
@@ -107,6 +116,7 @@
 		WHERE itinerary_no = #{itineraryNo}
 		AND user_no = #{userNo}
 	</select>
-
+	
+	
 
 </mapper>

@@ -14,25 +14,26 @@ const SchedulePlanList = (props) => {
     totalPlanDates,
     planPageOption,
     setPlanPageOption,
+    selectedPlans,
+    setSelectedPlans, // selectedPlans의 setter를 props에서 받아옵니다.
   } = props;
 
-  const backServer = process.env.REACT_APP_BACK_SERVER;
-  const navigate = useNavigate();
-  const params = useParams();
-  const itineraryNo = params.itineraryNo;
-  const selectedDate = totalPlanDates[selectedDay - 1];
+  const backServer = process.env.REACT_APP_BACK_SERVER; // 서버 URL
+  const navigate = useNavigate(); // 페이지 네비게이션을 위한 훅
+  const params = useParams(); // URL 파라미터를 가져오는 훅
+  const itineraryNo = params.itineraryNo; // 일정 번호
+  const selectedDate = totalPlanDates[selectedDay - 1]; // 선택된 날짜
   const [planList, setPlanList] = useState([]); // 조회 중인 일정 목록 배열
-  const [timeOptionsArr, setTimeOptionsArr] = useState([]); // 시간 선택 옵션 용 배열
+  const [timeOptionsArr, setTimeOptionsArr] = useState([]); // 시간 선택 옵션 배열
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 상태
   const [editList, setEditList] = useState([]); // 수정할 일정 목록
   const [edited, setEdited] = useState(false); // 수정 여부 상태
-  const [selectedPlans, setSelectedPlans] = useState([]); // 선택된 일정 목록
-  const [editPlanList, setEditPlanList] = useState([]); // 추가된 상태: 수정할 계획 목록
+  const [editPlanList, setEditPlanList] = useState([]); // 수정할 계획 목록
 
   // 상세 일정 조회
   useEffect(() => {
     if (itinerary.itineraryNo > 0) {
-      setEditList([]); // 초기화
+      setEditList([]); // 수정 목록 초기화
       axios
         .get(`${backServer}/domestic/plan`, {
           params: {
@@ -42,7 +43,7 @@ const SchedulePlanList = (props) => {
         })
         .then((res) => {
           console.log(res);
-          setPlanList(res.data);
+          setPlanList(res.data); // 받아온 데이터를 상태에 저장
         })
         .catch((err) => {
           console.log(err);
@@ -58,7 +59,7 @@ const SchedulePlanList = (props) => {
         const hour = i < 10 ? `0${i}` : `${i}`;
         for (let j = 0; j < 60; j += 30) {
           const minute = j < 10 ? `0${j}` : `${j}`;
-          options.push(`${hour}:${minute}`);
+          options.push(`${hour}:${minute}`); // HH:mm 형식으로 시간 추가
         }
       }
       setTimeOptionsArr(options);
@@ -101,7 +102,7 @@ const SchedulePlanList = (props) => {
   // 조회에서 버튼 클릭 시 수정 모드로 전환
   const toggleEditMode = () => {
     if (isEditing) {
-      saveUpdatedPlans(); // 수정 완료시 저장
+      saveUpdatedPlans(); // 수정 완료 시 저장
     } else {
       setIsEditing(true); // 수정 모드로 전환
       setPlanPageOption(2); // 수정 페이지로 변경
@@ -162,13 +163,14 @@ const SchedulePlanList = (props) => {
                   timeOptionsArr={timeOptionsArr}
                   backServer={backServer}
                   setIsEditing={setIsEditing}
-                  editPlanList={editPlanList} // editPlanList 전달
-                  setEditPlanList={setEditPlanList} // setEditPlanList 전달
+                  editPlanList={editPlanList}
+                  setEditPlanList={setEditPlanList}
                   planPageOption={planPageOption}
                   setPlanPageOption={setPlanPageOption}
-                  setEdited={setEdited} // setEdited 전달
-                  handleSelectPlan={handleSelectPlan} // 선택 처리 함수 전달
-                  isSelected={selectedPlans.includes(plan)} // 선택 여부 전달
+                  setEdited={setEdited}
+                  handleSelectPlan={handleSelectPlan}
+                  isSelected={selectedPlans.includes(plan)}
+                  setPlanList={setPlanList}
                 />
               ))
             ) : (
