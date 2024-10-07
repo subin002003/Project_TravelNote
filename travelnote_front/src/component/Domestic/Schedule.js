@@ -161,6 +161,10 @@ const Schedule = () => {
     setMarkers(newMarkers);
   };
 
+  useEffect(() => {
+    console.log("Updated plans:", selectedPlans);
+  }, [selectedPlans]);
+
   // 계획 추가 함수
   const planInsert = (plan) => {
     const SchedulePlan = {
