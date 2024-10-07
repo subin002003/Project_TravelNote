@@ -121,7 +121,11 @@
 		    where rownum &lt;= #{end}
 		)
 		where rnum &gt;= #{start}
-	
 	</select>
 
+	<select id="shareTravelTotalCount" resultType="int"	>
+		select count(*) from companion c 
+		join user_tbl u on c.user_no = u.user_no 
+		where u.user_nick = #{userNick}
+	</select> 
 </mapper>

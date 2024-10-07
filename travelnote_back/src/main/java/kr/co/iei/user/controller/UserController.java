@@ -243,4 +243,10 @@ public class UserController {
 		Map map = userService.myTravel(userNick, reqPage);
 		return ResponseEntity.ok(map);
 	}
+	
+	@GetMapping(value = "/shareTravelList/{userNick}/{reqPage}")
+	public ResponseEntity<Map> shareTravelList(@PathVariable String userNick, @PathVariable int reqPage){
+		Map map = userService.shareTravelList(userNick, reqPage);
+		return ResponseEntity.ok(map);
+	}
 }

@@ -20,6 +20,7 @@ import PaymentInfo from "./PaymentInfo";
 import Mywish from "./Mywish";
 import ChangePw from "./ChangePw";
 import MyTravel from "./MyTravel";
+import ShareTravel from "./ShareTravel";
 
 const MypageMain = () => {
   const navigate = useNavigate();
@@ -118,6 +119,7 @@ const MypageMain = () => {
               <Route path="myWish" element={<Mywish />} />
               <Route path="changePw" element={<ChangePw />} />
               <Route path="myTravel" element={<MyTravel />} />
+              <Route path="shareTravel" element={<ShareTravel />} />
 
               <Route path="myProduct" element={<MyProduct />} />
               <Route path="myPayment" element={<MyPayment />} />

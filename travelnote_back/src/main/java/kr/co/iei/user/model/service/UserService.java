@@ -279,7 +279,7 @@ public class UserService {
 		return 1;
 	}
 
-
+	
 	public Map myTravel(String userNick, int reqPage) {
 		int numPerPage = 3;
 		int pageNaviSize = 5;
@@ -294,6 +294,14 @@ public class UserService {
 		map.put("list",list);
 		map.put("pi", pi);
 		return map;
+	}
+
+
+	public Map shareTravelList(String userNick, int reqPage) {
+		int numPerPage = 3;
+		int pageNaviSize = 5;
+		int totalCount = domesticDao.shareTravelTotalCount(userNick);
+		return null;
 	}
 
 
