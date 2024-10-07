@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
 import kr.co.iei.Domestic.model.service.DomesticService;
 import kr.co.iei.board.model.service.BoardService;
 import kr.co.iei.foreignPlan.model.service.ForeignPlanService;
@@ -28,12 +29,15 @@ import kr.co.iei.user.model.dto.UserDTO;
 import kr.co.iei.user.model.dto.VerifyInfoDTO;
 import kr.co.iei.user.model.service.UserService;
 import kr.co.iei.util.EmailSender;
+import kr.co.iei.util.JwtUtils;
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
 	
+	@Autowired
+	private JwtUtils jwtUtil;
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -105,6 +109,17 @@ public class UserController {
 			return ResponseEntity.status(404).build();
 		}
 		
+	}
+	
+	@GetMapping(value = "/checkToken")
+	public ResponseEntity<LoginUserDTO> checkToken(HttpServletRequest request){
+		 String token = request.getHeader("Authorization").substring(7);
+		 if (jwtUtil.validateToken(token)) {
+		        LoginUserDTO loginUser = jwtUtil.checkToken(token);
+		        return ResponseEntity.ok(loginUser);
+		    } else {
+		        return ResponseEntity.ok(null);
+		    }
 	}
 	
 	@PostMapping(value = "/api/naver")

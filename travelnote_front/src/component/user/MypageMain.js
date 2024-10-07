@@ -21,8 +21,10 @@ import Mywish from "./Mywish";
 import ChangePw from "./ChangePw";
 import MyTravel from "./MyTravel";
 import ShareTravel from "./ShareTravel";
+import axios, { Axios } from "axios";
 
 const MypageMain = () => {
+  const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
   const location = useLocation(); // 현재 경로를 확인
   const userType = useRecoilValue(userTypeState);
@@ -41,15 +43,39 @@ const MypageMain = () => {
 
   // 로그인 상태 체크 및 리다이렉트
   useEffect(() => {
-    if (!isLogin) {
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (accessToken) {
+      axios
+        .get(`${backServer}/user/checkToken`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((res) => {
+          // 유효한 토큰일 경우 추가적인 작업 처리
+          console.log("토큰 유효함:", res);
+        })
+        .catch((err) => {
+          console.log("토큰 유효하지 않음:", err);
+          Swal.fire({
+            title: "로그인 후 이용해주세요",
+            icon: "warning",
+          }).then(() => {
+            // 경고 후 로그인 페이지로 리다이렉트
+            navigate("/login");
+          });
+        });
+    } else {
+      // 토큰이 없으면 바로 로그인 페이지로 리다이렉트
       Swal.fire({
-        title: "로그인 후 이용 가능합니다",
+        title: "로그인 후 이용해주세요",
         icon: "warning",
       }).then(() => {
-        navigate("/login"); // 경고 후 로그인 페이지로 리다이렉트
+        navigate("/login");
       });
     }
-  }, [navigate]);
+  }, [navigate, backServer]);
 
   // 현재 경로가 '/mypage'일 때만 'info'로 이동, 다른 경로일 경우 유지
   useEffect(() => {

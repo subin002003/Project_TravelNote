@@ -104,6 +104,7 @@ const MyBoard = () => {
                 textAlign: "center",
                 height: "100px",
                 margin: "0 auto",
+                lineHeight: "100px",
               }}
             >
               <h3>아직 작성한 글이 없습니다.</h3>

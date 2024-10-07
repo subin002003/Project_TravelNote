@@ -97,6 +97,7 @@ const HeaderLink = () => {
     setUserType(0);
     setUserNick("");
     delete axios.defaults.headers.common["Authorization"];
+    localStorage.removeItem("accessToken");
     window.localStorage.removeItem("refreshToken");
   };
 
