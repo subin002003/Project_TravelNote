@@ -50,40 +50,45 @@
 		WHERE
 		r.region_no = #{regionNo}
 	</select>
-
+	
+	<!-- 상세 일정 조회 -->
 	<select id="selectPlan" resultType="Plan">
 		select * from plan where
 		itinerary_no = #{itineraryNo} and plan_day = #{planDay}
 	</select>
-
+	
+	<!-- 상세 일정 수정 -->
 	<update id="updatePlan">
 		update plan set plan_memo = #{planMemo}, plan_time =
 		#{planTime} where plan_no = #{planNo}
 	</update>
-
+	
+	<!-- 상세 일정 삭제 -->
 	<delete id="deletePlans" parameterType="int">
 		DELETE FROM plan WHERE
 		plan_no = #{planNo}
 	</delete>
-
+	
+	<!-- 상세 일정 삽입 -->
 	<insert id="insertPlan" parameterType="plan">
 		INSERT INTO plan VALUES
-		(plan_no_seq.nextval, #{itineraryNo}, #{planDay},
-		#{planDate},
-		(SELECT
-		NVL(MAX(plan_seq), 0) + 1 FROM plan WHERE itinerary_no =
+		(plan_no_seq.nextval, #{itineraryNo}, #{planDay}, #{planDate},
+		(SELECT NVL(MAX(plan_seq), 0) + 1 FROM plan WHERE itinerary_no =
 		#{itineraryNo}), #{planAddress},
 		#{planLatitude}, #{planLongitude},
 		null, null, null, 1, #{planName},null)
 	</insert>
-
+	
+	<!-- 여행 관리 조회 -->
 	<select id="scheduleUpdate" resultType="Itinerary">
-		SELECT itinerary_no, itinerary_title, itinerary_start_date,
+		SELECT itinerary_no,
+		itinerary_title, itinerary_start_date,
 		itinerary_end_date
 		FROM Itinerary
 		WHERE itinerary_no = #{itineraryNo}
 	</select>
-
+	
+	<!-- 여행 관리 수정 -->
 	<update id="updateItinerary" parameterType="Itinerary">
     UPDATE Itinerary SET 
         itinerary_title = #{itineraryDTO.itineraryTitle},
@@ -92,7 +97,32 @@
     WHERE itinerary_no = #{itineraryNo}
 	</update>
 	
-	<!-- 오건하 작성 2024-10-07 -->
+
+
+	
+	<!-- 여행 관리 삭제 -->
+	<delete id="planDelete" parameterType="int">
+		DELETE FROM Itinerary WHERE itinerary_no = #{itineraryNo}
+	</delete>
+	
+	<!-- 동행자 추가 -->
+	<insert id="insertCompanion">
+		INSERT INTO companion (companion_no, itinerary_no, user_no)
+		VALUES (companion_no_seq.NEXTVAL, #{itineraryNo}, #{userNo})
+	</insert>
+	
+	<!-- 동행자 조회 -->
+	<select id="selectCompanion" parameterType="map"
+		resultType="Companion">
+		SELECT companion_no, itinerary_no, user_no
+		FROM companion
+		WHERE itinerary_no = #{itineraryNo}
+		AND user_no = #{userNo}
+	</select>
+	
+	
+
+		<!-- 오건하 작성 2024-10-07 -->
 	<select id="myTravelTotalCount" resultType="int">
 		select count(*) from itinerary join user_tbl using(user_no)
 		where user_nick = #{userNick}
@@ -122,7 +152,6 @@
 		)
 		where rnum &gt;= #{start}
 	</select>
-
 	<select id="shareTravelTotalCount" resultType="int"	>
 		select count(*) from companion c 
 		join user_tbl u on c.user_no = u.user_no 

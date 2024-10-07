@@ -144,6 +144,11 @@ const ForeignEditItinerary = () => {
           // 발송 성공 시 1, 실패 시 0, 회원이 없을 시 -1 받아 옴
           if (res.data > 0) {
             setIsInvitationAvailable(false);
+            setEmailInput("");
+            Swal.fire({
+              icon: "success",
+              html: "초대장이 발송되었습니다.",
+            });
           } else if (res.data === 0) {
             Swal.fire({
               icon: "error",

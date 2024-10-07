@@ -211,11 +211,6 @@
   margin: 20px auto;
 }
 
-/* ForeignRegionInfo */
-.plan-region-wrap {
-  width: 350px;
-}
-
 /* ForeignPlanSearch */
 .plan-search-wrap {
   width: 350px;
@@ -667,4 +662,47 @@
   font-size: 15px;
   padding-left: 10px;
   font-family: "SUITE-Regular";
+}
+
+/* ForeignRegionInfo */
+.plan-region-wrap {
+  width: 350px;
+  padding: 0 10px;
+}
+.plan-region-info-box {
+  background-color: var(--base-color);
+  padding: 10px;
+  border-radius: 10px;
+  max-height: 535px;
+  overflow: auto;
+
+  /* 스크롤바 제거 */
+  -ms-overflow-style: none; /* 인터넷 익스플로러 */
+  scrollbar-width: none; /* 파이어폭스 */
+}
+.plan-region-info-box::-webkit-scrollbar {
+  display: none; /* 스크롤바 제거 ( 크롬, 사파리, 오페라, 엣지 ) */
+}
+
+.plan-region-info-box h2 {
+  font-size: 16px;
+}
+.plan-region-info-box > h3 {
+  font-size: 14px;
+  margin: 6px;
+}
+.contact-remark {
+  text-align: left;
+  font-size: 14px;
+}
+.contact-remark h3 {
+  font-size: 14px;
+  text-align: left;
+  margin: 8px;
+}
+.contact-remark a:hover {
+  text-decoration: underline;
+}
+.currency-title {
+  margin-bottom: 16px;
 }

@@ -3,6 +3,7 @@ package kr.co.iei.Domestic.model.dao;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.iei.Domestic.model.dto.CompanionDTO;
 import kr.co.iei.Domestic.model.dto.EditPlanDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
@@ -37,6 +38,14 @@ public interface DomesticDao {
 	ItineraryDTO scheduleUpdate(int itinerary);
 
 	void updateItinerary(int itineraryNo, ItineraryDTO itineraryDTO);
+	
+	void planDelete(int itineraryNo);
+
+	void insertCompanion(CompanionDTO companion);
+
+	CompanionDTO selectCompanion(int itineraryNo, int userNo);
+
+	
 
 	//오건하 작성 2024-10-07
 	int myTravelTotalCount(String userNick);
