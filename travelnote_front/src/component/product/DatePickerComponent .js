@@ -54,9 +54,9 @@ const DateRangePickerComponent = ({ onDateRangeChange }) => {
   return (
     <div>
       {/* <h2>날짜 범위 선택</h2> */}
-      <button button className="date-picker" onClick={showDateRangePicker} >
+      <button className="date-picker" onClick={showDateRangePicker}>
         {dateRangeText}
-      </button >
+      </button>
     </div>
   );
 };

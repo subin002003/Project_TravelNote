@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Schedule.css";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getDate, getMonth, getYear } from "date-fns";
 import SchedulePlanList from "./SchedulePlanList";
 
@@ -28,6 +28,7 @@ const Schedule = () => {
   const { itineraryNo, city } = useParams();
   const [selectedPlans, setSelectedPlans] = useState([]);
   const [markers, setMarkers] = useState([]);
+  const navigate = useNavigate();
 
   // 일정 데이터 가져오기
   useEffect(() => {
@@ -160,6 +161,10 @@ const Schedule = () => {
     setMarkers(newMarkers);
   };
 
+  useEffect(() => {
+    console.log("Updated plans:", selectedPlans);
+  }, [selectedPlans]);
+
   // 계획 추가 함수
   const planInsert = (plan) => {
     const SchedulePlan = {
@@ -179,15 +184,12 @@ const Schedule = () => {
       .post(`${backServer}/domestic/insertPlan`, SchedulePlan)
       .then((response) => {
         console.log("일정이 추가되었습니다:", response.data);
-        addPlanToDay(SchedulePlan);
+
+        setSelectedPlans((prev) => [...prev, SchedulePlan]);
       })
       .catch((error) => {
         console.error("일정 추가에 실패했습니다:", error);
       });
-  };
-
-  const addPlanToDay = (plan) => {
-    setSelectedPlans((prevPlans) => [...prevPlans, plan]);
   };
 
   // 기차편 검색 처리 함수
@@ -222,9 +224,6 @@ const Schedule = () => {
     setShowTrainSearch(false);
   };
 
-  // selectedPlans가 변경될 때마다 화면 업데이트
-  useEffect(() => {}, [selectedPlans]);
-
   return (
     <div className="schedule-wrap">
       <div className="content">
@@ -238,6 +237,8 @@ const Schedule = () => {
               planPageOption={planPageOption}
               setPlanPageOption={setPlanPageOption}
               selectedPlans={selectedPlans}
+              setSelectedPlans={setSelectedPlans}
+              planInsert={planInsert}
             />
           </div>
         </div>
@@ -264,15 +265,12 @@ const Schedule = () => {
                 value={trainArrival}
                 onChange={(e) => setTrainArrival(e.target.value)}
               />
-              <button onClick={handleTrainSearch}>검색</button>
-              <ul>
-                {trainSchedules.map((schedule, index) => (
-                  <li key={index}>
-                    {schedule.trainNo} - {schedule.departureTime} -{" "}
-                    {schedule.arrivalTime}
-                  </li>
+              <button onClick={handleTrainSearch}>기차 검색</button>
+              <div>
+                {trainSchedules.map((train, index) => (
+                  <div key={index}>{train}</div>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
           {showSearch && (
@@ -290,9 +288,7 @@ const Schedule = () => {
                     {result.name} - {result.formattedAddress}
                     <button
                       className="add-btn"
-                      onClick={
-                        () => planInsert(result) // planInsert를 호출하여 일정에 추가
-                      }
+                      onClick={() => planInsert(result)}
                     >
                       +
                     </button>

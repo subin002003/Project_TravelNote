@@ -174,35 +174,42 @@ const ReviewBoardItem = (props) => {
   };
 
   return (
-    <>
-      <div>
-        <p style={{ display: "flex" }}>
+    <div style={{ margin: "80px 80px 80px 0px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <p style={{ margin: "0" }}>
           <span className="material-icons">favorite</span>
           {reviewBoard.likeCount}
         </p>
         <p>{reviewBoard.reviewBoardDate}</p>
       </div>
+
       <div>
         <p>
           <img
+            style={{ width: "400px" }}
             onClick={handleClick}
             className="review-board-mouse-on"
             src={
               reviewBoard.reviewBoardThumbNail
-                ? `${backServer}/reviewBoard/thumbNail/${reviewBoard.reviewBoardThumbNail}`
+                ? `${backServer}/reviewBoard/thumb/${reviewBoard.reviewBoardThumbNail}`
                 : "/image/default_img.png"
             }
           />
         </p>
       </div>
-      <div>
+
+      <div
+        style={{
+          fontWeight: "bold",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <h1>제목 : {reviewBoard.reviewBoardTitle}</h1>
         <p>{reviewBoard.reviewBoardCategory}</p>
-        <p>{reviewBoard.reviewBoardWriter}</p>
       </div>
-      <div>
-        <p>{reviewBoard.reviewBoardTitle}</p>
-      </div>
-    </>
+      <p>{reviewBoard.reviewBoardWriter}</p>
+    </div>
   );
 };
 export default ReviewBoardList;

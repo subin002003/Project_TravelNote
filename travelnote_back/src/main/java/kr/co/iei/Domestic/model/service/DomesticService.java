@@ -53,10 +53,12 @@ public class DomesticService {
     	return itinerary;
     }
     
+    //상세 일정 조회
 	public List selectPlan(int itineraryNo, int planDay) {
 			List list = domesticDao.selectPlan(itineraryNo, planDay);
 			return list;
 		}
+	//상세 일정 수정
 	@Transactional
 	public boolean updatePlan(String updateList) {
 		// Json 문자열로 받은 배열 변환
@@ -73,24 +75,31 @@ public class DomesticService {
 		}
 		return editList.size() == result;
 		}
-	
+	//상세 일정 삭제
 	@Transactional
 	public void deletePlans(int planNo) {
 	    domesticDao.deletePlans(planNo);
 	}
+	//상세 일정 추가
 	public int insertPlan(PlanDTO plan) {
 		int result = domesticDao.insertPlan(plan);
 		return result;
 	}
 	
+	//일정 관리 조회
 	public ItineraryDTO scheduleUpdate(int itineraryNo) {
 		ItineraryDTO itinerary = domesticDao.scheduleUpdate(itineraryNo);
 		return itinerary;
 	}
 	
+	//일정 관리 수정
 	public void updateItinerary(int itineraryNo, ItineraryDTO itineraryDTO) {
 		itineraryDTO.setItineraryNo(itineraryNo);
 	    domesticDao.updateItinerary(itineraryNo, itineraryDTO);
+	}
+	
+	public void planDelete(int itineraryNo) {
+		domesticDao.planDelete(itineraryNo);	
 	}
 
 	   // 동행자 추가 메서드
@@ -102,4 +111,5 @@ public class DomesticService {
     public CompanionDTO findCompanion(int itineraryNo, int userNo) {
         return domesticDao.selectCompanion(itineraryNo, userNo);
     }
+
 }

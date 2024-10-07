@@ -6,9 +6,19 @@
   	select count(*) from product where product_status=1
   </select>
   
+  <select id="totalCountSearch" parameterType="String" resultType="int">
+    SELECT COUNT(*)
+    FROM product
+    WHERE product_status = 1
+    AND (product_name LIKE '%' || #{searchQuery} || '%' 
+      OR product_sub_name LIKE '%' || #{searchQuery} || '%' 
+      OR product_info LIKE '%' || #{searchQuery} || '%')
+  </select>
+  
   <select id="searchProduct" resultType="product">
     SELECT * FROM (
-        SELECT rownum AS rnum, p.* FROM (
+        SELECT rownum AS rnum, p.* 
+        FROM (
             SELECT
                 product_no,
                 product_name,
@@ -91,11 +101,6 @@
         GROUP BY product_no
     ) likeCount ON p.product_no = likeCount.product_no
     WHERE rnum BETWEEN #{pi.start} AND #{pi.end}
-    <!-- userEmail이 null이 아닐 때만 이 조건을 추가 -->
-    <!-- 
-    <if test="userEmail != null">
-        AND w.product_no IS NOT NULL  
-    </if> -->
   </select>
   
   <!-- 상품 정렬(이메일 있을 때 - 좋아요순) -->
@@ -373,7 +378,10 @@
   
   <!-- 오건하 작성 2024-10-04 -->
   <select id="myReviewList" resultType="review">
-  	select product_no, review_writer, review_score,product_name,review_content, review_date from review join user_tbl on(review_writer = user_email) join product using(product_no) where user_nick = #{userNick}
+  	select 
+  	product_no, review_writer, review_score,product_name,review_content, review_date 
+  	from review join user_tbl on(review_writer = user_email) join product using(product_no) 
+  	where user_nick = #{userNick}
   </select>
   
   <!-- 오건하 작성 2024-10-04 -->
@@ -400,5 +408,29 @@
         where rownum &lt;= #{end}
     )
     where rnum &gt;= #{start}
+  </select>
+  <!-- 오건하 작성 2024-10-07 -->
+  <select id = "myWishTotalCount" resultType="int">
+  	select count(*) from wish join user_tbl using(user_no) where user_nick = #{userNick}
+  </select>
+  <select id = "myWishList" resultType="product">
+	select *
+	from (
+	    select rownum as rnum, result.*
+	    from (
+	        select 
+	            p.product_no,
+	            p.product_name,
+	            p.product_thumb,
+	            p.product_price
+	        from user_tbl u
+	        join wish w on u.user_no = w.user_no
+	        join product p on w.product_no = p.product_no
+	        where u.user_nick = #{userNick}
+	        order by p.product_name
+	    ) result
+	    where rownum &lt;= #{end}
+	)
+	where rnum &gt;= #{start}
   </select>
 </mapper>

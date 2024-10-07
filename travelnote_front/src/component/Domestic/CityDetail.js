@@ -6,7 +6,6 @@ import Swal from "sweetalert2";
 import { useRecoilState } from "recoil";
 import { loginEmailState } from "../utils/RecoilData";
 import WeatherDescKo from "./WeatherDescKo";
-import jejuImage from "../common/images/mainImage/jeju.jpg";
 
 const CityDetail = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -28,10 +27,9 @@ const CityDetail = () => {
   const locations = [
     {
       name: "Jeju",
-      currency: "KRW",
-      description:
-        "제주는 한국의 아름다운 섬으로, 독특한 자연경관과 풍부한 문화유산을 자랑합니다.",
-      images: jejuImage,
+    },
+    {
+      name: "서울",
     },
   ];
 

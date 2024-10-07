@@ -16,10 +16,13 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.iei.Domestic.model.service.DomesticService;
 import kr.co.iei.board.model.service.BoardService;
+import kr.co.iei.foreignPlan.model.service.ForeignPlanService;
 import kr.co.iei.pay.model.dto.PayDTO;
 import kr.co.iei.pay.model.service.PayService;
 import kr.co.iei.product.model.service.ProductService;
+import kr.co.iei.reviewboard.model.service.ReviewBoardService;
 import kr.co.iei.user.model.dto.LoginUserDTO;
 import kr.co.iei.user.model.dto.UserDTO;
 import kr.co.iei.user.model.dto.VerifyInfoDTO;
@@ -41,6 +44,9 @@ public class UserController {
 	private ProductService productService;
 	@Autowired
 	private PayService payService;
+	@Autowired
+	private ReviewBoardService reviewBoardService;
+
 	
 	@GetMapping(value="/checkEmail/{userEmail}")
 	public ResponseEntity<Integer> checkEmail(@PathVariable String userEmail){
@@ -218,5 +224,29 @@ public class UserController {
 	public ResponseEntity<PayDTO> paymentInfo(@PathVariable int orderNo){
 		PayDTO paymentInfo = payService.getPaymentInfo(orderNo);
 		return ResponseEntity.ok(paymentInfo);
+	}
+	
+	@GetMapping(value = "/myWish/{userNick}/{reqPage}")
+	public ResponseEntity<Map> myWish(@PathVariable String userNick, @PathVariable int reqPage){
+		Map map = productService.getMyWish(userNick, reqPage);
+		return ResponseEntity.ok(map);
+	}
+	
+	@GetMapping(value= "/myReviewBoardList/{userNick}/{reviewBoardReqPage}")
+	public ResponseEntity<Map> myReviewBoardList(@PathVariable String userNick, @PathVariable int reviewBoardReqPage){
+		Map map = reviewBoardService.myReviewBoardList(userNick, reviewBoardReqPage);
+		return ResponseEntity.ok(map);
+	}
+	
+	@GetMapping(value = "/myTravel/{userNick}/{reqPage}")
+	public ResponseEntity<Map> myTravel(@PathVariable String userNick, @PathVariable int reqPage){
+		Map map = userService.myTravel(userNick, reqPage);
+		return ResponseEntity.ok(map);
+	}
+	
+	@GetMapping(value = "/shareTravelList/{userNick}/{reqPage}")
+	public ResponseEntity<Map> shareTravelList(@PathVariable String userNick, @PathVariable int reqPage){
+		Map map = userService.shareTravelList(userNick, reqPage);
+		return ResponseEntity.ok(map);
 	}
 }

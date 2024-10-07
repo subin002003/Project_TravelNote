@@ -53,5 +53,10 @@ public class WebConfig implements WebMvcConfigurer {
 		registry
 		.addResourceHandler("/foreignImg/**")
 		.addResourceLocations("file:///"+root+"/foreign/");
+
+		registry
+		.addResourceHandler("/personalBoard/**")
+		.addResourceLocations("file:///"+root+"/personalBoard/");
 	}
+	
 }

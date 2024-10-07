@@ -45,9 +45,16 @@ public class ProductController {
 	@Value("${file.root}")
 	public String root;
 	
+//	@GetMapping(value = "/list/{reqPage}")
+//	public ResponseEntity<Map> listProducts(@PathVariable int reqPage, @RequestParam(required = false) String searchQuery, @RequestParam(required = false) String userEmail, @RequestParam(required = false) String sortOption) {
+//	    Map map = productService.listProducts(reqPage, searchQuery, userEmail, sortOption);
+//	    return ResponseEntity.ok(map);
+//	}
+	
 	// 상품 검색 기능
 	@GetMapping(value="/list/{reqPage}{searchQuery}")
 	public ResponseEntity<Map> searchProduct(@PathVariable int reqPage, @RequestParam(required = false) String searchQuery) {
+		System.out.println("searchQuery : " + searchQuery);
 		Map map = productService.searchProduct(reqPage, searchQuery);
 		return ResponseEntity.ok(map);
 	}
@@ -154,14 +161,6 @@ public class ProductController {
         Map<String, Object> productDetails = productService.selectOneProduct(productNo, userEmail);
         return ResponseEntity.ok(productDetails);
     }
-	
-	// 패키지 상품 목록(이메일 없으면)
-//	@GetMapping(value="/list/{reqPage}")
-//	public ResponseEntity<Map> list(@PathVariable int reqPage){
-//		// 조회 결과는 게시물목록, pageNavi생성 시 필요한 데이터들
-//		Map map = productService.selectProductList(reqPage);
-//		return ResponseEntity.ok(map);
-//	}
 	
 	// 패키지 상품 삭제
 	@DeleteMapping(value="/{productNo}")

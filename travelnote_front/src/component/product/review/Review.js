@@ -12,11 +12,20 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const Review = ({ productNo, open, handleClose, review, parentReviewNo }) => {
+const Review = ({
+  productNo,
+  open,
+  handleClose,
+  review,
+  parentReviewNo,
+  fetchProductReviews,
+}) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
   // const { productNo } = useParams();
+
+  const [productReviewList, setProductReviewList] = useState([]);
 
   const [reviewWriter, setReviewWriter] = useState(loginEmail || "");
   const [reviewScore, setReviewScore] = useState(
@@ -106,12 +115,17 @@ const Review = ({ productNo, open, handleClose, review, parentReviewNo }) => {
               title: review
                 ? "리뷰가 수정되었습니다."
                 : reviewCommentRef > 0
-                  ? "리뷰 답글이 등록되었습니다."
-                  : "리뷰가 등록되었습니다.",
+                ? "리뷰 답글이 등록되었습니다."
+                : "리뷰가 등록되었습니다.",
               icon: "success",
             });
+
+            // 다이얼로그를 닫고 리뷰 리스트를 갱신합니다.
             handleClose(); // 다이얼로그 닫기
-            navigate(`/product/view/${productNo}`);
+
+            // 리뷰 등록 또는 수정 후 화면에 리뷰를 업데이트
+            fetchProductReviews(); // 리뷰 리스트 갱신
+            // navigate(`/product/view/${productNo}`);
           } else {
             Swal.fire({
               title: "리뷰(답글) 등록/수정에 실패하였습니다.",
@@ -143,6 +157,18 @@ const Review = ({ productNo, open, handleClose, review, parentReviewNo }) => {
     console.log("ReviewScore:", reviewScore, "ReviewContent:", reviewContent);
   };
 
+  // 리뷰 리스트를 서버에서 다시 불러오는 함수
+  // const fetchReviews = () => {
+  //   axios
+  //     .get(`${backServer}/product/productNo/${productNo}/${loginEmail}`)
+  //     .then((res) => {
+  //       setProductReviewList(res.data.productReviewList); // 서버로부터 가져온 리뷰 리스트로 상태를 갱신
+  //     })
+  //     .catch((err) => {
+  //       console.error("리뷰 목록 불러오기 중 오류 발생:", err);
+  //     });
+  // };
+
   console.log(reviewContent);
 
   return (
@@ -156,6 +182,7 @@ const Review = ({ productNo, open, handleClose, review, parentReviewNo }) => {
           onChange={(event, newValue) => {
             setReviewScore(newValue);
           }}
+          readOnly // 소수점 이하 표시를 위해 읽기 전용
         />
       )}
       <TextField
