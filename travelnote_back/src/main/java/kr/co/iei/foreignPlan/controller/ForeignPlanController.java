@@ -84,7 +84,6 @@ public class ForeignPlanController {
 	// 일정에 장소 추가
 	@PostMapping(value="/addPlace")
 	public ResponseEntity<Integer> addPlace(@RequestBody ForeignPlanDTO plan) {
-		System.out.println(plan);
 		int result = foreignPlanService.insertPlace(plan);
 		return ResponseEntity.ok(result);
 	}

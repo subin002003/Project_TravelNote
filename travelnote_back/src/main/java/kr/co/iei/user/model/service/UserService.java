@@ -263,8 +263,8 @@ public class UserService {
 		String emailTitle = "TravelNote 초대 메일";
 		String emailContent = "<h2>당신의 여행 기록지 TravelNote 입니다.</h2>"
 				+"<h3>" + userEmail + "님이 초대를 보냈습니다. 지금 로그인하여 일정을 확인해 주세요.";
-		emailSender.sendInvitation(emailTitle, memberEmail, emailContent);
-		return 1;
+		int result = emailSender.sendInvitation(emailTitle, memberEmail, emailContent);
+		return result;
 	}
 
 
