@@ -138,4 +138,10 @@ public class ForeignPlanController {
 		return ResponseEntity.ok(result);
 	}
 	
+	// 일정 순서 하나 위로 변경
+	@GetMapping(value="/changeSeqUp/{planNo}")
+	public ResponseEntity<Boolean> changeSeqUp(@PathVariable int planNo) {
+		boolean result = foreignPlanService.changeSeqUp(planNo);
+		return ResponseEntity.ok(result);
+	}
 }

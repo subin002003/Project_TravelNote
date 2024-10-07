@@ -125,10 +125,26 @@ const ItineraryForm = () => {
           </h2>
           <div className="region-info-box">
             <span id="currency-info">
-              {region.currencyCode ? region.currencyCode : "환율 정보 없음"}
+              {region.currencyCode ? (
+                <>
+                  <span class="material-icons">credit_card</span>
+                  <span> </span>
+                  {region.currencyCode}
+                </>
+              ) : (
+                "환율 정보 없음"
+              )}
             </span>
             <span id="timezone-info">
-              {region.timeZone ? region.timeZone + "시간" : "시차 정보 없음"}
+              {region.timeZone ? (
+                <>
+                  <span class="material-icons">schedule</span>
+                  <span> </span>
+                  {region.timeZone} 시간
+                </>
+              ) : (
+                "시차 정보 없음"
+              )}
             </span>
           </div>
         </div>

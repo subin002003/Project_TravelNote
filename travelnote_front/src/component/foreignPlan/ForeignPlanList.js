@@ -132,6 +132,7 @@ const ForeignPlanList = (props) => {
                   <PlanItem
                     key={"plan-item-" + index}
                     plan={plan}
+                    index={index}
                     timeOptionsArr={timeOptionsArr}
                     setEdited={setEdited}
                     editPlanList={editPlanList}
@@ -141,6 +142,7 @@ const ForeignPlanList = (props) => {
                     setPlaceInfo={setPlaceInfo}
                     backServer={backServer}
                     setIsPlanDiffered={setIsPlanDiffered}
+                    planListLength={planList.length}
                   />
                 );
               })

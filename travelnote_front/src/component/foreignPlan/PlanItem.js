@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 const PlanItem = (props) => {
   const {
     plan,
+    index,
     timeOptionsArr,
     setEdited,
     editPlanList,
@@ -14,6 +15,7 @@ const PlanItem = (props) => {
     setPlaceInfo,
     backServer,
     setIsPlanDiffered,
+    planListLength,
   } = props;
   const [editPlan, setEditPlan] = useState({}); // 수정할 정보 저장planListStr
   const [isSeqHovered, setIsSeqHovered] = useState(false);
@@ -86,11 +88,49 @@ const PlanItem = (props) => {
     });
   };
 
+  // 순서 하나 위로 변경
+  const changeSeqUp = () => {
+    axios
+      .get(`${backServer}/foreign/changeSeqUp/${plan.planNo}`)
+      .then((res) => {
+        console.log(res);
+        if (res.data === true) {
+          setIsPlanDiffered(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // 순서 하나 아래로 변경
+  const changeSeqDown = () => {};
+
   return (
     <div className="plan-item">
       <div className="plan-item-info">
         <div className="plan-info-box">
           <div className="plan-seq-box">
+            <div className="plan-seq-change-icons">
+              <div
+                className={
+                  index === 0 ? "inactive-plan-seq-icon" : "plan-seq-up-icon"
+                }
+                onClick={changeSeqUp}
+              >
+                <span class="material-icons">arrow_drop_up</span>
+              </div>
+              <div
+                className={
+                  index + 1 === planListLength
+                    ? "inactive-plan-seq-icon"
+                    : "plan-seq-down-icon"
+                }
+                onClick={changeSeqDown}
+              >
+                <span class="material-icons">arrow_drop_down</span>
+              </div>
+            </div>
             <div
               className="plan-seq-icon"
               onMouseEnter={() => setIsSeqHovered(true)}

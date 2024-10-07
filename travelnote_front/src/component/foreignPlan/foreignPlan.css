@@ -110,6 +110,9 @@
 .foreign-info-box > .region-info-box > span {
   margin: 10px;
 }
+.region-info-box > span > span {
+  font-size: 13px;
+}
 .foregin-itinerary-box {
   display: flex;
   justify-content: space-between;
@@ -292,6 +295,30 @@
 }
 .plan-seq-box {
   width: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.plan-seq-change-icons {
+  height: 30px;
+}
+.plan-seq-change-icons > div {
+  width: 15px;
+  height: 15px;
+}
+.plan-seq-change-icons span {
+  width: 15px;
+  height: 15px;
+  font-size: 18px;
+  color: var(--main-color);
+}
+.plan-seq-up-icon span:hover,
+.plan-seq-down-icon span:hover {
+  cursor: pointer;
+  color: var(--sub-color);
+}
+.inactive-plan-seq-icon span {
+  color: #ccc;
 }
 .plan-seq-icon {
   border: 1px solid var(--main-color);
@@ -697,7 +724,7 @@
 .plan-region-info-box h2 {
   font-size: 16px;
 }
-.plan-region-info-box > h3 {
+.plan-region-info-box h3 {
   font-size: 14px;
   margin: 6px;
 }
@@ -709,6 +736,9 @@
   font-size: 14px;
   text-align: left;
   margin: 8px;
+}
+.contact-remark a {
+  color: var(--main-color);
 }
 .contact-remark a:hover {
   text-decoration: underline;

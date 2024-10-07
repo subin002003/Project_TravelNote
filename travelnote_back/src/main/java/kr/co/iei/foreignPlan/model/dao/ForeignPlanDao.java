@@ -48,5 +48,9 @@ public interface ForeignPlanDao {
 
 	int insertCompanion(int itineraryNo, String memberEmail);
 
+	int changeSeqUp(int planNo);
+
+	int changePrevSeqDown(int planNo);
+
 
 }
