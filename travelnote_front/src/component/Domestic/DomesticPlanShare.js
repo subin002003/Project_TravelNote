@@ -68,12 +68,13 @@ const DomesticPlanShare = () => {
   // 동행자 추가 버튼 클릭 시 실행되는 함수
   const handleAddCompanion = () => {
     const backServer = process.env.REACT_APP_BACK_SERVER;
+    console.log("Inviting companion with:", { itineraryNo, email });
 
     // 이메일 서버에 전송
     axios
       .post(`${backServer}/domestic/invite`, {
         itineraryNo,
-        email,
+        userEmail: email, // 확인: API가 이 이름을 기대하는지
       })
       .then((res) => {
         Swal.fire({
@@ -85,10 +86,20 @@ const DomesticPlanShare = () => {
       })
       .catch((err) => {
         console.error("Error inviting companion:", err);
-        Swal.fire({
-          icon: "error",
-          text: "동행자 초대에 실패했습니다.",
-        });
+        const errorMessage =
+          err.response?.data?.message || "동행자 초대에 실패했습니다.";
+        // 중복 이메일 확인을 위한 메시지 추가
+        if (errorMessage.includes("이미 추가된")) {
+          Swal.fire({
+            icon: "warning",
+            text: "이미 추가된 동행자입니다.", // 중복 이메일 메시지
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            text: errorMessage, // 서버에서 제공한 에러 메시지 사용
+          });
+        }
       });
   };
 

@@ -246,6 +246,7 @@ public class UserService {
 	}
 
 
+
 	public int checkBusinessRegNo(String businessRegNo) {
 		int result = userDao.checkBusinessRegNo(businessRegNo);
 		return result;
@@ -266,9 +267,9 @@ public class UserService {
 		int result = emailSender.sendInvitation(emailTitle, memberEmail, emailContent);
 		return result;
 	}
-
-
-	
+	 public UserDTO UserByEmail(String email) {
+	        return userDao.selectUserEmail(email);
+	    }
 
 
 	
