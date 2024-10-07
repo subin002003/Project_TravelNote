@@ -35,9 +35,7 @@ const ItineraryForm = () => {
       .then((res) => {
         setRegion(res.data);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   }, []);
 
   // 여행 제목 변경 핸들러
@@ -97,7 +95,12 @@ const ItineraryForm = () => {
             });
           }
         })
-        .catch((err) => {});
+        .catch((err) => {
+          Swal.fire({
+            icon: "error",
+            text: "서버 오류입니다.",
+          });
+        });
     } else {
       Swal.fire({
         icon: "warning",
@@ -125,7 +128,7 @@ const ItineraryForm = () => {
               {region.currencyCode ? region.currencyCode : "환율 정보 없음"}
             </span>
             <span id="timezone-info">
-              {region.timeZone ? region.timeZone : "시차 정보 없음"}
+              {region.timeZone ? region.timeZone + "시간" : "시차 정보 없음"}
             </span>
           </div>
         </div>
@@ -135,8 +138,8 @@ const ItineraryForm = () => {
           <div className="region-img">
             <img
               src={
-                region.regionImg
-                  ? `${backServer}/foreign/${region.regionImg}`
+                region.regionImg !== ""
+                  ? `${backServer}/foreignImg/${region.regionImg}`
                   : "/image/default_img.png"
               }
             ></img>

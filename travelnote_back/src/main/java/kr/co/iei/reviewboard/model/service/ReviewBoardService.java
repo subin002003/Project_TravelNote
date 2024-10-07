@@ -138,12 +138,12 @@ public class ReviewBoardService {
 
 	// 좋아요 추가
 	@Transactional
-	public boolean addLike(String userNick, int boardNo) {
+	public boolean addLike(String userNick, int reviewBoardNo) {
         // 좋아요 추가 로직
-        int result = reviewBoardDao.insertLike(userNick, boardNo);
+        int result = reviewBoardDao.insertLike(userNick, reviewBoardNo);
         // 좋아요 수 증가
         if (result > 0) {
-        	reviewBoardDao.incrementLikeCount(boardNo);
+        	reviewBoardDao.incrementLikeCount(reviewBoardNo);
             return true;
         }
         return false;
@@ -151,12 +151,12 @@ public class ReviewBoardService {
 
 	// 좋아요 취소
 	@Transactional
-	public boolean removeLike(String userNick, int boardNo) {
+	public boolean removeLike(String userNick, int reviewBoardNo) {
         // 좋아요 제거 로직
-        int result = reviewBoardDao.deleteLike(userNick, boardNo);
+        int result = reviewBoardDao.deleteLike(userNick, reviewBoardNo);
         // 좋아요 수 감소
         if (result > 0) {
-        	reviewBoardDao.decrementLikeCount(boardNo);
+        	reviewBoardDao.decrementLikeCount(reviewBoardNo);
             return true;
         }
         return false;

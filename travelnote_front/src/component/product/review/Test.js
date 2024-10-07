@@ -1,213 +1,224 @@
-import {
-  Rating,
-  Stack,
-  TextField,
-  Button,
-  CircularProgress,
-} from "@mui/material";
 import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { loginEmailState } from "../../utils/RecoilData";
-import { useNavigate } from "react-router-dom";
+import { loginEmailState } from "../utils/RecoilData";
 import axios from "axios";
+import ProductFrm from "./ProductFrm";
+import ToastEditor from "../utils/ToastEditor";
 import Swal from "sweetalert2";
 
-const Review = ({ productNo, open, handleClose, review, parentReviewNo }) => {
+const ProductUpdate = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
+  const params = useParams();
+  const productNo = params.productNo;
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
 
-  const [reviewWriter, setReviewWriter] = useState(loginEmail || "");
-  const [reviewScore, setReviewScore] = useState(
-    review ? review.reviewScore : 0.5
-  );
-  const [reviewContent, setReviewContent] = useState(
-    review ? review.reviewContent : ""
-  );
-  const [reviewCommentRef, setReviewCommentRef] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [productName, setProductName] = useState("");
+  const [productSubName, setProductSubName] = useState("");
+  const [productPrice, setProductPrice] = useState(0);
+  const [productInfo, setProductInfo] = useState("");
+  const [productLatitude, setProductLatitude] = useState(0);
+  const [productLongitude, setProductLongitude] = useState(0);
+  const [productStatus, setProductStatus] = useState(1);
+
+  // 썸네일 파일을 새로 전송하기 위한 state
+  const [thumbnail, setThumbnail] = useState(null);
+  // 첨부파일을 새로 전송하기 위한 state
+  const [productFile, setProductFile] = useState([]);
+
+  // 조회해온 썸네일을 화면에 보여주기 위한 state
+  const [productThumb, setProductThumb] = useState(null);
+  // 조회해온 파일목록을 화면에 보여주기 휘한 state
+  const [productFileList, setProductFileList] = useState([]);
+  // const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
+  // console.log(loginEmail);
+  // const userEmail = loginEmail;
+  // 기존 첨부파일을 삭제하면 삭제한 파일 번호를 저장할 배열
+  const [delProductFileNo, setDelProductFileNo] = useState([]);
+
+  // 상품명 입력
+  const inputProductName = (e) => {
+    setProductName(e.target.value);
+  };
+  // 상품 서브명 입력
+  const inputProductSubName = (e) => {
+    setProductSubName(e.target.value);
+  };
+  // 가격 입력
+  const inputProductPrice = (e) => {
+    setProductPrice(e.target.value);
+  };
+  // 위도 입력
+  const inputProductLatitude = (e) => {
+    setProductLatitude(e.target.value);
+  };
+  // 경도 입력
+  const inputProductLongitude = (e) => {
+    setProductLongitude(e.target.value);
+  };
 
   useEffect(() => {
-    if (review) {
-      // review가 있을 때 상태를 설정합니다.
-      setReviewWriter(review.reviewWriter);
-      setReviewScore(review.reviewScore);
-      setReviewContent(review.reviewContent);
-      setReviewCommentRef(review.reviewCommentRef);
-    } else {
-      // review가 없을 때 상태를 초기화합니다.
-      setReviewWriter(loginEmail || "");
-      setReviewScore(0.5);
-      setReviewContent("");
-      setReviewCommentRef(parentReviewNo || 0);
-    }
-  }, [review, parentReviewNo, loginEmail]);
-
-  const handleSubmit = () => {
-    // 리뷰 답글일 때 리뷰 점수를 0으로 설정
-    const scoreToSubmit = reviewCommentRef > 0 ? 0 : reviewScore;
-
-    if (scoreToSubmit >= 0 && reviewContent.trim() && productNo) {
-      setLoading(true); // 로딩 시작
-      const form = new FormData();
-      form.append("productNo", productNo);
-      form.append("reviewWriter", reviewWriter);
-      form.append("reviewScore", scoreToSubmit);
-      form.append("reviewContent", reviewContent);
-      form.append("reviewCommentRef", reviewCommentRef);
-
-      let request;
-      if (review) {
-        // 리뷰 수정
-        request = axios.patch(
-          `${backServer}/product/updateReview/${review.reviewNo}`,
-          form,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-      } else if (reviewCommentRef > 0) {
-        // 리뷰 답글 등록
-        request = axios.post(
-          `${backServer}/product/insertReviewComment`,
-          form,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-      } else {
-        // 일반 리뷰 등록
-        request = axios.post(`${backServer}/product/insertReview`, form, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-      }
-
-      request
+    if (loginEmail) {
+      const url = `${backServer}/product/productNo/${productNo}/${encodeURIComponent(
+        loginEmail
+      )}`;
+      // console.log("url", url);
+      axios
+        .get(url)
         .then((res) => {
           console.log(res);
+          setProductName(res.data.product.productName);
+          setProductSubName(res.data.product.productSubName);
+          setProductThumb(res.data.product.productThumb);
+          setProductPrice(res.data.product.productPrice);
+          setProductInfo(res.data.product.productInfo);
+          setProductLatitude(res.data.product.productLatitude);
+          setProductLongitude(res.data.product.productLongitude);
+          setProductStatus(res.data.product.productStatus);
+          setProductFileList(res.data.product.productFileList);
+        })
+        .catch((err) => {
+          console.error("Error details:", err);
+          if (err.response) {
+            console.error("Response data:", err.response.data);
+            console.error("Response status:", err.response.status);
+          } else if (err.request) {
+            console.error("Request data:", err.request);
+          } else {
+            console.error("Error message:", err.message);
+          }
+        });
+    }
+  }, [loginEmail]);
+
+  // console.log("Product Status:", productStatus);
+
+  const updateProduct = () => {
+    if (productName !== "" && productSubName !== "" && productInfo !== "") {
+      const form = new FormData();
+      form.append("productNo", productNo);
+      form.append("productName", productName);
+      form.append("productSubName", productSubName);
+      form.append("productPrice", productPrice);
+      form.append("productInfo", productInfo);
+      form.append("productLatitude", productLatitude);
+      form.append("productLongitude", productLongitude);
+      form.append("productWriter", loginEmail);
+      form.append("productStatus", productStatus);
+
+      if (productThumb !== null) {
+        form.append("productThumb", productThumb);
+      }
+      if (thumbnail !== null) {
+        form.append("thumbnail", thumbnail);
+      }
+      for (let i = 0; i < productFile.length; i++) {
+        form.append("productFile", productFile[i]);
+      }
+      for (let i = 0; i < delProductFileNo.length; i++) {
+        form.append("delProductFileNo", delProductFileNo[i]);
+      }
+      axios
+        .patch(`${backServer}/product`, form, {
+          headers: {
+            contentType: "multipart/form-data",
+            processData: false,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          setProductStatus(res.data.productStatus);
+          console.log(res.data.productStatus);
           if (res.data) {
-            Swal.fire({
-              title: review
-                ? "리뷰가 수정되었습니다."
-                : reviewCommentRef > 0
-                ? "리뷰 답글이 등록되었습니다."
-                : "리뷰가 등록되었습니다.",
-              icon: "success",
-            });
-            handleClose(); // 다이얼로그 닫기
             navigate(`/product/view/${productNo}`);
           } else {
             Swal.fire({
-              title: "리뷰(답글) 등록/수정에 실패하였습니다.",
-              icon: "warning",
+              title: "상품 수정에 실패했습니다.",
+              text: "다시 시도하세요.",
+              icon: "error",
             });
           }
         })
         .catch((err) => {
-          console.error(err);
-          const errorMessage =
-            err.response?.data?.message ||
-            "서버와의 통신 중 오류가 발생하였습니다.";
-          Swal.fire({
-            title: "오류 발생",
-            text: errorMessage,
-            icon: "error",
-          });
-        })
-        .finally(() => {
-          setLoading(false); // 로딩 종료
+          console.log("Axios Error:", err);
+          if (err.response) {
+            console.log("Response data:", err.response.data);
+            console.log("Response status:", err.response.status);
+            console.log("Response headers:", err.response.headers);
+          } else if (err.request) {
+            console.log("Request data:", err.request);
+          } else {
+            console.log("Error message:", err.message);
+          }
         });
-    } else {
-      Swal.fire({
-        title: "점수와 내용을 입력해주세요.",
-        text: "리뷰 점수는 0점 이상 입력해야 합니다.",
-        icon: "warning",
-      });
     }
-    console.log("ReviewScore:", reviewScore, "ReviewContent:", reviewContent);
   };
 
   return (
-    <Stack spacing={2}>
-      {/* parentReviewNo가 없는 경우에만 Rating 컴포넌트를 보여줍니다 */}
-      {!parentReviewNo && (
-        <Rating
-          name="half-rating"
-          value={reviewScore}
-          precision={0.5}
-          onChange={(event, newValue) => {
-            setReviewScore(newValue);
-          }}
-        />
-      )}
-      <TextField
-        label={parentReviewNo ? "답글을 남겨주세요" : "리뷰를 남겨주세요"}
-        multiline
-        rows={4}
-        value={reviewContent}
-        onChange={(e) => {
-          setReviewContent(e.target.value); // 상태 업데이트
-        }}
-        variant="outlined"
-        error={reviewContent.trim() === ""}
-        helperText={reviewContent.trim() === "" ? "내용을 입력해주세요." : ""}
-        sx={{
-          width: "100%",
-          backgroundColor: "#fff",
-          borderRadius: "7px",
-          transition: "all 0.35s ease",
-          "& .MuiOutlinedInput-root": {
-            "& fieldset": {
-              borderColor: "#ddd",
-            },
-            "&:hover fieldset": {
-              borderColor: "#ddd",
-            },
-            "&.Mui-focused fieldset": {
-              border: "1px solid #1363df",
-              transitionDuration: "0.5s",
-            },
-          },
-        }}
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleSubmit}
-        disabled={
-          loading ||
-          (!parentReviewNo && reviewScore <= 0) ||
-          reviewContent.trim() === ""
-        }
-        sx={{
-          backgroundColor: "#1363df",
-          color: "white",
-          fontWeight: "bold",
-          padding: "10px 20px",
-          borderRadius: "5px",
-          "&:hover": {
-            backgroundColor: "rgba(19, 99, 223, 0.8)", // 호버 시 배경색
-          },
+    <section className="section sec">
+      <div style={{ textAlign: "center" }} className="section-title">
+        등록 상품 수정
+      </div>
+      <form
+        className="product-write-frm"
+        onSubmit={(e) => {
+          e.preventDefault();
         }}
       >
-        {loading ? (
-          <CircularProgress size={24} />
-        ) : review ? (
-          "리뷰 수정"
-        ) : reviewCommentRef > 0 ? (
-          "답글 작성"
-        ) : (
-          "리뷰 작성"
-        )}
-      </Button>
-    </Stack>
+        <ProductFrm
+          // 로그인 유저
+          loginEmail={loginEmail}
+          // 상품 번호
+          productNo={productNo}
+          // 상품명
+          productName={productName}
+          setProductName={inputProductName}
+          // 상품 한 줄 소개
+          productSubName={productSubName}
+          setProductSubName={inputProductSubName}
+          // 상품 썸네일
+          thumbnail={thumbnail}
+          setThumbnail={setThumbnail}
+          // 상품 첨부파일
+          productFile={productFile}
+          setProductFile={setProductFile}
+          // 조회해온 썸네일, 파일 목록
+          productThumb={productThumb}
+          setProductThumb={setProductThumb}
+          productFileList={productFileList}
+          setProductFileList={setProductFileList}
+          // 상품 가격
+          productPrice={productPrice}
+          setProductPrice={inputProductPrice}
+          // 상품 위도
+          productLatitude={productLatitude}
+          setProductLatitude={inputProductLatitude}
+          // 상품 경도
+          productLongitude={productLongitude}
+          setProductLongitude={inputProductLongitude}
+          // 상품 판매여부
+          productStatus={productStatus}
+          setProductStatus={setProductStatus}
+          // 삭제한 첨부파일 번호
+          delProductFileNo={delProductFileNo}
+          setDelProductFileNo={setDelProductFileNo}
+        />
+        <div className="product-content-wrap">
+          <ToastEditor
+            productInfo={productInfo}
+            setProductInfo={setProductInfo}
+            type={1}
+          />
+        </div>
+        <div className="button-box">
+          <button className="btn-primary lg" onClick={updateProduct}>
+            수정하기
+          </button>
+        </div>
+      </form>
+    </section>
   );
 };
 
-export default Review;
+export default ProductUpdate;

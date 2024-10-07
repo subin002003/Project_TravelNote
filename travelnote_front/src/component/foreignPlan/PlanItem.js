@@ -28,7 +28,6 @@ const PlanItem = (props) => {
 
   // 이미지 혹은 제목 클릭 시 지도 중심에 위치 표시
   const viewPlace = () => {
-    console.log(100);
     setSelectedPosition({
       lat: Number(plan.planLatitude),
       lng: Number(plan.planLongitude),

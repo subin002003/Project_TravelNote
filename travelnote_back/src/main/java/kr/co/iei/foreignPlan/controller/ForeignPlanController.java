@@ -118,12 +118,24 @@ public class ForeignPlanController {
 
 	// 동행자 초대 보내기
 	@GetMapping(value="/inviteCompanion")
-	public ResponseEntity<Integer> inviteCompanion(@RequestParam String memberEmail, String userEmail){
+	public ResponseEntity<Integer> inviteCompanion(@RequestParam int itineraryNo, String memberEmail, String userEmail){
 		int result = -1;
 		int userCount = userService.findUserByEmail(memberEmail);
 		if (userCount > 0) {
 			 result = userService.sendInvitation(memberEmail, userEmail); // 발송 성공 시 1, 실패 시 0 받아 옴
 		}
+		if (result > 0) {
+			result = foreignPlanService.insertCompanion(itineraryNo, memberEmail); // insert 성공 시 1, 실패 시 0
+		}
+		// 결론적으로 이메일 발송, insert 모두 성공했을 때만 1 리턴
 		return ResponseEntity.ok(result);
 	}
+
+	// 로그인한 유저의 해당 여행 일정 조회 권한 확인
+	@GetMapping(value="/checkUser")
+	public ResponseEntity<Integer> checkUser(@RequestParam int itineraryNo, String userEmail) {
+		int result = foreignPlanService.checkUser(itineraryNo, userEmail); // 1이면 해당 일정 주인, 0이면 동행자, -1이면 권한 없음
+		return ResponseEntity.ok(result);
+	}
+	
 }

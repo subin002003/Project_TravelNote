@@ -24,39 +24,51 @@ const BoardWrite = () => {
   };
 
   const writeBoard = () => {
-    if (boardTitle !== "" && boardContent !== "") {
-      const form = new FormData();
-      form.append("boardTitle", boardTitle);
-      form.append("boardCategory", boardCategory);
-      form.append("boardContent", boardContent);
-      form.append("boardWriter", userNick);
-      //첨부파일도 추가한 경우에만 등록(첨부파일은 여러개가 같은 name으로 전송)
-      for (let i = 0; i < boardFile.length; i++) {
-        form.append("boardFile", boardFile[i]);
-      }
-      axios
-        .post(`${backServer}/board`, form, {
-          headers: {
-            contentType: "multipart/form-data",
-            processData: false,
-          },
-        })
-        .then((res) => {
-          console.log(res);
-          if (res.data) {
-            navigate("/board/list");
-          } else {
-            Swal.fire({
-              title: "에러가 발생했습니다",
-              text: "원인을 찾으세요",
-              icon: "error",
-            });
+    Swal.fire({
+      title: "등록하시겠습니까?",
+      icon: "warning",
+      showCancelButton: true, // 취소 버튼 표시
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "등록",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // 사용자가 '등록'를 클릭했을 경우
+        if (boardTitle !== "" && boardContent !== "") {
+          const form = new FormData();
+          form.append("boardTitle", boardTitle);
+          form.append("boardCategory", boardCategory);
+          form.append("boardContent", boardContent);
+          form.append("boardWriter", userNick);
+          //첨부파일도 추가한 경우에만 등록(첨부파일은 여러개가 같은 name으로 전송)
+          for (let i = 0; i < boardFile.length; i++) {
+            form.append("boardFile", boardFile[i]);
           }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+          axios
+            .post(`${backServer}/board`, form, {
+              headers: {
+                contentType: "multipart/form-data",
+                processData: false,
+              },
+            })
+            .then((res) => {
+              console.log(res);
+              if (res.data) {
+                navigate("/board/list");
+              } else {
+                Swal.fire({
+                  title: "에러가 발생했습니다",
+                  text: "원인을 찾으세요",
+                  icon: "error",
+                });
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      }
+    });
   };
 
   return (

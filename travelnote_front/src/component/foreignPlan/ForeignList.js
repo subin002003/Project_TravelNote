@@ -1,13 +1,9 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import Swal from "sweetalert2";
-import {
-  isLoginState,
-  loginEmailState,
-  userTypeState,
-} from "../utils/RecoilData";
+import { isLoginState } from "../utils/RecoilData";
 
 // path: foreign/list
 const ForeignList = () => {
@@ -195,8 +191,8 @@ const Region = (props) => {
       <div className="region-img">
         <img
           src={
-            region.regionImg
-              ? `${backServer}/foreign/${region.regionImg}`
+            region.regionImg !== ""
+              ? `${backServer}/foreignImg/${region.regionImg}`
               : "/image/default_img.png"
           }
         ></img>

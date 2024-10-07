@@ -32,11 +32,12 @@ const ProductFrm = (props) => {
   // 상품 판매 여부
   const productStatus = props.productStatus;
   const setProductStatus = props.setProductStatus;
+
   // 이미 등록된 상품 수정 시 필요한 데이터
   const productThumb = props.productThumb;
   const setProductThumb = props.setProductThumb;
-  const fileList = props.fileList;
-  const setFileList = props.setFileList;
+  const productFileList = props.productFileList;
+  const setProductFileList = props.setProductFileList;
   const delProductFileNo = props.delProductFileNo;
   const setDelProductFileNo = props.setDelProductFileNo;
 
@@ -79,6 +80,7 @@ const ProductFrm = (props) => {
 
   // 상품 판매여부 입력
   const handleChange = (e) => {
+    console.log("Switch clicked:", e.target.checked); // 추가된 로그
     setProductStatus(e.target.checked ? 1 : 2); // Switch 값에 따라 상품 상태를 1 또는 2으로 설정
   };
   console.log(productStatus);
@@ -178,13 +180,15 @@ const ProductFrm = (props) => {
         <div className="product-file-wrap">
           <label>첨부파일 목록</label>
           <div className="product-file-list">
-            {fileList
-              ? fileList.map((productFile, i) => {
+            {productFileList
+              ? productFileList.map((productFile, i) => {
                   const deleteFile = () => {
-                    const newFileList = fileList.fileList.filter((item) => {
-                      return item !== productFile;
-                    });
-                    setFileList(newFileList);
+                    const newFileList = productFileList.productFileList.filter(
+                      (item) => {
+                        return item !== productFile;
+                      }
+                    );
+                    setProductFileList(newFileList);
                     setDelProductFileNo([
                       ...delProductFileNo,
                       productFile.productNo,

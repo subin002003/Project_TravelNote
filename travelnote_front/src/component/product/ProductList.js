@@ -77,7 +77,7 @@ const ProductList = () => {
   };
 
   const handleSearchClick = () => {
-    setReqPage(1); // 검색 시 페이지를 초기화
+    // setReqPage(1); // 검색 시 페이지를 초기화
 
     axios
       .get(`${backServer}/product/list/${reqPage}?query=${searchQuery}`, {
@@ -183,17 +183,19 @@ const ProductItem = ({ product }) => {
   const navigate = useNavigate();
 
   // 상품의 좋아요 상태와 좋아요 수
-  // const [productLike, setProductLike] = useState(product.productLike === 1); // 좋아요 상태 (1: 좋아요, 0: 비활성화)
-  // const [productLikeCount, setProductLikeCount] = useState(
-  //   product.productLikeCount
-  // ); // 좋아요 수
+  const [productLike, setProductLike] = useState(product.productLike === 1); // 좋아요 상태 (1: 좋아요, 0: 비활성화)
+  const [productLikeCount, setProductLikeCount] = useState(
+    product.productLikeCount
+  ); // 좋아요 수
 
-  // 좋아요 상태와 좋아요 수를 props에서 직접 받음
-  const productLike = product.productLike === 1; // 좋아요 상태 (1: 좋아요, 0: 비활성화)
-  const productLikeCount = product.productLikeCount; // 좋아요 수
+  // product 변경 시 상태 업데이트
+  useEffect(() => {
+    setProductLike(product.productLike === 1);
+    setProductLikeCount(product.productLikeCount);
+  }, [product]);
 
-  const newLikeState = productLike ? 0 : 1; // 좋아요 상태를 토글
-  const newCount = productLike ? productLikeCount - 1 : productLikeCount + 1; // 좋아요 수 업데이트
+  // const newLikeState = productLike ? 0 : 1; // 좋아요 상태를 토글
+  // const newCount = productLike ? productLikeCount - 1 : productLikeCount + 1; // 좋아요 수 업데이트
 
   const handleLikeToggle = () => {
     if (!isLogin) {
@@ -220,11 +222,11 @@ const ProductItem = ({ product }) => {
 
       request
         .then((res) => {
-          // console.log(res.data);
-          // setProductLike(newLikeStatus); // 좋아요 상태 업데이트
-          // setProductLikeCount((prevCount) =>
-          //   newLikeStatus ? prevCount + 1 : prevCount - 1
-          // ); // 좋아요 수 업데이트
+          console.log(res.data);
+          setProductLike(newLikeStatus); // 좋아요 상태 업데이트
+          setProductLikeCount((prevCount) =>
+            newLikeStatus ? prevCount + 1 : prevCount - 1
+          ); // 좋아요 수 업데이트
         })
         .catch((err) => {
           console.log(err);

@@ -28,13 +28,23 @@
 .region-img {
   width: 300px;
   height: 300px;
+  border-radius: 10px;
+}
+.region-img:hover {
+  cursor: pointer;
 }
 .region-img > img {
   width: 100%;
   height: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+  object-position: center;
 }
 .region-title {
   width: 300px;
+}
+.region-title > div {
+  margin: 5px;
 }
 .region-name {
   text-align: center;

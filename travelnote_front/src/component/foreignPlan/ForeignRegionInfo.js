@@ -1,6 +1,3 @@
-import axios from "axios";
-import { Component, useEffect, useState } from "react";
-
 const ForeignRegionInfo = (props) => {
   const { regionInfo, regionApiInfo, exchangeRate } = props;
 

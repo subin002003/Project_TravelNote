@@ -36,6 +36,7 @@ const ForeignEditItinerary = () => {
 
   // 지역 정보 조회
   useEffect(() => {
+    if (!itinerary.regionNo) return;
     axios
       .get(`${backServer}/foreign/regionInfo/${itinerary.regionNo}`)
       .then((res) => {
@@ -65,7 +66,6 @@ const ForeignEditItinerary = () => {
     const obj = itinerary;
     obj.itineraryStartDate = startDate;
     obj.itineraryEndDate = endDate;
-    console.log(itinerary);
     if (itinerary.itineraryTitle === "") {
       obj.itineraryTitle = `${region.regionName}에 갑니다!`;
     } else {
@@ -79,6 +79,7 @@ const ForeignEditItinerary = () => {
             icon: "success",
             text: "일정이 수정되었습니다.",
           });
+          navigate("/foreign/plan/" + itineraryNo);
         }
       })
       .catch((err) => {
@@ -135,12 +136,12 @@ const ForeignEditItinerary = () => {
       axios
         .get(`${backServer}/foreign/inviteCompanion`, {
           params: {
+            itineraryNo: itineraryNo,
             memberEmail: memberEmail,
             userEmail: loginEmail,
           },
         })
         .then((res) => {
-          console.log(res);
           // 발송 성공 시 1, 실패 시 0, 회원이 없을 시 -1 받아 옴
           if (res.data > 0) {
             setIsInvitationAvailable(false);
@@ -162,7 +163,10 @@ const ForeignEditItinerary = () => {
           }
         })
         .catch((err) => {
-          console.log(err);
+          Swal.fire({
+            icon: "error",
+            text: "서버 오류입니다.",
+          });
         });
     }
   };
@@ -218,8 +222,8 @@ const ForeignEditItinerary = () => {
             <div className="region-img">
               <img
                 src={
-                  region.regionImg
-                    ? `${backServer}/foreign/${region.regionImg}`
+                  region.regionImg !== ""
+                    ? `${backServer}/foreignImg/${region.regionImg}`
                     : "/image/default_img.png"
                 }
               ></img>

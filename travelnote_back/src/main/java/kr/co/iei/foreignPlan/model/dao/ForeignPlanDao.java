@@ -42,9 +42,11 @@ public interface ForeignPlanDao {
 
 	int deleteItinerary(int itineraryNo);
 
-	int deleteItineraryPlan(int itineraryNo);
+	int checkUser(int itineraryNo, String userEmail);
 
+	int checkCompanion(int itineraryNo, String userEmail);
 
+	int insertCompanion(int itineraryNo, String memberEmail);
 
 
 }

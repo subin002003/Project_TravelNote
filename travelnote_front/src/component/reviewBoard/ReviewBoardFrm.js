@@ -1,17 +1,18 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const ReviewBoardFrm = (props) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
+
   const reviewBoardTitle = props.reviewboardTitle;
   const setReviewBoardTitle = props.setReviewBoardTitle;
   const thumbnail = props.thumbnail;
   const setThumbnail = props.setThumbnail;
   const reviewBoardFile = props.reviewBoardFile;
   const setReviewBoardFile = props.setReviewBoardFile;
-  const reviewBoardCategory = props.reviewBoardCategory;
-  const setReviewBoardCategory = props.setReviewBoardCategory;
   const reviewBoardSubContent = props.reviewBoardSubContent;
   const setReviewBoardSubContent = props.setReviewBoardSubContent;
+  const reviewBoardCategory = props.reviewBoardCategory;
+  const setReviewBoardCategory = props.setReviewBoardCategory;
 
   //수정인 경우에 추가로 전송되는 데이터
   const reviewBoardThumbNail = props.reviewBoardThumbNail;
@@ -21,14 +22,6 @@ const ReviewBoardFrm = (props) => {
   const delReviewBoardFileNo = props.delReviewBoardFileNo;
   const setDelReviewBoardFileNo = props.setDelReviewBoardFileNo;
 
-  // -> 썸네일을 추가(변경하면)전송할 state
-  // thumbnail
-  // -> 기존 썸네일정보( DB에서 조회해온 값 ) -> 작성 시에는 없음
-  // boardThumb	->null or filepath
-  // setBoardThumb
-  // -> 화면에 썸네일을 미리보기하는 state  -> 초기값이 무조건 null
-  // reviewBoardImg		->null
-  // setReviewBoardImg
   const thumbnailRef = useRef(null); // 썸네일 파일 입력 참조
   //썸네일 미리보기용 state(데이터 전송하지 않음)
   const [reviewBoardImg, setReviewBoardImg] = useState(null); // 썸네일 미리보기 상태
@@ -70,16 +63,24 @@ const ReviewBoardFrm = (props) => {
     setReviewBoardFile([...reviewBoardFile, ...fileArr]);
     setShowReviewBoardFile([...showReviewBoardFile, ...filenameArr]);
   };
+
+  // 카테고리 리스트 설정
+  const categories = [
+    "숙소",
+    "식사",
+    "관광지",
+    "교통",
+    "활동",
+    "문화",
+    "안전",
+    "예산",
+    "팁",
+    "경치",
+    "소감",
+  ];
+
   return (
     <div>
-      <div
-        style={{
-          borderTop: "1px solid black",
-          // 상단, 우측, 하단, 좌측 여백
-          margin: "20px 0px 40px 0px",
-          width: "100%",
-        }}
-      ></div>
       <div className="review-board-thumb-and-subContent">
         <div className="review-board-thumb-wrap">
           {reviewBoardImg ? (
@@ -88,7 +89,6 @@ const ReviewBoardFrm = (props) => {
                 thumbnailRef.current.click();
               }}
               src={reviewBoardImg}
-              alt="Thumbnail" //이미지 표시 안될 때 대신 표시될 텍스트
             />
           ) : reviewBoardThumbNail ? (
             <img
@@ -96,7 +96,6 @@ const ReviewBoardFrm = (props) => {
               onClick={() => {
                 thumbnailRef.current.click();
               }}
-              alt="Thumbnail"
             />
           ) : (
             <img
@@ -104,7 +103,6 @@ const ReviewBoardFrm = (props) => {
                 thumbnailRef.current.click();
               }}
               src="/image/default_img.png"
-              alt="Default"
             ></img>
           )}
           <input
@@ -167,22 +165,26 @@ const ReviewBoardFrm = (props) => {
               </label>
             </th>
             <td style={{ textAlign: "left" }}>
-              <input
-                type="text"
+              {/* 드롭다운으로 카테고리 선택 */}
+              <select
                 id="reviewBoardCategory"
-                name="reviewBoardCategory"
-                value={reviewBoardCategory}
+                value={reviewBoardCategory} // 선택된 카테고리 값
                 onChange={setReviewBoardCategory}
                 style={{
                   height: "30px",
-                  width: "100px",
-                  border: "none",
-                  outline: "none",
-                  borderBottom: "1px solid black",
+                  width: "200px",
                 }}
-              />
+              >
+                <option value="">선택하세요</option>
+                {categories.map((category, index) => (
+                  <option key={index} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
             </td>
           </tr>
+
           <tr>
             <th>
               <label style={{ fontSize: "15px" }}>첨부파일</label>

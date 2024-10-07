@@ -24,28 +24,52 @@ public class ProductService {
 	@Autowired
 	private PageUtil pageUtil;
 
+//	public Map<String, Object> listProducts(int reqPage, String searchQuery, String userEmail, String sortOption) {
+//	    if (searchQuery != null && !searchQuery.isEmpty()) {
+//	        return searchProduct(reqPage, searchQuery);
+//	    } else if (userEmail != null) {
+//	        return selectProductListEmail(reqPage, userEmail);
+//	    } else {
+//	        return selectProductList(reqPage);
+//	    }
+//	}
+	
 	// 상품 검색 기능
 	public Map<String, Object> searchProduct(int reqPage, String searchQuery) {
-		int numPerPage = 8;						// 한 페이지당 출력할 상품 갯수
+		int numPerPage = 4;						    // 한 페이지당 출력할 상품 갯수
 		int pageNaviSize = 7;						// 페이지네비 길이
-		int totalCount = productDao.totalCount();	// 전체 상품 수
+		int totalCount = (searchQuery == null || searchQuery.isEmpty() || searchQuery.equals(" "))
+		        ? productDao.totalCount() 
+		        : productDao.totalCountSearch(searchQuery);  // 검색어에 맞는 전체 상품 수
+		System.out.println("totalCount : " + totalCount);
 		// 페이징에 필요한 값들을 연산해서 객체로 리턴받음
 		PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
 
 		// 검색어가 있으면 검색어로, 없으면 전체 조회
+//		List<ProductDTO> list;
+//	    if (searchQuery == null || searchQuery.isEmpty() || totalCount == 0) {
+//	        list = new ArrayList<>(); // 검색어가 없거나 결과가 없으면 빈 리스트
+//	        pi = new PageInfo(); // 페이지 정보도 빈 값으로 설정
+//	    } else {
+//	        list = productDao.searchProduct(pi, searchQuery); // 검색된 상품 목록
+//	    }
 	    List<ProductDTO> list = (searchQuery == null || searchQuery.isEmpty())
 	        ? productDao.selectProductList(pi)
-	        : productDao.searchProduct(pi, searchQuery);
+	        : productDao.searchProduct(pi, searchQuery);  // 검색된 상품 목록
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list);
 		map.put("pi", pi);
+		// 검색 결과가 없으면 메시지 추가
+	    if (list.size() == 0) {
+	        map.put("message", "검색한 상품이 없습니다.");
+	    }
 		return map;
 	}
 	
 	// 패키지 상품 목록 조회(이메일 없으면)
 	public Map<String, Object> selectProductList(int reqPage) {
-		int numPerPage = 8;						// 한 페이지당 출력할 상품 갯수
+		int numPerPage = 4;						// 한 페이지당 출력할 상품 갯수
 		int pageNaviSize = 7;						// 페이지네비 길이
 		int totalCount = productDao.totalCount();	// 전체 상품 수
 		// 페이징에 필요한 값들을 연산해서 객체로 리턴받음
@@ -61,7 +85,7 @@ public class ProductService {
 	public Map<String, Object> selectProductListEmail(int reqPage, String userEmail) {
 //		int userNo = productDao.selectOneUser(userEmail);
 		// 게시물 조회 및 페이징에 필요한 데이터를 모두 취합
-		int numPerPage = 8;						// 한 페이지당 출력할 상품 갯수
+		int numPerPage = 4;						// 한 페이지당 출력할 상품 갯수
 		int pageNaviSize = 7;						// 페이지네비 길이
 		int totalCount = productDao.totalCount();	// 전체 상품 수
 		// 페이징에 필요한 값들을 연산해서 객체로 리턴받음
@@ -72,37 +96,10 @@ public class ProductService {
 		map.put("pi", pi);
 		return map;
 	}
-	
-	// 상품 정렬
-//	public Map<String, Object> selectProductListSortOption(int reqPage, String userEmail, String sortOption) {
-//	    // 게시물 조회 및 페이징에 필요한 데이터를 모두 취합
-//	    int numPerPage = 4;                        // 한 페이지당 출력할 상품 갯수
-//	    int pageNaviSize = 7;                      // 페이지네비 길이
-//	    int totalCount = productDao.totalCount();  // 전체 상품 수
-//	    // 페이징에 필요한 값들을 연산해서 객체로 리턴받음
-//	    PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
-//
-//	    List<ProductDTO> list; // Product 타입으로 리스트 선언
-//
-//	    if (sortOption.equals("mostLiked")) {
-//	    	System.out.println("mostLiked");
-//	        list = productDao.selectProductListMostLiked(pi, userEmail);
-//	    } else if (sortOption.equals("newest")) {
-//	    	System.out.println("newest");
-//	        list = productDao.selectProductListNewest(pi, userEmail);
-//	    } else {
-//	        list = productDao.selectProductListEmail(pi, userEmail); // 기본값으로 빈 리스트 할당
-//	    }
-//
-//	    Map<String, Object> map = new HashMap<String, Object>();
-//	    map.put("list", list);
-//	    map.put("pi", pi);
-//	    return map;
-//	}
 
 	// 상품 정렬
 	public Map<String, Object> selectProductListSortOption(int reqPage, String userEmail, String sortOption) {
-	    int numPerPage = 8; // 한 페이지당 출력할 상품 갯수
+	    int numPerPage = 4; // 한 페이지당 출력할 상품 갯수
 	    int pageNaviSize = 7; // 페이지네비 길이
 	    int totalCount = productDao.totalCount(); // 전체 상품 수
 

@@ -87,29 +87,39 @@ const BoardView = () => {
   };
 
   const deleteBoard = () => {
-    axios
-      .delete(`${backServer}/board/${board.boardNo}`)
-      .then((res) => {
-        if (res.data === 1) {
-          Swal.fire({
-            title: "삭제완료",
-            icon: "success",
-          }).then(() => {
-            navigate("/board/list");
+    Swal.fire({
+      title: "정말 삭제하시겠습니까?",
+      text: "삭제 후에는 복구할 수 없습니다!",
+      icon: "warning",
+      showCancelButton: true, // 취소 버튼 표시
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "삭제",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // 사용자가 '삭제'를 클릭했을 경우
+        axios
+          .delete(`${backServer}/board/${board.boardNo}`)
+          .then((res) => {
+            if (res.data === 1) {
+              Swal.fire({
+                title: "삭제완료",
+                icon: "success",
+              }).then(() => {
+                navigate("/board/list");
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            Swal.fire({
+              title: "삭제가 취소되었습니다.",
+              icon: "info",
+            });
           });
-        } else {
-          Swal.fire({
-            title: "삭제 실패",
-            icon: "error",
-            text: "작업 중 오류가발생했습니다.",
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      }
+    });
   };
-
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
   };
@@ -214,18 +224,35 @@ const BoardView = () => {
   };
 
   const boardViewReport = () => {
-    axios
-      .post(`${backServer}/board/report/${boardNo}`, { userNick: userNick })
-      .then((res) => {
-        console.log(res);
-        Swal.fire({
-          title: "신고 처리 완료",
-          icon: "success",
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    Swal.fire({
+      title: "정말 신고하시겠습니까?",
+      icon: "warning",
+      showCancelButton: true,
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "신고",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // 사용자가 '신고'를 클릭했을 경우
+        axios
+          .post(`${backServer}/board/report/${boardNo}`, { userNick: userNick })
+          .then((res) => {
+            console.log(res);
+            Swal.fire({
+              title: "신고 처리 완료",
+              icon: "success",
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+            Swal.fire({
+              title: "신고 실패",
+              icon: "error",
+              text: "작업 중 오류가 발생했습니다.",
+            });
+          });
+      }
+    });
   };
 
   return (

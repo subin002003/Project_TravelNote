@@ -82,8 +82,8 @@
 	<!-- 여행 관리 조회 -->
 	<select id="scheduleUpdate" resultType="Itinerary">
 		SELECT itinerary_no,
-		itinerary_title, itinerary_start_date,
-		itinerary_end_date
+		itinerary_title, 
+		itinerary_start_date, itinerary_end_date
 		FROM Itinerary
 		WHERE itinerary_no = #{itineraryNo}
 	</select>

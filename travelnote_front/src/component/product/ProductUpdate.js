@@ -17,8 +17,8 @@ const ProductUpdate = () => {
   const [productSubName, setProductSubName] = useState("");
   const [productPrice, setProductPrice] = useState(0);
   const [productInfo, setProductInfo] = useState("");
-  const [productLatitude, setProductLatitude] = useState("");
-  const [productLongitude, setProductLongitude] = useState("");
+  const [productLatitude, setProductLatitude] = useState(0);
+  const [productLongitude, setProductLongitude] = useState(0);
   const [productStatus, setProductStatus] = useState(1);
 
   // 썸네일 파일을 새로 전송하기 위한 state
@@ -28,10 +28,11 @@ const ProductUpdate = () => {
 
   // 조회해온 썸네일을 화면에 보여주기 위한 state
   const [productThumb, setProductThumb] = useState(null);
+
   // 조회해온 파일목록을 화면에 보여주기 휘한 state
-  const [fileList, setFileList] = useState([]);
+  const [productFileList, setProductFileList] = useState([]);
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
-  const userEmail = loginEmail;
+
   // 기존 첨부파일을 삭제하면 삭제한 파일 번호를 저장할 배열
   const [delProductFileNo, setDelProductFileNo] = useState([]);
 
@@ -57,32 +58,38 @@ const ProductUpdate = () => {
   };
 
   useEffect(() => {
-    axios
-      .get(`${backServer}/product/productNo/${productNo}/${userEmail}`)
-      .then((res) => {
-        console.log(res);
-        setProductName(res.data.productName);
-        setProductSubName(res.data.productSubName);
-        setProductThumb(res.data.productThumb);
-        setProductPrice(res.data.productPrice);
-        setProductInfo(res.data.productInfo);
-        setProductLatitude(res.data.productLatitude);
-        setProductLongitude(res.data.productLongitude);
-        setProductStatus(res.data.productStatus);
-        setFileList(res.data.fileList);
-      })
-      .catch((err) => {
-        console.error("Error details:", err);
-        if (err.response) {
-          console.error("Response data:", err.response.data);
-          console.error("Response status:", err.response.status);
-        } else if (err.request) {
-          console.error("Request data:", err.request);
-        } else {
-          console.error("Error message:", err.message);
-        }
-      });
-  }, [productNo, userEmail]);
+    if (loginEmail) {
+      const url = `${backServer}/product/productNo/${productNo}/${encodeURIComponent(
+        loginEmail
+      )}`;
+      // console.log("url", url);
+      axios
+        .get(url)
+        .then((res) => {
+          console.log(res);
+          setProductName(res.data.product.productName);
+          setProductSubName(res.data.product.productSubName);
+          setProductThumb(res.data.product.productThumb);
+          setProductPrice(res.data.product.productPrice);
+          setProductInfo(res.data.product.productInfo);
+          setProductLatitude(res.data.product.productLatitude);
+          setProductLongitude(res.data.product.productLongitude);
+          setProductStatus(res.data.product.productStatus);
+          setProductFileList(res.data.product.productFileList);
+        })
+        .catch((err) => {
+          console.error("Error details:", err);
+          if (err.response) {
+            console.error("Response data:", err.response.data);
+            console.error("Response status:", err.response.status);
+          } else if (err.request) {
+            console.error("Request data:", err.request);
+          } else {
+            console.error("Error message:", err.message);
+          }
+        });
+    }
+  }, [productNo, loginEmail]);
 
   console.log("Product No:", productNo);
   console.log(`${backServer}/product/productNo/${productNo}`);
@@ -99,6 +106,7 @@ const ProductUpdate = () => {
       form.append("productLongitude", productLongitude);
       form.append("productWriter", loginEmail);
       form.append("productStatus", productStatus);
+
       if (productThumb !== null) {
         form.append("productThumb", productThumb);
       }
@@ -148,8 +156,10 @@ const ProductUpdate = () => {
   };
 
   return (
-    <section className="section product-content-wrap">
-      <div className="section-title">등록 상품 수정</div>
+    <section className="section sec">
+      <div style={{ textAlign: "center" }} className="section-title">
+        등록 상품 수정
+      </div>
       <form
         className="product-write-frm"
         onSubmit={(e) => {
@@ -176,8 +186,8 @@ const ProductUpdate = () => {
           // 조회해온 썸네일, 파일 목록
           productThumb={productThumb}
           setProductThumb={setProductThumb}
-          fileList={fileList}
-          setFileList={setFileList}
+          productFileList={productFileList}
+          setProductFileList={setProductFileList}
           // 상품 가격
           productPrice={productPrice}
           setProductPrice={inputProductPrice}
