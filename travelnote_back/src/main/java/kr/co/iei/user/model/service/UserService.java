@@ -246,6 +246,7 @@ public class UserService {
 	}
 
 
+<<<<<<< HEAD
 	public int checkBusinessRegNo(String businessRegNo) {
 		int result = userDao.checkBusinessRegNo(businessRegNo);
 		return result;
@@ -269,6 +270,11 @@ public class UserService {
 
 
 	
+=======
+	 public UserDTO findUserByEmail(String email) {
+	        return userDao.selectUserByEmail(email);
+	    }
+>>>>>>> khj
 
 
 	

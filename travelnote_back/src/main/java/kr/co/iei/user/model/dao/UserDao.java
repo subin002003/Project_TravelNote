@@ -32,5 +32,7 @@ public interface UserDao {
 	int checkBusinessRegNo(String businessRegNo);
 
 	int selectUserByEmail(String memberEmail);
+	
+	UserDTO selectUserByEmail(String email);
 
 }

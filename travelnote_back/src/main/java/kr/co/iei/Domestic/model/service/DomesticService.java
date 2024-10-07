@@ -13,6 +13,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import kr.co.iei.Domestic.model.dao.DomesticDao;
+import kr.co.iei.Domestic.model.dto.CompanionDTO;
 import kr.co.iei.Domestic.model.dto.EditPlanDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
@@ -92,5 +93,13 @@ public class DomesticService {
 	    domesticDao.updateItinerary(itineraryNo, itineraryDTO);
 	}
 
+	   // 동행자 추가 메서드
+    public void addCompanion(CompanionDTO companion) {
+        domesticDao.insertCompanion(companion);
+    }
 
+    // 이미 추가된 동행자인지 확인하는 메서드
+    public CompanionDTO findCompanion(int itineraryNo, int userNo) {
+        return domesticDao.selectCompanion(itineraryNo, userNo);
+    }
 }
