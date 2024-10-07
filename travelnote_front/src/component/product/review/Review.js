@@ -18,7 +18,8 @@ const Review = ({
   handleClose,
   review,
   parentReviewNo,
-  fetchProductReviews,
+  fetchProductReviewList,
+  fetchProductReviewReCommentList,
 }) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
@@ -124,8 +125,8 @@ const Review = ({
             handleClose(); // 다이얼로그 닫기
 
             // 리뷰 등록 또는 수정 후 화면에 리뷰를 업데이트
-            fetchProductReviews(); // 리뷰 리스트 갱신
-            // navigate(`/product/view/${productNo}`);
+            fetchProductReviewList(); // 리뷰 리스트 갱신
+            fetchProductReviewReCommentList(); // 리뷰 답글 리스트 갱신
           } else {
             Swal.fire({
               title: "리뷰(답글) 등록/수정에 실패하였습니다.",
@@ -182,7 +183,6 @@ const Review = ({
           onChange={(event, newValue) => {
             setReviewScore(newValue);
           }}
-          readOnly // 소수점 이하 표시를 위해 읽기 전용
         />
       )}
       <TextField

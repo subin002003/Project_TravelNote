@@ -22,9 +22,6 @@ const NaverCallback = () => {
     const state = urlParams.get("state");
 
     if (authorizationCode && state) {
-      // 콘솔에 authorization code와 state 값을 출력하여 확인
-      console.log("Authorization Code:", authorizationCode);
-      console.log("State:", state);
       axios
         .post(`${backServer}/user/api/naver`, {
           authorizationCode: authorizationCode,
@@ -36,7 +33,7 @@ const NaverCallback = () => {
           setUserType(res.data.userType);
           setUserNick(res.data.userNick);
           axios.defaults.headers.common["Authorization"] = res.data.accessToken;
-
+          localStorage.setItem("accessToken", res.data.accessToken);
           window.localStorage.setItem("refreshToken", res.data.refreshToken);
           navigate("/");
         })

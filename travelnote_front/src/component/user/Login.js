@@ -28,6 +28,7 @@ const Login = () => {
   const [isSocialLogin, setIsSocialLogin] = useState(false);
   const login = () => {
     console.log(isSocialLogin);
+
     if (!isSocialLogin) {
       if (user.userEmail === "" || user.userPw === "") {
         Swal.fire({
@@ -36,34 +37,35 @@ const Login = () => {
         });
         return;
       }
-    }
 
-    axios
-      .post(`${backServer}/user/login`, user)
-      .then((res) => {
-        console.log(res);
-        setLoginEmail(res.data.userEmail);
-        setUserType(res.data.userType);
-        setUserNick(res.data.userNick);
-        axios.defaults.headers.common["Authorization"] = res.data.accessToken;
-        localStorage.setItem("accessToken", res.data.accessToken);
-        window.localStorage.setItem("refreshToken", res.data.refreshToken);
-        navigate("/");
-      })
-      .catch((err) => {
-        if (err.response && err.response.status === 404) {
-          Swal.fire({
-            title: "아이디 혹은 비밀번호를 확인해주세요.",
-            icon: "warning",
-          });
-        } else {
-          Swal.fire({
-            title: "로그인 중 문제가 발생했습니다.",
-            text: err.message,
-            icon: "error",
-          });
-        }
-      });
+      axios
+        .post(`${backServer}/user/login`, user)
+        .then((res) => {
+          console.log(res);
+          setLoginEmail(res.data.userEmail);
+          setUserType(res.data.userType);
+          setUserNick(res.data.userNick);
+          axios.defaults.headers.common["Authorization"] = res.data.accessToken;
+          localStorage.setItem("accessToken", res.data.accessToken);
+          window.localStorage.setItem("refreshToken", res.data.refreshToken);
+
+          navigate("/");
+        })
+        .catch((err) => {
+          if (err.response && err.response.status === 404) {
+            Swal.fire({
+              title: "아이디 혹은 비밀번호를 확인해주세요.",
+              icon: "warning",
+            });
+          } else {
+            Swal.fire({
+              title: "로그인 중 문제가 발생했습니다.",
+              text: err.message,
+              icon: "error",
+            });
+          }
+        });
+    }
   };
 
   return (

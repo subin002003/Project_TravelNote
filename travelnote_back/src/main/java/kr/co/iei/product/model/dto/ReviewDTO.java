@@ -21,6 +21,7 @@ public class ReviewDTO {
 	
 	private int reviewLike;
 	private int reviewLikeCount;
+	private int reviewReplyCount;
 	
 	//마이페이지 내가쓴 리뷰에서 어떤 글에 작성했는지 확인할 수 있도록 변수 추가
 	private String productName;

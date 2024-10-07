@@ -26,45 +26,57 @@ const ReviewBoardWrite = () => {
   };
 
   const writeReviewBoard = () => {
-    if (reviewBoardTitle !== "" && reviewBoardContent !== "") {
-      const form = new FormData();
-      form.append("reviewBoardTitle", reviewBoardTitle);
-      form.append("reviewBoardCategory", reviewBoardCategory);
-      form.append("reviewBoardContent", reviewBoardContent);
-      form.append("reviewBoardWriter", userNick);
-      form.append("reviewBoardSubContent", reviewBoardSubContent);
+    Swal.fire({
+      title: "등록하시겠습니까?",
+      icon: "warning",
+      showCancelButton: true, // 취소 버튼 표시
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "등록",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // 사용자가 '등록'를 클릭했을 경우
+        if (reviewBoardTitle !== "" && reviewBoardContent !== "") {
+          const form = new FormData();
+          form.append("reviewBoardTitle", reviewBoardTitle);
+          form.append("reviewBoardCategory", reviewBoardCategory);
+          form.append("reviewBoardContent", reviewBoardContent);
+          form.append("reviewBoardWriter", userNick);
+          form.append("reviewBoardSubContent", reviewBoardSubContent);
 
-      // 썸네일이 첨부된 경우에만 추가
-      if (thumbnail !== null) {
-        form.append("thumbnail", thumbnail);
-      }
-      //첨부파일도 추가한 경우에만 등록(첨부파일은 여러개가 같은 name으로 전송)
-      for (let i = 0; i < reviewBoardFile.length; i++) {
-        form.append("reviewBoardFile", reviewBoardFile[i]);
-      }
-      axios
-        .post(`${backServer}/reviewBoard`, form, {
-          headers: {
-            contentType: "multipart/form-data",
-            processData: false,
-          },
-        })
-        .then((res) => {
-          console.log(res);
-          if (res.data) {
-            navigate("/reviewBoard/list");
-          } else {
-            Swal.fire({
-              title: "에러가 발생했습니다",
-              text: "원인을 찾으세요",
-              icon: "error",
-            });
+          // 썸네일이 첨부된 경우에만 추가
+          if (thumbnail !== null) {
+            form.append("thumbnail", thumbnail);
           }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+          //첨부파일도 추가한 경우에만 등록(첨부파일은 여러개가 같은 name으로 전송)
+          for (let i = 0; i < reviewBoardFile.length; i++) {
+            form.append("reviewBoardFile", reviewBoardFile[i]);
+          }
+          axios
+            .post(`${backServer}/reviewBoard`, form, {
+              headers: {
+                contentType: "multipart/form-data",
+                processData: false,
+              },
+            })
+            .then((res) => {
+              console.log(res);
+              if (res.data) {
+                navigate("/reviewBoard/list");
+              } else {
+                Swal.fire({
+                  title: "에러가 발생했습니다",
+                  text: "원인을 찾으세요",
+                  icon: "error",
+                });
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      }
+    });
   };
 
   return (
