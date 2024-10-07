@@ -26,6 +26,22 @@ const BoardFrm = (props) => {
     setBoardFile([...boardFile, ...fileArr]);
     setShowBoardFile([...showBoardFile, ...filenameArr]);
   };
+
+  // 카테고리 리스트 설정
+  const categories = [
+    "숙소",
+    "식사",
+    "관광지",
+    "교통",
+    "활동",
+    "문화",
+    "안전",
+    "예산",
+    "팁",
+    "경치",
+    "소감",
+  ];
+
   return (
     <div>
       <div>
@@ -33,7 +49,7 @@ const BoardFrm = (props) => {
           <tbody>
             <tr>
               <th>
-                <label htmlFor="boardTitle" style={{ fontSize: "30px" }}>
+                <label htmlFor="boardTitle" style={{ fontSize: "20px" }}>
                   제목
                 </label>
               </th>
@@ -56,34 +72,37 @@ const BoardFrm = (props) => {
             </tr>
             <tr>
               <th>
-                <label htmlFor="boardCategory" style={{ fontSize: "21px" }}>
+                <label htmlFor="boardCategory" style={{ fontSize: "15px" }}>
                   카테고리
                 </label>
               </th>
-              <td>
-                <input
-                  type="text"
+              <td style={{ textAlign: "left" }}>
+                {/* 드롭다운으로 카테고리 선택 */}
+                <select
                   id="boardCategory"
-                  name="boardCategory"
-                  value={boardCategory}
+                  value={boardCategory} // 선택된 카테고리 값
                   onChange={setBoardCategory}
                   style={{
                     height: "30px",
-                    width: "100px",
-                    border: "none",
-                    outline: "none",
-                    borderBottom: "1px solid black",
+                    width: "200px",
                   }}
-                />
+                >
+                  <option value="">선택하세요</option>
+                  {categories.map((category, index) => (
+                    <option key={index} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
               </td>
             </tr>
             <tr>
               <th>
-                <label htmlFor="boardFile" style={{ fontSize: "20px" }}>
+                <label htmlFor="boardFile" style={{ fontSize: "15px" }}>
                   첨부파일
                 </label>
               </th>
-              <td>
+              <td style={{ textAlign: "left" }}>
                 <input
                   type="file"
                   id="boardFile"
@@ -94,7 +113,7 @@ const BoardFrm = (props) => {
             </tr>
             <tr>
               <th style={{ fontSize: "15px" }}>첨부파일 목록</th>
-              <td>
+              <td style={{ textAlign: "left" }}>
                 <div>
                   {fileList
                     ? fileList.map((boardFile, i) => {

@@ -33,6 +33,7 @@ const ReviewBoardWrite = () => {
       form.append("reviewBoardContent", reviewBoardContent);
       form.append("reviewBoardWriter", userNick);
       form.append("reviewBoardSubContent", reviewBoardSubContent);
+
       // 썸네일이 첨부된 경우에만 추가
       if (thumbnail !== null) {
         form.append("thumbnail", thumbnail);
