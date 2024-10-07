@@ -22,9 +22,6 @@ const NaverCallback = () => {
     const state = urlParams.get("state");
 
     if (authorizationCode && state) {
-      // 콘솔에 authorization code와 state 값을 출력하여 확인
-      console.log("Authorization Code:", authorizationCode);
-      console.log("State:", state);
       axios
         .post(`${backServer}/user/api/naver`, {
           authorizationCode: authorizationCode,
