@@ -67,6 +67,8 @@ const ProductView = () => {
   const [productReviewList, setProductReviewList] = useState([]);
   // const [newProductReviewList, setNewProductReviewList] = useState([]);
 
+  const [reviews, setReviews] = useState(productReviewList); // 리뷰 리스트 상태
+
   const [reqPage, setReqPage] = useState(1);
   const [pi, setPi] = useState({});
 
@@ -114,11 +116,16 @@ const ProductView = () => {
         const newProductReviewList = res.data.productReviewList;
 
         // 기존 리뷰 리스트를 새로운 리뷰 리스트로 업데이트
+        setProductReviewList(newProductReviewList);
         // setProductReviewList(prevReviews => [...prevReviews, newReview]);
-        setProductReviewList(productReviewList => [...productReviewList, newProductReviewList]);
 
-        console.log(newProductReviewList); // 새 리뷰 리스트 출력
-        console.log(productReviewList);
+        // setProductReviewList((productReviewList) => [
+        //   ...productReviewList,
+        //   newProductReviewList,
+        // ]);
+
+        // console.log(newProductReviewList); // 새 리뷰 리스트 출력
+        // console.log(productReviewList);
       })
       .catch((err) => {
         console.error("Axios error:", err);
@@ -132,6 +139,7 @@ const ProductView = () => {
   useEffect(() => {
     console.log("리뷰 리스트가 업데이트되었습니다:", productReviewList);
   }, [productReviewList]); // productReviewList가 변경될 때마다 콜백이 실행
+
   // 날짜 범위 상태
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -204,6 +212,26 @@ const ProductView = () => {
     });
   };
 
+  const handleDeleteReview = (deletedReviewNo) => {
+    // 리뷰가 삭제된 후 필터링하여 삭제된 리뷰를 목록에서 제거
+    // setReviews(reviews.filter((review) => review.reviewNo !== deletedReviewNo));
+    setProductReviewList((prevReviews) =>
+      prevReviews.filter((review) => review.reviewNo !== deletedReviewNo)
+    );
+  };
+
+  // 리뷰 목록 갱신 함수
+  const fetchProductReviews = () => {
+    axios
+      .get(`${backServer}/product/productNo/${productNo}/${loginEmail}`)
+      .then((res) => {
+        setProductReviewList(res.data.productReviewList); // 리뷰 리스트 갱신
+      })
+      .catch((err) => {
+        console.error("리뷰 목록 불러오기 중 오류 발생:", err);
+      });
+  };
+
   const minus = () => {
     if (people === 1) {
       Swal.fire({
@@ -234,10 +262,11 @@ const ProductView = () => {
   // 리뷰 작성 팝업 닫기
   const handleCloseReviewDialog = () => {
     setOpenReviewDialog(false);
+    fetchProductReviews(); // 다이얼로그가 닫힐 때 리뷰 목록 갱신
   };
 
   return (
-    <section className="section product-view-wrap">
+    <section className="section sec product-view-wrap">
       <div className="product-view-content">
         <div className="product-view-info">
           <div className="product-thumbnail-swiper">
@@ -447,10 +476,13 @@ const ProductView = () => {
               {productReviewList.length > 0 ? (
                 productReviewList.map((review, i) => (
                   <ReviewItem
-                    key={`review-${i}`}
+                    // key={`review-${i}`}
+                    key={review.reviewNo} // 고유한 리뷰 ID 사용
                     product={product}
                     review={review}
                     parentReviewNo={review.reviewNo} // 부모 리뷰 ID 전달
+                    onDeleteReview={handleDeleteReview} // 삭제 핸들러 전달
+                    fetchProductReviews={fetchProductReviews} // 여기서 전달
                   />
                 ))
               ) : (
@@ -460,7 +492,7 @@ const ProductView = () => {
               )}
             </ul>
           </div>
-          <PageNavi pi={pi} reqPage={reqPage} setReqPage={setReqPage} />
+          {/* <PageNavi pi={pi} reqPage={reqPage} setReqPage={setReqPage} /> */}
           {/* 리뷰 전체보기 */}
         </div>
       </div>
@@ -484,6 +516,7 @@ const ProductView = () => {
               productNo={productNo}
               open={openReviewDialog}
               handleClose={handleCloseReviewDialog}
+              fetchProductReviews={fetchProductReviews} // 리뷰 리스트 갱신 함수 전달
             />
           </DialogContent>
           <DialogActions>
@@ -528,10 +561,11 @@ const ProductView = () => {
 
 const ReviewItem = (props) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
-  const navigate = useNavigate();
   const product = props.product;
   const productNo = product.productNo;
   const review = props.review;
+
+  const { fetchProductReviews } = props;
 
   const parentReviewNo = props.reviewCommentRef;
 
@@ -588,7 +622,8 @@ const ReviewItem = (props) => {
                 title: "리뷰가 삭제되었습니다.",
                 icon: "success",
               });
-              navigate(`/product/view/${productNo}`);
+              props.onDeleteReview(review.reviewNo); // 삭제된 리뷰 번호를 상위 컴포넌트에 전달
+              // navigate(`/product/view/${productNo}`);
             }
           })
           .catch((err) => {
@@ -675,8 +710,14 @@ const ReviewItem = (props) => {
         <Rating
           name={`rating-${review.reviewId}`}
           value={review.reviewScore} // 리뷰 점수
+          precision={0.1} // 소수점 이하 1자리까지 표시
           readOnly // 읽기 전용
         />
+        {/* <Rating
+          name={`rating-${review.reviewId}`}
+          value={review.reviewScore} // 리뷰 점수
+          readOnly // 읽기 전용
+        /> */}
         <div className="posting-review-content">{review.reviewContent}</div>
         <div className="review-link-box">
           <span
@@ -751,6 +792,7 @@ const ReviewItem = (props) => {
               review={dialogType === "update" ? review : null} // 리뷰 수정인 경우에만 review 전달
               parentReviewNo={dialogType === "reply" ? review.reviewNo : null} // 답글인 경우 parentReviewNo 전달
               handleClose={handleCloseReviewDialog}
+              fetchProductReviews={fetchProductReviews} // 여기서 다시 전달
             />
             {/* <Review
               productNo={productNo}

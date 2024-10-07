@@ -97,7 +97,7 @@ const ProductWrite = () => {
     }
   };
   return (
-    <section className="section product-content-wrap">
+    <section className="section sec">
       <div style={{ textAlign: "center" }} className="section-title">
         상품 등록
       </div>

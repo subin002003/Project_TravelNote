@@ -6,9 +6,19 @@
   	select count(*) from product where product_status=1
   </select>
   
+  <select id="totalCountSearch" parameterType="String" resultType="int">
+    SELECT COUNT(*)
+    FROM product
+    WHERE product_status = 1
+    AND (product_name LIKE '%' || #{searchQuery} || '%' 
+      OR product_sub_name LIKE '%' || #{searchQuery} || '%' 
+      OR product_info LIKE '%' || #{searchQuery} || '%')
+  </select>
+  
   <select id="searchProduct" resultType="product">
     SELECT * FROM (
-        SELECT rownum AS rnum, p.* FROM (
+        SELECT rownum AS rnum, p.* 
+        FROM (
             SELECT
                 product_no,
                 product_name,
@@ -91,11 +101,6 @@
         GROUP BY product_no
     ) likeCount ON p.product_no = likeCount.product_no
     WHERE rnum BETWEEN #{pi.start} AND #{pi.end}
-    <!-- userEmail이 null이 아닐 때만 이 조건을 추가 -->
-    <!-- 
-    <if test="userEmail != null">
-        AND w.product_no IS NOT NULL  
-    </if> -->
   </select>
   
   <!-- 상품 정렬(이메일 있을 때 - 좋아요순) -->

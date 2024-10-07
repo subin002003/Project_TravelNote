@@ -14,12 +14,18 @@ import kr.co.iei.util.PageInfo;
 public interface ProductDao {
 
 	int totalCount();
+
+	int totalCountSearch(String searchQuery);
 	
 	List<ProductDTO> searchProduct(PageInfo pi, String searchQuery);
 
 	List<ProductDTO> selectProductList(PageInfo pi);
 
 	List<ProductDTO> selectProductListEmail(PageInfo pi, String userEmail);
+
+	// 상품 정렬
+	List<ProductDTO> selectProductListMostLiked(PageInfo pi, String userEmail);
+	List<ProductDTO> selectProductListNewest(PageInfo pi, String userEmail);
 
 	int insertProduct(ProductDTO product);
 
@@ -99,10 +105,5 @@ public interface ProductDao {
 	
 	//오건하 작성 2024-10-04
 	List myProductList(PageInfo pi);
-
-
-	// 상품 정렬
-	List<ProductDTO> selectProductListMostLiked(PageInfo pi, String userEmail);
-	List<ProductDTO> selectProductListNewest(PageInfo pi, String userEmail);
 
 }
