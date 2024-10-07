@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import axios from "axios"; // Axios import
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 
 const SchedulePlanTime = (props) => {
   const {
@@ -12,6 +13,8 @@ const SchedulePlanTime = (props) => {
     planPageOption,
   } = props;
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  const navigate = useNavigate();
+  const { cityName, regionNo } = useParams();
   const [saveUpdatedPlan, setSaveUpdatedPlan] = useState({
     planNo: plan.planNo,
     planMemo: plan.planMemo,
@@ -68,18 +71,18 @@ const SchedulePlanTime = (props) => {
           )
           .then((response) => {
             if (response.status === 200) {
-              if (editPlanList && Array.isArray(editPlanList)) {
-                const newPlanList = editPlanList.filter(
-                  (item) => item.planNo !== saveUpdatedPlan.planNo
-                );
-                console.log("삭제 성공:", newPlanList);
-                setEditPlanList(newPlanList);
-                Swal.fire(
-                  "삭제되었습니다!",
-                  "일정이 삭제되었습니다.",
-                  "success"
+              // deletePlan 함수에서 props를 통해 setPlanList를 호출합니다.
+              if (props.setPlanList) {
+                props.setPlanList((prevList) =>
+                  prevList.filter(
+                    (item) => item.planNo !== saveUpdatedPlan.planNo
+                  )
                 );
               }
+              Swal.fire({
+                text: "일정이 삭제되었습니다.",
+                icon: "success",
+              });
             }
           })
           .catch((error) => {
