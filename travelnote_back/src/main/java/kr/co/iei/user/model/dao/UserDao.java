@@ -29,4 +29,6 @@ public interface UserDao {
 
 	int deleteUser(String userEmail);
 
+	UserDTO selectUserByEmail(String email);
+
 }

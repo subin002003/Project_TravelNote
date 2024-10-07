@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class CompanionDTO {
 
 	private int companionNo;
-	private int itinearyNo;
+	private int itineraryNo;
 	private int userNo;
 }

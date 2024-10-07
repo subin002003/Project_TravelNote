@@ -246,7 +246,9 @@ public class UserService {
 	}
 
 
-	
+	 public UserDTO findUserByEmail(String email) {
+	        return userDao.selectUserByEmail(email);
+	    }
 
 
 	

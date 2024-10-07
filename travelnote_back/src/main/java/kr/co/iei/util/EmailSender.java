@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -40,4 +41,14 @@ public class EmailSender {
 			e.printStackTrace();
 		}
 	}
+
+	public void send(SimpleMailMessage message) {
+        try {
+            message.setSentDate(new Date());
+            message.setFrom("travelnote0919@gmail.com");
+            sender.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

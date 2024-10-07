@@ -34,4 +34,9 @@
 	<delete id="deleteUser">
 		delete from user_tbl where user_email = #{userEmail}
 	</delete>
+	<select id="selectUserByEmail" parameterType="String" resultType="User">
+        SELECT user_no, user_name, user_email
+        FROM user_tbl
+        WHERE user_email = #{email}
+    </select>
 </mapper>

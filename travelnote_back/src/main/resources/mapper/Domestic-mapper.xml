@@ -78,20 +78,35 @@
 	</insert>
 
 	<select id="scheduleUpdate" resultType="Itinerary">
-		SELECT itinerary_no, itinerary_title, itinerary_start_date,
+		SELECT itinerary_no,
+		itinerary_title, itinerary_start_date,
 		itinerary_end_date
 		FROM Itinerary
 		WHERE itinerary_no = #{itineraryNo}
 	</select>
 
 	<update id="updateItinerary" parameterType="Itinerary">
-    UPDATE Itinerary SET 
-        itinerary_title = #{itineraryDTO.itineraryTitle},
-        itinerary_start_date = #{itineraryDTO.itineraryStartDate},
-        itinerary_end_date = #{itineraryDTO.itineraryEndDate} 
-    WHERE itinerary_no = #{itineraryNo}
-</update>
-
+		UPDATE Itinerary SET
+		itinerary_title = #{itineraryDTO.itineraryTitle},
+		itinerary_start_date = #{itineraryDTO.itineraryStartDate},
+		itinerary_end_date = #{itineraryDTO.itineraryEndDate}
+		WHERE itinerary_no = #{itineraryNo}
+	</update>
+	
+	<!-- 동행자 추가 -->
+	<insert id="insertCompanion">
+		INSERT INTO companion (companion_no, itinerary_no, user_no)
+		VALUES (companion_no_seq.NEXTVAL, #{itineraryNo}, #{userNo})
+	</insert>
+	
+	<!-- 동행자 조회 -->
+	<select id="selectCompanion" parameterType="map"
+		resultType="Companion">
+		SELECT companion_no, itinerary_no, user_no
+		FROM companion
+		WHERE itinerary_no = #{itineraryNo}
+		AND user_no = #{userNo}
+	</select>
 
 
 </mapper>
