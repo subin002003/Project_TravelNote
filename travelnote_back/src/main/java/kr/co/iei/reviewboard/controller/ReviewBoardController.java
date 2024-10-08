@@ -96,10 +96,10 @@ public class ReviewBoardController {
 	
 	// 게시물 등록
 	@PostMapping
-	public ResponseEntity<Boolean> insertReviewBoard(@ModelAttribute ReviewBoardDTO reviewBoard,@ModelAttribute MultipartFile reviewBoardThumbNail, @ModelAttribute MultipartFile[] reviewBoardFile){
-		if(reviewBoardThumbNail != null) {
+	public ResponseEntity<Boolean> insertReviewBoard(@ModelAttribute ReviewBoardDTO reviewBoard,@ModelAttribute MultipartFile thumbnail, @ModelAttribute MultipartFile[] reviewBoardFile){
+		if(thumbnail != null) {
 			String savepath = root + "/reviewBoard/thumb/";
-			String filepath = fileUtil.upload(savepath, reviewBoardThumbNail);
+			String filepath = fileUtil.upload(savepath, thumbnail);
 			reviewBoard.setReviewBoardThumbNail(filepath);
 		}
 		
@@ -161,12 +161,12 @@ public class ReviewBoardController {
 	// 게시물 수정
 	@PatchMapping
 	public ResponseEntity<Boolean> updateReviewBoard(@ModelAttribute ReviewBoardDTO reviewBoard,
-												@ModelAttribute MultipartFile reviewBoardThumbNail,
+												@ModelAttribute MultipartFile thumbnail,
 												@ModelAttribute MultipartFile[] reviewBoardFile){
 		
-		if(reviewBoardThumbNail != null) {
+		if(thumbnail != null) {
 			String savepath = root + "/reviewBoard/thumb/";
-			String filepath = fileUtil.upload(savepath, reviewBoardThumbNail);
+			String filepath = fileUtil.upload(savepath, thumbnail);
 			reviewBoard.setReviewBoardThumbNail(filepath);
 		}
 		List<ReviewBoardFileDTO> reviewBoardFileList = new ArrayList<ReviewBoardFileDTO>();

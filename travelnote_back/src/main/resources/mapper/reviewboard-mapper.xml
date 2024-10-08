@@ -176,7 +176,9 @@
 		update review_board set 
 			review_board_title=#{reviewBoardTitle},
 			review_board_content=#{reviewBoardContent},
-			review_board_category=#{reviewBoardCategory}
+			review_board_category=#{reviewBoardCategory},
+			review_board_thumbNail=#{reviewBoardThumbNail},
+			review_board_subContent=#{reviewBoardSubContent}
 			where review_board_no=#{reviewBoardNo}
 	</update>
 	
