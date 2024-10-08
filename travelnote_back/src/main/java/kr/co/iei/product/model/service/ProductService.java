@@ -65,7 +65,8 @@ public class ProductService {
 //	    map.put("pi", pi);
 //	    return map;
 //	}
-	
+
+	// 상품 검색 기능
 	public Map<String, Object> searchProduct(String keyword) {
 		List<ProductDTO> list = productDao.searchProduct(keyword);
 //		List<ProductDTO> list;
@@ -156,45 +157,100 @@ public class ProductService {
 	}
 
 	// 패키지 상품 상세페이지(이메일 없을 때)
-	public Map<String, Object> selectOneProduct(int productNo) {
-		ProductDTO product = productDao.selectOneProduct(productNo);
-        List<ProductFileDTO> productFileList = productDao.selectOneProductFileList(productNo);
-        // 리뷰 리스트
-        List<ReviewDTO> productReviewList = productDao.selectOneProductReviews(productNo);
-        // 리뷰 답글 리스트
-        List<ReviewDTO> productReviewReCommentList = productDao.selectOneProductReviewReCommentList(productNo);
+	public Map<String, Object> selectOneProduct(int productNo, int reqPage) {
+	    ProductDTO product = productDao.selectOneProduct(productNo);
+	    List<ProductFileDTO> productFileList = productDao.selectOneProductFileList(productNo);
 
-        // 상품, 파일, 리뷰 정보를 맵에 담음
-	    Map<String, Object> map = new HashMap<String, Object>();
-        map.put("product", product);
-        map.put("productFileList", productFileList);
-        map.put("productReviewList", productReviewList);
-        map.put("productReviewReCommentList", productReviewReCommentList);
+	    // 리뷰 페이징 처리
+	    int numPerPage = 6; 	// 한 페이지당 출력할 리뷰 갯수
+	    int pageNaviSize = 5;   // 페이지네비 길이
+	    int totalCount = productDao.reviewTotalCount(productNo); // 전체 리뷰 수
+	    PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
+	    System.out.println(pi);
+	    
+	    // 리뷰 리스트
+	    List<ReviewDTO> productReviewList = productDao.selectOneProductReviews(productNo, pi);
+	    // 리뷰 답글 리스트
+	    List<ReviewDTO> productReviewReCommentList = productDao.selectOneProductReviewReCommentList(productNo, pi);
 
-        return map;
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("product", product);
+	    map.put("productFileList", productFileList);
+	    map.put("productReviewList", productReviewList);
+	    map.put("productReviewReCommentList", productReviewReCommentList);
+	    map.put("pi", pi);
+
+	    return map;
 	}
 
 	// 패키지 상품 상세페이지(이메일 있을 때)
-    public Map<String, Object> selectOneProduct(int productNo, String userEmail) {
-        ProductDTO product = productDao.selectOneProduct(productNo);
-        List<ProductFileDTO> productFileList = productDao.selectOneProductFileList(productNo);
-        int userNo = productDao.selectOneUser(userEmail);
-        // 리뷰 리스트
-        List<ReviewDTO> productReviewList = productDao.selectOneProductUserReviews(productNo, userNo);
-        // 리뷰 답글 리스트
-        List<ReviewDTO> productReviewReCommentList = productDao.selectOneProductUserReviewReCommentList(productNo, userNo);
-//	    product.setProductFileList(productFileList);
-//	    product.setProductReviewList(productReviewList);
+	public Map<String, Object> selectOneProduct(int productNo, String userEmail, int reqPage) {
+	    ProductDTO product = productDao.selectOneProduct(productNo);
+	    List<ProductFileDTO> productFileList = productDao.selectOneProductFileList(productNo);
+	    int userNo = productDao.selectOneUser(userEmail);
 
-        // 상품, 파일, 리뷰 정보를 맵에 담음
-	    Map<String, Object> map = new HashMap<String, Object>();
-        map.put("product", product);
-        map.put("productFileList", productFileList);
-        map.put("productReviewList", productReviewList);
-        map.put("productReviewReCommentList", productReviewReCommentList);
+	    // 리뷰 페이징 처리
+	    int numPerPage = 6; 	// 한 페이지당 출력할 리뷰 갯수
+	    int pageNaviSize = 5;   // 페이지네비 길이
+	    int totalCount = productDao.reviewTotalCount(productNo); // 전체 리뷰 수
+	    PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
+	    System.out.println(pi);
+	    
+	    // 리뷰 리스트
+	    List<ReviewDTO> productReviewList = productDao.selectOneProductUserReviews(productNo, userNo, pi);
+      	// 리뷰 답글 리스트
+	    List<ReviewDTO> productReviewReCommentList = productDao.selectOneProductUserReviewReCommentList(productNo, userNo, pi);
 
-        return map;
-    }
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("product", product);
+	    map.put("productFileList", productFileList);
+	    map.put("productReviewList", productReviewList);
+	    map.put("productReviewReCommentList", productReviewReCommentList);
+	    map.put("pi", pi);
+
+	    return map;
+	}
+
+	// 패키지 상품 상세페이지(이메일 없을 때)
+//	public Map<String, Object> selectOneProduct(int productNo) {
+//		ProductDTO product = productDao.selectOneProduct(productNo);
+//        List<ProductFileDTO> productFileList = productDao.selectOneProductFileList(productNo);
+//        // 리뷰 리스트
+//        List<ReviewDTO> productReviewList = productDao.selectOneProductReviews(productNo);
+//        // 리뷰 답글 리스트
+//        List<ReviewDTO> productReviewReCommentList = productDao.selectOneProductReviewReCommentList(productNo);
+//
+//        // 상품, 파일, 리뷰 정보를 맵에 담음
+//	    Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("product", product);
+//        map.put("productFileList", productFileList);
+//        map.put("productReviewList", productReviewList);
+//        map.put("productReviewReCommentList", productReviewReCommentList);
+//
+//        return map;
+//	}
+
+	// 패키지 상품 상세페이지(이메일 있을 때)
+//    public Map<String, Object> selectOneProduct(int productNo, String userEmail) {
+//        ProductDTO product = productDao.selectOneProduct(productNo);
+//        List<ProductFileDTO> productFileList = productDao.selectOneProductFileList(productNo);
+//        int userNo = productDao.selectOneUser(userEmail);
+//        // 리뷰 리스트
+//        List<ReviewDTO> productReviewList = productDao.selectOneProductUserReviews(productNo, userNo);
+//        // 리뷰 답글 리스트
+//        List<ReviewDTO> productReviewReCommentList = productDao.selectOneProductUserReviewReCommentList(productNo, userNo);
+////	    product.setProductFileList(productFileList);
+////	    product.setProductReviewList(productReviewList);
+//
+//        // 상품, 파일, 리뷰 정보를 맵에 담음
+//	    Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("product", product);
+//        map.put("productFileList", productFileList);
+//        map.put("productReviewList", productReviewList);
+//        map.put("productReviewReCommentList", productReviewReCommentList);
+//
+//        return map;
+//    }
 	
 //	public Map selectProductListSortOption(int reqPage, String userEmail, String sortOption) {
 //	    // 게시물 조회 및 페이징에 필요한 데이터를 모두 취합

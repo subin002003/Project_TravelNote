@@ -41,6 +41,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import GoogleMap from "./GoogleMap";
+import PageNavi from "../utils/PagiNavi";
 
 const sortOptions = [
   { label: "좋아요순", value: "mostLiked" },
@@ -91,8 +92,10 @@ const ProductView = () => {
     // }
 
     const request = loginEmail
-      ? axios.get(`${backServer}/product/productNo/${productNo}/${loginEmail}`)
-      : axios.get(`${backServer}/product/productNo/${productNo}`);
+      ? axios.get(
+          `${backServer}/product/productNo/${productNo}/${loginEmail}/${reqPage}`
+        )
+      : axios.get(`${backServer}/product/productNo/${productNo}/${reqPage}`);
 
     request
       .then((res) => {
@@ -101,6 +104,7 @@ const ProductView = () => {
         setProductFileList(res.data.productFileList); // 첨부파일 관리
         setProductReviewList(res.data.productReviewList); // 리뷰 관리
         setProductReviewReCommentList(res.data.productReviewReCommentList);
+        setPi(res.data.pi);
       })
       .catch((err) => {
         console.log("Error:", err.response ? err.response.data : err.message);
@@ -110,7 +114,7 @@ const ProductView = () => {
           icon: "error",
         });
       });
-  }, [productNo, loginEmail]);
+  }, [productNo, loginEmail, reqPage]);
 
   // 각 정렬 옵션에 따른 클릭 이벤트 처리
   const handleSortClick = (sortOption) => {
@@ -564,6 +568,9 @@ const ProductView = () => {
               )}
             </ul>
           </div>
+          <div className="review-paging-wrap">
+            <PageNavi pi={pi} reqPage={reqPage} setReqPage={setReqPage} />
+          </div>
         </div>
       </div>
 
@@ -761,10 +768,19 @@ const ReviewItem = (props) => {
   const handleLikeToggle = () => {
     if (!isLogin) {
       Swal.fire({
-        title: "로그인 후 이용이 가능합니다.",
-        icon: "info",
+        title: "로그인이 필요합니다.",
+        text: "리뷰에 '좋아요'를 하려면 로그인이 필요합니다. 로그인하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "로그인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login"); // 로그인 페이지로 이동
+        }
       });
-      return;
     }
 
     if (isLogin) {
@@ -1053,10 +1069,19 @@ const ReviewReCommentItem = (props) => {
   const handleLikeToggle = () => {
     if (!isLogin) {
       Swal.fire({
-        title: "로그인 후 이용이 가능합니다.",
-        icon: "info",
+        title: "로그인이 필요합니다.",
+        text: "답글에 '좋아요'를 하려면 로그인이 필요합니다. 로그인하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "로그인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login"); // 로그인 페이지로 이동
+        }
       });
-      return;
     }
 
     if (isLogin) {

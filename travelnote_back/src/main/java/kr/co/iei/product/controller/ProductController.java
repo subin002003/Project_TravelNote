@@ -167,16 +167,16 @@ public class ProductController {
 	}
 	
 	// 상품 상세페이지
-	@GetMapping(value="/productNo/{productNo}")
-	public ResponseEntity<Map> selectOneProduct(@PathVariable int productNo) {
-		Map<String, Object> productDetails = productService.selectOneProduct(productNo);
+	@GetMapping(value="/productNo/{productNo}/{reqPage}")
+	public ResponseEntity<Map> selectOneProduct(@PathVariable int productNo, @PathVariable int reqPage) {
+		Map<String, Object> productDetails = productService.selectOneProduct(productNo, reqPage);
 		return ResponseEntity.ok(productDetails);
 	}
 
 	// 상품 상세페이지
-    @GetMapping(value="/productNo/{productNo}/{userEmail}")
-    public ResponseEntity<Map> selectOneProduct(@PathVariable int productNo, @PathVariable String userEmail) {
-        Map<String, Object> productDetails = productService.selectOneProduct(productNo, userEmail);
+    @GetMapping(value="/productNo/{productNo}/{userEmail}/{reqPage}")
+    public ResponseEntity<Map> selectOneProduct(@PathVariable int productNo, @PathVariable String userEmail, @PathVariable int reqPage) {
+        Map<String, Object> productDetails = productService.selectOneProduct(productNo, userEmail, reqPage);
         return ResponseEntity.ok(productDetails);
     }
 	
