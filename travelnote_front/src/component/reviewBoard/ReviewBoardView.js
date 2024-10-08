@@ -301,7 +301,7 @@ const ReviewBoardView = () => {
                 <td>{reviewBoard.reviewBoardReadCount}</td>
               </tr>
               <tr>
-                <th>작성일자</th>
+                <th>작성일</th>
                 <td>{reviewBoard.reviewBoardDate}</td>
               </tr>
               <tr>
@@ -311,11 +311,12 @@ const ReviewBoardView = () => {
             </tbody>
           </table>
         </div>
+
         <div
-          className="review-board-thumbnail-and-subcontent"
-          style={{ display: "flex" }}
+          className="review-board-thumb-and-subContent"
+          style={{ marginTop: "20px" }}
         >
-          <div className="review-board-thumbnail">
+          <div className="review-board-thumb-wrap" style={{ height: "300px" }}>
             <img
               src={
                 reviewBoard.reviewBoardThumbNail

@@ -15,11 +15,13 @@ public interface ProductDao {
 
 	int totalCount();
 
-	int totalCountSearch(String searchQuery);
+	int totalCountSearch(String keyword);
 
 	List<ProductDTO> productList();
 	
-	List<ProductDTO> searchProduct(String searchQuery);
+	List<ProductDTO> searchProduct(String keyword);
+
+	List<ProductDTO> searchProductList(PageInfo pi, String keyword);
 
 	List<ProductDTO> selectProductList(PageInfo pi);
 
@@ -56,6 +58,15 @@ public interface ProductDao {
     List<ReviewDTO> selectReviewListMostLiked(int productNo, int userNo);
     // 리뷰 리스트 (최신순 정렬)
     List<ReviewDTO> selectReviewListNewest(int productNo, int userNo);
+    // 리뷰 리스트 (별점순 정렬)
+	List<ReviewDTO> selectReviewListScore(int productNo, int userNo);
+	
+    // 리뷰 답글 리스트 (좋아요 순 정렬)
+    List<ReviewDTO> selectReviewReCommentListMostLiked(int productNo, int userNo);
+    // 리뷰 답글 리스트 (최신순 정렬)
+    List<ReviewDTO> selectReviewReCommentListNewest(int productNo, int userNo);
+    // 리뷰 답글 리스트 (별점순 정렬)
+	List<ReviewDTO> selectReviewReCommentListScore(int productNo, int userNo);
 
 	ProductFileDTO getProductFile(int productFileNo);
 

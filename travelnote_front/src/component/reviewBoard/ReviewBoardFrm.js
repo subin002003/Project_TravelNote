@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 const ReviewBoardFrm = (props) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
 
-  const reviewBoardTitle = props.reviewboardTitle;
+  // props 에서 필요한 값들을 가져옴
+  const reviewBoardTitle = props.reviewBoardTitle;
   const setReviewBoardTitle = props.setReviewBoardTitle;
   const thumbnail = props.thumbnail;
   const setThumbnail = props.setThumbnail;
@@ -23,7 +24,6 @@ const ReviewBoardFrm = (props) => {
   const setDelReviewBoardFileNo = props.setDelReviewBoardFileNo;
 
   const thumbnailRef = useRef(null); // 썸네일 파일 입력 참조
-  //썸네일 미리보기용 state(데이터 전송하지 않음)
   const [reviewBoardImg, setReviewBoardImg] = useState(null); // 썸네일 미리보기 상태
 
   //썸네일 이미지 첨부파일이 변경되면 동작할 함수
@@ -81,6 +81,15 @@ const ReviewBoardFrm = (props) => {
 
   return (
     <div>
+      <p style={{ marginLeft: "20px" }}>썸네일로 설정할 이미지를 등록하세요</p>
+      <div style={{ marginLeft: "110px" }}>
+        <p>Click!!</p>
+        <p>
+          <span className="material-icons" style={{ marginLeft: "10px" }}>
+            south
+          </span>
+        </p>
+      </div>
       <div className="review-board-thumb-and-subContent">
         <div className="review-board-thumb-wrap">
           {reviewBoardImg ? (
@@ -137,15 +146,15 @@ const ReviewBoardFrm = (props) => {
         <tbody>
           <tr>
             <th>
-              <label htmlFor="review-boardTitle" style={{ fontSize: "20px" }}>
+              <label htmlFor="reviewBoardTitle" style={{ fontSize: "20px" }}>
                 제목
               </label>
             </th>
             <td>
               <input
                 type="text"
-                id="review-boardTitle"
-                name="review-boardTitle"
+                id="reviewBoardTitle"
+                name="reviewBoardTitle"
                 value={reviewBoardTitle}
                 onChange={setReviewBoardTitle}
                 style={{
@@ -160,7 +169,7 @@ const ReviewBoardFrm = (props) => {
           </tr>
           <tr>
             <th>
-              <label htmlFor="reviewBoardCategory" style={{ fontSize: "15px" }}>
+              <label htmlFor="reviewBoardCategory" style={{ fontSize: "12px" }}>
                 카테고리
               </label>
             </th>
@@ -187,7 +196,7 @@ const ReviewBoardFrm = (props) => {
 
           <tr>
             <th>
-              <label style={{ fontSize: "15px" }}>첨부파일</label>
+              <label style={{ fontSize: "12px" }}>첨부파일</label>
             </th>
             <td style={{ textAlign: "left" }}>
               <input
@@ -199,7 +208,7 @@ const ReviewBoardFrm = (props) => {
             </td>
           </tr>
           <tr>
-            <th style={{ fontSize: "15px" }}>첨부파일 목록</th>
+            <th style={{ fontSize: "12px" }}>첨부파일 목록</th>
             <td style={{ textAlign: "left" }}>
               <div>
                 {fileList

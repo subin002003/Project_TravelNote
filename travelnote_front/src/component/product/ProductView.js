@@ -41,11 +41,11 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import GoogleMap from "./GoogleMap";
-import PageNavi from "../utils/PagiNavi";
 
 const sortOptions = [
   { label: "좋아요순", value: "mostLiked" },
   { label: "최신순", value: "newest" },
+  { label: "별점순", value: "score" },
 ];
 
 const ProductView = () => {
@@ -71,7 +71,10 @@ const ProductView = () => {
   );
   // const [newProductReviewList, setNewProductReviewList] = useState([]);
 
-  const [reviews, setReviews] = useState(productReviewList); // 리뷰 리스트 상태
+  const [reviewList, setReviewList] = useState(productReviewList); // 리뷰 리스트 상태
+  const [reviewReCommentList, setReviewReCommentList] = useState(
+    productReviewReCommentList
+  ); // 리뷰 리스트 상태
 
   const [reqPage, setReqPage] = useState(1);
   const [pi, setPi] = useState({});
@@ -122,9 +125,12 @@ const ProductView = () => {
 
         // 새로운 리뷰 리스트를 가져옵니다.
         const newProductReviewList = res.data.productReviewList;
+        const newProductReviewReCommentList =
+          res.data.productReviewReCommentList;
 
         // 기존 리뷰 리스트를 새로운 리뷰 리스트로 업데이트
         setProductReviewList(newProductReviewList);
+        setProductReviewReCommentList(newProductReviewReCommentList);
       })
       .catch((err) => {
         console.error("Axios error:", err);
@@ -136,8 +142,12 @@ const ProductView = () => {
   };
 
   useEffect(() => {
-    console.log("리뷰 리스트가 업데이트되었습니다:", productReviewList);
-  }, [productReviewList]); // productReviewList가 변경될 때마다 콜백이 실행
+    console.log(
+      "리뷰 리스트가 업데이트되었습니다:",
+      productReviewList,
+      productReviewReCommentList
+    );
+  }, [productReviewList, productReviewReCommentList]); // productReviewList가 변경될 때마다 콜백이 실행
 
   // 날짜 범위 상태
   const [startDate, setStartDate] = useState(null);
@@ -217,6 +227,9 @@ const ProductView = () => {
     setProductReviewList((prevReviews) =>
       prevReviews.filter((review) => review.reviewNo !== deletedReviewNo)
     );
+    setProductReviewReCommentList((prevReviews) =>
+      prevReviews.filter((review) => review.reviewNo !== deletedReviewNo)
+    );
   };
 
   // 리뷰 목록 갱신 함수
@@ -225,6 +238,7 @@ const ProductView = () => {
       .get(`${backServer}/product/productNo/${productNo}/${loginEmail}`)
       .then((res) => {
         setProductReviewList(res.data.productReviewList); // 리뷰 리스트 갱신
+        setProductReviewReCommentList(res.data.productReviewReCommentList);
       })
       .catch((err) => {
         console.error("리뷰 목록 불러오기 중 오류 발생:", err);
@@ -232,16 +246,16 @@ const ProductView = () => {
   };
 
   // 리뷰 답글 목록 갱신 함수
-  const fetchProductReviewReCommentList = () => {
-    axios
-      .get(`${backServer}/product/productNo/${productNo}/${loginEmail}`)
-      .then((res) => {
-        setProductReviewReCommentList(res.data.productReviewReCommentList); // 리뷰 리스트 갱신
-      })
-      .catch((err) => {
-        console.error("리뷰 답글 목록 불러오기 중 오류 발생:", err);
-      });
-  };
+  // const fetchProductReviewReCommentList = () => {
+  //   axios
+  //     .get(`${backServer}/product/productNo/${productNo}/${loginEmail}`)
+  //     .then((res) => {
+  //       setProductReviewReCommentList(res.data.productReviewReCommentList); // 리뷰 리스트 갱신
+  //     })
+  //     .catch((err) => {
+  //       console.error("리뷰 답글 목록 불러오기 중 오류 발생:", err);
+  //     });
+  // };
 
   const minus = () => {
     if (people === 1) {
@@ -267,14 +281,36 @@ const ProductView = () => {
 
   // 리뷰 작성 팝업 열기
   const handleOpenReviewDialog = () => {
-    setOpenReviewDialog(true);
+    if (!isLogin) {
+      Swal.fire({
+        title: "로그인이 필요합니다.",
+        text: "리뷰를 작성하려면 로그인이 필요합니다. 로그인하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "로그인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login"); // 로그인 페이지로 이동
+        }
+      });
+    } else {
+      setOpenReviewDialog(true); // 로그인 상태일 경우에만 다이얼로그를 엶
+      fetchProductReviewList(); // 다이얼로그가 닫힐 때 리뷰 목록 갱신
+      // fetchProductReviewReCommentList();
+    }
   };
+  // const handleOpenReviewDialog = () => {
+  //   setOpenReviewDialog(true);
+  // };
 
   // 리뷰 작성 팝업 닫기
   const handleCloseReviewDialog = () => {
     setOpenReviewDialog(false);
     fetchProductReviewList(); // 다이얼로그가 닫힐 때 리뷰 목록 갱신
-    fetchProductReviewReCommentList();
+    // fetchProductReviewReCommentList();
   };
 
   return (
@@ -511,9 +547,10 @@ const ProductView = () => {
                               review={reComment}
                               parentReviewNo={reComment.reviewNo} // 부모 리뷰 ID 전달
                               onDeleteReview={handleDeleteReview} // 삭제 핸들러 전달
-                              fetchProductReviewReCommentList={
-                                fetchProductReviewReCommentList
-                              } // 여기서 전달
+                              fetchProductReviewList={fetchProductReviewList} // 여기서 전달
+                              // fetchProductReviewReCommentList={
+                              //   fetchProductReviewReCommentList
+                              // } // 여기서 전달
                             />
                           </li>
                         ))}
@@ -550,7 +587,7 @@ const ProductView = () => {
               open={openReviewDialog}
               handleClose={handleCloseReviewDialog}
               fetchProductReviewList={fetchProductReviewList} // 리뷰 리스트 갱신 함수 전달
-              fetchProductReviewReCommentList={fetchProductReviewReCommentList} // 리뷰 답글 리스트 갱신 함수 전달
+              // fetchProductReviewReCommentList={fetchProductReviewReCommentList} // 리뷰 답글 리스트 갱신 함수 전달
             />
           </DialogContent>
           <DialogActions>
@@ -598,6 +635,7 @@ const ReviewItem = (props) => {
   const product = props.product;
   const productNo = product.productNo;
   const review = props.review;
+  const navigate = useNavigate();
 
   const { fetchProductReviewList } = props;
 
@@ -622,10 +660,42 @@ const ReviewItem = (props) => {
 
   // 리뷰 작성 팝업 열기
   const handleOpenReviewDialog = (type) => {
-    setOpenReviewDialog(true);
-    setDialogType(type); // 'register', 'update', 'reply' 타입 설정
-    // 여기에 parentReviewId를 사용하는 로직 추가
-    console.log("Parent Review ID:", parentReviewNo);
+    if (!isLogin && type === "update") {
+      Swal.fire({
+        title: "로그인이 필요합니다.",
+        text: "리뷰를 수정하려면 로그인이 필요합니다. 로그인하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "로그인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login"); // 로그인 페이지로 이동
+        }
+      });
+    } else if (!isLogin) {
+      Swal.fire({
+        title: "로그인이 필요합니다.",
+        text: "리뷰를 작성하려면 로그인이 필요합니다. 로그인하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "로그인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login"); // 로그인 페이지로 이동
+        }
+      });
+    } else {
+      setOpenReviewDialog(true); // 로그인 상태일 경우에만 다이얼로그를 엶
+      setDialogType(type); // 'register', 'update', 'reply' 타입 설정
+      // 여기에 parentReviewId를 사용하는 로직 추가
+      console.log("Parent Review ID:", parentReviewNo);
+    }
   };
 
   // 리뷰 작성 팝업 닫기
@@ -635,40 +705,57 @@ const ReviewItem = (props) => {
 
   // 리뷰 삭제
   const deleteReview = () => {
-    Swal.fire({
-      title: "리뷰를 삭제하시겠습니까?",
-      text: "삭제 후 복구할 수 없습니다.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "삭제",
-      cancelButtonText: "취소",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axios
-          .delete(`${backServer}/product/deleteReview/${review.reviewNo}`)
-          .then((res) => {
-            console.log(res);
-            if (res.data === 1) {
+    if (!isLogin) {
+      Swal.fire({
+        title: "로그인이 필요합니다.",
+        text: "리뷰를 삭제하려면 로그인이 필요합니다. 로그인하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "로그인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login"); // 로그인 페이지로 이동
+        }
+      });
+    } else {
+      Swal.fire({
+        title: "리뷰를 삭제하시겠습니까?",
+        text: "삭제 후 복구할 수 없습니다.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "삭제",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .delete(`${backServer}/product/deleteReview/${review.reviewNo}`)
+            .then((res) => {
+              console.log(res);
+              if (res.data === 1) {
+                Swal.fire({
+                  title: "리뷰가 삭제되었습니다.",
+                  icon: "success",
+                });
+                props.onDeleteReview(review.reviewNo); // 삭제된 리뷰 번호를 상위 컴포넌트에 전달
+                // navigate(`/product/view/${productNo}`);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
               Swal.fire({
-                title: "리뷰가 삭제되었습니다.",
-                icon: "success",
+                title: "서버와의 통신 중 오류가 발생하였습니다.",
+                text: err.message,
+                icon: "error",
               });
-              props.onDeleteReview(review.reviewNo); // 삭제된 리뷰 번호를 상위 컴포넌트에 전달
-              // navigate(`/product/view/${productNo}`);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            Swal.fire({
-              title: "서버와의 통신 중 오류가 발생하였습니다.",
-              text: err.message,
-              icon: "error",
             });
-          });
-      }
-    });
+        }
+      });
+    }
   };
 
   const handleLikeToggle = () => {
@@ -684,14 +771,14 @@ const ReviewItem = (props) => {
       const newLikeStatus = !reviewLike; // 좋아요 상태 토글
       const request = newLikeStatus
         ? axios.post(
-          // 리뷰 좋아요
-          `${backServer}/product/${review.reviewNo}/insertReviewLike/${loginEmail}`,
-          { reviewLike: 1 }
-        )
+            // 리뷰 좋아요
+            `${backServer}/product/${review.reviewNo}/insertReviewLike/${loginEmail}`,
+            { reviewLike: 1 }
+          )
         : axios.delete(
-          // 리뷰 좋아요 취소
-          `${backServer}/product/${review.reviewNo}/deleteReviewLike/${loginEmail}?reviewLike=1`
-        );
+            // 리뷰 좋아요 취소
+            `${backServer}/product/${review.reviewNo}/deleteReviewLike/${loginEmail}?reviewLike=1`
+          );
 
       request
         .then((res) => {
@@ -812,8 +899,8 @@ const ReviewItem = (props) => {
             {dialogType === "update"
               ? "리뷰 수정"
               : dialogType === "reply"
-                ? "답글 작성"
-                : "리뷰 작성"}
+              ? "답글 작성"
+              : "리뷰 작성"}
           </DialogTitle>
           <DialogContent>
             <Review
@@ -840,8 +927,9 @@ const ReviewReCommentItem = (props) => {
   const product = props.product;
   const productNo = product.productNo;
   const review = props.review;
+  const navigate = useNavigate();
 
-  const { fetchProductReviewReCommentList } = props;
+  const { fetchProductReviewList } = props;
 
   const parentReviewNo = props.reviewCommentRef;
 
@@ -864,10 +952,42 @@ const ReviewReCommentItem = (props) => {
 
   // 리뷰 작성 팝업 열기
   const handleOpenReviewDialog = (type) => {
-    setOpenReviewDialog(true);
-    setDialogType(type); // 'register', 'update', 'reply' 타입 설정
-    // 여기에 parentReviewId를 사용하는 로직 추가
-    console.log("Parent Review ID:", parentReviewNo);
+    if (!isLogin && type === "update") {
+      Swal.fire({
+        title: "로그인이 필요합니다.",
+        text: "답글을 수정하려면 로그인이 필요합니다. 로그인하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "로그인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login"); // 로그인 페이지로 이동
+        }
+      });
+    } else if (!isLogin) {
+      Swal.fire({
+        title: "로그인이 필요합니다.",
+        text: "답글을 작성하려면 로그인이 필요합니다. 로그인하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "로그인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login"); // 로그인 페이지로 이동
+        }
+      });
+    } else {
+      setOpenReviewDialog(true); // 로그인 상태일 경우에만 다이얼로그를 엶
+      setDialogType(type); // 'register', 'update', 'reply' 타입 설정
+      // 여기에 parentReviewId를 사용하는 로직 추가
+      console.log("Parent Review ID:", parentReviewNo);
+    }
   };
 
   // 리뷰 작성 팝업 닫기
@@ -877,40 +997,57 @@ const ReviewReCommentItem = (props) => {
 
   // 리뷰 삭제
   const deleteReview = () => {
-    Swal.fire({
-      title: "답글을 삭제하시겠습니까?",
-      text: "삭제 후 복구할 수 없습니다.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "삭제",
-      cancelButtonText: "취소",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axios
-          .delete(`${backServer}/product/deleteReview/${review.reviewNo}`)
-          .then((res) => {
-            console.log(res);
-            if (res.data === 1) {
+    if (!isLogin) {
+      Swal.fire({
+        title: "로그인이 필요합니다.",
+        text: "답글을 삭제하려면 로그인이 필요합니다. 로그인하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "로그인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login"); // 로그인 페이지로 이동
+        }
+      });
+    } else {
+      Swal.fire({
+        title: "답글을 삭제하시겠습니까?",
+        text: "삭제 후 복구할 수 없습니다.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "삭제",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .delete(`${backServer}/product/deleteReview/${review.reviewNo}`)
+            .then((res) => {
+              console.log(res);
+              if (res.data === 1) {
+                Swal.fire({
+                  title: "답글이 삭제되었습니다.",
+                  icon: "success",
+                });
+                props.onDeleteReview(review.reviewNo); // 삭제된 리뷰 번호를 상위 컴포넌트에 전달
+                // navigate(`/product/view/${productNo}`);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
               Swal.fire({
-                title: "답글이 삭제되었습니다.",
-                icon: "success",
+                title: "서버와의 통신 중 오류가 발생하였습니다.",
+                text: err.message,
+                icon: "error",
               });
-              props.onDeleteReview(review.reviewNo); // 삭제된 리뷰 번호를 상위 컴포넌트에 전달
-              // navigate(`/product/view/${productNo}`);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            Swal.fire({
-              title: "서버와의 통신 중 오류가 발생하였습니다.",
-              text: err.message,
-              icon: "error",
             });
-          });
-      }
-    });
+        }
+      });
+    }
   };
 
   const handleLikeToggle = () => {
@@ -926,14 +1063,14 @@ const ReviewReCommentItem = (props) => {
       const newLikeStatus = !reviewLike; // 좋아요 상태 토글
       const request = newLikeStatus
         ? axios.post(
-          // 리뷰 좋아요
-          `${backServer}/product/${review.reviewNo}/insertReviewLike/${loginEmail}`,
-          { reviewLike: 1 }
-        )
+            // 리뷰 좋아요
+            `${backServer}/product/${review.reviewNo}/insertReviewLike/${loginEmail}`,
+            { reviewLike: 1 }
+          )
         : axios.delete(
-          // 리뷰 좋아요 취소
-          `${backServer}/product/${review.reviewNo}/deleteReviewLike/${loginEmail}?reviewLike=1`
-        );
+            // 리뷰 좋아요 취소
+            `${backServer}/product/${review.reviewNo}/deleteReviewLike/${loginEmail}?reviewLike=1`
+          );
 
       request
         .then((res) => {
@@ -1056,8 +1193,8 @@ const ReviewReCommentItem = (props) => {
             {dialogType === "update"
               ? "리뷰 수정"
               : dialogType === "reply"
-                ? "답글 작성"
-                : "리뷰 작성"}
+              ? "답글 작성"
+              : "리뷰 작성"}
           </DialogTitle>
           <DialogContent>
             <Review
@@ -1065,7 +1202,7 @@ const ReviewReCommentItem = (props) => {
               review={dialogType === "update" ? review : null} // 리뷰 수정인 경우에만 review 전달
               parentReviewNo={dialogType === "reply" ? review.reviewNo : null} // 답글인 경우 parentReviewNo 전달
               handleClose={handleCloseReviewDialog}
-              fetchProductReviewReCommentList={fetchProductReviewReCommentList} // 여기서 다시 전달
+              fetchProductReviewList={fetchProductReviewList} // 여기서 다시 전달
             />
           </DialogContent>
           <DialogActions>
