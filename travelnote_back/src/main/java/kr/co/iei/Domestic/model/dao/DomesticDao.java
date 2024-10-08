@@ -59,6 +59,10 @@ public interface DomesticDao {
 	//오건하 작성 2024-10-07
 	List shareTravelList(PageInfo pi);
 
+	List selectSearchTrains(String departure, String arrival);
+
+
+
 
 
 	

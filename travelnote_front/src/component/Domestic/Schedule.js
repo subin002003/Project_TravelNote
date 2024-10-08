@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { getDate, getMonth, getYear } from "date-fns";
 import SchedulePlanList from "./SchedulePlanList";
+import Swal from "sweetalert2";
 
 const Schedule = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -21,6 +22,7 @@ const Schedule = () => {
     lng: 126.978,
   });
   const [trainSchedules, setTrainSchedules] = useState([]);
+  const [planDay, setPlanDay] = useState(1); // planDay 초기값 설정
   const [showSearch, setShowSearch] = useState(false);
   const [showTrainSearch, setShowTrainSearch] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
@@ -29,7 +31,8 @@ const Schedule = () => {
   const { itineraryNo, city } = useParams();
   const [selectedPlans, setSelectedPlans] = useState([]);
   const [markers, setMarkers] = useState([]);
-  const navigate = useNavigate();
+  const [planList, setPlanList] = useState(false); // 또는 빈 배열로 설정할 수도 있습니다.
+  const [planse, setPlanse] = useState(true);
 
   // 일정 데이터 가져오기
   useEffect(() => {
@@ -49,13 +52,12 @@ const Schedule = () => {
           dates.push(newDate);
           startDate.setDate(startDate.getDate() + 1);
         }
-
         setTotalPlanDates(dates);
       })
       .catch((error) => {
         console.error("일정을 불러오는 데 실패했습니다:", error);
       });
-  }, [backServer, itineraryNo]);
+  }, [backServer, itineraryNo, planse]);
 
   // Google Maps 초기화
   useEffect(() => {
@@ -126,6 +128,8 @@ const Schedule = () => {
           updateMarkers(places);
         } else {
           console.error("검색에 실패했습니다: ", status);
+          setSearchResults([]);
+          updateMarkers([]);
         }
       });
     } else {
@@ -161,12 +165,8 @@ const Schedule = () => {
     setMarkers(newMarkers);
   };
 
-  useEffect(() => {
-    console.log("Updated plans:", selectedPlans);
-  }, [selectedPlans]);
-
-  // 계획 추가 함수
-  const planInsert = (plan) => {
+  //일정 추가 함수
+  const handleAddPlan = (plan) => {
     const SchedulePlan = {
       itineraryNo: itineraryNo,
       planDay: selectedDay,
@@ -174,18 +174,21 @@ const Schedule = () => {
       planAddress: plan.formattedAddress,
       planLatitude: plan.geometry.location.lat(),
       planLongitude: plan.geometry.location.lng(),
-      planImage: plan.photos[0]?.getUrl(),
       planType: 1,
       planName: plan.name,
       planId: plan.place_id,
     };
     axios
       .post(`${backServer}/domestic/insertPlan`, SchedulePlan)
-      .then((response) => {
-        console.log("일정이 추가되었습니다:", response.data);
-
-        setPlans((prev) => [...prev, SchedulePlan]);
-        setSelectedPlans((prev) => [...prev, SchedulePlan]); // 선택된 계획도 업데이트
+      .then((res) => {
+        if (res.data > 0) {
+          Swal.fire({
+            title: "일정 추가 성공!",
+            text: "장소가 일정에 추가되었습니다.",
+            icon: "success",
+          });
+          setPlanse(planse ? false : true);
+        }
       })
       .catch((error) => {
         console.error("일정 추가에 실패했습니다:", error);
@@ -204,6 +207,7 @@ const Schedule = () => {
           },
         })
         .then((res) => {
+          console.log("기차 API 응답:", res.data); // API 응답 로그 추가
           setTrainSchedules(res.data);
         })
         .catch((error) => {
@@ -236,9 +240,9 @@ const Schedule = () => {
               setSelectedDay={setSelectedDay}
               planPageOption={planPageOption}
               setPlanPageOption={setPlanPageOption}
-              selectedPlans={selectedPlans}
+              selectedPlans={selectedPlans} // 업데이트된 selectedPlans 전달
               setSelectedPlans={setSelectedPlans}
-              planInsert={planInsert}
+              setPlanList={setPlanList}
               plans={plans}
             />
           </div>
@@ -249,11 +253,11 @@ const Schedule = () => {
               기차편 추가
             </button>
             <button className="date-list" onClick={togglePlaceSearch}>
-              장소 검색
+              일정 추가
             </button>
           </div>
           {showTrainSearch && (
-            <div className="train-search">
+            <div className="train-searchcontainer ">
               <input
                 type="text"
                 placeholder="출발지"
@@ -278,14 +282,10 @@ const Schedule = () => {
             <div className="search-container">
               <input
                 type="text"
-                placeholder="장소 추가"
+                placeholder="일정 검색"
                 onChange={handleSearch}
               />
-              <ul>
-                {selectedPlans.map((plan, index) => (
-                  <li key={index}>{plan.planName}</li>
-                ))}
-              </ul>
+
               <button className="search-add">검색</button>
               <ul>
                 {searchResults.map((result) => (
@@ -293,7 +293,7 @@ const Schedule = () => {
                     {result.name} - {result.formattedAddress}
                     <button
                       className="add-btn"
-                      onClick={() => planInsert(result)}
+                      onClick={() => handleAddPlan(result)}
                     >
                       +
                     </button>

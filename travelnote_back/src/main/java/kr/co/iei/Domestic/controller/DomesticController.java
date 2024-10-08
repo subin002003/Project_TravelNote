@@ -14,6 +14,7 @@ import kr.co.iei.Domestic.model.dto.ItineraryDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
 import kr.co.iei.Domestic.model.dto.PlanDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
+import kr.co.iei.Domestic.model.dto.TrainDTO;
 import kr.co.iei.Domestic.model.service.DomesticService;
 import kr.co.iei.user.model.dto.UserDTO;
 import kr.co.iei.user.model.service.UserService;
@@ -151,6 +152,11 @@ public class DomesticController {
         emailSender.send(message); // 이메일 전송
     }
     
- 
+ // 기차편 검색 처리
+    @GetMapping("/search")
+    public ResponseEntity<List<TrainDTO>> searchTrains(@RequestParam String departure, @RequestParam String arrival) {
+        List<TrainDTO> trainList = domesticService.searchTrains(departure, arrival);
+        return ResponseEntity.ok(trainList);
+    }
 
 }
