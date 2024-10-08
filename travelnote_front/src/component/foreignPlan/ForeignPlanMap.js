@@ -23,13 +23,13 @@ const ForeignPlanMap = (props) => {
     searchAirport,
   } = props;
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-  const mapRef = useRef(null);
+  const mapRef = useRef();
   const infoWindowRef = useRef(null);
   const [markerArr, setMarkerArr] = useState([]);
 
   // 구글 지도 스크립트 추가
   useEffect(() => {
-    if (regionInfo) {
+    if (regionInfo.regionLatitude !== "" && mapRef) {
       const script = document.createElement("script");
       script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places`;
       script.async = true;
@@ -56,7 +56,7 @@ const ForeignPlanMap = (props) => {
 
   // 지역 정보 조회되면 지도 중심 설정
   useEffect(() => {
-    if (map && regionInfo) {
+    if (map && regionInfo.regionLatitude !== "") {
       map.setCenter({
         lat: Number(regionInfo.regionLatitude),
         lng: Number(regionInfo.regionLongitude),
@@ -98,31 +98,7 @@ const ForeignPlanMap = (props) => {
     infoWindow.setPosition(placeInfo.placeLocation);
     infoWindow.open({ map });
     infoWindowRef.current = infoWindow;
-
-    // 닫기 기능 추가
-    // setTimeout(() => {
-    //   const closeButton = document.getElementById("info-window-close-button");
-    //   if (closeButton) {
-    //     closeButton.addEventListener("click", closeInfoWindow);
-    //   }
-    // }, 100);
-
-    // return () => {
-    //   if (infoWindowRef.current) {
-    //     infoWindowRef.current.close();
-    //   }
-    //   const closeButton = document.getElementById("info-window-close-button");
-    //   if (closeButton) {
-    //     closeButton.removeEventListener("click", closeInfoWindow);
-    //   }
-    // };
   }, [placeInfo]);
-
-  // const closeInfoWindow = () => {
-  //   if (infoWindowRef.current) {
-  //     infoWindowRef.current.close();
-  //   }
-  // };
 
   // 장소 검색
   useEffect(() => {

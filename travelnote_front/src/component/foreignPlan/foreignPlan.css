@@ -320,7 +320,8 @@
 .inactive-plan-seq-icon span {
   color: #ccc;
 }
-.plan-seq-icon {
+.plan-seq-icon,
+.plan-seq-icon-inactive {
   border: 1px solid var(--main-color);
   color: var(--main-color);
   width: 30px;
@@ -637,7 +638,7 @@
 
 /* ForeignPlanMap */
 .plan-map-wrap {
-  height: 700px;
+  height: 635px;
   padding: 0 10px;
 }
 .foreign-map {
@@ -679,6 +680,7 @@
 .companion-button:hover,
 .invitation-button:hover {
   background-color: var(--sub-color);
+  cursor: pointer;
 }
 .delete-itinerary-box {
   display: block;

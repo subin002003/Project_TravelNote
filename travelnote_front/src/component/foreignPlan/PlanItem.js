@@ -93,7 +93,6 @@ const PlanItem = (props) => {
     axios
       .get(`${backServer}/foreign/changeSeqUp/${plan.planNo}`)
       .then((res) => {
-        console.log(res);
         if (res.data === true) {
           setIsPlanDiffered(true);
         }
@@ -104,7 +103,18 @@ const PlanItem = (props) => {
   };
 
   // 순서 하나 아래로 변경
-  const changeSeqDown = () => {};
+  const changeSeqDown = () => {
+    axios
+      .get(`${backServer}/foreign/changeSeqDown/${plan.planNo}`)
+      .then((res) => {
+        if (res.data === true) {
+          setIsPlanDiffered(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <div className="plan-item">
@@ -114,7 +124,9 @@ const PlanItem = (props) => {
             <div className="plan-seq-change-icons">
               <div
                 className={
-                  index === 0 ? "inactive-plan-seq-icon" : "plan-seq-up-icon"
+                  planPageOption === 1 || index === 0
+                    ? "inactive-plan-seq-icon"
+                    : "plan-seq-up-icon"
                 }
                 onClick={changeSeqUp}
               >
@@ -122,7 +134,7 @@ const PlanItem = (props) => {
               </div>
               <div
                 className={
-                  index + 1 === planListLength
+                  planPageOption === 1 || index + 1 === planListLength
                     ? "inactive-plan-seq-icon"
                     : "plan-seq-down-icon"
                 }
@@ -132,12 +144,20 @@ const PlanItem = (props) => {
               </div>
             </div>
             <div
-              className="plan-seq-icon"
+              className={
+                planPageOption === 1
+                  ? "plan-seq-icon-inactive"
+                  : "plan-seq-icon"
+              }
               onMouseEnter={() => setIsSeqHovered(true)}
               onMouseLeave={() => setIsSeqHovered(false)}
-              onClick={deletePlan}
+              onClick={planPageOption === 1 ? "" : deletePlan}
             >
-              {isSeqHovered ? "X" : plan.planSeq}
+              {planPageOption === 1
+                ? plan.planSeq
+                : isSeqHovered
+                ? "X"
+                : plan.planSeq}
             </div>
           </div>
           <div className="plan-name-box">

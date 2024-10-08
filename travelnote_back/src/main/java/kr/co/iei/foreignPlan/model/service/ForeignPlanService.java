@@ -175,6 +175,15 @@ public class ForeignPlanService {
 			return false;
 		}
 	}
-	
 
+	// 일정 순서 하나 아래로 변경
+	public boolean changeSeqDown(int planNo) {
+		int result = foreignPlanDao.changeNextSeqUp(planNo);
+		result += foreignPlanDao.changeSeqDown(planNo);
+		if (result == 2) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
