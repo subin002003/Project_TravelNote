@@ -31,4 +31,7 @@ public class ProductDTO {
 	private int productLikeCount;
 	// 리뷰
 	private List<ReviewDTO> productReviewList;
+	
+	// 각 상품 리뷰 평균 점수
+	private double avgReviewScore;
 }
