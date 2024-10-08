@@ -60,7 +60,7 @@ a:hover {
   text-align: center;
 }
 
-.button-box>button {
+.button-box > button {
   width: auto !important;
   margin: 0 10px;
 }
@@ -89,7 +89,9 @@ a:hover {
 #product-search-button {
   width: 25%;
   height: 40px;
+  border-top-left-radius: 0px;
   border-top-right-radius: 25px;
+  border-bottom-left-radius: 0px;
   border-bottom-right-radius: 25px;
   background: #0575e6;
   /* fallback for old browsers */
@@ -124,7 +126,7 @@ a:hover {
   opacity: 0.8;
 }
 
-.channelTalkBtn>img {
+.channelTalkBtn > img {
   position: absolute;
   top: 0;
   left: 0;
@@ -153,7 +155,7 @@ a:hover {
   box-sizing: border-box;
 }
 
-.pagination>li {
+.pagination > li {
   width: 40px;
   height: 40px;
   text-align: center;
@@ -162,15 +164,15 @@ a:hover {
   transition: all 0.3s;
 }
 
-.pagination>li:hover {
+.pagination > li:hover {
   background-color: rgba(71, 181, 255, 0.8);
 }
 
-.pagination.circle-style>li {
+.pagination.circle-style > li {
   border-radius: 50%;
 }
 
-.pagination>li>span.page-item {
+.pagination > li > span.page-item {
   cursor: pointer;
   display: block;
   width: 100%;
@@ -178,7 +180,7 @@ a:hover {
   font-size: 18px;
 }
 
-.pagination>li>span.page-item.material-icons {
+.pagination > li > span.page-item.material-icons {
   display: block;
   width: 100%;
   height: 100%;
@@ -190,7 +192,7 @@ a:hover {
   color: #fff;
 }
 
-.posting-item {
+.posting-list-item {
   /* margin-bottom: 20px; */
   /* padding: 30px 35px; */
 }
@@ -204,12 +206,36 @@ a:hover {
   cursor: pointer;
   float: left;
 }
-
 .posting-info-right {
   width: 13%;
   position: relative;
   float: left;
 }
+
+/* .posting-info.even > .posting-info-left {
+  width: 87%;
+  cursor: pointer;
+  float: left;
+}
+.posting-info.even > .posting-info-right {
+  width: 13%;
+  position: relative;
+  float: left;
+}
+.posting-info.odd > .posting-info-left {
+  width: 13%;
+  position: relative;
+  float: left;
+}
+.posting-info.odd > .posting-info-right {
+  width: 79%;
+  cursor: pointer;
+  float: left;
+  margin-left: 96px;
+}
+.posting-info.odd .price {
+  float: left;
+} */
 
 .posting-img {
   box-sizing: border-box;
@@ -221,10 +247,14 @@ a:hover {
   justify-content: center;
 }
 
-.posting-img>img {
+.posting-img > img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.avg-score.product-like-count {
+  margin-top: 7px;
 }
 
 .like-icon-box {
@@ -236,22 +266,22 @@ a:hover {
   /* background: rgba(255, 255, 255, 0.3); */
 }
 
-.like-icon-box>span.product-like-checked,
-.like-icon-box>span.product-like-unchecked {
+.like-icon-box > span.product-like-checked,
+.like-icon-box > span.product-like-unchecked {
   position: absolute;
-  top: 7px;
-  right: 21px;
+  top: 10px;
+  right: 10px;
   cursor: pointer;
 }
 
-.productLikeCount {
+/* .productLikeCount {
   position: absolute;
   top: 6.5px;
   right: 8px;
   font-size: 14px;
-}
+} */
 
-.like-icon-box>span>i {
+.like-icon-box > span > i {
   font-size: 20px;
   color: #ff1a51;
 }
@@ -260,6 +290,7 @@ a:hover {
   float: right;
   color: var(--main-color);
   margin-top: 5px;
+  font-weight: 700;
 }
 
 /* ProductView */
@@ -316,7 +347,7 @@ a:hover {
 /* .input-item > label {
   margin-bottom: 20px;
 } */
-.input-item>input {
+.input-item > input {
   padding-left: 10px;
   width: 100%;
   height: 35px;
@@ -327,7 +358,7 @@ a:hover {
   transition: all 0.35s;
 }
 
-.input-item>input:focus {
+.input-item > input:focus {
   border-color: var(--main-color);
   outline: none;
 }
@@ -370,7 +401,7 @@ a:hover {
   float: right;
 }
 
-.review-link-box>span {
+.review-link-box > span {
   cursor: pointer;
 }
 
@@ -379,7 +410,7 @@ a:hover {
   margin-right: 10px !important;
 }
 
-.review-link-box>span>span {
+.review-link-box > span > span {
   margin-left: 2px;
 }
 
@@ -421,7 +452,7 @@ a:hover {
   justify-content: center;
 }
 
-.product-thumb-wrap>img {
+.product-thumb-wrap > img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -450,7 +481,7 @@ a:hover {
   gap: 26px;
 }
 
-.product-info>div {
+.product-info > div {
   width: calc(100% / 3);
 }
 
