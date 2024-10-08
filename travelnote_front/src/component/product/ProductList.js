@@ -106,6 +106,7 @@ const ProductList = () => {
               handleSearchClick();
             }
           }}
+          autoComplete="off"
           placeholder="상품명 검색"
         />
         <button id="product-search-button" onClick={handleSearchClick}>
@@ -222,11 +223,19 @@ const ProductItem = ({ product }) => {
   const handleLikeToggle = () => {
     if (!isLogin) {
       Swal.fire({
-        title: "로그인 후 이용이 가능합니다.",
-        icon: "info",
+        title: "로그인이 필요합니다.",
+        text: "상품을 '찜'하려면 로그인이 필요합니다. 로그인하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "로그인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login"); // 로그인 페이지로 이동
+        }
       });
-      // navigate(`/login`);
-      return;
     }
 
     if (isLogin === true) {
@@ -277,7 +286,8 @@ const ProductItem = ({ product }) => {
         <div className="posting-title">
           <p style={{ color: "#a1a1a1" }}>{product.productSubName}</p>
         </div>
-        {/* 상품 리뷰 별점 평균 표시 */}
+        {/* 상품 리뷰 별점 평균 점수, 좋아요 합계 */}
+
         <div
           style={{ display: "flex", alignItems: "center" }}
           className="avg-score product-like-count"

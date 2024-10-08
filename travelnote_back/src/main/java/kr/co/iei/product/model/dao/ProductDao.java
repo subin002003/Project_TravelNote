@@ -14,10 +14,10 @@ import kr.co.iei.util.PageInfo;
 public interface ProductDao {
 
 	int totalCount();
+	
+	int reviewTotalCount(int productNo);
 
 	int totalCountSearch(String keyword);
-
-	List<ProductDTO> productList();
 	
 	List<ProductDTO> searchProduct(String keyword);
 
@@ -45,14 +45,14 @@ public interface ProductDao {
     int selectOneUser(String userEmail);
 
     // 리뷰 리스트 조회(이메일 없을 때)
-	List<ReviewDTO> selectOneProductReviews(int productNo);
+	List<ReviewDTO> selectOneProductReviews(int productNo, PageInfo pi);
     // 리뷰 답글 조회(이메일 없을 때)
-	List<ReviewDTO> selectOneProductReviewReCommentList(int productNo);
+	List<ReviewDTO> selectOneProductReviewReCommentList(int productNo, PageInfo pi);
 	
 	// 리뷰 리스트 조회(이메일 있을 때)
-    List<ReviewDTO> selectOneProductUserReviews(int productNo, int userNo);
+    List<ReviewDTO> selectOneProductUserReviews(int productNo, int userNo, PageInfo pi);
     // 리뷰 답글 조회
- 	List<ReviewDTO> selectOneProductUserReviewReCommentList(int productNo, int userNo);
+ 	List<ReviewDTO> selectOneProductUserReviewReCommentList(int productNo, int userNo, PageInfo pi);
  	
     // 리뷰 리스트 (좋아요 순 정렬)
     List<ReviewDTO> selectReviewListMostLiked(int productNo, int userNo);
