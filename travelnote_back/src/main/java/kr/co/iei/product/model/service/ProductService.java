@@ -184,7 +184,7 @@ public class ProductService {
 	}
 
 	// 패키지 상품 상세페이지(이메일 있을 때)
-	public Map<String, Object> selectOneProduct(int productNo, String userEmail, int reqPage) {
+	public Map<String, Object> selectOneProductUserEmail(int productNo, String userEmail, int reqPage) {
 	    ProductDTO product = productDao.selectOneProduct(productNo);
 	    List<ProductFileDTO> productFileList = productDao.selectOneProductFileList(productNo);
 	    int userNo = productDao.selectOneUser(userEmail);

@@ -175,8 +175,9 @@ public class ProductController {
 
 	// 상품 상세페이지
     @GetMapping(value="/productNo/{productNo}/{userEmail}/{reqPage}")
-    public ResponseEntity<Map> selectOneProduct(@PathVariable int productNo, @PathVariable String userEmail, @PathVariable int reqPage) {
-        Map<String, Object> productDetails = productService.selectOneProduct(productNo, userEmail, reqPage);
+    public ResponseEntity<Map> selectOneProductUserEmail(@PathVariable int productNo, @PathVariable String userEmail, @PathVariable int reqPage) {
+    	System.out.println("userEmail : " + userEmail);
+        Map<String, Object> productDetails = productService.selectOneProductUserEmail(productNo, userEmail, reqPage);
         return ResponseEntity.ok(productDetails);
     }
 	
@@ -231,7 +232,7 @@ public class ProductController {
 	}
 	
 	// 리뷰 정렬
-    @GetMapping(value="/productNo/{productNo}/{userEmail}/{sortOption}")
+    @GetMapping(value="/productNo/{productNo}/review/{userEmail}/{sortOption}")
     public ResponseEntity<Map> selectReview(@PathVariable int productNo, @PathVariable String userEmail, @PathVariable String sortOption) {
     	System.out.println(sortOption);
         Map<String, Object> sortedReviews = productService.selectReviewListSortOption(productNo, userEmail, sortOption);
