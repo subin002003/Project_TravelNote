@@ -62,6 +62,7 @@ const ReviewBoardUpdate = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         // 사용자가 '등록'를 클릭했을 경우
+        console.log(thumbnail);
         if (
           reviewBoardTitle !== "" &&
           reviewBoardContent !== "" &&
