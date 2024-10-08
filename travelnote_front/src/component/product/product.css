@@ -53,11 +53,13 @@ a:hover {
   margin-bottom: 65px;
 }
 
-.button-box {
+.buttonBox {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
   width: 400px;
-  margin: 50px auto 150px auto;
+  margin: 70px auto 0 auto !important;
   padding: 10px;
-  text-align: center;
 }
 
 .button-box > button {

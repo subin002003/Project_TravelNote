@@ -122,7 +122,7 @@ const ProductView = () => {
 
     axios
       .get(
-        `${backServer}/product/productNo/${productNo}/${loginEmail}/${sortOption}`
+        `${backServer}/product/productNo/${productNo}/review/${loginEmail}/${sortOption}`
       )
       .then((res) => {
         console.log(res.data); // 응답 데이터 로그
@@ -606,7 +606,7 @@ const ProductView = () => {
       </div>
 
       {isLogin && userType === 2 ? (
-        <div className="button-box">
+        <div className="buttonBox">
           <Link
             className="btn-primary lg"
             to={`/product/update/${product.productNo}`}
