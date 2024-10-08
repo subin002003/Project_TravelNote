@@ -1,8 +1,5 @@
 const ForeignPlanDaysButton = (props) => {
-  const planDays = props.planDays;
-  const selectedDay = props.selectedDay;
-  const setSelectedDay = props.setSelectedDay;
-  const totalPlanDates = props.totalPlanDates;
+  const { planDays, selectedDay, setSelectedDay, totalPlanDates } = props;
   const moveToClickedDay = (e) => {
     setSelectedDay(Number(e.target.id));
   };

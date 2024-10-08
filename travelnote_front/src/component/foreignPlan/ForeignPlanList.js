@@ -98,7 +98,7 @@ const ForeignPlanList = (props) => {
       <div className="itinerary-info-box">
         <h4>{itinerary.itineraryTitle}</h4>
         <h5>
-          {itinerary.countryName} {itinerary.regionName}
+          {"[" + itinerary.countryName + "]"} {itinerary.regionName}
         </h5>
         <h5>
           {itinerary.itineraryStartDate} ~ {itinerary.itineraryEndDate}

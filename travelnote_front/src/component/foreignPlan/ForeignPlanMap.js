@@ -12,20 +12,19 @@ const ForeignPlanMap = (props) => {
     setSelectedPosition,
     placeInfo,
     setPlaceInfo,
-    departInfo,
-    setDepartInfo,
-    arrivalInfo,
-    setArrivalInfo,
     searchDepartAirport,
     setSearchDepartAirport,
     searchArrivalAirport,
     setSearchArrivalAirport,
     searchAirport,
+    planPageOption,
+    planList,
   } = props;
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   const mapRef = useRef();
   const infoWindowRef = useRef(null);
   const [markerArr, setMarkerArr] = useState([]);
+  const [pathPoints, setPathPoints] = useState(null);
 
   // 구글 지도 스크립트 추가
   useEffect(() => {
@@ -72,7 +71,90 @@ const ForeignPlanMap = (props) => {
     }
   }, [selectedPosition]);
 
-  // placeInfo 바뀔 때마다 마커 띄우기
+  // planPageOption 바뀔 때마다 마커 띄우기/지우기
+  useEffect(() => {
+    if (!map) return;
+    // 기존 마커 있으면 지우기
+    markerArr.forEach((marker) => {
+      marker.setMap(null);
+    });
+    if (pathPoints) {
+      console.log("Removing existing pathPoints:", pathPoints);
+      pathPoints.setMap(null); // Remove the previous polyline from the map
+    }
+    // planPageOption이 1일 때 조회이므로 planList에 있는 리스트를 마커로 띄우기
+    if (planPageOption === 1 && planList.length > 0) {
+      const bounds = new window.google.maps.LatLngBounds();
+      const newPathPoints = [];
+      const newMarkerArr = [];
+      planList.map((place, index) => {
+        const marker = new window.google.maps.Marker({
+          position: {
+            lat: Number(place.planLatitude),
+            lng: Number(place.planLongitude),
+          },
+          map: map,
+          label: {
+            text: String(place.planSeq),
+            color: "white",
+            fontSize: "16px",
+            fontWeight: "bold",
+          },
+        });
+        bounds.extend(marker.position);
+        // 마커 이벤트 리스너
+        marker.addListener("click", () => {
+          map.setZoom(15);
+          map.setCenter({
+            lat: Number(place.planLatitude),
+            lng: Number(place.planLongitude),
+          });
+          setPlaceInfo({
+            placeName: place.planName,
+            placeLocation: {
+              lat: Number(place.planLatitude),
+              lng: Number(place.planLongitude),
+            },
+            placeAddress: place.planAddress,
+            placeId: place.planId,
+          });
+          setSelectedPosition({
+            lat: Number(place.planLatitude),
+            lng: Number(place.planLongitude),
+          });
+        });
+        newPathPoints.push({
+          lat: Number(place.planLatitude),
+          lng: Number(place.planLongitude),
+        });
+        newMarkerArr.push(marker);
+      });
+      setMarkerArr(newMarkerArr);
+      if (newMarkerArr.length > 0) {
+        map.fitBounds(bounds);
+      }
+      if (map.getZoom() > 13) {
+        map.setZoom(13);
+      }
+      const polyline = new window.google.maps.Polyline({
+        path: newPathPoints,
+        geodesic: false,
+        strokeColor: "#FF0000",
+        strokeOpacity: 1.0,
+        strokeWeight: 1,
+        map: map,
+      });
+      setPathPoints(polyline);
+    } else {
+      map.setCenter({
+        lat: Number(regionInfo.regionLatitude),
+        lng: Number(regionInfo.regionLongitude),
+      });
+      map.setZoom(13);
+    }
+  }, [regionInfo, planPageOption, planList]);
+
+  // placeInfo 바뀔 때마다 인포윈도우 띄우기
   useEffect(() => {
     if (!map || !placeInfo.placeName) return;
 
@@ -128,7 +210,8 @@ const ForeignPlanMap = (props) => {
       ) {
         const bounds = new window.google.maps.LatLngBounds();
         // 마커 추가
-        const newMarkerArr = resultList.map((place, index) => {
+        const newMarkerArr = [];
+        resultList.map((place, index) => {
           const marker = new window.google.maps.Marker({
             position: place.geometry.location,
             map: map,
@@ -136,7 +219,6 @@ const ForeignPlanMap = (props) => {
           bounds.extend(marker.position);
           marker.addListener("click", () => {
             map.setZoom(15);
-            console.log(2);
 
             map.setCenter(place.geometry.location);
             setPlaceInfo({
@@ -147,8 +229,14 @@ const ForeignPlanMap = (props) => {
             });
             setSelectedPosition(place.geometry.location);
           });
-          return marker;
+          newMarkerArr.push(marker);
         });
+        if (newMarkerArr.length > 0) {
+          map.fitBounds(bounds);
+        }
+        if (map.getZoom() > 13) {
+          map.setZoom(13);
+        }
         setMarkerArr(newMarkerArr);
         setSearchPlaceList(resultList);
         setSearchKeyword("");
@@ -197,14 +285,21 @@ const ForeignPlanMap = (props) => {
       ) {
         const bounds = new window.google.maps.LatLngBounds();
         // 마커 추가
-        const newMarkerArr = resultList.map((place, index) => {
+        const newMarkerArr = [];
+        resultList.map((place, index) => {
           const marker = new window.google.maps.Marker({
             position: place.geometry.location,
             map: map,
           });
           bounds.extend(marker.position);
-          return marker;
+          newMarkerArr.push(marker);
         });
+        if (newMarkerArr.length > 0) {
+          map.fitBounds(bounds);
+        }
+        if (map.getZoom() > 13) {
+          map.setZoom(13);
+        }
         setMarkerArr(newMarkerArr);
         setSearchPlaceList(resultList);
         setSearchDepartAirport("");

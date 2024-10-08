@@ -99,6 +99,7 @@ const ForeignPlanMain = () => {
             totalPlanDates.push(newDate);
             startDate.setDate(startDate.getDate() + 1);
           }
+          setTotalPlanDates(totalPlanDates);
         }
       })
       .catch((err) => {
@@ -242,15 +243,13 @@ const ForeignPlanMain = () => {
         setSelectedPosition={setSelectedPosition}
         placeInfo={placeInfo}
         setPlaceInfo={setPlaceInfo}
-        departInfo={departInfo}
-        setDepartInfo={setDepartInfo}
-        arrivalInfo={arrivalInfo}
-        setArrivalInfo={setArrivalInfo}
         searchDepartAirport={searchDepartAirport}
         setSearchDepartAirport={setSearchDepartAirport}
         searchArrivalAirport={searchArrivalAirport}
         setSearchArrivalAirport={setSearchArrivalAirport}
         searchAirport={searchAirport}
+        planPageOption={planPageOption}
+        planList={planList}
       />
     </div>
   );

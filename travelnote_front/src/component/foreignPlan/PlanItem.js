@@ -61,6 +61,7 @@ const PlanItem = (props) => {
 
   // seq-icon 클릭 시 삭제
   const deletePlan = () => {
+    if (planPageOption === 1) return;
     Swal.fire({
       icon: "warning",
       text: "일정에서 삭제할까요?",
@@ -151,7 +152,7 @@ const PlanItem = (props) => {
               }
               onMouseEnter={() => setIsSeqHovered(true)}
               onMouseLeave={() => setIsSeqHovered(false)}
-              onClick={planPageOption === 1 ? "" : deletePlan}
+              onClick={deletePlan}
             >
               {planPageOption === 1
                 ? plan.planSeq
