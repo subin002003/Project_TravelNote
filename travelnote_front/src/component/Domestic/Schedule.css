@@ -164,9 +164,7 @@
 .schedule-edit-panel.active {
   display: block; /* 수정 모드일 때 활성화 */
 }
-.schedule-content {
-  overflow-y: auto;
-}
+
 .button-container {
   display: flex;
   justify-content: center; /* 버튼을 가운데 정렬 */
@@ -263,6 +261,7 @@
 .add-btn:hover {
   background-color: #0056b3;
 }
+
 .train-search-container {
   display: flex;
   flex-direction: column;

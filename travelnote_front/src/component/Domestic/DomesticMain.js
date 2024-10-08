@@ -14,6 +14,7 @@ const DomesticMain = () => {
   const [searchText, setSearchText] = useState("어디로 여행 떠날까요 ?");
   const [filteredRegions, setFilteredRegions] = useState([]);
   const [reqPage, setReqPage] = useState(1);
+  const [totalRegions, setTotalRegions] = useState(20); // 전체 지역 수 상태 추가
 
   useEffect(() => {
     axios
@@ -143,11 +144,127 @@ const DomesticMain = () => {
           />
         ))}
       </div>
-      <button className="more-btn" onClick={() => setReqPage(reqPage + 1)}>
-        더보기
-      </button>
+      {regionList.length < totalRegions && (
+        <button className="more-btn" onClick={() => setReqPage(reqPage + 1)}>
+          더보기
+        </button>
+      )}
     </div>
   );
 };
 
 export default DomesticMain;
+
+/*
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import "./DomesticMain.css";
+import Swal from "sweetalert2";
+import { isLoginState } from "../utils/RecoilData";
+import { useRecoilState, useRecoilValue } from "recoil";
+
+const DomesticMain = () => {
+  const backServer = process.env.REACT_APP_BACK_SERVER;
+  const isLogin = useRecoilValue(isLoginState);
+  const navigate = useNavigate();
+  const [regionList, setRegionList] = useState([]);
+  const [totalRegions, setTotalRegions] = useState(0); // 전체 지역 수 상태 추가
+  const [searchText, setSearchText] = useState("어디로 여행 떠날까요 ?");
+  const [filteredRegions, setFilteredRegions] = useState([]);
+  const [reqPage, setReqPage] = useState(1);
+
+  useEffect(() => {
+    axios
+      .get(`${backServer}/domestic/list/${reqPage}`)
+      .then((res) => {
+        const { regions, totalRegions } = res.data; // 전체 지역 수 포함
+        const koreanRegions = regions.filter(
+          (region) => region.countryName === "대한민국"
+        );
+        setRegionList((prevList) => [...prevList, ...koreanRegions]);
+        setTotalRegions(totalRegions); // 전체 지역 수 저장
+      })
+      .catch((err) => {
+        console.error("에러발생:", err);
+      });
+  }, [reqPage, backServer]);
+
+  useEffect(() => {
+    if (searchText === "어디로 여행 떠날까요 ?" || searchText === "") {
+      setFilteredRegions(regionList);
+    } else {
+      const results = regionList.filter((region) =>
+        region.regionName.includes(searchText)
+      );
+      setFilteredRegions(results);
+    }
+  }, [searchText, regionList]);
+
+  const handleSearch = () => {
+    setSearchText(searchText.trim());
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+
+
+
+    return (
+      <div className="city-card" tabIndex={0}>
+        <Link to={`/city/${city}/${regionNo}`}>
+          <img src={imagePath} alt={city} className="city-image" />
+          <div className="city-name">
+            {city} ({country})
+          </div>
+        </Link>
+      </div>
+    );
+  };
+
+  return (
+    <div className="domestic-wrap">
+      <h1>국내 여행 플래너</h1>
+      <div className="search-bar">
+        <input
+          type="text"
+          value={searchText}
+          onFocus={() =>
+            searchText === "어디로 여행 떠날까요 ?" && setSearchText("")
+          }
+          onBlur={() =>
+            searchText === "" && setSearchText("어디로 여행 떠날까요 ?")
+          }
+          onChange={(e) => setSearchText(e.target.value)}
+          onKeyDown={handleKeyDown} // Enter 키 입력 감지
+        />
+        <button className="search-btn" onClick={handleSearch}>
+          검색
+        </button>
+      </div>
+      <div className="city-list">
+        {filteredRegions.map((region) => (
+          <CityCard
+            key={region.regionNo}
+            city={region.regionName}
+            country={region.countryName}
+            regionNo={region.regionNo}
+          />
+        ))}
+      </div>
+      {regionList.length < totalRegions && (
+        <button className="more-btn" onClick={() => setReqPage(reqPage + 1)}>
+          더보기
+        </button>
+      )}
+    </div>
+  );
+};
+
+export default DomesticMain;
+
+*/

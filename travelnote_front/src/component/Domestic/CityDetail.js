@@ -8,12 +8,12 @@ import { loginEmailState } from "../utils/RecoilData";
 import WeatherDescKo from "./WeatherDescKo";
 
 const CityDetail = () => {
+  const [weather, setWeather] = useState(null);
   const backServer = process.env.REACT_APP_BACK_SERVER;
-  const API_KEY = process.env.REACT_APP_API_KEY;
+
   const { cityName, regionNo } = useParams();
   const navigate = useNavigate();
   const [loginEmail] = useRecoilState(loginEmailState);
-  const [weather, setWeather] = useState(null);
   const [tripTitle, setTripTitle] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -104,7 +104,7 @@ const CityDetail = () => {
       .then((res) => {
         Swal.fire({
           icon: "success",
-          text: "여행 일정이 성공적으로 저장되었습니다.",
+          text: "여행 일정 만들기 성공.",
         });
         navigate(`/schedule/${res.data}`);
       })
@@ -164,7 +164,7 @@ const CityDetail = () => {
                   <input
                     type="date"
                     value={endDate}
-                    min={today}
+                    min={startDate || today}
                     onChange={(e) => setEndDate(e.target.value)}
                   />
                 </label>

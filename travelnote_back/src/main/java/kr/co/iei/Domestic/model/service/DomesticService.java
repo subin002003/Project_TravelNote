@@ -19,6 +19,7 @@ import kr.co.iei.Domestic.model.dto.ItineraryDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
 import kr.co.iei.Domestic.model.dto.PlanDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
+import kr.co.iei.Domestic.model.dto.TrainDTO;
 
 
 @Service
@@ -29,7 +30,7 @@ public class DomesticService {
 
     // 페이지 번호에 따른 지역 리스트 가져오기
     public List<RegionDTO> getAllRegions(int reqPage) {
-        int itemNum = 8; // 첫 페이지 사진 갯수
+        int itemNum = 6; // 첫 페이지 사진 갯수
         int endNum = reqPage * itemNum;
         int startNum = endNum - itemNum + 1;
         List list = domesticDao.getAllRegions(startNum, endNum);
@@ -111,5 +112,11 @@ public class DomesticService {
     public CompanionDTO findCompanion(int itineraryNo, int userNo) {
         return domesticDao.selectCompanion(itineraryNo, userNo);
     }
+   
+    //기차 조회
+	public List<TrainDTO> searchTrains(String departure, String arrival) {
+		List list = domesticDao.selectSearchTrains(departure, arrival);
+		return list;
+	}
 
 }

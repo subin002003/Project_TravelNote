@@ -56,7 +56,7 @@
 		select * from plan where
 		itinerary_no = #{itineraryNo} and plan_day = #{planDay}
 	</select>
-	
+
 	<!-- 상세 일정 수정 -->
 	<update id="updatePlan">
 		update plan set plan_memo = #{planMemo}, plan_time =
@@ -183,4 +183,14 @@
 		)
 		where (rnum between #{start} and #{end}) and receive_user = #{userNick} 
 	</select>
+	
+	   <select id="selectSearchTrains" resultType="Train">
+        SELECT 
+            train_no AS trainNo,
+            train_name AS trainName,
+            departure,
+            arrival
+        FROM train
+        WHERE departure = #{departure} AND arrival = #{arrival}
+    </select>
 </mapper>
