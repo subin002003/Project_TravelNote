@@ -62,6 +62,7 @@ const MyReservation = () => {
 const ReservationItem = (props) => {
   const reservation = props.reservation;
   const navigate = useNavigate();
+  const backerver = process.env.REACT_APP_BACK_SERVER;
   const navigateReservationView = () => {
     navigate(`/mypage/myReservation/${reservation.orderNo}`);
   };
@@ -72,7 +73,14 @@ const ReservationItem = (props) => {
       className="reservation-item"
     >
       <div className="reservation-thum">
-        <img className="reservation-img" src="/image/logo1.png"></img>
+        <img
+          className="reservation-img"
+          src={
+            reservation.productThumb
+              ? `${backerver}/product/thumb/${reservation.productThumb}`
+              : "/image/logo1.png"
+          }
+        ></img>
       </div>
       <div className="reservation-table">
         <table>

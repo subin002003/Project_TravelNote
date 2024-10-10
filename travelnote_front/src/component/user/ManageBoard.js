@@ -59,15 +59,15 @@ const ManageBoard = () => {
   return (
     <div className="manage-board-wrap">
       <div className="mypage-title">자유게시판 신고 목록</div>
-      <table className="report-board-list">
+      <table style={{ fontSize: "14px" }} className="report-board-list">
         <tbody>
           <tr>
-            <th>게시글 번호</th>
-            <th>게시글 제목</th>
-            <th>작성자</th>
-            <th>작성일</th>
-            <th>삭제버튼</th>
-            <th>삭제여부</th>
+            <th style={{ width: "12%" }}>게시글 번호</th>
+            <th style={{ width: "20%" }}>게시글 제목</th>
+            <th style={{ width: "15%" }}>작성자</th>
+            <th style={{ width: "23%" }}>작성일</th>
+            <th style={{ width: "20%" }}>삭제버튼</th>
+            <th style={{ width: "15%" }}>삭제여부</th>
           </tr>
           {reportBoardList.map((reportBoard, i) => (
             <ReportBoardItem
@@ -86,26 +86,31 @@ const ManageBoard = () => {
         />
       </div>
       <div className="mypage-title">리뷰게시판 신고 목록</div>
-      <div className="report-reviewboard-list">
-        <table className="report-board-list">
-          <tbody>
-            <tr>
-              <th>게시글 번호</th>
-              <th>게시글 제목</th>
-              <th>작성자</th>
-              <th>작성일</th>
-              <th>삭제버튼</th>
-              <th>삭제여부</th>
-            </tr>
-            {reportReviewBoardList.map((reviewBoard, i) => (
-              <ReviewBoardItem
-                key={"reportReviewBoard" + i}
-                reviewBoard={reviewBoard}
-                updateReviewBoardStatus={updateReviewBoardStatus} // 상태 업데이트 함수 전달
-              />
-            ))}
-          </tbody>
-        </table>
+      <table style={{ fontSize: "14px" }} className="report-board-list">
+        <tbody>
+          <tr>
+            <th style={{ width: "12%" }}>게시글 번호</th>
+            <th style={{ width: "20%" }}>게시글 제목</th>
+            <th style={{ width: "15%" }}>작성자</th>
+            <th style={{ width: "23%" }}>작성일</th>
+            <th style={{ width: "20%" }}>삭제버튼</th>
+            <th style={{ width: "15%" }}>삭제여부</th>
+          </tr>
+          {reportReviewBoardList.map((reviewBoard, i) => (
+            <ReviewBoardItem
+              key={"reportReviewBoard" + i}
+              reviewBoard={reviewBoard}
+              updateReviewBoardStatus={updateReviewBoardStatus} // 상태 업데이트 함수 전달
+            />
+          ))}
+        </tbody>
+      </table>
+      <div style={{ marginTop: "15px" }} className="manage-board-page-navi">
+        <PageNavi
+          pi={reviewBoardPi}
+          reqPage={reviewBoardReqPage}
+          setReqPage={setReviewBoardReqPage}
+        />
       </div>
     </div>
   );
@@ -158,8 +163,26 @@ const ReportBoardItem = (props) => {
 const ReviewBoardItem = (props) => {
   const reviewBoard = props.reviewBoard;
   const updateReviewBoardStatus = props.updateReviewBoardStatus;
+  const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
-  const deleteReviewBoard = () => {};
+  const deleteReviewBoard = () => {
+    axios
+      .patch(
+        `${backServer}/admin/updateReviewBoardStatus/${reviewBoard.reviewBoardNo}`
+      )
+      .then((res) => {
+        if (res.data === 1) {
+          Swal.fire({
+            icon: "success",
+            title: "삭제 성공",
+          });
+        }
+        updateReviewBoardStatus(reviewBoard.reviewBoardNo, 0);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <tr>
       <td>{reviewBoard.reviewBoardNo}</td>

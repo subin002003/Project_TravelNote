@@ -222,6 +222,13 @@ public class ReviewBoardService {
 		return map;
 	}
 	
+	//오건하 2024-10-10 작성
+	@Transactional
+	public int updateReviewBoardStatus(int reviewBoardNo) {
+		int result = reviewBoardDao.updateReviewBoardStatus(reviewBoardNo);
+		return result;
+	}
+	
 	
 	
 	

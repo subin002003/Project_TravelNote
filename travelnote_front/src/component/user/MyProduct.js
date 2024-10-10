@@ -64,6 +64,7 @@ const MyProduct = () => {
 const MyProductItem = (props) => {
   const myProduct = props.myProduct;
   const navigate = useNavigate();
+  const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigateProductView = () => {
     navigate(`/product/view/${myProduct.productNo}`);
   };
@@ -73,8 +74,16 @@ const MyProductItem = (props) => {
       onClick={navigateProductView}
       className="myproduct-content"
     >
-      <div className="myproduct-thumb">
-        <img className="myproduct-img" src="/image/logo1.png"></img>
+      <div style={{ borderRadius: "10px" }} className="myproduct-thumb">
+        <img
+          style={{ width: "100%", height: "100%", borderRadius: "10px" }}
+          className="myproduct-img"
+          src={
+            myProduct.productThumb
+              ? `${backServer}/product/thumb/${myProduct.productThumb}`
+              : "/image/default_img.png"
+          }
+        ></img>
       </div>
       <table>
         <tr>

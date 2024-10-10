@@ -28,12 +28,13 @@
 	            o.people, 
 	            o.price, 
 	            p.product_name, 
-	            u.user_nick, 
+	            u2.user_nick, 
 	            p.product_thumb 
 	        from order_pay o 
 	        join product p on o.product_no = p.product_no 
 	        join user_tbl u on p.product_writer = u.user_email 
-	        where u.user_nick = #{userNick}
+	        join user_tbl u2 on u2.user_email = o.user_email
+	        where u2.user_nick = #{userNick}
 	        order by o.order_no
 	    ) result
 	) 

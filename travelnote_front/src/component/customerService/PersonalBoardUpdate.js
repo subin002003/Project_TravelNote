@@ -1,5 +1,5 @@
-import { useRecoilState } from "recoil";
-import { userNickState } from "../utils/RecoilData";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { isLoginState, userNickState } from "../utils/RecoilData";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -23,6 +23,7 @@ const PersonalBoardUpdate = () => {
   const [delPersonalBoardFileNo, setDelPersonalBoardFileNo] = useState([]); // 삭제할 파일 번호 배열
 
   const [currentDate, setCurrentDate] = useState("");
+  const isLogin = useRecoilValue(isLoginState);
 
   useEffect(() => {
     const today = new Date();
@@ -31,6 +32,14 @@ const PersonalBoardUpdate = () => {
   }, []);
 
   useEffect(() => {
+    if (!isLogin) {
+      Swal.fire({
+        title: "로그인 후 이용해주세요",
+        icon: "warning",
+      }).then(() => {
+        navigate("/login");
+      });
+    }
     axios
       .get(`${backServer}/personalBoard/view/${personalBoardNo}`)
       .then((res) => {

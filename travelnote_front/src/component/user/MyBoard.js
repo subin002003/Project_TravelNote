@@ -148,6 +148,7 @@ const BoardItem = (props) => {
 
 const ReviewBoardItem = (props) => {
   const reviewBoard = props.reviewBoard;
+  const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
   const naviageReviewBoardView = () => {
     navigate(`/reviewBoard/view/${reviewBoard.reviewBoardNo}`);
@@ -159,7 +160,13 @@ const ReviewBoardItem = (props) => {
       className="myreviewboard-item"
     >
       <div className="myreviewboard-thumb">
-        <img src="/image/logo1.png"></img>
+        <img
+          src={
+            reviewBoard.reviewBoardThumbNail
+              ? `${backServer}/reviewBoard/thumb/${reviewBoard.reviewBoardThumbNail}`
+              : "/image/default_img.png"
+          }
+        ></img>
       </div>
       <div className="myreviewboard-title">
         <span>{reviewBoard.reviewBoardTitle}</span>

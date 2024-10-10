@@ -85,4 +85,11 @@ public class AdminController {
 		return ResponseEntity.ok(map);
 	}
 	
+	@PatchMapping(value = "/updateReviewBoardStatus/{reviewBoardNo}")
+	public ResponseEntity<Integer> updateReviewBoardStatus(@PathVariable int reviewBoardNo){
+		int result = reviewBoardService.updateReviewBoardStatus(reviewBoardNo);
+		return ResponseEntity.ok(result);
+	}
+	
+	
 }

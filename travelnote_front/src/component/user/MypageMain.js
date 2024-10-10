@@ -50,9 +50,6 @@ const MypageMain = () => {
   // 로그인 상태 체크 및 리다이렉트
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
-    console.log("userType : " + userType);
-    console.log("userNick : " + userNick);
-    console.log("userEmail : " + loginEmail);
     if (accessToken) {
       axios
         .get(`${backServer}/user/checkToken`, {
@@ -60,12 +57,8 @@ const MypageMain = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         })
-        .then((res) => {
-          // 유효한 토큰일 경우 추가적인 작업 처리
-          console.log("토큰 유효함:", res);
-        })
+        .then((res) => {})
         .catch((err) => {
-          console.log("토큰 유효하지 않음:", err);
           Swal.fire({
             title: "로그인 후 이용해주세요",
             icon: "warning",

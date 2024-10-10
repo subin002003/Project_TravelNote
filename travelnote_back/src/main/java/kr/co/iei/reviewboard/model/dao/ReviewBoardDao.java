@@ -73,7 +73,10 @@ public interface ReviewBoardDao {
 	int reportReviewBoardTotalCount();
 	
 	//오건하 2024-10-10 작성
-	List reportReviewBoardList(PageInfo pi);	
+	List reportReviewBoardList(PageInfo pi);
+
+	//오건하 2024-10-10 작성
+	int updateReviewBoardStatus(int reviewBoardNo);	
 	
 	
 }

@@ -29,7 +29,7 @@ const PaymentInfo = () => {
         <table>
           <tbody>
             <tr>
-              <th>주문번호</th>
+              <th style={{ width: "25%" }}>주문번호</th>
               <td colSpan={3}>{paymentInfo.orderNo}</td>
             </tr>
             <tr>
@@ -56,8 +56,8 @@ const PaymentInfo = () => {
               <td colSpan={3}>{paymentInfo.productName}</td>
             </tr>
             <tr>
-              <th>결제 가격</th>
-              <td>{paymentInfo.price}00원</td>
+              <th style={{ width: "25%" }}>결제 가격</th>
+              <td style={{ width: "25%" }}>{paymentInfo.price}00원</td>
               <th>결제 인원</th>
               <td>{paymentInfo.people}명</td>
             </tr>

@@ -414,7 +414,6 @@ td {
   width: 100%;
 }
 .paymentInfo-table {
-  width: 80%;
   background-color: var(--background-color);
   margin: 0 auto;
   border-radius: 20px;
@@ -474,10 +473,12 @@ td {
 }
 
 .wish-product-title {
+  width: 250px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-right: 50px;
+  margin-right: 20px;
+  margin-left: 10px;
 }
 
 .wish-product-title span:first-child {
