@@ -92,7 +92,7 @@ const ReviewBoardView = () => {
       .then((res) => {
         if (res.data.success) {
           setLiked(!liked); // 상태 반전
-          setLikeCount((prev) => (liked ? prev - 1 : prev + 1)); // 카운트 업데이트
+          setLikeCount((prev) => (liked ? Number(prev) - 1 : Number(prev) + 1)); // 카운트 업데이트
         } else {
           Swal.fire({
             title: "실패",
