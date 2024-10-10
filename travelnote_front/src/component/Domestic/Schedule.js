@@ -31,7 +31,7 @@ const Schedule = () => {
   const { itineraryNo, city } = useParams();
   const [selectedPlans, setSelectedPlans] = useState([]);
   const [markers, setMarkers] = useState([]);
-  const [planList, setPlanList] = useState(false); // 또는 빈 배열로 설정할 수도 있습니다.
+  const [planList, setPlanList] = useState(false);
   const [planse, setPlanse] = useState(true);
 
   // 일정 데이터 가져오기
@@ -53,9 +53,6 @@ const Schedule = () => {
           startDate.setDate(startDate.getDate() + 1);
         }
         setTotalPlanDates(dates);
-      })
-      .catch((error) => {
-        console.error("일정을 불러오는 데 실패했습니다:", error);
       });
   }, [backServer, itineraryNo, planse]);
 
@@ -112,7 +109,7 @@ const Schedule = () => {
         query: searchTerm,
         location: cityCoordinates,
         radius: 500,
-        fields: ["name", "geometry", "place_id", "formatted_address", "photos"],
+        fields: ["name", "geometry", "place_id", "formatted_address"],
       };
 
       service.textSearch(request, (results, status) => {
@@ -127,7 +124,6 @@ const Schedule = () => {
           setSearchResults(places);
           updateMarkers(places);
         } else {
-          console.error("검색에 실패했습니다: ", status);
           setSearchResults([]);
           updateMarkers([]);
         }
@@ -138,6 +134,7 @@ const Schedule = () => {
     }
   };
 
+  // 마커 업데이트
   const updateMarkers = (places) => {
     markers.forEach((marker) => marker.setMap(null));
 
@@ -165,7 +162,7 @@ const Schedule = () => {
     setMarkers(newMarkers);
   };
 
-  //일정 추가 함수
+  // 일정 추가 함수
   const handleAddPlan = (plan) => {
     const SchedulePlan = {
       itineraryNo: itineraryNo,
@@ -189,11 +186,10 @@ const Schedule = () => {
           });
           setPlanse(planse ? false : true);
         }
-      })
-      .catch((error) => {
-        console.error("일정 추가에 실패했습니다:", error);
       });
   };
+
+  // 검색 기능 표시 토글
   const togglePlaceSearch = () => {
     setShowSearch(!showSearch);
     setShowTrainSearch(false);
@@ -211,14 +207,14 @@ const Schedule = () => {
               setSelectedDay={setSelectedDay}
               planPageOption={planPageOption}
               setPlanPageOption={setPlanPageOption}
-              selectedPlans={selectedPlans} // 업데이트된 selectedPlans 전달
+              selectedPlans={selectedPlans}
               setSelectedPlans={setSelectedPlans}
               setPlanList={setPlanList}
               plans={plans}
             />
           </div>
         </div>
-        <div className="store-list" style={{ width: "300px" }}>
+        <div className="store-list">
           <div className="search-button">
             <button className="date-list" onClick={togglePlaceSearch}>
               일정 추가
@@ -228,7 +224,7 @@ const Schedule = () => {
             <div className="search-container">
               <input
                 type="text"
-                placeholder="일정 검색"
+                placeholder="장소 검색"
                 onChange={handleSearch}
               />
               <button className="search-add">검색</button>
@@ -248,7 +244,7 @@ const Schedule = () => {
             </div>
           )}
         </div>
-        <div id="map" style={{ height: "70%", width: "70%" }}></div>
+        <div id="map" style={{ height: "80%", width: "70%" }}></div>
       </div>
     </div>
   );

@@ -42,11 +42,7 @@ const SchedulePlanList = (props) => {
           },
         })
         .then((res) => {
-          console.log(res.data);
           setPlanList(res.data); // 받아온 데이터를 상태에 저장
-        })
-        .catch((err) => {
-          console.log(err);
         });
     }
   }, [itinerary, selectedDate, backServer, selectedDay]);
@@ -92,9 +88,6 @@ const SchedulePlanList = (props) => {
               text: "처리 중 오류가 발생했습니다.",
             });
           }
-        })
-        .catch((err) => {
-          console.log(err);
         });
     }
   };
