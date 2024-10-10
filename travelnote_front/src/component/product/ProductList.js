@@ -280,7 +280,7 @@ const ProductItem = ({ product }) => {
           navigate(`/product/view/${product.productNo}`);
         }}
       >
-        <div className="posting-title">
+        <div style={{ width: "95%" }} className="posting-title">
           <h3 style={{ marginBottom: "0" }}>{product.productName}</h3>
         </div>
         <div className="posting-title">
