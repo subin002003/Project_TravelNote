@@ -32,7 +32,7 @@ const ReviewBoardToastEditor = (props) => {
         console.log(err);
       });
   };
-  console.log(reviewBoardContent);
+
   return (
     <div style={{ width: "100%", marginTop: "20px" }}>
       {type === 0 || (type === 1 && reviewBoardContent !== "") ? (

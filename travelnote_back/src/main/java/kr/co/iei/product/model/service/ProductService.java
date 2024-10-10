@@ -85,7 +85,7 @@ public class ProductService {
 	
 	// 패키지 상품 목록 조회(이메일 없으면)
 	public Map<String, Object> selectProductList(int reqPage) {
-		int numPerPage = 5;						// 한 페이지당 출력할 상품 갯수
+		int numPerPage = 4;						// 한 페이지당 출력할 상품 갯수
 		int pageNaviSize = 7;						// 페이지네비 길이
 		int totalCount = productDao.totalCount();	// 전체 상품 수
 		// 페이징 처리에 필요한 값들을 연산해서 객체로 리턴받음
@@ -101,7 +101,7 @@ public class ProductService {
 	public Map<String, Object> selectProductListEmail(int reqPage, String userEmail) {
 //		int userNo = productDao.selectOneUser(userEmail);
 		// 게시물 조회 및 페이징에 필요한 데이터를 모두 취합
-		int numPerPage = 5;						// 한 페이지당 출력할 상품 갯수
+		int numPerPage = 4;						// 한 페이지당 출력할 상품 갯수
 		int pageNaviSize = 7;						// 페이지네비 길이
 		int totalCount = productDao.totalCount();	// 전체 상품 수
 		// 페이징 처리에 필요한 값들을 연산해서 객체로 리턴받음
@@ -116,7 +116,7 @@ public class ProductService {
 
 	// 상품 정렬
 	public Map<String, Object> selectProductListSortOption(int reqPage, String userEmail, String sortOption) {
-	    int numPerPage = 5; // 한 페이지당 출력할 상품 갯수
+	    int numPerPage = 4; // 한 페이지당 출력할 상품 갯수
 	    int pageNaviSize = 7; // 페이지네비 길이
 	    int totalCount = productDao.totalCount(); // 전체 상품 수
 
@@ -127,11 +127,11 @@ public class ProductService {
 	    
 	    switch (sortOption) {
 	        case "mostLiked":
-	            System.out.println("mostLiked");
+	        	// System.out.println("mostLiked");
 	            list = productDao.selectProductListMostLiked(pi, userEmail);
 	            break;
 	        case "newest":
-	            System.out.println("newest");
+	        	// System.out.println("newest");
 	            list = productDao.selectProductListNewest(pi, userEmail);
 	            break;
 	        default:
@@ -162,11 +162,11 @@ public class ProductService {
 	    List<ProductFileDTO> productFileList = productDao.selectOneProductFileList(productNo);
 
 	    // 리뷰 페이징 처리
-	    int numPerPage = 6; 	// 한 페이지당 출력할 리뷰 갯수
+	    int numPerPage = 4; 	// 한 페이지당 출력할 리뷰 갯수
 	    int pageNaviSize = 5;   // 페이지네비 길이
 	    int totalCount = productDao.reviewTotalCount(productNo); // 전체 리뷰 수
-	    PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
-	    System.out.println(pi);
+	    PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount-1);
+	    // System.out.println(pi);
 	    
 	    // 리뷰 리스트
 	    List<ReviewDTO> productReviewList = productDao.selectOneProductReviews(productNo, pi);
@@ -190,11 +190,11 @@ public class ProductService {
 	    int userNo = productDao.selectOneUser(userEmail);
 
 	    // 리뷰 페이징 처리
-	    int numPerPage = 6; 	// 한 페이지당 출력할 리뷰 갯수
+	    int numPerPage = 4; 	// 한 페이지당 출력할 리뷰 갯수
 	    int pageNaviSize = 5;   // 페이지네비 길이
 	    int totalCount = productDao.reviewTotalCount(productNo); // 전체 리뷰 수
-	    PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
-	    System.out.println(pi);
+	    PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount-1);
+	    // System.out.println(pi);
 	    
 	    // 리뷰 리스트
 	    List<ReviewDTO> productReviewList = productDao.selectOneProductUserReviews(productNo, userNo, pi);
@@ -334,17 +334,17 @@ public class ProductService {
         List<ReviewDTO> productReviewReCommentList;
         switch (sortOption) {
 		    case "mostLiked":
-		    	System.out.println("mostLiked");
+		    	// System.out.println("mostLiked");
 		        productReviewList = productDao.selectReviewListMostLiked(productNo, userNo);
 		        productReviewReCommentList = productDao.selectReviewReCommentListMostLiked(productNo, userNo);
 		        break;
 		    case "newest":
-		    	System.out.println("newest");
+		    	// System.out.println("newest");
 		        productReviewList = productDao.selectReviewListNewest(productNo, userNo);
 		        productReviewReCommentList = productDao.selectReviewReCommentListNewest(productNo, userNo);
 		        break;
 		    case "score":
-		    	System.out.println("score");
+		    	// System.out.println("score");
 		    	productReviewList = productDao.selectReviewListScore(productNo, userNo);
 		        productReviewReCommentList = productDao.selectReviewReCommentListScore(productNo, userNo);
 		        break;

@@ -66,9 +66,6 @@ const MainNavi = () => {
                 <Link to="/board/list">자유게시판</Link>
               </li>
               <li>
-                <Link to="/QnaBoard/list">QnA게시판</Link>
-              </li>
-              <li>
                 <Link to="/reviewBoard/list">후기게시판</Link>
               </li>
             </ul>

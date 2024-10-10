@@ -60,7 +60,6 @@ const ReviewBoardWrite = () => {
               },
             })
             .then((res) => {
-              console.log(res);
               if (res.data) {
                 navigate("/reviewBoard/list");
               } else {

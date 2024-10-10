@@ -19,8 +19,8 @@ const ProductWrite = () => {
   const [thumbnail, setThumbnail] = useState(null);
   const [productPrice, setProductPrice] = useState(0);
   const [productInfo, setProductInfo] = useState("");
-  const [productLatitude, setProductLatitude] = useState("");
-  const [productLongitude, setProductLongitude] = useState("");
+  const [productLatitude, setProductLatitude] = useState(0);
+  const [productLongitude, setProductLongitude] = useState(0);
   const [productStatus, setProductStatus] = useState(1);
   const [productFile, setProductFile] = useState([]);
 
@@ -60,6 +60,7 @@ const ProductWrite = () => {
       form.append("productLongitude", productLongitude);
       form.append("productWriter", loginEmail);
       form.append("productStatus", productStatus);
+
       // 썸네일 있는 경우에만 추가
       if (thumbnail !== null) {
         form.append("thumbnail", thumbnail);
@@ -139,7 +140,7 @@ const ProductWrite = () => {
             type={0}
           />
         </div>
-        <div className="button-box">
+        <div className="buttonBox">
           <button type="submit" className="btn-primary lg">
             등록
           </button>

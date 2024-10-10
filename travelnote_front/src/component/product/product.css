@@ -71,7 +71,8 @@ a:hover {
 .product-search-box {
   width: 100%;
   max-width: 750px;
-  margin: 0 auto;
+  margin: 50px auto;
+  margin-top: 0 !important;
 }
 
 #product-search {
@@ -296,11 +297,15 @@ a:hover {
 }
 
 /* ProductView */
+.toastui-editor-contents img {
+  width: 80% !important;
+}
+
 .sec {
   overflow: hidden;
   width: 100%;
   max-width: 1200px;
-  margin: 150px auto;
+  margin: 70px auto;
 }
 
 .line {
@@ -355,7 +360,7 @@ a:hover {
   height: 35px;
   border: 1px solid var(--gray);
   border-radius: 10px;
-  background-color: var(--white);
+  background-color: var(--white) !important;
   margin-top: 20px;
   transition: all 0.35s;
 }
@@ -410,6 +415,14 @@ a:hover {
 .review-like-checked,
 .review-like-unchecked {
   margin-right: 10px !important;
+  color: #47b5ff;
+}
+.review-like-checked > i,
+.review-like-unchecked > i {
+}
+
+.reviewReComment-btn {
+  color: var(--gray2);
 }
 
 .review-link-box > span > span {

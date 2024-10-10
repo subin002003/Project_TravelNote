@@ -5,9 +5,11 @@ import {
   userTypeState,
 } from "../../utils/RecoilData";
 import Swal from "sweetalert2";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./reservation.css";
 import ChannelTalk from "../ChannelTalk";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const TravelReservation = () => {
   const productNo = localStorage.getItem("productNo");
@@ -19,6 +21,9 @@ const TravelReservation = () => {
   // totalPrice 계산
   const totalPrice = people * productPrice;
 
+  const [emailCheck, setEmailCheck] = useState(0);
+  const emailMessage = useRef(null);
+
   // console.log("productNo", productNo);
   // console.log("productName", productName);
   // console.log("startDate:", startDate);
@@ -27,14 +32,15 @@ const TravelReservation = () => {
   // console.log("productPrice:", productPrice);
 
   const backServer = process.env.REACT_APP_BACK_SERVER;
+  const navigate = useNavigate();
   // 로그인 회원 정보
   const isLogin = useRecoilValue(isLoginState);
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
-  // const userEmail = loginEmail;
+
   const [userType, setUserType] = useRecoilState(userTypeState);
 
   const [userName, setUserName] = useState("");
-  const [userEmail, setUserEmail] = useState(loginEmail);
+  const [userEmail, setUserEmail] = useState("");
   const [userPhone, setUserPhone] = useState("");
 
   // 유저 이름
@@ -181,8 +187,59 @@ const TravelReservation = () => {
     }
   };
 
+  const checkEmail = () => {
+    emailMessage.current.classList.remove("valid");
+    emailMessage.current.classList.remove("invalid");
+    const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailReg.test(userEmail)) {
+      setEmailCheck(2);
+      emailMessage.current.classList.add("invalid");
+      emailMessage.current.innerText = "이메일 형식을 확인해주세요";
+    } else {
+      axios
+        .get(`${backServer}/user/checkEmail/${userEmail}`)
+        .then((res) => {
+          console.log(res);
+          if (res.data === 0) {
+            emailMessage.current.classList.add("invalid");
+            emailMessage.current.innerText = "가입되지 않은 이메일입니다.";
+            setEmailCheck(1);
+          } else {
+            setEmailCheck(3);
+            emailMessage.current.classList.add("valid");
+            emailMessage.current.innerText = "예약 가능한 이메일 입니다.";
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
   const handlePayment = () => {
-    // 필수 체크박스가 모두 선택되지 않았을 경우 경고 메시지
+    // 1차: 예약자 정보 확인 (이름, 이메일, 전화번호가 빈 문자열인지 확인)
+    if (userName === "" || userEmail === "" || userPhone === "") {
+      Swal.fire({
+        title: "입력 정보를 확인하세요.",
+        text: "예약자 정보를 모두 입력하셔야 결제 단계로 넘어갈 수 있습니다.",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "확인",
+      });
+      return; // 입력 정보가 빈 경우 다음 로직을 실행하지 않도록 종료
+    }
+
+    // 2차: 이메일 유효성 검사 확인
+    if (emailCheck !== 3) {
+      Swal.fire({
+        icon: "warning",
+        title: "이메일 유효성 검사 실패",
+        text: "이메일 형식 또는 가입 여부를 확인해 주세요.",
+      });
+      return; // 이메일 유효성 검사를 통과하지 못하면 종료
+    }
+
+    // 3차: 약관 동의 확인 (필수 약관 모두 동의했는지 확인)
     if (
       !(agree1 && agree11 && agree12 && agree13 && agree2 && agree21 && agree22)
     ) {
@@ -289,8 +346,10 @@ const TravelReservation = () => {
             id="userEmail"
             value={userEmail}
             onChange={inputUserEmail}
-            placeholder="ex.) abc1234@mail.com"
+            onBlur={checkEmail}
+            placeholder="ex.) travelnote@gmail.com"
           />
+          <p ref={emailMessage}></p>
         </div>
 
         <div style={{ margin: "31.5px 0" }} className="input-item">
@@ -355,6 +414,9 @@ const TravelReservation = () => {
             />
             <label className="parents-label" htmlFor="agree1">
               이용 규정과 약관
+              <sup style={{ fontSize: "14px", color: "coral" }}>
+                &nbsp;*필수
+              </sup>
             </label>
           </div>
           <div>
@@ -412,6 +474,9 @@ const TravelReservation = () => {
             />
             <label className="parents-label" htmlFor="agree2">
               개인정보 수집 및 이용 동의
+              <sup style={{ fontSize: "14px", color: "coral" }}>
+                &nbsp;*필수
+              </sup>
             </label>
           </div>
           <div>
@@ -455,6 +520,9 @@ const TravelReservation = () => {
             />
             <label className="parents-label" htmlFor="agree3">
               광고성 수신 동의
+              <sup style={{ fontSize: "14px", color: "#1363df" }}>
+                &nbsp;(선택)
+              </sup>
             </label>
           </div>
           <div>
