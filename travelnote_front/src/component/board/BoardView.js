@@ -24,7 +24,9 @@ const BoardView = () => {
   const handleCommentEditChange = (e) => {
     setEditingComment({ ...editingComment, content: e.target.value });
   };
+
   useEffect(() => {
+    console.log(1);
     // 게시물 가져오기
     axios
       .get(`${backServer}/board/boardNo/${boardNo}`)
@@ -68,7 +70,7 @@ const BoardView = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [reset, boardNo]);
+  }, [reset, boardNo, isLogin]);
 
   const toggleLike = () => {
     // 로그인 유무 확인

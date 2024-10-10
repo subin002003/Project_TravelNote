@@ -69,7 +69,7 @@ const ReviewBoardView = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [reviewBoardNo, reset]); // reviewBoardNo와 reset을 의존성 배열에 포함
+  }, [reviewBoardNo, reset, isLogin]); // reviewBoardNo와 reset을 의존성 배열에 포함
 
   const toggleLike = () => {
     // 로그인 유무 확인
