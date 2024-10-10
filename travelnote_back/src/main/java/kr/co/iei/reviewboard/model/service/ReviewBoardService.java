@@ -94,7 +94,7 @@ public class ReviewBoardService {
 	// 파일 조회
 	public ReviewBoardFileDTO getReviewBoardFile(int reviewBoardFileNo) {
 		ReviewBoardFileDTO reviewBoard = reviewBoardDao.getReviewBoardFile(reviewBoardFileNo);
-		return null;
+		return reviewBoard;
 	}
 
 	// 게시물 삭제
@@ -202,8 +202,6 @@ public class ReviewBoardService {
 		PageInfo pi = pageUtil.getPageInfo(reviewBoardReqPage, numPerPage, pageNaviSize, totalCount);
 		pi.setUserNick(userNick);
 		List list = reviewBoardDao.myReviewBoardList(pi);
-		System.out.println("리뷰게시판 내가 쓴글 페이지 인포 : "+pi);
-		System.out.println("리뷰게시판 내가 쓴글 : "+list);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list",list);
 		map.put("pi",pi);
