@@ -173,8 +173,8 @@ const Review = ({
 
   return (
     <Stack spacing={2}>
-      {/* parentReviewNo가 없는 경우에만 Rating 컴포넌트를 보여줍니다 */}
-      {!parentReviewNo && (
+      {/* parentReviewNo가 없고, 답글이 아닌 경우에만 Rating 컴포넌트를 보여줍니다 */}
+      {!parentReviewNo && !reviewCommentRef && (
         <Rating
           name="half-rating"
           value={reviewScore}
