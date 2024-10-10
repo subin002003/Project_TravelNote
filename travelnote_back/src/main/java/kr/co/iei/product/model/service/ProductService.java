@@ -162,10 +162,10 @@ public class ProductService {
 	    List<ProductFileDTO> productFileList = productDao.selectOneProductFileList(productNo);
 
 	    // 리뷰 페이징 처리
-	    int numPerPage = 6; 	// 한 페이지당 출력할 리뷰 갯수
+	    int numPerPage = 4; 	// 한 페이지당 출력할 리뷰 갯수
 	    int pageNaviSize = 5;   // 페이지네비 길이
 	    int totalCount = productDao.reviewTotalCount(productNo); // 전체 리뷰 수
-	    PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
+	    PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount-1);
 	    // System.out.println(pi);
 	    
 	    // 리뷰 리스트
@@ -190,10 +190,10 @@ public class ProductService {
 	    int userNo = productDao.selectOneUser(userEmail);
 
 	    // 리뷰 페이징 처리
-	    int numPerPage = 6; 	// 한 페이지당 출력할 리뷰 갯수
+	    int numPerPage = 4; 	// 한 페이지당 출력할 리뷰 갯수
 	    int pageNaviSize = 5;   // 페이지네비 길이
 	    int totalCount = productDao.reviewTotalCount(productNo); // 전체 리뷰 수
-	    PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
+	    PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount-1);
 	    // System.out.println(pi);
 	    
 	    // 리뷰 리스트

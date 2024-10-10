@@ -13,7 +13,6 @@ const BoardView = () => {
   const boardNo = params.boardNo;
   const [board, setBoard] = useState({});
   const [userNick, setUserNick] = useRecoilState(userNickState);
-
   const isLogin = useRecoilValue(isLoginState); // 로그인 상태 확인
   const [liked, setLiked] = useState(false); // 좋아요 상태
   const [likeCount, setLikeCount] = useState(0); // 좋아요 개수
@@ -25,7 +24,9 @@ const BoardView = () => {
   const handleCommentEditChange = (e) => {
     setEditingComment({ ...editingComment, content: e.target.value });
   };
+
   useEffect(() => {
+    console.log(1);
     // 게시물 가져오기
     axios
       .get(`${backServer}/board/boardNo/${boardNo}`)
@@ -37,12 +38,24 @@ const BoardView = () => {
             text: "해당 게시글은 조회할 수 없는 상태입니다.",
             icon: "warning",
           }).then(() => {
-            navigate("/board/list"); // 리스트 페이지로 이동 (원하는 대로 수정 가능)
+            navigate("/board/list"); // 리스트 페이지로 이동
           });
           return; // useEffect의 나머지 부분을 실행하지 않음
         }
         setBoard(res.data);
         setLikeCount(res.data.likeCount || 0); // 초기 좋아요 수, res.data.likeCount 값 존재:그 값을 setLikeCount에 전달 / 존재x or null 등 일 때 : 0을 setLikeCount에 전달
+
+        // DB에서 사용자 좋아요 상태 확인
+        if (isLogin) {
+          axios
+            .get(`${backServer}/board/like/${boardNo}`, {
+              params: { userNick: userNick },
+            }) // 사용자 좋아요 상태 확인
+            .then((likeRes) => {
+              setLiked(likeRes.data.liked || false); // 초기 좋아요 상태 설정
+            })
+            .catch((err) => console.log(err));
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -57,7 +70,7 @@ const BoardView = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [reset]);
+  }, [reset, boardNo, isLogin]);
 
   const toggleLike = () => {
     // 로그인 유무 확인

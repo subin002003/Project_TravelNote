@@ -229,6 +229,14 @@
         where review_board_no = #{reviewBoardNo}
     </update>
 	
+	<!-- 좋아요 상태 조회 -->
+	<select id="selectLike" resultType="string">
+        select user_nick
+        from review_board_like
+        where user_nick = #{userNick} and review_board_no = #{reviewBoardNo}
+    </select>
+	
+	
 	<!-- 댓글 등록 -->
 	 <insert id="addComment">
 		insert into review_board_comment 

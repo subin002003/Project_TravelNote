@@ -217,6 +217,19 @@ public class ReviewBoardController {
         return ResponseEntity.ok(response);
     }
 	
+	// 특정 사용자의 좋아요 상태 조회
+    @GetMapping("/like/{reviewBoardNo}")
+    public ResponseEntity<Map<String, Object>> checkLikeStatus(
+            @PathVariable int reviewBoardNo,
+            @RequestParam String userNick) {
+        boolean liked = reviewBoardService.checkLikeStatus(userNick, reviewBoardNo);
+        Map<String, Object> response = new HashMap<>();
+        response.put("liked", liked);
+        return ResponseEntity.ok(response);
+    }
+	
+	
+	
 	// 댓글 등록
 	@PostMapping("/{reviewBoardNo}/comments")
 	public ResponseEntity<String> addComment(@PathVariable int reviewBoardNo, @RequestBody ReviewBoardCommentDTO comment) {

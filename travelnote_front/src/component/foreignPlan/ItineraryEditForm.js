@@ -8,7 +8,7 @@ import { ko } from "date-fns/locale";
 import { getDate, getMonth, getYear } from "date-fns";
 import Swal from "sweetalert2";
 
-const ForeignEditItinerary = () => {
+const ItineraryEditForm = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
   const isLogin = useRecoilValue(isLoginState);
@@ -21,6 +21,7 @@ const ForeignEditItinerary = () => {
   const [isInvitationAvailable, setIsInvitationAvailable] = useState(false);
   const [emailInput, setEmailInput] = useState("");
   const [userAuth, setUserAuth] = useState(); // 로그인 유저 권한: 1이면 해당 일정 주인, 0이면 동행자, -1이면 권한 없음
+  const [newTotalPlanDates, setNewTotalPlanDates] = useState([]);
 
   // 로그인한 유저가 해당 여행 일정 조회 권한이 있는지 조회
   useEffect(() => {
@@ -51,6 +52,9 @@ const ForeignEditItinerary = () => {
           });
           navigate("/");
         });
+    } else {
+      Swal.fire({ icon: "info", text: "로그인이 필요합니다." });
+      navigate("/login");
     }
   }, [loginEmail]);
 
@@ -104,17 +108,39 @@ const ForeignEditItinerary = () => {
   // 버튼 클릭 시 일정 수정 적용
   const editItinerary = () => {
     const obj = itinerary;
-    obj.itineraryStartDate = startDate;
-    obj.itineraryEndDate = endDate;
+    if (itinerary.itineraryStartDate !== startDate) {
+      obj.itineraryStartDate = startDate;
+    }
+    if (itinerary.itineraryEndDate !== endDate) {
+      obj.itineraryEndDate = endDate;
+    }
+    if (
+      itinerary.itineraryStartDate !== startDate &&
+      itinerary.itineraryEndDate !== endDate
+    ) {
+      // 새 날짜 배열 생성
+      const newStartDate = new Date(startDate);
+      const newEndDate = new Date(endDate);
+      while (newStartDate <= newEndDate) {
+        const year = getYear(newStartDate);
+        const month = String(getMonth(newStartDate) + 1).padStart(2, "0");
+        const date = String(getDate(newStartDate)).padStart(2, "0");
+        const newDate = year + "-" + month + "-" + date;
+        newTotalPlanDates.push(newDate);
+        newStartDate.setDate(newStartDate.getDate() + 1);
+      }
+      obj.totalPlanDates = newTotalPlanDates;
+    }
     if (itinerary.itineraryTitle === "") {
       obj.itineraryTitle = `${region.regionName} 여행`;
     } else {
       obj.itineraryTitle = itinerary.itineraryTitle.trim();
     }
+    console.log(obj);
     axios
       .post(`${backServer}/foreign/editItinerary`, obj)
       .then((res) => {
-        if (res.data > 0) {
+        if (res.data) {
           Swal.fire({
             icon: "success",
             text: "일정이 수정되었습니다.",
@@ -339,4 +365,4 @@ const ForeignEditItinerary = () => {
   );
 };
 
-export default ForeignEditItinerary;
+export default ItineraryEditForm;

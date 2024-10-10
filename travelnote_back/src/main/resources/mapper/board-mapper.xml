@@ -221,6 +221,13 @@
         where board_no = #{boardNo}
     </update>
 	
+	<!-- 좋아요 상태 조회 -->
+	<select id="selectLike" resultType="string">
+        select user_nick
+        from board_like
+        where user_nick = #{userNick} and board_no = #{boardNo}
+    </select>
+	
 	
 	<!-- 댓글 등록 -->
 	 <insert id="addComment">

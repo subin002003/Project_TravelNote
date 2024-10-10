@@ -51,6 +51,8 @@ public interface ReviewBoardDao {
 
 	int deleteLike(@Param("userNick") String userNick, @Param("reviewBoardNo") int reviewBoardNo);
 
+	String selectLike(@Param("userNick") String userNick, @Param("reviewBoardNo") int reviewBoardNo);	
+
 	void decrementLikeCount(int boardNo);
 
 	void addComment(ReviewBoardCommentDTO comment);
@@ -77,6 +79,7 @@ public interface ReviewBoardDao {
 
 	//오건하 2024-10-10 작성
 	int updateReviewBoardStatus(int reviewBoardNo);	
+
 	
 	
 }

@@ -162,12 +162,11 @@ public class BoardService {
         return false;
 	}
 	
-	
-
-	
-	
-	
-	
+	// 특정 사용자의 좋아요 상태 조회
+	public boolean checkLikeStatus(String userNick, int boardNo) {
+        return boardDao.selectLike(userNick, boardNo) != null;
+    }
+		
 	// 댓글 등록
 	@Transactional
 	public void addComment(BoardCommentDTO comment) {

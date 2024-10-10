@@ -13,7 +13,6 @@ const ReviewBoardView = () => {
   const reviewBoardNo = params.reviewBoardNo;
   const [reviewBoard, setReviewBoard] = useState({});
   const [userNick, setUserNick] = useRecoilState(userNickState);
-
   const isLogin = useRecoilValue(isLoginState); // 로그인 상태 확인
   const [liked, setLiked] = useState(false); // 좋아요 상태
   const [likeCount, setLikeCount] = useState(0); // 좋아요 개수
@@ -23,7 +22,6 @@ const ReviewBoardView = () => {
   const [editingComment, setEditingComment] = useState(null); // 수정 중인 댓글 상태
   const [reported, setReported] = useState(false); // 신고 상태
   const handleCommentEditChange = (e) => {
-    console.log(editingComment.content);
     setEditingComment({ ...editingComment, content: e.target.value });
   };
 
@@ -39,34 +37,29 @@ const ReviewBoardView = () => {
             text: "해당 게시글은 조회할 수 없는 상태입니다.",
             icon: "warning",
           }).then(() => {
-            navigate("/reviewBoard/list"); // 리스트 페이지로 이동 (원하는 대로 수정 가능)
+            navigate("/reviewBoard/list"); // 리스트 페이지로 이동
           });
           return; // useEffect의 나머지 부분을 실행하지 않음
         }
         setReviewBoard(res.data);
         setLikeCount(res.data.likeCount || 0); // 초기 좋아요 수, res.data.likeCount 값 존재:그 값을 setLikeCount에 전달 / 존재 X or null 등 일 때 : 0을 setLikeCount에 전달
-        // setLiked(res.data.liked || false); // 초기 좋아요 상태
+
+        // DB에서 사용자 좋아요 상태 확인
+        if (isLogin) {
+          axios
+            .get(`${backServer}/reviewBoard/like/${reviewBoardNo}`, {
+              params: { userNick: userNick },
+            }) // 사용자 좋아요 상태 확인
+            .then((likeRes) => {
+              setLiked(likeRes.data.liked || false); // 초기 좋아요 상태 설정
+            })
+            .catch((err) => console.log(err));
+        }
       })
       .catch((err) => {
         console.log(err);
       });
 
-    // 로그인 상태일 때 서버에서 좋아요 상태 가져오기 (새로고침 후에도 좋아요 상태 유지)
-    if (isLogin) {
-      axios
-        .get(`${backServer}/reviewBoard/like/${reviewBoardNo}`, {
-          params: { userNick: userNick },
-        })
-        .then((res) => {
-          if (res.data.success) {
-            setLiked(res.data.liked); // 서버에서 가져온 좋아요 상태로 업데이트
-            setLikeCount(res.data.likeCount || 0); // 좋아요 개수도 업데이트
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
     // 댓글 목록 가져오기
     axios
       .get(`${backServer}/reviewBoard/${reviewBoardNo}`)
@@ -76,7 +69,7 @@ const ReviewBoardView = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [reviewBoardNo, reset]); // reviewBoardNo와 reset을 의존성 배열에 포함
+  }, [reviewBoardNo, reset, isLogin]); // reviewBoardNo와 reset을 의존성 배열에 포함
 
   const toggleLike = () => {
     // 로그인 유무 확인
@@ -99,7 +92,7 @@ const ReviewBoardView = () => {
       .then((res) => {
         if (res.data.success) {
           setLiked(!liked); // 상태 반전
-          setLikeCount((prev) => (liked ? prev - 1 : prev + 1)); // 카운트 업데이트
+          setLikeCount((prev) => (liked ? Number(prev) - 1 : Number(prev) + 1)); // 카운트 업데이트
         } else {
           Swal.fire({
             title: "실패",
@@ -620,7 +613,6 @@ const FileItem = (props) => {
         responseType: "blob",
       })
       .then((res) => {
-        console.log(res);
         //서버에서 받은 데이터를 javascript 의 Blob 객체로 변환
         const blob = new Blob([res.data]);
         //blob데이터를 이용해서 데이터 객체 url생성(다운로드할수있는 링크)
