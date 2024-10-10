@@ -1,6 +1,5 @@
 const ForeignRegionInfo = (props) => {
   const { regionInfo, regionApiInfo, exchangeRate } = props;
-
   return (
     <div className="plan-region-wrap">
       {exchangeRate > 0 ? (

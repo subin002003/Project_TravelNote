@@ -34,20 +34,21 @@ const ForeignPlanSearch = (props) => {
     setSearchArrivalAirport,
     searchAirport,
     setSearchAirport,
+    planPageOption,
   } = props;
   const [category, setCategory] = useState(2); // 1일 때 항공편, 2일 때 장소
 
-  // 추천 명소로 저장된 정보 목록 조회
-
-  // 날짜 변경 시 입력값 리셋
+  // 날짜, 카테고리, 수정 여부 변경 시 입력값 리셋
   useEffect(() => {
-    setDepartInfo({});
-    setArrivalInfo({});
+    setDepartInfo({ departAirport: "" });
+    setArrivalInfo({ arrivalAirport: "" });
     setIsNextDayButtonChecked(false);
     setSearchDepartAirport();
     setSearchArrivalAirport();
     setSearchAirport();
-  }, [selectedDay]);
+    setSearchInput("");
+    setSearchPlaceList([]);
+  }, [selectedDay, category, planPageOption]);
 
   // 장소 검색 인풋에 엔터 입력 시 검색
   const changeSearchInput = (e) => {
@@ -183,8 +184,11 @@ const ForeignPlanSearch = (props) => {
           });
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          text: "서버 오류입니다.",
+        });
       });
   };
 

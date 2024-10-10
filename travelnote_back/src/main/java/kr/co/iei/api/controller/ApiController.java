@@ -23,6 +23,9 @@ public class ApiController {
 	
 	@GetMapping(value="/regionInfoApi/{countryName}")
 	public ResponseEntity<RegionInfoDTO> regionInfoApi(@PathVariable String countryName) {
+		if (countryName.equals("미국")) {
+			countryName = "미합중국";
+		}
 		String url = "http://apis.data.go.kr/1262000/LocalContactService2/getLocalContactList2";
 		String serviceKey = "w+YHFXUfIm1ox4RJBBw4OsWb3it3ymoD3Dx+zKFemzluHHcgLlVlbgYDiSp5m57samsQD9tXyUXzUjSdkTh5lA==";
 		String returnType = "json";

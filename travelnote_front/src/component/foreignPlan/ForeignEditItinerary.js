@@ -1,5 +1,5 @@
-import { useRecoilState } from "recoil";
-import { loginEmailState } from "../utils/RecoilData";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { isLoginState, loginEmailState } from "../utils/RecoilData";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -11,6 +11,7 @@ import Swal from "sweetalert2";
 const ForeignEditItinerary = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
+  const isLogin = useRecoilValue(isLoginState);
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
   const itineraryNo = useParams().itineraryNo;
   const [region, setRegion] = useState({});
@@ -19,6 +20,39 @@ const ForeignEditItinerary = () => {
   const [endDate, setEndDate] = useState("");
   const [isInvitationAvailable, setIsInvitationAvailable] = useState(false);
   const [emailInput, setEmailInput] = useState("");
+  const [userAuth, setUserAuth] = useState(); // 로그인 유저 권한: 1이면 해당 일정 주인, 0이면 동행자, -1이면 권한 없음
+
+  // 로그인한 유저가 해당 여행 일정 조회 권한이 있는지 조회
+  useEffect(() => {
+    // 로그인 되어 있는 경우 회원의 조회/수정 권한 조회
+    if (isLogin && loginEmail !== "") {
+      axios
+        .get(`${backServer}/foreign/checkUser`, {
+          params: {
+            itineraryNo: itineraryNo,
+            userEmail: loginEmail,
+          },
+        })
+        .then((res) => {
+          // 1이면 해당 일정 주인, 0이면 동행자, -1이면 권한 없음
+          setUserAuth(res.data);
+          if (res.data < 0) {
+            Swal.fire({
+              icon: "warning",
+              text: "조회 권한이 없습니다.",
+            });
+            navigate("/");
+          }
+        })
+        .catch(() => {
+          Swal.fire({
+            icon: "error",
+            text: "서버 오류입니다.",
+          });
+          navigate("/");
+        });
+    }
+  }, [loginEmail]);
 
   // 여행 정보 조회
   useEffect(() => {
@@ -29,8 +63,11 @@ const ForeignEditItinerary = () => {
         setStartDate(res.data.itineraryStartDate);
         setEndDate(res.data.itineraryEndDate);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          text: "서버 오류입니다.",
+        });
       });
   }, []);
 
@@ -42,8 +79,11 @@ const ForeignEditItinerary = () => {
       .then((res) => {
         setRegion(res.data);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          text: "서버 오류입니다.",
+        });
       });
   }, [itinerary]);
 
@@ -82,8 +122,11 @@ const ForeignEditItinerary = () => {
           navigate("/foreign/plan/" + itineraryNo);
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          text: "서버 오류입니다.",
+        });
       });
   };
 
@@ -108,11 +151,17 @@ const ForeignEditItinerary = () => {
               });
               navigate("/foreign/list");
             } else {
-              console.log(res);
+              Swal.fire({
+                icon: "error",
+                html: "삭제 중 오류가 발생했습니다.<br>잠시 후 다시 시도해 주세요.",
+              });
             }
           })
-          .catch((err) => {
-            console.log(err);
+          .catch(() => {
+            Swal.fire({
+              icon: "error",
+              text: "서버 오류입니다.",
+            });
           });
       }
     });
@@ -173,8 +222,6 @@ const ForeignEditItinerary = () => {
 
   return (
     <>
-      {/* 다시 여행 조회로 이동 버튼 만들기 */}
-
       <section className="section">
         <form
           className="itinerary-form"

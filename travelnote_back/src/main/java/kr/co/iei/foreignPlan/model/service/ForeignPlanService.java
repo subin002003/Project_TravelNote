@@ -157,7 +157,6 @@ public class ForeignPlanService {
 			return 1;
 		} else {
 			result = foreignPlanDao.checkCompanion(itineraryNo, userEmail);
-			System.out.println(result);
 			if (result > 0) {
 				return 0;
 			}

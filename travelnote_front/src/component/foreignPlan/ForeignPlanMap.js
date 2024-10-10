@@ -19,6 +19,7 @@ const ForeignPlanMap = (props) => {
     searchAirport,
     planPageOption,
     planList,
+    isPlanDiffered,
   } = props;
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   const mapRef = useRef();
@@ -79,8 +80,7 @@ const ForeignPlanMap = (props) => {
       marker.setMap(null);
     });
     if (pathPoints) {
-      console.log("Removing existing pathPoints:", pathPoints);
-      pathPoints.setMap(null); // Remove the previous polyline from the map
+      pathPoints.setMap(null);
     }
     // planPageOption이 1일 때 조회이므로 planList에 있는 리스트를 마커로 띄우기
     if (planPageOption === 1 && planList.length > 0) {
@@ -311,6 +311,15 @@ const ForeignPlanMap = (props) => {
       }
     });
   }, [searchDepartAirport, searchArrivalAirport]);
+
+  // isPlanDiffered 바뀔 때마다 마커, 인포윈도우 삭제
+  useEffect(() => {
+    if (!map || !placeInfo) return;
+
+    if (infoWindowRef.current) {
+      infoWindowRef.current.close();
+    }
+  }, [isPlanDiffered]);
 
   return (
     <div className="plan-map-wrap">

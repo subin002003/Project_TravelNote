@@ -48,8 +48,11 @@ const ForeignPlanList = (props) => {
           setPlanList(res.data);
           setIsPlanDiffered(false);
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          Swal.fire({
+            icon: "error",
+            text: "서버 오류입니다.",
+          });
         });
     }
   }, [itinerary, selectedDate, isPlanDiffered]);
@@ -80,8 +83,11 @@ const ForeignPlanList = (props) => {
             });
           }
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          Swal.fire({
+            icon: "error",
+            text: "서버 오류입니다.",
+          });
         });
     } else {
       setPlanPageOption(1);

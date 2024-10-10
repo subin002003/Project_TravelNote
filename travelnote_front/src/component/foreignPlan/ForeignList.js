@@ -26,8 +26,11 @@ const ForeignList = () => {
       .then((res) => {
         setRegionTotalCount(res.data);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          text: "서버 오류입니다.",
+        });
       });
   };
 
@@ -48,8 +51,11 @@ const ForeignList = () => {
           setIsMoreRegionLeft(false);
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          text: "서버 오류입니다.",
+        });
       });
   }, [reqPage]);
 
@@ -183,6 +189,7 @@ const Region = (props) => {
         icon: "info",
         text: "로그인이 필요합니다.",
       });
+      navigate("/login");
     }
   };
 

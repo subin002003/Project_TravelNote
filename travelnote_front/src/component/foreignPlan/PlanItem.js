@@ -82,8 +82,11 @@ const PlanItem = (props) => {
               });
             }
           })
-          .catch((err) => {
-            console.log(err.data);
+          .catch(() => {
+            Swal.fire({
+              icon: "error",
+              text: "서버 오류입니다.",
+            });
           });
       }
     });
@@ -98,8 +101,11 @@ const PlanItem = (props) => {
           setIsPlanDiffered(true);
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          text: "서버 오류입니다.",
+        });
       });
   };
 
@@ -112,8 +118,11 @@ const PlanItem = (props) => {
           setIsPlanDiffered(true);
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          text: "서버 오류입니다.",
+        });
       });
   };
 

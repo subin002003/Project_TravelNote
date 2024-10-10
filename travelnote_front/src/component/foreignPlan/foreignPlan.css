@@ -571,7 +571,7 @@
   width: 100%;
   object-fit: cover;
   object-position: center;
-  max-height: 80;
+  max-height: 80px;
 }
 .place-item-image-box > img:hover {
   cursor: pointer;
@@ -584,6 +584,9 @@
   margin: 10px 0;
   margin-top: 13px;
   padding-right: 10px;
+  max-height: 42px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .place-item-title:hover {
   cursor: pointer;
@@ -595,9 +598,9 @@
   margin: 0;
   margin-bottom: 10px;
   padding-right: 10px;
-}
-.place-airport-check {
-  font-size: 12px;
+  height: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .place-item-add {
   display: flex;
@@ -729,6 +732,11 @@
 .plan-region-info-box h3 {
   font-size: 14px;
   margin: 6px;
+}
+.plan-region-info-box img {
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 .contact-remark {
   text-align: left;
