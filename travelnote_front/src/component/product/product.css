@@ -296,6 +296,10 @@ a:hover {
 }
 
 /* ProductView */
+.toastui-editor-contents img {
+  width: 80% !important;
+}
+
 .sec {
   overflow: hidden;
   width: 100%;
