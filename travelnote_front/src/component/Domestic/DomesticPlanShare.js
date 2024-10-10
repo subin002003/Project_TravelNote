@@ -22,7 +22,6 @@ const DomesticPlanShare = () => {
     axios
       .get(`${backServer}/domestic/Schedule/${itineraryNo}`)
       .then((res) => {
-        console.log("Trip details fetched:", res.data); // 성공 로그
         setTripDetails(res.data);
         setTripTitle(res.data.itineraryTitle); // 제목 설정
         setStartDate(res.data.itineraryStartDate); // 시작 날짜 설정

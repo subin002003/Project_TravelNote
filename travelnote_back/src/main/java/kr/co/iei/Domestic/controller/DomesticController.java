@@ -1,7 +1,6 @@
 package kr.co.iei.Domestic.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,6 @@ import kr.co.iei.Domestic.model.dto.ItineraryDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
 import kr.co.iei.Domestic.model.dto.PlanDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
-import kr.co.iei.Domestic.model.dto.TrainDTO;
 import kr.co.iei.Domestic.model.service.DomesticService;
 import kr.co.iei.user.model.dto.UserDTO;
 import kr.co.iei.user.model.service.UserService;
@@ -45,7 +43,6 @@ public class DomesticController {
     // 여행지 정보 조회 
     @GetMapping("/view/{regionNo}")
     public ResponseEntity<RegionDTO> view(@PathVariable int regionNo) {
-    	 System.out.println("Received request for regionNo: " + regionNo); // 로그 추가
     	RegionDTO region = domesticService.selectRegion(regionNo);
     	return ResponseEntity.ok(region);
     }
@@ -150,13 +147,6 @@ public class DomesticController {
         message.setSubject("여행 초대");
         message.setText("여행 계획에 초대합니다.");
         emailSender.send(message); // 이메일 전송
-    }
-    
- // 기차편 검색 처리
-    @GetMapping("/search")
-    public ResponseEntity<List<TrainDTO>> searchTrains(@RequestParam String departure, @RequestParam String arrival) {
-        List<TrainDTO> trainList = domesticService.searchTrains(departure, arrival);
-        return ResponseEntity.ok(trainList);
     }
 
 }
