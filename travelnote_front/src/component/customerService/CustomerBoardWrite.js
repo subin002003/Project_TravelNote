@@ -28,7 +28,6 @@ const CustomerBoardWrite = () => {
     axios
       .post(`${backServer}/faqBoard/writeFaqBoard`, faqBoard)
       .then((res) => {
-        console.log(res);
         if (res.data === 1) {
           Swal.fire({
             title: "글 작성 완료",

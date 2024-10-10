@@ -1,5 +1,5 @@
-import { useRecoilState } from "recoil";
-import { userNickState } from "../utils/RecoilData";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { isLoginState, userNickState } from "../utils/RecoilData";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -7,10 +7,20 @@ import { useNavigate } from "react-router-dom";
 
 const PersonalBoardWrite = () => {
   const [userNick, setUserNick] = useRecoilState(userNickState);
+  const isLogin = useRecoilValue(isLoginState);
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState("");
+
   useEffect(() => {
+    if (!isLogin) {
+      Swal.fire({
+        title: "로그인 후 이용해주세요",
+        icon: "warning",
+      }).then(() => {
+        navigate("/login");
+      });
+    }
     const today = new Date();
     const formattedDate = today.toISOString().split("T")[0]; // YYYY-MM-DD 형식으로 변환
     setCurrentDate(formattedDate);

@@ -20,4 +20,7 @@ public class UserDTO {
 	private int userType;
 	private String socialType;
 	private String businessRegNo;
+
+	//정지회원기능 구현시 블라인드된 게시글의 갯수를 알기 위한 칼럼
+	private int inactiveBoards;
 }

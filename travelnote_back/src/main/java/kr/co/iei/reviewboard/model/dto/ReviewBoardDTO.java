@@ -27,6 +27,9 @@ public class ReviewBoardDTO {
 	private String likeCount;
 	private List<ReviewBoardFileDTO> fileList;
 	private int[] delReviewBoardFileNo;
+	
+	//신고횟수를 위한 변수 추가 2024-10-10 오건하
+	private int reportCount;
 }
 	
 

@@ -15,7 +15,6 @@ const MyProduct = () => {
     axios
       .get(`${backServer}/user/myProduct/${userNick}/${reqPage}`)
       .then((res) => {
-        console.log(res);
         setMyProductList(res.data.list);
         setPi(res.data.pi);
       })

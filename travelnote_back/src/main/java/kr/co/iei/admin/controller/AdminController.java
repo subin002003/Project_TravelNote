@@ -19,6 +19,8 @@ import kr.co.iei.board.model.service.BoardService;
 import kr.co.iei.personalboard.model.dto.PersonalBoardAnswerDTO;
 import kr.co.iei.personalboard.model.dto.PersonalBoardDTO;
 import kr.co.iei.personalboard.model.service.PersonalBoardService;
+import kr.co.iei.reviewboard.model.service.ReviewBoardService;
+import kr.co.iei.user.model.service.UserService;
 
 @CrossOrigin("*")
 @RestController
@@ -28,6 +30,10 @@ public class AdminController {
 	private PersonalBoardService personalBoardService;
 	@Autowired
 	private BoardService boardService;
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private ReviewBoardService reviewBoardService;
 	
 	@GetMapping(value = "/personalBoardList/{reqPage}")
 	public ResponseEntity<Map> getPersonalBoardList(@PathVariable int reqPage){
@@ -51,7 +57,6 @@ public class AdminController {
 	
 	@PatchMapping(value = "/updatePersonalBoardAnswer/{personalBoardNo}")
 	public ResponseEntity<Integer> updatePersonalBoardAnswer(@RequestBody PersonalBoardAnswerDTO personalBoardAnswer, @PathVariable int personalBoardNo){
-		System.out.println("업뎃 테스트 : "+personalBoardAnswer);
 		int result = personalBoardService.updatePersonalBoardAnswer(personalBoardAnswer);
 		return ResponseEntity.ok(result);
 	}
@@ -66,6 +71,18 @@ public class AdminController {
 	public ResponseEntity<Integer> updateBoardStatus(@PathVariable int boardNo){
 		int result = boardService.updateBoardStatus(boardNo);
 		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping(value = "/reportUserList/{reqPage}")
+	public ResponseEntity<Map> selectReportUserList(@PathVariable int reqPage){
+		Map map = userService.selectReportUserList(reqPage);
+		return ResponseEntity.ok(map);
+	}
+	
+	@GetMapping(value = "/reportReviewList/{reviewBoardReqPage}")
+	public ResponseEntity<Map> selectReportReviewList(@PathVariable int reviewBoardReqPage){
+		Map map = reviewBoardService.selectReportReviewList(reviewBoardReqPage);
+		return ResponseEntity.ok(map);
 	}
 	
 }

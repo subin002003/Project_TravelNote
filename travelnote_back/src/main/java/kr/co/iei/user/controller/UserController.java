@@ -84,14 +84,15 @@ public class UserController {
 	
 	@PostMapping
 	public ResponseEntity<Integer> joinUser(@RequestBody UserDTO user){
-		System.out.println("가입한 유저 정보 : "+user);
+		if(user.getUserType() == 0 && user.getUserName().equals( user.getUserNick())) {
+			user.setUserType(2);
+		}
 		int result = userService.joinUser(user);
 		return ResponseEntity.ok(result);
 	}
 	
 	@PostMapping(value = "/login")
 	public ResponseEntity<LoginUserDTO> login(@RequestBody UserDTO user){
-		System.out.println("받아온 로그인 정보 : "+user);
 		LoginUserDTO loginUser = userService.login(user);
 		if(loginUser != null) {			
 			return ResponseEntity.ok(loginUser);
@@ -116,7 +117,6 @@ public class UserController {
 		 String token = request.getHeader("Authorization").substring(7);
 		 if (jwtUtil.validateToken(token)) {
 		        LoginUserDTO loginUser = jwtUtil.checkToken(token);
-		        System.out.println("토큰 정보 : "+loginUser);
 		        return ResponseEntity.ok(loginUser);
 		    } else {
 		        return ResponseEntity.ok(null);
@@ -129,7 +129,6 @@ public class UserController {
 		String accessToken = userService.getNaverAccessToken(authInfo);
 		
 		UserDTO naverUser = userService.naverUserInfo(accessToken);
-		System.out.println("네이버 로그인 불러온 정보 : "+naverUser);
 		int checkUser = userService.checkEmail(naverUser.getUserEmail());
 		if(checkUser > 0 && naverUser.getSocialType().equals("naver")) {
 			naverLoginUser = userService.socialLogin(naverUser);
@@ -141,7 +140,6 @@ public class UserController {
 			int result = userService.joinSocialUser(naverUser);
 			if(result > 0) {
 				naverLoginUser = userService.socialLogin(naverUser);
-				System.out.println("네이버 로그인 유저 정보 : " + naverLoginUser);
 				return ResponseEntity.ok(naverLoginUser);
 			}
 			return ResponseEntity.ok(naverLoginUser);
@@ -173,7 +171,6 @@ public class UserController {
 
 	@PatchMapping
 	public ResponseEntity<Integer> updateUser(@RequestBody UserDTO user){
-		System.out.println("업데이터 유저 : "+user);
 		int result = userService.updateUser(user);
 		return ResponseEntity.ok(result);
 	}
@@ -186,10 +183,7 @@ public class UserController {
 	
 	@GetMapping(value = "/getNick")
 	public ResponseEntity<String> getNick(@RequestHeader("Authorization") String token){
-		System.out.println("유저닉네임 가져오기 실행");
-		System.out.println("토큰" + token);
 		String userNick = userService.getNick(token);
-		System.out.println("userNick 출력 : "+userNick);
 		return ResponseEntity.ok(userNick);
 	}
 	
@@ -208,7 +202,6 @@ public class UserController {
 	@GetMapping(value = "/myReviewList/{userNick}/{reqPage}")
 	public ResponseEntity<Map> myReviewList(@PathVariable String userNick, @PathVariable int reqPage){
 		Map map = productService.myReviewList(userNick, reqPage);
-		System.out.println("리뷰 리스트 : "+map.get("list"));
 		return ResponseEntity.ok(map);
 	}
 	
@@ -265,4 +258,11 @@ public class UserController {
 		Map map = userService.shareTravelList(userNick, reqPage);
 		return ResponseEntity.ok(map);
 	}
+	
+	@PatchMapping(value = "/suspendUser/{userEmail}")
+	public ResponseEntity<Integer> suspendUser(@PathVariable String userEmail){
+		int result = userService.suspendUser(userEmail);
+		return ResponseEntity.ok(result);
+	}
+	
 }

@@ -41,7 +41,6 @@ const MyInfo = () => {
   const changeUser = (e) => {
     const name = e.target.name;
     setUser({ ...user, [name]: e.target.value });
-    console.log(user);
   };
 
   const checkName = () => {
@@ -92,7 +91,6 @@ const MyInfo = () => {
       axios
         .get(`${backServer}/user/checkPhone/${user.userPhone}`)
         .then((res) => {
-          console.log(res);
           if (res.data === 0) {
             setPhoneStatus(3);
             phoneStatusMessage.current.classList.add("valid");
@@ -167,7 +165,6 @@ const MyInfo = () => {
         axios
           .delete(`${backServer}/user`)
           .then((res) => {
-            console.log(res);
             if (res.data === 1) {
               Swal.fire({
                 title: "탈퇴 성공",

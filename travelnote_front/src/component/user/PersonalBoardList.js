@@ -12,7 +12,6 @@ const PersonalBoardList = () => {
     axios
       .get(`${backServer}/admin/personalBoardList/${reqPage}`)
       .then((res) => {
-        console.log(res);
         setPersonalBoardList(res.data.list);
         setPi(res.data.pi);
       });

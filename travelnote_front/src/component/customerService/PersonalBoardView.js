@@ -32,7 +32,6 @@ const PersonalBoardView = () => {
     axios
       .get(`${backServer}/personalBoard/getAnswer/${personalBoardNo}`)
       .then((res) => {
-        console.log(res);
         setPersonalBoardAnswer(res.data);
       })
       .catch((err) => {

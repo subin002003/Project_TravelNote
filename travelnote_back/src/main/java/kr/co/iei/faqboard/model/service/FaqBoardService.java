@@ -32,7 +32,6 @@ public class FaqBoardService {
 		int pageNaviSize = 5;
 		int totalCount = faqBoardDao.totalCount();
 		PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
-		System.out.println("pageInfo : " + pi);
 		List list = faqBoardDao.selectBoardList(pi);
 	
 		Map<String, Object> map = new HashMap<String, Object>();

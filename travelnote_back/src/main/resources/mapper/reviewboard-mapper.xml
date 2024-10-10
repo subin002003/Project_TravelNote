@@ -289,6 +289,43 @@
 				order by review_board_no desc)b)
 				where (rnum between #{start} and #{end}) and review_board_writer = #{userNick}
 	</select>
+	<select id="reportReviewBoardTotalCount" resultType="int">
+		select count(*) as total
+		from (
+		    select review_board_no
+		    from review_board_report
+		    group by review_board_no
+		    having count(*) >= 2
+		) subquery
+	</select>
+	<select id="reportReviewBoardList" resultType="reviewBoard">
+		select *
+		from (
+			select rownum as rnum, result.*
+			from (
+				select
+				r.review_board_no,
+				r.review_board_title,
+				r.review_board_writer,
+				to_char(r.review_board_date, 'yyyy-mm-dd') as review_board_date,
+				r.review_board_status,
+				count(rr.review_board_no) as report_count
+			from review_board_report rr
+			inner join review_board r
+				on rr.review_board_no = r.review_board_no
+			group by
+				r.review_board_no,
+				r.review_board_title,
+				r.review_board_writer,
+				r.review_board_date,
+				r.review_board_status
+			having count(rr.review_board_no) >= 1
+			order by r.review_board_no desc)
+			result
+			where rownum &lt; #{end}
+			)
+			where rnum >= #{start}
+	</select>
 </mapper>
 
 

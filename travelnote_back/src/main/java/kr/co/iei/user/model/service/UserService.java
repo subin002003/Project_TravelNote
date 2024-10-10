@@ -317,6 +317,25 @@ public class UserService {
 	    }
 
 
+	public Map selectReportUserList(int reqPage) {
+		int numPerPage = 10;
+		int pageNaviSize = 5;
+		int totalCount = userDao.reportUserTotalCount();
+		PageInfo pi = pageUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
+		List list = userDao.selectReportUserList(pi);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list",list);
+		map.put("pi",pi);
+		return map;
+	}
+
+	@Transactional
+	public int suspendUser(String userEmail) {
+		int result = userDao.suspendUser(userEmail);
+		return result;
+	}
+
+
 
 	
 

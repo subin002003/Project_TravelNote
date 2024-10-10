@@ -15,7 +15,6 @@ const Mywish = () => {
     axios
       .get(`${backServer}/user/myWish/${userNick}/${reqPage}`)
       .then((res) => {
-        console.log(res);
         setMyWishList(res.data.list);
         setPi(res.data.pi);
       })

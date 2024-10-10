@@ -11,7 +11,6 @@ const PaymentInfo = () => {
     axios
       .get(`${backServer}/user/paymentInfo/${orderNo}`)
       .then((res) => {
-        console.log(res);
         setPaymentInfo(res.data);
       })
       .catch((err) => {

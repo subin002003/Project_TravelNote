@@ -96,7 +96,6 @@ public class PersonalBoardController {
 	@GetMapping(value = "/getAnswer/{personalBoardNo}")
 	public ResponseEntity<PersonalBoardAnswerDTO> getAnswer(@PathVariable int personalBoardNo){
 		PersonalBoardAnswerDTO personalBoardAnswer = personalBoardService.getPersonalBoardAnswer(personalBoardNo);
-		System.out.println("답변정보 : "+personalBoardAnswer);
 		return ResponseEntity.ok(personalBoardAnswer);
 	}
 	
@@ -140,7 +139,6 @@ public class PersonalBoardController {
 		personalBoard.setPersonalBoardWriter(personalBoardWriter);
 		personalBoard.setPersonalBoardNo(personalBoardNo);
 		personalBoard.setDelPersonalBoardFileNo(delPersonalBoardFileNo);
-		System.out.println("게시글번호 : "+personalBoardNo);
 		List<PersonalBoardFileDTO> personalBoardFiles = new ArrayList<PersonalBoardFileDTO>();
 		if(personalBoardFileList != null) {
 			String savepath = root + "/personalBoard/";

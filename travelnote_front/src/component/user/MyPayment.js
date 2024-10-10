@@ -15,7 +15,6 @@ const MyPayment = () => {
     axios
       .get(`${backServer}/user/myPayment/${userNick}/${reqPage}`)
       .then((res) => {
-        console.log(res);
         setMyPaymentList(res.data.list);
         setPi(res.data.pi);
       })

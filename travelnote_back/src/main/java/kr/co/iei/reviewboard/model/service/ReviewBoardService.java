@@ -202,11 +202,23 @@ public class ReviewBoardService {
 		PageInfo pi = pageUtil.getPageInfo(reviewBoardReqPage, numPerPage, pageNaviSize, totalCount);
 		pi.setUserNick(userNick);
 		List list = reviewBoardDao.myReviewBoardList(pi);
-		System.out.println("리뷰게시판 내가 쓴글 페이지 인포 : "+pi);
-		System.out.println("리뷰게시판 내가 쓴글 : "+list);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list",list);
 		map.put("pi",pi);
+		return map;
+	}
+	
+	//오건하 작성 2024-10-10
+	public Map selectReportReviewList(int reviewBoardReqPage) {
+		int numPerPage = 3;
+		int pageNaviSize = 5;
+		int totalCount = reviewBoardDao.reportReviewBoardTotalCount();
+		PageInfo pi = pageUtil.getPageInfo(reviewBoardReqPage, numPerPage, pageNaviSize, totalCount);
+		List list = reviewBoardDao.reportReviewBoardList(pi);
+		System.out.println("신고게시판 리뷰 : "+list);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list",list);
+		map.put("pi", pi);
 		return map;
 	}
 	

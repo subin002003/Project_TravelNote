@@ -28,7 +28,6 @@ const NaverCallback = () => {
           state: state,
         })
         .then((res) => {
-          console.log(res);
           setLoginEmail(res.data.userEmail);
           setUserType(res.data.userType);
           setUserNick(res.data.userNick);

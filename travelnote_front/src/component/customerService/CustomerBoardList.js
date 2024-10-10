@@ -26,7 +26,6 @@ const CustomerBoardList = () => {
     axios
       .get(`${backServer}/faqBoard/list/${reqPage}`)
       .then((res) => {
-        console.log(res);
         setFaqBoardList(res.data.list);
         setPi(res.data.pi);
       })
@@ -42,8 +41,6 @@ const CustomerBoardList = () => {
         const response = await axios.get(`${backServer}/user/getNick`, {
           headers: { Authorization: token },
         }); // 백엔드에서 userNick 정보를 가져오는 API
-        console.log(response);
-        console.log("가져온 닉네임 : " + response.data);
         setUserNick(response.data); // 백엔드에서 받아온 userNick을 설정
       } catch (err) {
         console.log("Error fetching userNick:", err);
@@ -59,7 +56,6 @@ const CustomerBoardList = () => {
           params: { userNick },
         })
         .then((res) => {
-          console.log(res);
           setPersonaBoardList(res.data.list);
           setPersonalBoardPi(res.data.pi);
         })

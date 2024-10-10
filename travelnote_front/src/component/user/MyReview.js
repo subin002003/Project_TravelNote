@@ -16,7 +16,6 @@ const MyReview = () => {
     axios
       .get(`${backServer}/user/myReviewList/${userNick}/${reqPage}`)
       .then((res) => {
-        console.log(res);
         setReviewList(res.data.list);
         setPi(res.data.pi);
       })

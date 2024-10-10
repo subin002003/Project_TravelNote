@@ -14,7 +14,6 @@ const ReservationView = () => {
     axios
       .get(`${backServer}/user/reservationInfo/${orderNo}`)
       .then((res) => {
-        console.log(res);
         setReservationInfo(res.data);
       })
       .catch((err) => {

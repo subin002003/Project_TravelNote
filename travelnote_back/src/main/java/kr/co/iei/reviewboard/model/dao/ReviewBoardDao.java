@@ -67,7 +67,13 @@ public interface ReviewBoardDao {
 	int myReviewBoardTotalCount(String userNick);
 
 	//오건하 2024-10-07 작성
-	List myReviewBoardList(PageInfo pi);	
+	List myReviewBoardList(PageInfo pi);
+
+	//오건하 2024-10-07 작성
+	int reportReviewBoardTotalCount();
+	
+	//오건하 2024-10-10 작성
+	List reportReviewBoardList(PageInfo pi);	
 	
 	
 }

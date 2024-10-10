@@ -27,8 +27,6 @@ const Login = () => {
   };
   const [isSocialLogin, setIsSocialLogin] = useState(false);
   const login = () => {
-    console.log(isSocialLogin);
-
     if (!isSocialLogin) {
       if (user.userEmail === "" || user.userPw === "") {
         Swal.fire({
@@ -41,7 +39,13 @@ const Login = () => {
       axios
         .post(`${backServer}/user/login`, user)
         .then((res) => {
-          console.log(res);
+          if (res.data.userType === 4) {
+            Swal.fire({
+              title: "정지 회원 입니다. 관리자에게 문의해주세요.",
+              icon: "warning",
+            });
+            return;
+          }
           setLoginEmail(res.data.userEmail);
           setUserType(res.data.userType);
           setUserNick(res.data.userNick);

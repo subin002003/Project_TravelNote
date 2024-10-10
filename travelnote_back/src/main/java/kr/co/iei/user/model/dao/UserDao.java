@@ -1,8 +1,11 @@
 package kr.co.iei.user.model.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.iei.user.model.dto.UserDTO;
+import kr.co.iei.util.PageInfo;
 
 @Mapper
 public interface UserDao {
@@ -34,5 +37,11 @@ public interface UserDao {
 	int selectUserByEmail(String memberEmail);
 	
 	UserDTO selectUserEmail(String email);
+
+	List selectReportUserList(PageInfo pi);
+
+	int reportUserTotalCount();
+
+	int suspendUser(String userEmail);
 
 }

@@ -16,7 +16,6 @@ const CustomerBoardUpdate = () => {
     axios
       .get(`${backServer}/faqBoard/view/${faqBoardNo}`)
       .then((res) => {
-        console.log(res);
         setFaqBoard(res.data);
       })
       .catch((err) => {

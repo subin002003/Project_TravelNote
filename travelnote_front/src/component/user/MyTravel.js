@@ -15,10 +15,8 @@ const MyTravel = () => {
     axios
       .get(`${backServer}/user/myTravel/${userNick}/${reqPage}`)
       .then((res) => {
-        console.log(res.data);
         setMyTravelList(res.data.list);
         setPi(res.data.pi);
-        console.log(pi);
       });
   }, [reqPage]);
   return (

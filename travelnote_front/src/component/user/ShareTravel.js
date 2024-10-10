@@ -16,7 +16,6 @@ const ShareTravel = () => {
     axios
       .get(`${backServer}/user/shareTravelList/${userNick}/${reqPage}`)
       .then((res) => {
-        console.log(res);
         setShareTrevelList(res.data.list);
         setPi(res.data.pi);
       })

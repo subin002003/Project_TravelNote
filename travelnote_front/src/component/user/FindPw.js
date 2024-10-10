@@ -79,7 +79,6 @@ const FindPw = () => {
         verificationCode: verificationCode,
       })
       .then((res) => {
-        console.log(res);
         if (res.data === 1) {
           verifyMessage.current.classList.add("valid");
           verifyMessage.current.innerText =
@@ -139,7 +138,6 @@ const FindPw = () => {
       axios
         .patch(`${backServer}/user/changePw`, user)
         .then((res) => {
-          console.log(res);
           if (res.data === 1) {
             Swal.fire({
               title: "비밀번호 변경 완료 !",

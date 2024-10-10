@@ -30,17 +30,51 @@ const JoinUser = () => {
     const selectedCategory = e.target.value;
     setCategory(selectedCategory);
 
-    setUser({
-      userEmail: "",
-      userPw: "",
-      userName: "",
-      userPhone: "",
-      userNick: "",
-      userType: 0, // 카테고리에 따라 userType 설정
-    });
+    setUser((prevUser) => ({
+      ...prevUser,
+      userType: selectedCategory === "agency" ? 2 : 1,
+      businessRegNo: "",
+    }));
+
+    if (businessRegNoRef.current) {
+      businessRegNoRef.current.classList.remove("invalid");
+      businessRegNoRef.current.classList.remove("valid");
+      businessRegNoRef.current.innerText = "";
+    }
+    if (emailMessage.current) {
+      emailMessage.current.classList.remove("valid");
+      emailMessage.current.classList.remove("invalid");
+      emailMessage.current.innerText = "";
+    }
+    if (pwRef.current) {
+      pwRef.current.classList.remove("invalid");
+      pwRef.current.classList.remove("valid");
+      pwRef.current.innerText = "6~12자. 영어와 숫자를 반드시 입력해주세요.";
+    }
+    if (pwReRef.current) {
+      pwReRef.current.classList.remove("invalid");
+      pwReRef.current.classList.remove("valid");
+      pwReRef.current.innerText = "";
+    }
+    if (phoneRef.current) {
+      phoneRef.current.classList.remove("invalid");
+      phoneRef.current.classList.remove("valid");
+      phoneRef.current.innerText = "";
+    }
+    if (nameRef.current) {
+      nameRef.current.classList.remove("invalid");
+      nameRef.current.classList.remove("valid");
+      nameRef.current.innerText = "";
+    }
+    if (nickRef.current) {
+      nickRef.current.classList.remove("invalid");
+      nickRef.current.classList.remove("valid");
+      nickRef.current.innerText = "";
+    }
 
     // 여행사일 때 userNick을 userName과 동일하게 설정
     if (selectedCategory === "agency") {
+      setNameState(2);
       setUser((prevUser) => ({
         ...prevUser,
         userNick: prevUser.userName,
@@ -112,7 +146,6 @@ const JoinUser = () => {
       axios
         .get(`${backServer}/user/checkEmail/${user.userEmail}`)
         .then((res) => {
-          console.log(res);
           if (res.data === 0) {
             emailMessage.current.classList.add("valid");
             emailMessage.current.innerText =
@@ -188,7 +221,6 @@ const JoinUser = () => {
       axios
         .get(`${backServer}/user/checkPhone/${user.userPhone}`)
         .then((res) => {
-          console.log(res);
           if (res.data === 0) {
             setPhoneState(3);
             phoneRef.current.classList.add("valid");
@@ -234,18 +266,33 @@ const JoinUser = () => {
     const nickReg = /^[가-힣a-zA-Z0-9]{1,8}$/;
     if (!nickReg.test(user.userNick)) {
       setNickState(1);
-      nickRef.current.classList.add("invalid");
-      nickRef.current.innerText = "닉네임은 8자 이하로만 사용 가능합니다.";
+      if (category === "agency") {
+        nickRef.current.classList.add("invalid");
+        nickRef.current.innerText = "여행사명은 8자 이하로만 사용 가능합니다.";
+      } else {
+        nickRef.current.classList.add("invalid");
+        nickRef.current.innerText = "닉네임은 8자 이하로만 사용 가능합니다.";
+      }
     } else {
       axios.get(`${backServer}/user/checkNick/${user.userNick}`).then((res) => {
         if (res.data === 0) {
           setNickState(3);
-          nickRef.current.classList.add("valid");
-          nickRef.current.innerText = "사용 가능한 닉네임 입니다.";
+          if (category === "agency") {
+            nickRef.current.classList.add("valid");
+            nickRef.current.innerText = "사용 가능한 여행사명 입니다.";
+          } else {
+            nickRef.current.classList.add("valid");
+            nickRef.current.innerText = "사용 가능한 닉네임 입니다.";
+          }
         } else {
           setNickState(2);
-          nickRef.current.classList.add("invalid");
-          nickRef.current.innerText = "중복된 닉네임 입니다.";
+          if (category === "agency") {
+            nickRef.current.classList.add("invalid");
+            nickRef.current.innerText = "중복된 여행사명 입니다.";
+          } else {
+            nickRef.current.classList.add("invalid");
+            nickRef.current.innerText = "중복된 닉네임 입니다.";
+          }
         }
       });
     }
@@ -294,7 +341,6 @@ const JoinUser = () => {
         .catch((err) => {
           console.log(err);
         });
-      console.log(response.data);
       if (
         response.data.data[0].tax_type ===
         "국세청에 등록되지 않은 사업자등록번호입니다."
@@ -314,34 +360,31 @@ const JoinUser = () => {
   };
 
   const join = () => {
-    console.log(category);
-    console.log(user);
-    console.log(pwState);
-    console.log(phoneState);
-    console.log(nameState);
-    console.log(nickState);
-    console.log(businessRegNoState);
     if (category === "agency") {
-      user.userNick = user.userName;
-      setNickState(3);
+      user.userName = user.userNick;
       if (
         //emailCheck === 4 &&
         pwState === 3 &&
         phoneState === 3 &&
         nameState === 2 &&
-        nickState === 3 &&
-        businessRegNoState === 3
+        nickState === 3
+        //&&businessRegNoState === 3
       ) {
-        setUser({ userType: 2 });
+        setUser((prevUser) => ({
+          ...prevUser,
+          userType: 2,
+        }));
+
         axios
           .post(`${backServer}/user`, user)
           .then((res) => {
-            console.log(res);
-            Swal.fire({
-              title: "가입 성공 !",
-              icon: "success",
-            });
-            navigate("/");
+            if (res.data === 1) {
+              Swal.fire({
+                title: "가입 성공 !",
+                icon: "success",
+              });
+              navigate("/");
+            }
           })
           .catch((err) => {
             console.log(err);
@@ -364,12 +407,13 @@ const JoinUser = () => {
         axios
           .post(`${backServer}/user`, user)
           .then((res) => {
-            console.log(res);
-            Swal.fire({
-              title: "가입 성공 !",
-              icon: "success",
-            });
-            navigate("/");
+            if (res.data === 1) {
+              Swal.fire({
+                title: "가입 성공 !",
+                icon: "success",
+              });
+              navigate("/");
+            }
           })
           .catch((err) => {
             console.log(err);
@@ -417,7 +461,7 @@ const JoinUser = () => {
               여행사
             </label>
           </div>
-          <div className="img-box">
+          <div style={{ marginBottom: "15px" }} className="img-box">
             <img className="logo" src="/image/logo1.png"></img>
           </div>
           <div className="input-group">
@@ -430,6 +474,7 @@ const JoinUser = () => {
                 type="text"
                 name="userEmail"
                 id="userEmail"
+                value={user.userEmail}
                 placeholder="ex)travelnote@gmail.com"
                 onChange={changeUser}
                 onBlur={checkEmail}
@@ -479,6 +524,7 @@ const JoinUser = () => {
                 type="password"
                 name="userPw"
                 id="userPw"
+                value={user.userPw}
                 onChange={changeUser}
                 onBlur={pwCheck}
               ></input>
@@ -497,6 +543,7 @@ const JoinUser = () => {
                 type="password"
                 name="userPwRe"
                 id="userPwRe"
+                value={pwRe}
                 onChange={pwReChange}
                 onBlur={pwReCheck}
               ></input>
@@ -516,6 +563,7 @@ const JoinUser = () => {
                 placeholder="ex)010-0000-0000"
                 id="userPhone"
                 name="userPhone"
+                value={user.userPhone}
                 onChange={changeUser}
                 onBlur={phoneCheck}
               ></input>
@@ -527,47 +575,27 @@ const JoinUser = () => {
           {category === "user" ? (
             <div className="input-group">
               <div className="label-box">
-                <label htmlFor="userName">이름</label>
+                <label htmlFor="userNick">닉네임</label>
               </div>
               <div className="input-box">
                 <input
                   className="user-input"
                   type="text"
-                  id="userName"
-                  name="userName"
+                  id="userNick"
+                  name="userNick"
+                  value={user.userNick}
                   onChange={changeUser}
-                  onBlur={nameCheck}
+                  onBlur={nickCheck}
                 ></input>
-                <div className="msg-box">
-                  <p ref={nameRef}></p>
-                </div>
+              </div>
+              <div className="msg-box">
+                <p ref={nickRef}></p>
               </div>
             </div>
           ) : (
             <div className="input-group">
               <div className="label-box">
-                <label htmlFor="userName">여행사 이름</label>
-              </div>
-              <div className="input-box">
-                <input
-                  className="user-input"
-                  type="text"
-                  id="userName"
-                  name="userName"
-                  onChange={changeUser}
-                  onBlur={nameCheck}
-                ></input>
-                <div className="msg-box">
-                  <p ref={nameRef}></p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {category === "user" ? (
-            <div className="input-group">
-              <div className="label-box">
-                <label htmlFor="userNick">닉네임</label>
+                <label htmlFor="userNick">여행사 이름</label>
               </div>
               <div className="input-box">
                 <input
@@ -578,9 +606,31 @@ const JoinUser = () => {
                   onChange={changeUser}
                   onBlur={nickCheck}
                 ></input>
+                <div className="msg-box">
+                  <p ref={nickRef}></p>
+                </div>
               </div>
-              <div className="msg-box">
-                <p ref={nickRef}></p>
+            </div>
+          )}
+
+          {category === "user" ? (
+            <div className="input-group">
+              <div className="label-box">
+                <label htmlFor="userName">이름</label>
+              </div>
+              <div className="input-box">
+                <input
+                  className="user-input"
+                  type="text"
+                  id="userName"
+                  name="userName"
+                  value={user.userName}
+                  onChange={changeUser}
+                  onBlur={nameCheck}
+                ></input>
+                <div className="msg-box">
+                  <p ref={nameRef}></p>
+                </div>
               </div>
             </div>
           ) : (
@@ -595,6 +645,7 @@ const JoinUser = () => {
                     type="text"
                     id="businessRegNo"
                     name="businessRegNo"
+                    value={user.businessRegNo}
                     onChange={changeUser}
                     onBlur={businessRegNoCheck}
                     placeholder=" - 없이 입력해주세요."

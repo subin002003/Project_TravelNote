@@ -19,7 +19,6 @@ const MyBoard = () => {
     axios
       .get(`${backServer}/user/myBoardList/${userNick}/${boardReqPage}`)
       .then((res) => {
-        console.log(res);
         setBoardList(res.data.list);
         setBoardPi(res.data.pi);
       })
@@ -33,7 +32,6 @@ const MyBoard = () => {
         `${backServer}/user/myReviewBoardList/${userNick}/${reviewBoardReqPage}`
       )
       .then((res) => {
-        console.log(res);
         setReviewBoardList(res.data.list);
         setReviewBoardPi(res.data.pi);
       })
@@ -107,7 +105,15 @@ const MyBoard = () => {
                 lineHeight: "100px",
               }}
             >
-              <h3>아직 작성한 글이 없습니다.</h3>
+              <span
+                style={{
+                  fontSize: "16px",
+                  fontFamily: "SUITE-Regular",
+                  fontWeight: "bold",
+                }}
+              >
+                아직 작성한 글이 없습니다.
+              </span>
             </div>
           )}
         </div>
@@ -142,9 +148,16 @@ const BoardItem = (props) => {
 
 const ReviewBoardItem = (props) => {
   const reviewBoard = props.reviewBoard;
-  const naviaget = useNavigate();
+  const navigate = useNavigate();
+  const naviageReviewBoardView = () => {
+    navigate(`/reviewBoard/view/${reviewBoard.reviewBoardNo}`);
+  };
   return (
-    <div className="myreviewboard-item">
+    <div
+      style={{ cursor: "pointer" }}
+      onClick={naviageReviewBoardView}
+      className="myreviewboard-item"
+    >
       <div className="myreviewboard-thumb">
         <img src="/image/logo1.png"></img>
       </div>

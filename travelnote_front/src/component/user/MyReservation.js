@@ -15,7 +15,6 @@ const MyReservation = () => {
     axios
       .get(`${backServer}/user/myReservation/${userNick}/${reqPage}`)
       .then((res) => {
-        console.log(res);
         setReservationList(res.data.list);
         setPi(res.data.pi);
       })

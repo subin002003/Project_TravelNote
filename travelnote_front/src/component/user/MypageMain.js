@@ -106,10 +106,8 @@ const MypageMain = () => {
     if (userType === 3) {
       setMenus([
         { url: "/mypage/admin/manageBoard", text: "게시글 관리" },
-        { url: "#", text: "회원 관리" },
+        { url: "/mypage/admin/manageUser", text: "회원 관리" },
         { url: "/mypage/admin/personalBoardList", text: "1대1문의 답변하기" },
-        { url: "#", text: "여행지 등록하기" },
-        { url: "#", text: "관광지 등록하기" },
       ]);
     } else if (userType === 2) {
       setMenus([

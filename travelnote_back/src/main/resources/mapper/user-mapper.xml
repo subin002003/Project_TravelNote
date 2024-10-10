@@ -49,10 +49,66 @@
 		select count(*) from user_tbl where user_email = #{userEmail}
 	</select>
 
-	<select id="selectUserEmail" parameterType="String" resultType="User">
+	<select id="selectUserEmail" parameterType="String" resultType="user">
         SELECT user_no, user_name, user_email
         FROM user_tbl
         WHERE user_email = #{email}
     </select>
-
+    
+    <select id="reportUserTotalCount" resultType="int">
+		select
+		    count(*) as total_users
+		from (
+		    select 
+		        b.board_writer as user_nick, 
+		        count(b.board_no) as inactive_boards, 
+		        u.user_type, 
+		        u.user_email
+		    from
+		        board b
+		    join 
+		        user_tbl u on b.board_writer = u.user_nick
+		    where 
+		        b.board_status = 0
+		    group by
+		        b.board_writer, 
+		        u.user_type, 
+		        u.user_email
+		    having 
+		        count(b.board_no) >= 2
+		)
+	
+	</select>
+	
+	<select id="selectReportUserList" resultType="user">
+		select * from (
+		    select 
+		        rownum as rnum, 
+		        user_nick, 
+		        inactive_boards, 
+		        user_type, 
+		        user_email
+		    from (
+		        select 
+		            b.board_writer as user_nick, 
+		            count(b.board_no) as inactive_boards, 
+		            u.user_type, 
+		            u.user_email
+		        from board b
+		        join user_tbl u on b.board_writer = u.user_nick
+		        where b.board_status = 0
+		        group by
+		            b.board_writer, 
+		            u.user_type, 
+		            u.user_email
+		        having count(b.board_no) >= 2
+		        order by b.board_writer
+		    ) result
+		) 
+		where rnum between #{start} and #{end}
+	</select>
+	
+	<update id="suspendUser" >
+		update user_tbl set user_type = 4 where user_email = #{userEmail}
+	</update>
 </mapper>
