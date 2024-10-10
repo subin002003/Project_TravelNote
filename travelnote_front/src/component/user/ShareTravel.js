@@ -67,6 +67,54 @@ const ShareTravelItem = (props) => {
       navigate(`/foreign/plan/${shareTravel.itineraryNo}`);
     }
   };
+  const getImagePath = (city) => {
+    switch (city) {
+      case "서울":
+        return "/images/서울.jpg";
+      case "부산":
+        return "/images/부산.jpg";
+      case "강릉":
+        return "/images/강릉.jpg";
+      case "대전":
+        return "/images/대전.jpg";
+      case "인천":
+        return "/images/인천.jpg";
+      case "제주":
+        return "/images/제주.jpg";
+      case "가평":
+        return "/images/가평.jpg";
+      case "거제 통영":
+        return "/images/거제 통영.jpg";
+      case "경주":
+        return "/images/경주.jpg";
+      case "군산":
+        return "/images/군산.jpg";
+      case "남원":
+        return "/images/남원.jpg";
+      case "목포":
+        return "/images/목포.jpg";
+      case "수원":
+        return "/images/수원.jpg";
+      case "안동":
+        return "/images/안동.jpg";
+      case "여수":
+        return "/images/여수.jpg";
+      case "영월":
+        return "/images/영월.jpg";
+      case "전주":
+        return "/images/전주.jpg";
+      case "제천":
+        return "/images/제천.jpg";
+      case "춘천":
+        return "/images/춘천.jpg";
+      case "포항":
+        return "/images/포항.jpg";
+      default:
+        return "/images/default_img.png";
+    }
+  };
+  const imagePath = getImagePath(shareTravel.regionName);
+  const backServer = process.env.REACT_APP_BACK_SERVER;
   return (
     <div
       onClick={navigateShareTravel}
@@ -74,7 +122,18 @@ const ShareTravelItem = (props) => {
       style={{ marginBottom: "20px", cursor: "pointer" }}
     >
       <div className="reservation-thum">
-        <img className="reservation-img" src="/image/logo1.png"></img>
+        {shareTravel.countryName === "대한민국" ? (
+          <img className="reservation-img" src={imagePath}></img>
+        ) : (
+          <img
+            className="reservation-img"
+            src={
+              shareTravel.regionImg !== ""
+                ? `${backServer}/foreignImg/${shareTravel.regionImg}`
+                : "/image/default_img.png"
+            }
+          ></img>
+        )}
       </div>
       <div className="reservation-table">
         <table>

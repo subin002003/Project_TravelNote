@@ -394,6 +394,7 @@ td {
   margin: 0 auto;
 }
 .myproduct-content {
+  width: 200px;
   height: 100%;
 }
 .myproduct-thumb {

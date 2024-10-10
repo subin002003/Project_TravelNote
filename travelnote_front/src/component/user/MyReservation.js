@@ -86,7 +86,7 @@ const ReservationItem = (props) => {
         <table>
           <tbody>
             <tr>
-              <th>예약 상품명 :</th>
+              <th style={{ width: "25%" }}>예약 상품명 :</th>
               <td>{reservation.productName}</td>
             </tr>
             <tr>
