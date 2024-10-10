@@ -465,7 +465,7 @@ const ProductView = () => {
       <div className="line"></div>
       <div className="clear"></div>
 
-      <div id="map" className="sec product-google-map">
+      <div id="product-map" className="sec product-google-map">
         <h3 className="section-title">지도</h3>
         {product.productLatitude && product.productLongitude ? (
           <GoogleMap
