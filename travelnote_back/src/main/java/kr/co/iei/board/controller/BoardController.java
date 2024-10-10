@@ -210,7 +210,16 @@ public class BoardController {
     }
 	
 	
-	
+	// 특정 사용자의 좋아요 상태 조회
+    @GetMapping("/like/{boardNo}")
+    public ResponseEntity<Map<String, Object>> checkLikeStatus(
+            @PathVariable int boardNo,
+            @RequestParam String userNick) {
+        boolean liked = boardService.checkLikeStatus(userNick, boardNo);
+        Map<String, Object> response = new HashMap<>();
+        response.put("liked", liked);
+        return ResponseEntity.ok(response);
+    }
 	
 	
 	

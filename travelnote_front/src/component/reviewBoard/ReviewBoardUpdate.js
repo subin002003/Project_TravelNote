@@ -39,7 +39,6 @@ const ReviewBoardUpdate = () => {
     axios
       .get(`${backServer}/reviewBoard/reviewBoardNo/${reviewBoardNo}`)
       .then((res) => {
-        console.log(res);
         setReviewBoardTitle(res.data.reviewBoardTitle);
         setReviewBoardCategory(res.data.reviewBoardCategory);
         setReviewBoardContent(res.data.reviewBoardContent);
@@ -62,7 +61,6 @@ const ReviewBoardUpdate = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         // 사용자가 '등록'를 클릭했을 경우
-        console.log(thumbnail);
         if (
           reviewBoardTitle !== "" &&
           reviewBoardContent !== "" &&
@@ -86,10 +84,7 @@ const ReviewBoardUpdate = () => {
           for (let i = 0; i < delReviewBoardFileNo.length; i++) {
             form.append("delReviewBoardFileNo", delReviewBoardFileNo[i]);
           }
-          for (let key of form.keys()) {
-            console.log(`${key}: ${form.get(key)}`);
-          }
-          console.log(delReviewBoardFileNo);
+
           axios
             .patch(`${backServer}/reviewBoard`, form, {
               headers: {
@@ -98,7 +93,6 @@ const ReviewBoardUpdate = () => {
               },
             })
             .then((res) => {
-              console.log(res);
               if (res.data === true) {
                 navigate(`/reviewBoard/view/${reviewBoardNo}`);
               } else {

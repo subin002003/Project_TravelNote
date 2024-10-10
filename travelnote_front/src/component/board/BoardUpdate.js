@@ -33,7 +33,6 @@ const BoardUpdate = () => {
     axios
       .get(`${backServer}/board/boardNo/${boardNo}`)
       .then((res) => {
-        console.log(res);
         setBoardTitle(res.data.boardTitle);
         setBoardCategory(res.data.boardCategory);
         setBoardContent(res.data.boardContent);
@@ -67,10 +66,7 @@ const BoardUpdate = () => {
           for (let i = 0; i < delBoardFileNo.length; i++) {
             form.append("delBoardFileNo", delBoardFileNo[i]);
           }
-          for (let key of form.keys()) {
-            console.log(`${key}: ${form.get(key)}`);
-          }
-          console.log(delBoardFileNo);
+
           axios
             .patch(`${backServer}/board`, form, {
               headers: {
@@ -79,7 +75,6 @@ const BoardUpdate = () => {
               },
             })
             .then((res) => {
-              console.log(res);
               if (res.data === true) {
                 navigate(`/board/view/${boardNo}`);
               } else {
