@@ -71,7 +71,8 @@ a:hover {
 .product-search-box {
   width: 100%;
   max-width: 750px;
-  margin: 0 auto;
+  margin: 50px auto;
+  margin-top: 0 !important;
 }
 
 #product-search {

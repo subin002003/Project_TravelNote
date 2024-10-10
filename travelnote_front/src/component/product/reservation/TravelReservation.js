@@ -21,15 +21,6 @@ const TravelReservation = () => {
   // totalPrice 계산
   const totalPrice = people * productPrice;
 
-  // const [user, setUser] = useState({
-  //   userEmail: "",
-  //   userPw: "",
-  //   userName: "",
-  //   userPhone: "",
-  //   userNick: "",
-  //   userType: "1",
-  //   businessRegNo: "",
-  // });
   const [emailCheck, setEmailCheck] = useState(0);
   const emailMessage = useRef(null);
 
@@ -45,11 +36,11 @@ const TravelReservation = () => {
   // 로그인 회원 정보
   const isLogin = useRecoilValue(isLoginState);
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
-  // const userEmail = loginEmail;
+
   const [userType, setUserType] = useRecoilState(userTypeState);
 
   const [userName, setUserName] = useState("");
-  const [userEmail, setUserEmail] = useState(loginEmail);
+  const [userEmail, setUserEmail] = useState("");
   const [userPhone, setUserPhone] = useState("");
 
   // 유저 이름
@@ -211,8 +202,7 @@ const TravelReservation = () => {
           console.log(res);
           if (res.data === 0) {
             emailMessage.current.classList.add("invalid");
-            emailMessage.current.innerText =
-              "입력하신 이메일은 가입되지 않은 이메일입니다.";
+            emailMessage.current.innerText = "가입되지 않은 이메일입니다.";
             setEmailCheck(1);
           } else {
             setEmailCheck(3);
@@ -424,6 +414,9 @@ const TravelReservation = () => {
             />
             <label className="parents-label" htmlFor="agree1">
               이용 규정과 약관
+              <sup style={{ fontSize: "14px", color: "coral" }}>
+                &nbsp;*필수
+              </sup>
             </label>
           </div>
           <div>
@@ -481,6 +474,9 @@ const TravelReservation = () => {
             />
             <label className="parents-label" htmlFor="agree2">
               개인정보 수집 및 이용 동의
+              <sup style={{ fontSize: "14px", color: "coral" }}>
+                &nbsp;*필수
+              </sup>
             </label>
           </div>
           <div>
@@ -524,6 +520,9 @@ const TravelReservation = () => {
             />
             <label className="parents-label" htmlFor="agree3">
               광고성 수신 동의
+              <sup style={{ fontSize: "14px", color: "#1363df" }}>
+                &nbsp;(선택)
+              </sup>
             </label>
           </div>
           <div>
