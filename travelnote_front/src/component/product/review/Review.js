@@ -196,6 +196,14 @@ const Review = ({
         variant="outlined"
         error={reviewContent.trim() === ""}
         helperText={reviewContent.trim() === "" ? "내용을 입력해주세요." : ""}
+        autoFocus
+        InputLabelProps={{
+          style: {
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }, // label 글씨가 잘리지 않게 설정
+        }}
         sx={{
           width: "100%",
           backgroundColor: "#fff",
