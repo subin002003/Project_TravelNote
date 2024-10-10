@@ -29,10 +29,6 @@ const ForeignPlanList = (props) => {
   const [edited, setEdited] = useState(false);
   const [editPlanList, setEditPlanList] = useState([]); // 수정할 일정 목록
 
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // 로그인한 아이디 조회 중인 여정 번호의 주인이 맞는지 확인해야 함
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   // 일정 목록 조회
   useEffect(() => {
     if (itinerary.itineraryNo > 0) {

@@ -77,6 +77,9 @@ const ForeignPlanMain = () => {
             text: "서버 오류입니다.",
           });
         });
+    } else {
+      Swal.fire({ icon: "info", text: "로그인이 필요합니다." });
+      navigate("/login");
     }
   }, [loginEmail]);
 

@@ -13,11 +13,10 @@ import {
   userTypeState,
 } from "../utils/RecoilData";
 
-// path: foreign/createItinerary/:regionNo
+// path: foreign/itinerary/:regionNo
 const ItineraryForm = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
-  const [userType, setUserType] = useRecoilState(userTypeState);
   const isLogin = useRecoilValue(isLoginState);
   const navigate = useNavigate();
   const regionNo = useParams().regionNo;
@@ -27,6 +26,15 @@ const ItineraryForm = () => {
   const [itineraryTitle, setItineraryTitle] = useState("");
   const [itineraryStartDate, setItineraryStartDate] = useState("");
   const [itineraryEndDate, setItineraryEndDate] = useState("");
+
+  // 로그인 확인
+  if (!isLogin) {
+    Swal.fire({
+      icon: "info",
+      text: "로그인이 필요합니다.",
+    });
+    navigate("/login");
+  }
 
   // 지역 정보 조회
   useEffect(() => {
