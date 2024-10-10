@@ -52,8 +52,14 @@
   transform: scale(1.1); /* 이미지 확대 */
 }
 .city-name {
-  margin-top: 20px;
-  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.city-name .country {
+  margin-bottom: 5px;
 }
 
 .more-btn {

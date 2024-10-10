@@ -45,7 +45,6 @@ const CityDetail = () => {
         getWeatherForCity(res.data.regionName);
       })
       .catch((err) => {
-        console.error("Error fetching city info:", err);
         Swal.fire({
           icon: "error",
           text: "도시 정보를 가져오는 데 실패했습니다.",
@@ -74,9 +73,7 @@ const CityDetail = () => {
         temp: temp,
         icon: weatherIconAdrs,
       });
-    } catch (err) {
-      console.error("Error fetching weather data:", err);
-    }
+    } catch (err) {}
   };
 
   const handleSubmit = (e) => {
@@ -107,7 +104,6 @@ const CityDetail = () => {
         navigate(`/schedule/${res.data}`);
       })
       .catch((err) => {
-        console.error("Error saving itinerary:", err);
         Swal.fire({
           icon: "error",
           text: "여행 일정 저장에 실패했습니다.",
