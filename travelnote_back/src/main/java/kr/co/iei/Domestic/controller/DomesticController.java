@@ -19,7 +19,7 @@ import kr.co.iei.user.model.service.UserService;
 import kr.co.iei.util.EmailSender;
 
 
-@CrossOrigin("*")  // CORS 설정
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/domestic")
 public class DomesticController {
@@ -144,8 +144,8 @@ public class DomesticController {
     private void sendEmail(String toEmail) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
-        message.setSubject("여행 초대");
-        message.setText("여행 계획에 초대합니다.");
+        message.setSubject("TravelNote의 초대를 합니다!!");
+        message.setText("여행 계획에 초대되었습니다.");
         emailSender.send(message); // 이메일 전송
     }
 

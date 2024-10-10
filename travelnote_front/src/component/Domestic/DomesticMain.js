@@ -17,17 +17,12 @@ const DomesticMain = () => {
   const [totalRegions, setTotalRegions] = useState(20); // 전체 지역 수 상태 추가
 
   useEffect(() => {
-    axios
-      .get(`${backServer}/domestic/list/${reqPage}`)
-      .then((res) => {
-        const koreanRegions = res.data.filter(
-          (region) => region.countryName === "대한민국"
-        );
-        setRegionList((prevList) => [...prevList, ...koreanRegions]);
-      })
-      .catch((err) => {
-        console.error("에러발생:", err);
-      });
+    axios.get(`${backServer}/domestic/list/${reqPage}`).then((res) => {
+      const koreanRegions = res.data.filter(
+        (region) => region.countryName === "대한민국"
+      );
+      setRegionList((prevList) => [...prevList, ...koreanRegions]);
+    });
   }, [reqPage, backServer]);
 
   useEffect(() => {
@@ -123,7 +118,8 @@ const DomesticMain = () => {
       <div className="city-card" tabIndex={0} onClick={handleCityClick}>
         <img src={imagePath} alt={city} className="city-image" />
         <div className="city-name">
-          {city} ({country})
+          <span className="country">{country}</span>
+          <span className="city">{city}</span>
         </div>
       </div>
     );
