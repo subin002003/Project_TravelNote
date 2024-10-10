@@ -270,6 +270,7 @@ const MyInfo = () => {
                   value={user.userNick}
                   onChange={changeUser}
                   onBlur={checkNick}
+                  disabled
                 ></input>
               ) : (
                 <>

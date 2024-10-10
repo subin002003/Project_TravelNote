@@ -17,7 +17,7 @@
 		select * from user_tbl where user_email = #{userEmail}
 	</select>
 	<insert id="joinSocialUser">
-		insert into user_tbl values(user_seq.nextval, #{userEmail},null, #{userName}, #{userPhone}, #{userNick}, 1, #{socialType})
+		insert into user_tbl values(user_seq.nextval, #{userEmail},null, #{userName}, #{userPhone}, #{userNick}, 1, #{socialType}, null)
 	</insert>
 	<select id="findEmail" resultType="java.lang.String">
 		select user_email from user_tbl where user_name = #{userName} and user_phone = #{userPhone} 
