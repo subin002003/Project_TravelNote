@@ -304,7 +304,7 @@ a:hover {
   overflow: hidden;
   width: 100%;
   max-width: 1200px;
-  margin: 150px auto;
+  margin: 70px auto;
 }
 
 .line {
@@ -359,7 +359,7 @@ a:hover {
   height: 35px;
   border: 1px solid var(--gray);
   border-radius: 10px;
-  background-color: var(--white);
+  background-color: var(--white) !important;
   margin-top: 20px;
   transition: all 0.35s;
 }
