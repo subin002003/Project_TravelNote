@@ -1,5 +1,9 @@
 import { useRecoilState, useRecoilValue } from "recoil";
-import { loginEmailState, userTypeState } from "../utils/RecoilData";
+import {
+  isLoginState,
+  loginEmailState,
+  userTypeState,
+} from "../utils/RecoilData";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -15,7 +19,7 @@ const ForeignPlanMain = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const navigate = useNavigate();
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
-  const [userType, setUserType] = useRecoilState(userTypeState);
+  const isLogin = useRecoilValue(isLoginState);
   const itineraryNo = useParams().itineraryNo; // 여행 일정 번호
   const [itinerary, setItinerary] = useState({}); // 여행 일정 정보 객체
   const [totalPlanDates, setTotalPlanDates] = useState([]); // 여행 일정표 용 날짜 배열
@@ -47,33 +51,33 @@ const ForeignPlanMain = () => {
 
   // 로그인한 유저가 해당 여행 일정 조회 권한이 있는지 조회 -> 1이면 해당 일정 주인, -1이면 권한 없음, 0이면 동행자
   useEffect(() => {
-    if (loginEmail === "") return;
-    console.log(loginEmail);
-    axios
-      .get(`${backServer}/foreign/checkUser`, {
-        params: {
-          itineraryNo: itineraryNo,
-          userEmail: loginEmail,
-        },
-      })
-      .then((res) => {
-        // 1이면 해당 일정 주인, 0이면 동행자, -1이면 권한 없음
-        setUserAuth(res.data);
-        console.log(res.data);
-        if (res.data < 0) {
+    // 로그인 되어 있는 경우 회원의 조회/수정 권한 조회
+    if (isLogin && loginEmail !== "") {
+      axios
+        .get(`${backServer}/foreign/checkUser`, {
+          params: {
+            itineraryNo: itineraryNo,
+            userEmail: loginEmail,
+          },
+        })
+        .then((res) => {
+          // 1이면 해당 일정 주인, 0이면 동행자, -1이면 권한 없음
+          setUserAuth(res.data);
+          if (res.data < 0) {
+            Swal.fire({
+              icon: "warning",
+              text: "조회 권한이 없습니다.",
+            });
+            navigate("/");
+          }
+        })
+        .catch(() => {
           Swal.fire({
-            icon: "warning",
-            text: "조회 권한이 없습니다.",
+            icon: "error",
+            text: "서버 오류입니다.",
           });
-          // navigate("/foreign/list");
-        }
-      })
-      .catch(() => {
-        Swal.fire({
-          icon: "error",
-          text: "서버 오류입니다.",
         });
-      });
+    }
   }, [loginEmail]);
 
   // 일정 정보 조회
@@ -95,6 +99,7 @@ const ForeignPlanMain = () => {
             totalPlanDates.push(newDate);
             startDate.setDate(startDate.getDate() + 1);
           }
+          setTotalPlanDates(totalPlanDates);
         }
       })
       .catch((err) => {
@@ -238,15 +243,13 @@ const ForeignPlanMain = () => {
         setSelectedPosition={setSelectedPosition}
         placeInfo={placeInfo}
         setPlaceInfo={setPlaceInfo}
-        departInfo={departInfo}
-        setDepartInfo={setDepartInfo}
-        arrivalInfo={arrivalInfo}
-        setArrivalInfo={setArrivalInfo}
         searchDepartAirport={searchDepartAirport}
         setSearchDepartAirport={setSearchDepartAirport}
         searchArrivalAirport={searchArrivalAirport}
         setSearchArrivalAirport={setSearchArrivalAirport}
         searchAirport={searchAirport}
+        planPageOption={planPageOption}
+        planList={planList}
       />
     </div>
   );

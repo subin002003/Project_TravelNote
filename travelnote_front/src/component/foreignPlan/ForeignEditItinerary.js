@@ -67,7 +67,7 @@ const ForeignEditItinerary = () => {
     obj.itineraryStartDate = startDate;
     obj.itineraryEndDate = endDate;
     if (itinerary.itineraryTitle === "") {
-      obj.itineraryTitle = `${region.regionName}에 갑니다!`;
+      obj.itineraryTitle = `${region.regionName} 여행`;
     } else {
       obj.itineraryTitle = itinerary.itineraryTitle.trim();
     }
@@ -185,7 +185,7 @@ const ForeignEditItinerary = () => {
           {/* 여행지 정보 */}
           <div className="foreign-info-box">
             <h2>
-              {region.countryName} {region.regionName}
+              {"[" + region.countryName + "]"} {region.regionName}
             </h2>
             <div className="region-info-box">
               {isInvitationAvailable ? (
@@ -235,7 +235,7 @@ const ForeignEditItinerary = () => {
                   className="itinerary-input"
                   name="itineraryTitle"
                   value={itinerary.itineraryTitle}
-                  placeholder={region.regionName + "에 갑니다!"}
+                  placeholder={region.regionName + " 여행"}
                   onChange={(e) => {
                     setItinerary({
                       ...itinerary,

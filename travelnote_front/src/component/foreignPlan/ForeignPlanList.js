@@ -98,7 +98,7 @@ const ForeignPlanList = (props) => {
       <div className="itinerary-info-box">
         <h4>{itinerary.itineraryTitle}</h4>
         <h5>
-          {itinerary.countryName} {itinerary.regionName}
+          {"[" + itinerary.countryName + "]"} {itinerary.regionName}
         </h5>
         <h5>
           {itinerary.itineraryStartDate} ~ {itinerary.itineraryEndDate}
@@ -132,6 +132,7 @@ const ForeignPlanList = (props) => {
                   <PlanItem
                     key={"plan-item-" + index}
                     plan={plan}
+                    index={index}
                     timeOptionsArr={timeOptionsArr}
                     setEdited={setEdited}
                     editPlanList={editPlanList}
@@ -141,6 +142,7 @@ const ForeignPlanList = (props) => {
                     setPlaceInfo={setPlaceInfo}
                     backServer={backServer}
                     setIsPlanDiffered={setIsPlanDiffered}
+                    planListLength={planList.length}
                   />
                 );
               })

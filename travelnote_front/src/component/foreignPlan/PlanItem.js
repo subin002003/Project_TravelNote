@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 const PlanItem = (props) => {
   const {
     plan,
+    index,
     timeOptionsArr,
     setEdited,
     editPlanList,
@@ -14,6 +15,7 @@ const PlanItem = (props) => {
     setPlaceInfo,
     backServer,
     setIsPlanDiffered,
+    planListLength,
   } = props;
   const [editPlan, setEditPlan] = useState({}); // 수정할 정보 저장planListStr
   const [isSeqHovered, setIsSeqHovered] = useState(false);
@@ -59,6 +61,7 @@ const PlanItem = (props) => {
 
   // seq-icon 클릭 시 삭제
   const deletePlan = () => {
+    if (planPageOption === 1) return;
     Swal.fire({
       icon: "warning",
       text: "일정에서 삭제할까요?",
@@ -86,18 +89,76 @@ const PlanItem = (props) => {
     });
   };
 
+  // 순서 하나 위로 변경
+  const changeSeqUp = () => {
+    axios
+      .get(`${backServer}/foreign/changeSeqUp/${plan.planNo}`)
+      .then((res) => {
+        if (res.data === true) {
+          setIsPlanDiffered(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // 순서 하나 아래로 변경
+  const changeSeqDown = () => {
+    axios
+      .get(`${backServer}/foreign/changeSeqDown/${plan.planNo}`)
+      .then((res) => {
+        if (res.data === true) {
+          setIsPlanDiffered(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div className="plan-item">
       <div className="plan-item-info">
         <div className="plan-info-box">
           <div className="plan-seq-box">
+            <div className="plan-seq-change-icons">
+              <div
+                className={
+                  planPageOption === 1 || index === 0
+                    ? "inactive-plan-seq-icon"
+                    : "plan-seq-up-icon"
+                }
+                onClick={changeSeqUp}
+              >
+                <span class="material-icons">arrow_drop_up</span>
+              </div>
+              <div
+                className={
+                  planPageOption === 1 || index + 1 === planListLength
+                    ? "inactive-plan-seq-icon"
+                    : "plan-seq-down-icon"
+                }
+                onClick={changeSeqDown}
+              >
+                <span class="material-icons">arrow_drop_down</span>
+              </div>
+            </div>
             <div
-              className="plan-seq-icon"
+              className={
+                planPageOption === 1
+                  ? "plan-seq-icon-inactive"
+                  : "plan-seq-icon"
+              }
               onMouseEnter={() => setIsSeqHovered(true)}
               onMouseLeave={() => setIsSeqHovered(false)}
               onClick={deletePlan}
             >
-              {isSeqHovered ? "X" : plan.planSeq}
+              {planPageOption === 1
+                ? plan.planSeq
+                : isSeqHovered
+                ? "X"
+                : plan.planSeq}
             </div>
           </div>
           <div className="plan-name-box">

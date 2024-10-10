@@ -152,9 +152,7 @@ public class ForeignPlanService {
 
 	// 일정 조회 권한 확인
 	public int checkUser(int itineraryNo, String userEmail) {
-		System.out.println(itineraryNo + "" + userEmail);
 		int result = foreignPlanDao.checkUser(itineraryNo, userEmail);
-		System.out.println(result);
 		if (result > 0) {
 			return 1;
 		} else {
@@ -166,6 +164,26 @@ public class ForeignPlanService {
 		}
 		return -1;
 	}
-	
 
+	// 일정 순서 하나 위로 변경
+	public boolean changeSeqUp(int planNo) {
+		int result = foreignPlanDao.changePrevSeqDown(planNo);
+		result += foreignPlanDao.changeSeqUp(planNo);
+		if (result == 2) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// 일정 순서 하나 아래로 변경
+	public boolean changeSeqDown(int planNo) {
+		int result = foreignPlanDao.changeNextSeqUp(planNo);
+		result += foreignPlanDao.changeSeqDown(planNo);
+		if (result == 2) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

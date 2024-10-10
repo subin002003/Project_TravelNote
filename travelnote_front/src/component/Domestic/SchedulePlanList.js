@@ -15,7 +15,7 @@ const SchedulePlanList = (props) => {
     planPageOption,
     setPlanPageOption,
     selectedPlans,
-    setSelectedPlans, // selectedPlans의 setter를 props에서 받아옵니다.
+    setSelectedPlans,
   } = props;
 
   const backServer = process.env.REACT_APP_BACK_SERVER; // 서버 URL
@@ -42,14 +42,14 @@ const SchedulePlanList = (props) => {
           },
         })
         .then((res) => {
-          console.log(res);
+          console.log(res.data);
           setPlanList(res.data); // 받아온 데이터를 상태에 저장
         })
         .catch((err) => {
           console.log(err);
         });
     }
-  }, [itinerary, selectedDate]);
+  }, [itinerary, selectedDate, backServer, selectedDay]);
 
   // 시간 배열 생성
   useEffect(() => {
@@ -116,13 +116,11 @@ const SchedulePlanList = (props) => {
 
   // 일정 선택 처리
   const handleSelectPlan = (plan) => {
-    if (selectedPlans.includes(plan)) {
-      setSelectedPlans(
-        selectedPlans.filter((selectedPlan) => selectedPlan !== plan)
-      ); // 선택 해제
-    } else {
-      setSelectedPlans([...selectedPlans, plan]); // 선택 추가
-    }
+    const updatedPlans = selectedPlans.includes(plan)
+      ? selectedPlans.filter((selectedPlan) => selectedPlan !== plan) // 선택 해제
+      : [...selectedPlans, plan]; // 선택 추가
+
+    setSelectedPlans(updatedPlans); // 상태 업데이트
   };
 
   return (

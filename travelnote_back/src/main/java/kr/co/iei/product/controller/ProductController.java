@@ -52,10 +52,28 @@ public class ProductController {
 //	}
 	
 	// 상품 검색 기능
-	@GetMapping(value="/list/{reqPage}{searchQuery}")
-	public ResponseEntity<Map> searchProduct(@PathVariable int reqPage, @RequestParam(required = false) String searchQuery) {
-		System.out.println("searchQuery : " + searchQuery);
-		Map map = productService.searchProduct(reqPage, searchQuery);
+//	@GetMapping(value="/list/{reqPage}/{keyword}")
+//	public ResponseEntity<Map> searchProduct(@PathVariable int reqPage, @RequestParam(required = false) String keyword) {
+//	    System.out.println("keyword : " + keyword);
+//	    Map<String, Object> map = productService.searchProduct(reqPage, keyword);
+//	    return ResponseEntity.ok(map);
+//	}
+	
+//	@GetMapping(value="/list/{reqPage}/{searchKeyword}")
+//	public ResponseEntity<Map> searchProduct(@RequestParam(required = false) String searchKeyword, @PathVariable int reqPage) {
+//	    System.out.println("searchKeyword : " + searchKeyword);
+//	    Map map = productService.searchProduct(searchKeyword, reqPage);
+//	    return ResponseEntity.ok(map);
+//	}
+	
+	@GetMapping(value="/list{keyword}")
+	public ResponseEntity<Map> searchProduct(@RequestParam(required = false) String keyword) {
+		// keyword가 null이거나 빈 문자열 또는 공백만 있는 경우 처리
+	    if (keyword == null || keyword.trim().isEmpty()) {
+	        keyword = null; // 검색 조건을 없애기 위해 null로 처리
+	    }
+		System.out.println("searchQuery : " + keyword);
+		Map map = productService.searchProduct(keyword);
 		return ResponseEntity.ok(map);
 	}
 	
@@ -91,7 +109,7 @@ public class ProductController {
 		return ResponseEntity.ok("/product/editor/" + filepath);
 	}
 	
-	// 패키지 상품 대표 이미지 처리
+	// 상품 대표 이미지 처리
 	@GetMapping("/{filename}")
 	public ResponseEntity<Resource> getProductImage(@PathVariable String filename) throws FileNotFoundException {
 	    // 이미지 파일의 저장 경로
@@ -148,21 +166,22 @@ public class ProductController {
 		return ResponseEntity.ok(result == 1 + productFileList.size());
 	}
 	
-	// 패키지 상품 상세페이지
-//	@GetMapping(value="/productNo/{productNo}")
-//	public ResponseEntity<ProductDTO> selectOneProduct(@PathVariable int productNo) {
-//		ProductDTO product = productService.selectOneProduct(productNo);
-//		return ResponseEntity.ok(product);
-//	}
+	// 상품 상세페이지
+	@GetMapping(value="/productNo/{productNo}/{reqPage}")
+	public ResponseEntity<Map> selectOneProduct(@PathVariable int productNo, @PathVariable int reqPage) {
+		Map<String, Object> productDetails = productService.selectOneProduct(productNo, reqPage);
+		return ResponseEntity.ok(productDetails);
+	}
 
 	// 상품 상세페이지
-    @GetMapping(value="/productNo/{productNo}/{userEmail}")
-    public ResponseEntity<Map> selectOneProduct(@PathVariable int productNo, @PathVariable String userEmail) {
-        Map<String, Object> productDetails = productService.selectOneProduct(productNo, userEmail);
+    @GetMapping(value="/productNo/{productNo}/{userEmail}/{reqPage}")
+    public ResponseEntity<Map> selectOneProductUserEmail(@PathVariable int productNo, @PathVariable String userEmail, @PathVariable int reqPage) {
+    	System.out.println("userEmail : " + userEmail);
+        Map<String, Object> productDetails = productService.selectOneProductUserEmail(productNo, userEmail, reqPage);
         return ResponseEntity.ok(productDetails);
     }
 	
-	// 패키지 상품 삭제
+	// 상품 삭제
 	@DeleteMapping(value="/{productNo}")
 	public ResponseEntity<Integer> deleteProduct(@PathVariable int productNo) {
 		List<ProductFileDTO> delFileList = productService.deleteProduct(productNo);
@@ -178,7 +197,7 @@ public class ProductController {
 		}
 	}
 	
-	// 패키지 상품 수정
+	// 상품 수정
 	@PatchMapping
 	public ResponseEntity<Boolean> updateProduct(@ModelAttribute ProductDTO product, @ModelAttribute MultipartFile thumbnail, @ModelAttribute MultipartFile[] productFile){
 		if(thumbnail != null) {
@@ -213,8 +232,9 @@ public class ProductController {
 	}
 	
 	// 리뷰 정렬
-    @GetMapping(value="/productNo/{productNo}/{userEmail}/{sortOption}")
+    @GetMapping(value="/productNo/{productNo}/review/{userEmail}/{sortOption}")
     public ResponseEntity<Map> selectReview(@PathVariable int productNo, @PathVariable String userEmail, @PathVariable String sortOption) {
+    	System.out.println(sortOption);
         Map<String, Object> sortedReviews = productService.selectReviewListSortOption(productNo, userEmail, sortOption);
         return ResponseEntity.ok(sortedReviews);
     }

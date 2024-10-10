@@ -16,7 +16,6 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { Rating } from "@mui/material";
 
 const sortOptions = [
   { label: "좋아요순", value: "mostLiked" },
@@ -106,7 +105,6 @@ const ProductList = () => {
               handleSearchClick();
             }
           }}
-          autoComplete="off"
           placeholder="상품명 검색"
         />
         <button id="product-search-button" onClick={handleSearchClick}>
@@ -223,19 +221,11 @@ const ProductItem = ({ product }) => {
   const handleLikeToggle = () => {
     if (!isLogin) {
       Swal.fire({
-        title: "로그인이 필요합니다.",
-        text: "상품을 '찜'하려면 로그인이 필요합니다. 로그인하시겠습니까?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "로그인",
-        cancelButtonText: "취소",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/login"); // 로그인 페이지로 이동
-        }
+        title: "로그인 후 이용이 가능합니다.",
+        icon: "info",
       });
+      // navigate(`/login`);
+      return;
     }
 
     if (isLogin === true) {
@@ -273,7 +263,7 @@ const ProductItem = ({ product }) => {
   };
 
   return (
-    <li style={{ marginBottom: "25px" }} className="posting-list-item">
+    <li style={{ marginBottom: "20px" }} className="posting-list-item">
       <div
         className="posting-info-left"
         onClick={() => {
@@ -281,29 +271,10 @@ const ProductItem = ({ product }) => {
         }}
       >
         <div className="posting-title">
-          <h3 style={{ marginBottom: "0" }}>{product.productName}</h3>
+          <p>{product.productName}</p>
         </div>
         <div className="posting-title">
-          <p style={{ color: "#a1a1a1" }}>{product.productSubName}</p>
-        </div>
-        {/* 상품 리뷰 별점 평균 점수, 좋아요 합계 */}
-
-        <div
-          style={{ display: "flex", alignItems: "center" }}
-          className="avg-score product-like-count"
-        >
-          <Rating
-            name={`rating-${product.productNo}`}
-            value={product.avgReviewScore} // 상품 리뷰 별점 평균
-            precision={0.1} // 소수점 이하 2자리까지 표시
-            readOnly // 읽기 전용
-          />
-          <span>({Number((product.avgReviewScore || 0).toFixed(1))})</span>
-          <span>&nbsp;&nbsp;&nbsp;</span>
-          <span>
-            <i style={{ color: "#ff1a51" }} className="fa-solid fa-heart"></i>
-          </span>
-          <span className="product-like-count">&nbsp;({productLikeCount})</span>
+          <p>{product.productSubName}</p>
         </div>
       </div>
       <div className="posting-info-right">
@@ -330,7 +301,7 @@ const ProductItem = ({ product }) => {
             ></i>
           </span>
           {/* 좋아요 수 출력 */}
-          {/* <span className="productLikeCount">{productLikeCount}</span> */}
+          <span className="productLikeCount">{productLikeCount}</span>
         </div>
         <span className="price">{product.productPrice.toLocaleString()}원</span>
       </div>

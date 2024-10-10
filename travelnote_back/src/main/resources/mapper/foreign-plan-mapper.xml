@@ -116,4 +116,29 @@
 	<select id="checkCompanion" resultType="int">
 		select count(*) from companion where itinerary_no = #{itineraryNo} and user_no = (select user_no from user_tbl where user_email = #{userEmail})
 	</select>
+	
+	<update id="changePrevSeqDown">
+		update plan set plan_seq = plan_seq + 1 where plan_no = 
+												(select plan_no from plan 
+												where itinerary_no = (select itinerary_no from plan where plan_no = #{planNo})
+												and plan_day = (select plan_day from plan where plan_no = #{planNo})
+												and plan_seq = (select plan_seq from plan where plan_no = #{planNo}) - 1)
+	</update>
+
+	<update id="changeSeqUp">
+		update plan set plan_seq = plan_seq - 1 where plan_no = #{planNo}
+	</update>
+	
+	<update id="changeNextSeqUp">
+		update plan set plan_seq = plan_seq - 1 where plan_no = 
+												(select plan_no from plan 
+												where itinerary_no = (select itinerary_no from plan where plan_no = #{planNo})
+												and plan_day = (select plan_day from plan where plan_no = #{planNo})
+												and plan_seq = (select plan_seq from plan where plan_no = #{planNo}) + 1)
+	</update>
+	
+	<update id="changeSeqDown">
+		update plan set plan_seq = plan_seq + 1 where plan_no = #{planNo}
+	</update>
+	
 </mapper>

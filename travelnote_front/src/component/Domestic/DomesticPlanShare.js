@@ -182,7 +182,7 @@ const DomesticPlanShare = () => {
             <input
               type="date"
               value={endDate}
-              min={today}
+              min={startDate || today}
               onChange={(e) => setEndDate(e.target.value)}
             />
           </label>

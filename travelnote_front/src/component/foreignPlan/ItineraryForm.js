@@ -77,7 +77,7 @@ const ItineraryForm = () => {
       obj.itineraryStartDate = itineraryStartDate;
       obj.itineraryEndDate = itineraryEndDate;
       if (itineraryTitle === "") {
-        obj.itineraryTitle = `${region.regionName}에 갑니다!`;
+        obj.itineraryTitle = `${region.regionName} 여행`;
       } else {
         obj.itineraryTitle = itineraryTitle.trim();
       }
@@ -121,14 +121,30 @@ const ItineraryForm = () => {
         {/* 여행지 정보 */}
         <div className="foreign-info-box">
           <h2>
-            {region.countryName} {region.regionName}
+            {"[" + region.countryName + "]"} {region.regionName}
           </h2>
           <div className="region-info-box">
             <span id="currency-info">
-              {region.currencyCode ? region.currencyCode : "환율 정보 없음"}
+              {region.currencyCode ? (
+                <>
+                  <span class="material-icons">credit_card</span>
+                  <span> </span>
+                  {region.currencyCode}
+                </>
+              ) : (
+                "환율 정보 없음"
+              )}
             </span>
             <span id="timezone-info">
-              {region.timeZone ? region.timeZone + "시간" : "시차 정보 없음"}
+              {region.timeZone ? (
+                <>
+                  <span class="material-icons">schedule</span>
+                  <span> </span>
+                  {region.timeZone}시간
+                </>
+              ) : (
+                "시차 정보 없음"
+              )}
             </span>
           </div>
         </div>
@@ -152,7 +168,7 @@ const ItineraryForm = () => {
                 name="itineraryTitle"
                 value={itineraryTitle}
                 onChange={changeInput}
-                placeholder={region.regionName + "에 갑니다!"}
+                placeholder={region.regionName + " 여행"}
               ></input>
             </div>
             <div className="itinerary-input-item">
