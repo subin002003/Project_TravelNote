@@ -11,7 +11,7 @@ const ToastEditor = (props) => {
   const editorRef = useRef(null);
   const changeValue = () => {
     const editorData = editorRef.current.getInstance().getHTML();
-    console.log(editorData); // 확인용 로그
+    // console.log(editorData); // 확인용 로그
     setProductInfo(editorData);
   };
 
@@ -27,14 +27,14 @@ const ToastEditor = (props) => {
         },
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         callbackFunc(`${backServer}${res.data}`, "이미지");
       })
       .catch((err) => {
         console.log(err);
       });
   };
-  console.log(productInfo);
+  // console.log(productInfo);
 
   return (
     <div style={{ width: "100%", marginTop: "20px" }}>

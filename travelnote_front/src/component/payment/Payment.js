@@ -56,7 +56,7 @@ const Payment = () => {
     //   return;
     // }
 
-    console.log(typeof totalPrice);
+    // console.log(typeof totalPrice);
 
     IMP.request_pay(
       {
@@ -72,7 +72,7 @@ const Payment = () => {
         m_redirect_url: `${backServer}/mypage`,
       },
       function (rsp) {
-        console.log("결제 응답:", rsp); // 추가 로그
+        // console.log("결제 응답:", rsp); // 추가 로그
         if (rsp.success) {
           // 결제 성공 시 서버로 결제 정보 전달
           const form = new FormData();
@@ -84,7 +84,7 @@ const Payment = () => {
           form.append("price", 1);
           form.append("paymentType", 1);
 
-          console.log(form);
+          // console.log(form);
 
           axios
             .post(`${backServer}/pay/saveOrder`, form, {
@@ -125,7 +125,7 @@ const Payment = () => {
     const { IMP } = window;
     IMP.init("imp73014035"); // 'imp00000000' 대신 발급받은 가맹점 식별코드를 사용합니다.
 
-    console.log(typeof totalPrice);
+    // console.log(typeof totalPrice);
 
     IMP.request_pay(
       {
@@ -140,7 +140,7 @@ const Payment = () => {
         buyer_postcode: "123-456",
       },
       function (rsp) {
-        console.log("결제 응답:", rsp); // 추가 로그
+        // console.log("결제 응답:", rsp); // 추가 로그
         if (rsp.success) {
           // 결제 성공 시 서버로 결제 정보 전달
           const form = new FormData();
@@ -152,7 +152,7 @@ const Payment = () => {
           form.append("price", 1);
           form.append("paymentType", 2);
 
-          console.log(form);
+          // console.log(form);
 
           axios
             .post(`${backServer}/pay/saveOrder`, form, {
@@ -193,7 +193,7 @@ const Payment = () => {
     const { IMP } = window;
     IMP.init("imp73014035"); // 'imp00000000' 대신 발급받은 가맹점 식별코드를 사용합니다.
 
-    console.log(typeof totalPrice);
+    // console.log(typeof totalPrice);
 
     IMP.request_pay(
       {
@@ -208,7 +208,7 @@ const Payment = () => {
         buyer_postcode: "123-456",
       },
       function (rsp) {
-        console.log("결제 응답:", rsp); // 추가 로그
+        // console.log("결제 응답:", rsp); // 추가 로그
         if (rsp.success) {
           // 결제 성공 시 서버로 결제 정보 전달
           const form = new FormData();
@@ -220,7 +220,7 @@ const Payment = () => {
           form.append("price", 1);
           form.append("paymentType", 3);
 
-          console.log(form);
+          // console.log(form);
 
           axios
             .post(`${backServer}/pay/saveOrder`, form, {
@@ -261,7 +261,7 @@ const Payment = () => {
     const { IMP } = window;
     IMP.init("imp73014035"); // 'imp00000000' 대신 발급받은 가맹점 식별코드를 사용합니다.
 
-    console.log(typeof totalPrice);
+    // console.log(typeof totalPrice);
 
     IMP.request_pay(
       {
@@ -279,7 +279,7 @@ const Payment = () => {
         m_redirect_url: `${backServer}/mypage`,
       },
       function (rsp) {
-        console.log("결제 응답:", rsp); // 추가 로그
+        // console.log("결제 응답:", rsp); // 추가 로그
         if (rsp.success) {
           // 결제 성공 시 서버로 결제 정보 전달
           const form = new FormData();
@@ -291,7 +291,7 @@ const Payment = () => {
           form.append("price", 1);
           form.append("paymentType", 4);
 
-          console.log(form);
+          // console.log(form);
 
           axios
             .post(`${backServer}/pay/saveOrder`, form, {

@@ -80,10 +80,11 @@ const ProductFrm = (props) => {
 
   // 상품 판매여부 입력
   const handleChange = (e) => {
-    console.log("Switch clicked:", e.target.checked); // 추가된 로그
+    // console.log("Switch clicked:", e.target.checked); // 추가된 로그
     setProductStatus(e.target.checked ? 1 : 2); // Switch 값에 따라 상품 상태를 1 또는 2으로 설정
   };
-  console.log(productStatus);
+  // console.log("productStatus : ", productStatus);
+  // console.log("delProductFileNo : ", delProductFileNo);
 
   return (
     <div className="mt">
@@ -183,15 +184,13 @@ const ProductFrm = (props) => {
             {productFileList
               ? productFileList.map((productFile, i) => {
                   const deleteFile = () => {
-                    const newFileList = productFileList.productFileList.filter(
-                      (item) => {
-                        return item !== productFile;
-                      }
-                    );
+                    const newFileList = productFileList.filter((item) => {
+                      return item !== productFile;
+                    });
                     setProductFileList(newFileList);
                     setDelProductFileNo([
                       ...delProductFileNo,
-                      productFile.productNo,
+                      productFile.productFileNo,
                     ]);
                   };
                   return (

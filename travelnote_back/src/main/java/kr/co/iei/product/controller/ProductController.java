@@ -72,7 +72,7 @@ public class ProductController {
 	    if (keyword == null || keyword.trim().isEmpty()) {
 	        keyword = null; // 검색 조건을 없애기 위해 null로 처리
 	    }
-		System.out.println("searchQuery : " + keyword);
+	    // System.out.println("searchQuery : " + keyword);
 		Map map = productService.searchProduct(keyword);
 		return ResponseEntity.ok(map);
 	}
@@ -176,7 +176,7 @@ public class ProductController {
 	// 상품 상세페이지
     @GetMapping(value="/productNo/{productNo}/{userEmail}/{reqPage}")
     public ResponseEntity<Map> selectOneProductUserEmail(@PathVariable int productNo, @PathVariable String userEmail, @PathVariable int reqPage) {
-    	System.out.println("userEmail : " + userEmail);
+    	// System.out.println("userEmail : " + userEmail);
         Map<String, Object> productDetails = productService.selectOneProductUserEmail(productNo, userEmail, reqPage);
         return ResponseEntity.ok(productDetails);
     }
@@ -234,7 +234,7 @@ public class ProductController {
 	// 리뷰 정렬
     @GetMapping(value="/productNo/{productNo}/review/{userEmail}/{sortOption}")
     public ResponseEntity<Map> selectReview(@PathVariable int productNo, @PathVariable String userEmail, @PathVariable String sortOption) {
-    	System.out.println(sortOption);
+    	// System.out.println(sortOption);
         Map<String, Object> sortedReviews = productService.selectReviewListSortOption(productNo, userEmail, sortOption);
         return ResponseEntity.ok(sortedReviews);
     }
@@ -242,7 +242,7 @@ public class ProductController {
 	// 리뷰 등록
 	@PostMapping(value="/insertReview")
 	public ResponseEntity<Integer> insertReview(@ModelAttribute ReviewDTO review) {
-		System.out.println(review);
+		// System.out.println(review);
 		int result = productService.insertReview(review);
 		return ResponseEntity.ok(result);
 	}
@@ -250,7 +250,7 @@ public class ProductController {
 	// 리뷰 답글 등록
 	@PostMapping(value="/insertReviewComment")
 	public ResponseEntity<Integer> insertReviewComment(@ModelAttribute ReviewDTO review) {
-		System.out.println(review);
+		// System.out.println(review);
 		int result = productService.insertReviewComment(review);
 		return ResponseEntity.ok(result);
 	}

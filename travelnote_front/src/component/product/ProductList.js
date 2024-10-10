@@ -46,7 +46,7 @@ const ProductList = () => {
 
     request
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setProductList(res.data.list);
         setPi(res.data.pi);
       })
@@ -57,13 +57,13 @@ const ProductList = () => {
 
   // 각 정렬 옵션에 따른 클릭 이벤트 처리
   const handleSortClick = (sortOption) => {
-    console.log(sortOption);
+    // console.log(sortOption);
     setReqPage(1); // 페이지를 1로 리셋
 
     axios
       .get(`${backServer}/product/list/${reqPage}/${loginEmail}/${sortOption}`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setProductList(res.data.list);
         setPi(res.data.pi);
       })
@@ -84,7 +84,7 @@ const ProductList = () => {
         params: { keyword }, // keyword를 params로 전달
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setProductList(res.data.list);
       })
       .catch((err) => {
@@ -253,7 +253,7 @@ const ProductItem = ({ product }) => {
 
       request
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setProductLike(newLikeStatus); // 좋아요 상태 업데이트
           setProductLikeCount((prevCount) =>
             newLikeStatus ? prevCount + 1 : prevCount - 1
@@ -298,12 +298,16 @@ const ProductItem = ({ product }) => {
             precision={0.1} // 소수점 이하 2자리까지 표시
             readOnly // 읽기 전용
           />
-          <span>({Number((product.avgReviewScore || 0).toFixed(1))})</span>
+          <span style={{ color: "#a1a1a1" }}>
+            ({Number((product.avgReviewScore || 0).toFixed(1))})
+          </span>
           <span>&nbsp;&nbsp;&nbsp;</span>
           <span>
             <i style={{ color: "#ff1a51" }} className="fa-solid fa-heart"></i>
           </span>
-          <span className="product-like-count">&nbsp;({productLikeCount})</span>
+          <span style={{ color: "#a1a1a1" }} className="product-like-count">
+            &nbsp;({productLikeCount})
+          </span>
         </div>
       </div>
       <div className="posting-info-right">
