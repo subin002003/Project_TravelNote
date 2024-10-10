@@ -109,7 +109,7 @@ const Review = ({
 
       request
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           if (res.data) {
             Swal.fire({
               title: review
@@ -154,7 +154,7 @@ const Review = ({
         icon: "warning",
       });
     }
-    console.log("ReviewScore:", reviewScore, "ReviewContent:", reviewContent);
+    // console.log("ReviewScore:", reviewScore, "ReviewContent:", reviewContent);
   };
 
   // 리뷰 리스트를 서버에서 다시 불러오는 함수
@@ -196,6 +196,13 @@ const Review = ({
         variant="outlined"
         error={reviewContent.trim() === ""}
         helperText={reviewContent.trim() === "" ? "내용을 입력해주세요." : ""}
+        autoFocus
+        InputLabelProps={{
+          style: {
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }, // label 글씨가 잘리지 않게 설정
+        }}
         sx={{
           width: "100%",
           backgroundColor: "#fff",

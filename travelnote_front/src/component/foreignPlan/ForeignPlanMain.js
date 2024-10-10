@@ -42,7 +42,7 @@ const ForeignPlanMain = () => {
   const [timeOptionsArr, setTimeOptionsArr] = useState([]); // 시간 선택 옵션 용 배열
   const [isNextDayButtonChecked, setIsNextDayButtonChecked] = useState(false);
   const [searchAirport, setSearchAirport] = useState(0); // 1이면 Departure, 2면 Arrival
-  const [userAuth, setUserAuth] = useState();
+  const [userAuth, setUserAuth] = useState(); // 로그인 유저 권한: 1이면 해당 일정 주인, 0이면 동행자, -1이면 권한 없음
 
   // Api 관련
   const currencyApiKey = "fca_live_EeFeNGdxZTuLBGhbi5zT4weOAZk1AgA4ahK7Q0EP";
@@ -102,8 +102,11 @@ const ForeignPlanMain = () => {
           setTotalPlanDates(totalPlanDates);
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          text: "서버 오류입니다.",
+        });
       });
   }, []);
 
@@ -153,8 +156,11 @@ const ForeignPlanMain = () => {
           `https://api.freecurrencyapi.com/v1/latest?apikey=${currencyApiKey}&base_currency=${regionInfo.currencyCode}&currencies=KRW`
         );
         setExchangeRate(response.data.data["KRW"]);
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          text: "서버 오류입니다.",
+        });
       }
     };
     if (regionInfo.currencyCode) {
@@ -230,6 +236,7 @@ const ForeignPlanMain = () => {
           setSearchArrivalAirport={setSearchArrivalAirport}
           searchAirport={searchAirport}
           setSearchAirport={setSearchAirport}
+          planPageOption={planPageOption}
         />
       )}
       <ForeignPlanMap
@@ -250,6 +257,7 @@ const ForeignPlanMain = () => {
         searchAirport={searchAirport}
         planPageOption={planPageOption}
         planList={planList}
+        isPlanDiffered={isPlanDiffered}
       />
     </div>
   );

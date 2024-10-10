@@ -12,6 +12,7 @@ const ProductUpdate = () => {
   const navigate = useNavigate();
   const params = useParams();
   const productNo = params.productNo;
+  const [reqPage, setReqPage] = useState(1);
 
   const [productName, setProductName] = useState("");
   const [productSubName, setProductSubName] = useState("");
@@ -23,6 +24,7 @@ const ProductUpdate = () => {
 
   // 썸네일 파일을 새로 전송하기 위한 state
   const [thumbnail, setThumbnail] = useState(null);
+
   // 첨부파일을 새로 전송하기 위한 state
   const [productFile, setProductFile] = useState([]);
 
@@ -31,6 +33,7 @@ const ProductUpdate = () => {
 
   // 조회해온 파일목록을 화면에 보여주기 휘한 state
   const [productFileList, setProductFileList] = useState([]);
+
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
 
   // 기존 첨부파일을 삭제하면 삭제한 파일 번호를 저장할 배열
@@ -61,12 +64,12 @@ const ProductUpdate = () => {
     if (loginEmail) {
       const url = `${backServer}/product/productNo/${productNo}/${encodeURIComponent(
         loginEmail
-      )}`;
+      )}/${reqPage}`;
       // console.log("url", url);
       axios
         .get(url)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           setProductName(res.data.product.productName);
           setProductSubName(res.data.product.productSubName);
           setProductThumb(res.data.product.productThumb);
@@ -80,8 +83,8 @@ const ProductUpdate = () => {
         .catch((err) => {
           console.error("Error details:", err);
           if (err.response) {
-            console.error("Response data:", err.response.data);
-            console.error("Response status:", err.response.status);
+            // console.error("Response data:", err.response.data);
+            // console.error("Response status:", err.response.status);
           } else if (err.request) {
             console.error("Request data:", err.request);
           } else {
@@ -91,8 +94,8 @@ const ProductUpdate = () => {
     }
   }, [productNo, loginEmail]);
 
-  console.log("Product No:", productNo);
-  console.log(`${backServer}/product/productNo/${productNo}`);
+  // console.log("Product No:", productNo);
+  // console.log(`${backServer}/product/productNo/${productNo}`);
 
   const updateProduct = () => {
     if (productName !== "" && productSubName !== "" && productInfo !== "") {
@@ -104,7 +107,7 @@ const ProductUpdate = () => {
       form.append("productInfo", productInfo);
       form.append("productLatitude", productLatitude);
       form.append("productLongitude", productLongitude);
-      form.append("productWriter", loginEmail);
+      // form.append("productWriter", loginEmail);
       form.append("productStatus", productStatus);
 
       if (productThumb !== null) {
@@ -127,17 +130,21 @@ const ProductUpdate = () => {
           },
         })
         .then((res) => {
-          console.log(res);
-          setProductStatus(res.data.productStatus);
-          console.log(res.data.productStatus);
-          if (res.data) {
-            navigate(`/product/view/${productNo}`);
-          } else {
+          // console.log("Response Status:", res.status); // 상태 코드 확인
+          // console.log("Full Response:", res); // 전체 응답 확인
+          // console.log("Response Data:", res.data); // 응답 데이터 확인
+          // setProductStatus(res.data.productStatus);
+
+          if (res.data === false) {
             Swal.fire({
               title: "상품 수정에 실패했습니다.",
-              text: "다시 시도하세요.",
+              text: "입력한 내용을 확인해주세요.",
               icon: "error",
             });
+          } else {
+            setProductStatus(res.data.productStatus);
+            // console.log(res.data.productStatus);
+            navigate(`/product/view/${productNo}`);
           }
         })
         .catch((err) => {

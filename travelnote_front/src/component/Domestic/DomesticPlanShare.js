@@ -22,7 +22,6 @@ const DomesticPlanShare = () => {
     axios
       .get(`${backServer}/domestic/Schedule/${itineraryNo}`)
       .then((res) => {
-        console.log("Trip details fetched:", res.data); // 성공 로그
         setTripDetails(res.data);
         setTripTitle(res.data.itineraryTitle); // 제목 설정
         setStartDate(res.data.itineraryStartDate); // 시작 날짜 설정
@@ -30,7 +29,6 @@ const DomesticPlanShare = () => {
         setLoading(false); // 로딩 완료
       })
       .catch((err) => {
-        console.error("Error fetching trip details:", err);
         Swal.fire({
           icon: "error",
           text: "여행 계획 정보를 가져오는 데 실패했습니다.",
@@ -54,7 +52,6 @@ const DomesticPlanShare = () => {
         });
       })
       .catch((err) => {
-        console.error("Error updating trip details:", err);
         Swal.fire({
           icon: "error",
           text: "여행 계획 수정에 실패했습니다.",
@@ -82,7 +79,6 @@ const DomesticPlanShare = () => {
             navigate("/");
           })
           .catch((err) => {
-            console.error("Error deleting trip:", err);
             Swal.fire({
               icon: "error",
               text: "여행 계획 삭제에 실패했습니다.",
@@ -108,7 +104,6 @@ const DomesticPlanShare = () => {
         setShowInvite(false);
       })
       .catch((err) => {
-        console.error("Error inviting companion:", err);
         const errorMessage =
           err.response?.data?.message || "동행자 초대에 실패했습니다.";
         if (errorMessage.includes("이미 추가된")) {
@@ -148,7 +143,7 @@ const DomesticPlanShare = () => {
               type="email"
               placeholder="동행자 이메일을 입력해주세요"
               value={email}
-              onChange={(e) => setEmail(e.target.value)} // 이메일 변경 시 상태 업데이트
+              onChange={(e) => setEmail(e.target.value)}
               className="email-input"
             />
             <button onClick={handleAddCompanion} className="add-companion-btn">

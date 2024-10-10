@@ -1,24 +1,24 @@
 .schedule-wrap {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100vh;
-  font-family: Arial, sans-serif;
-  padding: 20px;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh; /* 화면 전체 높이를 차지하도록 설정 */
+  overflow: hidden; /* 스크롤을 없애고 화면 안에 모든 내용이 들어가도록 설정 */
 }
 
 .content {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
 }
 
 .itinerary-panel {
-  flex: 0 0 300px; /* 좌측 패널의 너비 고정 */
-  padding: 20px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  margin-right: 20px;
+  width: 20%;
+  height: 90%;
+  overflow-y: auto;
 }
 
 .button-container {
@@ -33,13 +33,11 @@
   padding: 20px;
   box-sizing: border-box;
 }
-
-.map {
-  width: 100%;
-  height: 100%;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+#map {
+  width: 40%; /* 전체 화면의 40%를 지도에 할당 */
+  height: 100%; /* 지도도 전체 높이를 차지하도록 설정 */
 }
+
 .search > input {
   padding: 10px;
   margin: 50px 10px;
@@ -189,15 +187,15 @@
 }
 
 .Editing-btn-active {
-  background-color: #0056b3; /* 수정 완료 상태일 때 다른 색으로 표시 */
+  background-color: #0056b3;
 }
 
 .Editing-btn:hover {
-  background-color: #0056b3; /* 수정 버튼에 hover 상태 적용 */
+  background-color: #0056b3;
 }
 .store-list {
-  flex: 1 1 1;
   text-align: center;
+  width: 300px;
 }
 .search-add {
   padding: 10px 30px;
@@ -482,11 +480,11 @@
 
   .trip-details input[type="text"],
   .trip-details input[type="date"] {
-    font-size: 14px; /* 입력 필드 크기 조정 */
+    font-size: 14px;
   }
 
   .trip-btn {
-    font-size: 16px; /* 버튼 크기 조정 */
+    font-size: 16px;
   }
 }
 .companion-btn {

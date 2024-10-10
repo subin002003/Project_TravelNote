@@ -211,6 +211,10 @@ public class BoardController {
 	
 	
 	
+	
+	
+	
+	
 	// 댓글 등록
 	@PostMapping("/{boardNo}/comments")
 	public ResponseEntity<String> addComment(@PathVariable int boardNo, @RequestBody BoardCommentDTO comment) {

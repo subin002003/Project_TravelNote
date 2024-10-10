@@ -19,8 +19,8 @@ public class ProductDTO {
 	private String productThumb;
 	private int productPrice;
 	private String productInfo;
-	private int productLatitude;
-	private int productLongitude;
+	private double productLatitude;
+	private double productLongitude;
 	private String productWriter;
 	private int productStatus;
 	private String enrollDate;

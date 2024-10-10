@@ -186,7 +186,7 @@ const ReviewBoardItem = (props) => {
       <div>
         <p>
           <img
-            style={{ width: "400px" }}
+            style={{ width: "400px", height: "250px", objectFit: "cover" }}
             onClick={handleClick}
             className="review-board-mouse-on"
             src={

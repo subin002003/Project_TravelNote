@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 const CustomButton = () => {
   // handleSubmit 함수 추가
   const writeReview = () => {
-    console.log("리뷰 작성 버튼 클릭됨");
+    // console.log("리뷰 작성 버튼 클릭됨");
   };
   return (
     <Button

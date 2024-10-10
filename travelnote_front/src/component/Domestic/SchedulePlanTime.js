@@ -86,7 +86,6 @@ const SchedulePlanTime = (props) => {
             }
           })
           .catch((error) => {
-            console.error("삭제 실패:", error);
             Swal.fire(
               "삭제 실패",
               "일정 삭제 중 오류가 발생했습니다.",

@@ -86,20 +86,22 @@ const ProductView = () => {
   const [openReviewDialog, setOpenReviewDialog] = useState(false); // 다이얼로그 상태
 
   useEffect(() => {
-    // if (!productNo || !loginEmail) {
-    //   console.error("productNo 또는 loginEmail 유효하지 않습니다.");
-    //   return;
-    // }
+    if (!productNo || !loginEmail) {
+      // console.error("productNo 또는 loginEmail 유효하지 않습니다.");
+      return;
+    }
 
     const request = loginEmail
       ? axios.get(
-          `${backServer}/product/productNo/${productNo}/${loginEmail}/${reqPage}`
+          `${backServer}/product/productNo/${productNo}/${encodeURIComponent(
+            loginEmail
+          )}/${reqPage}`
         )
       : axios.get(`${backServer}/product/productNo/${productNo}/${reqPage}`);
 
     request
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setProduct(res.data.product);
         setProductFileList(res.data.productFileList); // 첨부파일 관리
         setProductReviewList(res.data.productReviewList); // 리뷰 관리
@@ -118,14 +120,14 @@ const ProductView = () => {
 
   // 각 정렬 옵션에 따른 클릭 이벤트 처리
   const handleSortClick = (sortOption) => {
-    console.log(sortOption);
+    // console.log(sortOption);
 
     axios
       .get(
         `${backServer}/product/productNo/${productNo}/review/${loginEmail}/${sortOption}`
       )
       .then((res) => {
-        console.log(res.data); // 응답 데이터 로그
+        // console.log(res.data); // 응답 데이터 로그
 
         // 새로운 리뷰 리스트를 가져옵니다.
         const newProductReviewList = res.data.productReviewList;
@@ -146,11 +148,11 @@ const ProductView = () => {
   };
 
   useEffect(() => {
-    console.log(
-      "리뷰 리스트가 업데이트되었습니다:",
-      productReviewList,
-      productReviewReCommentList
-    );
+    // console.log(
+    //   "리뷰 리스트가 업데이트되었습니다:",
+    //   productReviewList,
+    //   productReviewReCommentList
+    // );
   }, [productReviewList, productReviewReCommentList]); // productReviewList가 변경될 때마다 콜백이 실행
 
   // 날짜 범위 상태
@@ -236,10 +238,22 @@ const ProductView = () => {
     );
   };
 
+  {
+    /*
+    const request = loginEmail
+      ? axios.get(
+          `${backServer}/product/productNo/${productNo}/${loginEmail}/${reqPage}`
+        )
+      : axios.get(`${backServer}/product/productNo/${productNo}/${reqPage}`);
+    */
+  }
+
   // 리뷰 목록 갱신 함수
   const fetchProductReviewList = () => {
     axios
-      .get(`${backServer}/product/productNo/${productNo}/${loginEmail}`)
+      .get(
+        `${backServer}/product/productNo/${productNo}/${loginEmail}/${reqPage}`
+      )
       .then((res) => {
         setProductReviewList(res.data.productReviewList); // 리뷰 리스트 갱신
         setProductReviewReCommentList(res.data.productReviewReCommentList);
@@ -562,7 +576,13 @@ const ProductView = () => {
                   </li>
                 ))
               ) : (
-                <li style={{ textAlign: "center", color: "gray" }}>
+                <li
+                  style={{
+                    margin: "150px auto",
+                    textAlign: "center",
+                    color: "gray",
+                  }}
+                >
                   등록된 리뷰가 없습니다.
                 </li>
               )}
@@ -701,7 +721,7 @@ const ReviewItem = (props) => {
       setOpenReviewDialog(true); // 로그인 상태일 경우에만 다이얼로그를 엶
       setDialogType(type); // 'register', 'update', 'reply' 타입 설정
       // 여기에 parentReviewId를 사용하는 로직 추가
-      console.log("Parent Review ID:", parentReviewNo);
+      // console.log("Parent Review ID:", parentReviewNo);
     }
   };
 
@@ -742,7 +762,7 @@ const ReviewItem = (props) => {
           axios
             .delete(`${backServer}/product/deleteReview/${review.reviewNo}`)
             .then((res) => {
-              console.log(res);
+              // console.log(res);
               if (res.data === 1) {
                 Swal.fire({
                   title: "리뷰가 삭제되었습니다.",
@@ -798,7 +818,7 @@ const ReviewItem = (props) => {
 
       request
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setReviewLike(newLikeStatus); // 좋아요 상태 업데이트
           setReviewLikeCount((prevCount) =>
             newLikeStatus ? prevCount + 1 : prevCount - 1
@@ -848,7 +868,15 @@ const ReviewItem = (props) => {
           precision={0.1} // 소수점 이하 1자리까지 표시
           readOnly // 읽기 전용
         />
-        <div className="posting-review-content">{review.reviewContent}</div>
+        <div
+          className="posting-review-content"
+          style={{
+            whiteSpace: "pre-wrap", // 줄바꿈과 공백을 그대로 렌더링
+            wordWrap: "break-word", // 단어가 너무 길 경우 줄바꿈 처리
+          }}
+        >
+          {review.reviewContent}
+        </div>
         <div className="review-link-box">
           <span
             className={
@@ -918,7 +946,11 @@ const ReviewItem = (props) => {
               ? "답글 작성"
               : "리뷰 작성"}
           </DialogTitle>
-          <DialogContent>
+          <DialogContent
+            sx={{
+              paddingTop: dialogType === "reply" ? "20px !important" : "0px", // dialogType이 reply일 때만 padding-top 20px 적용
+            }}
+          >
             <Review
               productNo={productNo}
               review={dialogType === "update" ? review : null} // 리뷰 수정인 경우에만 review 전달
@@ -1002,7 +1034,7 @@ const ReviewReCommentItem = (props) => {
       setOpenReviewDialog(true); // 로그인 상태일 경우에만 다이얼로그를 엶
       setDialogType(type); // 'register', 'update', 'reply' 타입 설정
       // 여기에 parentReviewId를 사용하는 로직 추가
-      console.log("Parent Review ID:", parentReviewNo);
+      // console.log("Parent Review ID:", parentReviewNo);
     }
   };
 
@@ -1043,7 +1075,7 @@ const ReviewReCommentItem = (props) => {
           axios
             .delete(`${backServer}/product/deleteReview/${review.reviewNo}`)
             .then((res) => {
-              console.log(res);
+              // console.log(res);
               if (res.data === 1) {
                 Swal.fire({
                   title: "답글이 삭제되었습니다.",
@@ -1054,7 +1086,7 @@ const ReviewReCommentItem = (props) => {
               }
             })
             .catch((err) => {
-              console.log(err);
+              // console.log(err);
               Swal.fire({
                 title: "서버와의 통신 중 오류가 발생하였습니다.",
                 text: err.message,
@@ -1099,7 +1131,7 @@ const ReviewReCommentItem = (props) => {
 
       request
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setReviewLike(newLikeStatus); // 좋아요 상태 업데이트
           setReviewLikeCount((prevCount) =>
             newLikeStatus ? prevCount + 1 : prevCount - 1
@@ -1221,7 +1253,11 @@ const ReviewReCommentItem = (props) => {
               ? "답글 작성"
               : "리뷰 작성"}
           </DialogTitle>
-          <DialogContent>
+          <DialogContent
+            sx={{
+              paddingTop: dialogType === "reply" ? "20px !important" : "0px", // dialogType이 reply일 때만 padding-top 20px 적용
+            }}
+          >
             <Review
               productNo={productNo}
               review={dialogType === "update" ? review : null} // 리뷰 수정인 경우에만 review 전달

@@ -19,7 +19,6 @@ import kr.co.iei.Domestic.model.dto.ItineraryDTO;
 import kr.co.iei.Domestic.model.dto.ItineraryInfoDTO;
 import kr.co.iei.Domestic.model.dto.PlanDTO;
 import kr.co.iei.Domestic.model.dto.RegionDTO;
-import kr.co.iei.Domestic.model.dto.TrainDTO;
 
 
 @Service
@@ -112,11 +111,5 @@ public class DomesticService {
     public CompanionDTO findCompanion(int itineraryNo, int userNo) {
         return domesticDao.selectCompanion(itineraryNo, userNo);
     }
-   
-    //기차 조회
-	public List<TrainDTO> searchTrains(String departure, String arrival) {
-		List list = domesticDao.selectSearchTrains(departure, arrival);
-		return list;
-	}
 
 }

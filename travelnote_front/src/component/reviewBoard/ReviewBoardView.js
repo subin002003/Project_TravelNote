@@ -26,30 +26,57 @@ const ReviewBoardView = () => {
     console.log(editingComment.content);
     setEditingComment({ ...editingComment, content: e.target.value });
   };
+
   useEffect(() => {
     // 게시물 가져오기
     axios
       .get(`${backServer}/reviewBoard/reviewBoardNo/${reviewBoardNo}`)
       .then((res) => {
+        if (res.data.reviewBoardStatus !== 1) {
+          // reviewBoardStatus가 1이 아닐 때 모달창 표시
+          Swal.fire({
+            title: "조회할 수 없습니다",
+            text: "해당 게시글은 조회할 수 없는 상태입니다.",
+            icon: "warning",
+          }).then(() => {
+            navigate("/reviewBoard/list"); // 리스트 페이지로 이동 (원하는 대로 수정 가능)
+          });
+          return; // useEffect의 나머지 부분을 실행하지 않음
+        }
         setReviewBoard(res.data);
-        setLikeCount(res.data.likeCount || 0); // 초기 좋아요 수, res.data.likeCount 값 존재:그 값을 setLikeCount에 전달 / 존재x or null 등 일 때 : 0을 setLikeCount에 전달
-        setLiked(res.data.liked || false); // 초기 좋아요 상태
+        setLikeCount(res.data.likeCount || 0); // 초기 좋아요 수, res.data.likeCount 값 존재:그 값을 setLikeCount에 전달 / 존재 X or null 등 일 때 : 0을 setLikeCount에 전달
+        // setLiked(res.data.liked || false); // 초기 좋아요 상태
       })
       .catch((err) => {
         console.log(err);
       });
 
+    // 로그인 상태일 때 서버에서 좋아요 상태 가져오기 (새로고침 후에도 좋아요 상태 유지)
+    if (isLogin) {
+      axios
+        .get(`${backServer}/reviewBoard/like/${reviewBoardNo}`, {
+          params: { userNick: userNick },
+        })
+        .then((res) => {
+          if (res.data.success) {
+            setLiked(res.data.liked); // 서버에서 가져온 좋아요 상태로 업데이트
+            setLikeCount(res.data.likeCount || 0); // 좋아요 개수도 업데이트
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
     // 댓글 목록 가져오기
     axios
       .get(`${backServer}/reviewBoard/${reviewBoardNo}`)
       .then((res) => {
-        console.log(res.data);
         setComments(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [reset]);
+  }, [reviewBoardNo, reset]); // reviewBoardNo와 reset을 의존성 배열에 포함
 
   const toggleLike = () => {
     // 로그인 유무 확인

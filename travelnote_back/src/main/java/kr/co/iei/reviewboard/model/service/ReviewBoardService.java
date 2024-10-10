@@ -94,7 +94,7 @@ public class ReviewBoardService {
 	// 파일 조회
 	public ReviewBoardFileDTO getReviewBoardFile(int reviewBoardFileNo) {
 		ReviewBoardFileDTO reviewBoard = reviewBoardDao.getReviewBoardFile(reviewBoardFileNo);
-		return null;
+		return reviewBoard;
 	}
 
 	// 게시물 삭제

@@ -23,7 +23,6 @@ const BoardView = () => {
   const [editingComment, setEditingComment] = useState(null); // 수정 중인 댓글 상태
   const [reported, setReported] = useState(false); // 신고 상태
   const handleCommentEditChange = (e) => {
-    console.log(editingComment.content);
     setEditingComment({ ...editingComment, content: e.target.value });
   };
   useEffect(() => {
@@ -31,9 +30,19 @@ const BoardView = () => {
     axios
       .get(`${backServer}/board/boardNo/${boardNo}`)
       .then((res) => {
+        if (res.data.boardStatus !== 1) {
+          // boardStatus가 1이 아닐 때 모달창 표시
+          Swal.fire({
+            title: "조회할 수 없습니다",
+            text: "해당 게시글은 조회할 수 없는 상태입니다.",
+            icon: "warning",
+          }).then(() => {
+            navigate("/board/list"); // 리스트 페이지로 이동 (원하는 대로 수정 가능)
+          });
+          return; // useEffect의 나머지 부분을 실행하지 않음
+        }
         setBoard(res.data);
         setLikeCount(res.data.likeCount || 0); // 초기 좋아요 수, res.data.likeCount 값 존재:그 값을 setLikeCount에 전달 / 존재x or null 등 일 때 : 0을 setLikeCount에 전달
-        setLiked(res.data.liked || false); // 초기 좋아요 상태
       })
       .catch((err) => {
         console.log(err);
@@ -43,7 +52,6 @@ const BoardView = () => {
     axios
       .get(`${backServer}/board/${boardNo}`)
       .then((res) => {
-        console.log(res.data);
         setComments(res.data);
       })
       .catch((err) => {
@@ -333,7 +341,7 @@ const BoardView = () => {
               {/* 좋아요 */}
               <span className="material-icons">
                 {/* 좋아요 상태에 따라 아이콘 변경 */}
-                {liked ? "favorite" : "favorite_border"}{" "}
+                {liked === true ? "favorite" : "favorite_border"}
               </span>
               <span style={{ marginLeft: "2px" }}>{likeCount}</span>
             </p>
@@ -564,7 +572,6 @@ const FileItem = (props) => {
         responseType: "blob",
       })
       .then((res) => {
-        console.log(res);
         //서버에서 받은 데이터를 javascript 의 Blob 객체로 변환
         const blob = new Blob([res.data]);
         //blob데이터를 이용해서 데이터 객체 url생성(다운로드할수있는 링크)
