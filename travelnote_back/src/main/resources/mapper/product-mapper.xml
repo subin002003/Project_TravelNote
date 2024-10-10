@@ -554,7 +554,7 @@
   
   <!-- 리뷰 수정 -->
   <update id="updateReview">
-  	update review set review_content=#{reviewContent} where review_no=#{reviewNo}
+  	update review set review_content=#{reviewContent}, review_score=#{reviewScore} where review_no=#{reviewNo}
   </update>
   
   <!-- 리뷰 삭제 -->
