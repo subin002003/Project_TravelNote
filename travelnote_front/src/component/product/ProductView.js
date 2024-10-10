@@ -1261,14 +1261,17 @@ const ReviewReCommentItem = (props) => {
         >
           <DialogTitle>
             {dialogType === "update"
-              ? "리뷰 수정"
+              ? "답글 수정"
               : dialogType === "reply"
               ? "답글 작성"
               : "리뷰 작성"}
           </DialogTitle>
           <DialogContent
             sx={{
-              paddingTop: dialogType === "reply" ? "20px !important" : "0px", // dialogType이 reply일 때만 padding-top 20px 적용
+              paddingTop:
+                dialogType === "update" || dialogType === "reply"
+                  ? "10px !important"
+                  : "0px", // dialogType이 update이거나 reply일 때만 padding-top 20px 적용
             }}
           >
             <Review
