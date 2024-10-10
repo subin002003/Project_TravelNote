@@ -38,11 +38,9 @@ const CityDetail = () => {
 
   // 도시 정보와 날씨 정보를 가져오는 useEffect
   useEffect(() => {
-    console.log("Fetching city info..."); // 시작 로그
     axios
       .get(`${backServer}/domestic/view/${regionNo}`)
       .then((res) => {
-        console.log("City info fetched:", res.data); // 성공 로그
         setCityInfo(res.data);
         getWeatherForCity(res.data.regionName);
       })

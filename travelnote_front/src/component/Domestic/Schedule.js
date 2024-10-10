@@ -194,35 +194,6 @@ const Schedule = () => {
         console.error("일정 추가에 실패했습니다:", error);
       });
   };
-
-  // 기차편 검색 처리 함수
-  const handleTrainSearch = () => {
-    if (trainDeparture.length >= 2 && trainArrival.length >= 2) {
-      axios
-        .get(`${backServer}/domestic/search`, {
-          params: {
-            departure: trainDeparture,
-            arrival: trainArrival,
-            apiKey: trainApiKey,
-          },
-        })
-        .then((res) => {
-          console.log("기차 API 응답:", res.data); // API 응답 로그 추가
-          setTrainSchedules(res.data);
-        })
-        .catch((error) => {
-          console.error("기차편 검색에 실패했습니다:", error);
-        });
-    } else {
-      alert("출발지와 도착지를 입력해주세요.");
-    }
-  };
-
-  const toggleTrainSearch = () => {
-    setShowTrainSearch(!showTrainSearch);
-    setShowSearch(false);
-  };
-
   const togglePlaceSearch = () => {
     setShowSearch(!showSearch);
     setShowTrainSearch(false);
@@ -249,35 +220,10 @@ const Schedule = () => {
         </div>
         <div className="store-list" style={{ width: "300px" }}>
           <div className="search-button">
-            <button className="tri-date" onClick={toggleTrainSearch}>
-              기차편 추가
-            </button>
             <button className="date-list" onClick={togglePlaceSearch}>
               일정 추가
             </button>
           </div>
-          {showTrainSearch && (
-            <div className="train-searchcontainer ">
-              <input
-                type="text"
-                placeholder="출발지"
-                value={trainDeparture}
-                onChange={(e) => setTrainDeparture(e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="도착지"
-                value={trainArrival}
-                onChange={(e) => setTrainArrival(e.target.value)}
-              />
-              <button onClick={handleTrainSearch}>기차 검색</button>
-              <div>
-                {trainSchedules.map((train, index) => (
-                  <div key={index}>{train}</div>
-                ))}
-              </div>
-            </div>
-          )}
           {showSearch && (
             <div className="search-container">
               <input
@@ -285,7 +231,6 @@ const Schedule = () => {
                 placeholder="일정 검색"
                 onChange={handleSearch}
               />
-
               <button className="search-add">검색</button>
               <ul>
                 {searchResults.map((result) => (
@@ -303,7 +248,7 @@ const Schedule = () => {
             </div>
           )}
         </div>
-        <div id="map" style={{ height: "100%", width: "90%" }}></div>
+        <div id="map" style={{ height: "70%", width: "70%" }}></div>
       </div>
     </div>
   );
