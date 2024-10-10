@@ -236,10 +236,22 @@ const ProductView = () => {
     );
   };
 
+  {
+    /*
+    const request = loginEmail
+      ? axios.get(
+          `${backServer}/product/productNo/${productNo}/${loginEmail}/${reqPage}`
+        )
+      : axios.get(`${backServer}/product/productNo/${productNo}/${reqPage}`);
+    */
+  }
+
   // 리뷰 목록 갱신 함수
   const fetchProductReviewList = () => {
     axios
-      .get(`${backServer}/product/productNo/${productNo}/${loginEmail}`)
+      .get(
+        `${backServer}/product/productNo/${productNo}/${loginEmail}/${reqPage}`
+      )
       .then((res) => {
         setProductReviewList(res.data.productReviewList); // 리뷰 리스트 갱신
         setProductReviewReCommentList(res.data.productReviewReCommentList);
@@ -918,7 +930,11 @@ const ReviewItem = (props) => {
               ? "답글 작성"
               : "리뷰 작성"}
           </DialogTitle>
-          <DialogContent>
+          <DialogContent
+            sx={{
+              paddingTop: dialogType === "reply" ? "20px !important" : "0px", // dialogType이 reply일 때만 padding-top 20px 적용
+            }}
+          >
             <Review
               productNo={productNo}
               review={dialogType === "update" ? review : null} // 리뷰 수정인 경우에만 review 전달
@@ -1221,7 +1237,11 @@ const ReviewReCommentItem = (props) => {
               ? "답글 작성"
               : "리뷰 작성"}
           </DialogTitle>
-          <DialogContent>
+          <DialogContent
+            sx={{
+              paddingTop: dialogType === "reply" ? "20px !important" : "0px", // dialogType이 reply일 때만 padding-top 20px 적용
+            }}
+          >
             <Review
               productNo={productNo}
               review={dialogType === "update" ? review : null} // 리뷰 수정인 경우에만 review 전달
