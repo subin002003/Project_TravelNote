@@ -163,6 +163,10 @@ public class BoardService {
 	}
 	
 	
+
+	
+	
+	
 	
 	// 댓글 등록
 	@Transactional
