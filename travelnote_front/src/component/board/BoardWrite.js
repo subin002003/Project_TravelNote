@@ -52,7 +52,6 @@ const BoardWrite = () => {
               },
             })
             .then((res) => {
-              console.log(res);
               if (res.data) {
                 navigate("/board/list");
               } else {

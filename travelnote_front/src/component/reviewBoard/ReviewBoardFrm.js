@@ -127,6 +127,7 @@ const ReviewBoardFrm = (props) => {
             width: "1120px",
             height: "300px",
             border: "1px solid black",
+            marginLeft: "30px",
           }}
         >
           <textarea

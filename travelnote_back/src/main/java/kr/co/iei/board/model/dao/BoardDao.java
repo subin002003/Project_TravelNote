@@ -43,6 +43,8 @@ public interface BoardDao {
 
 	int deleteLike(@Param("userNick") String userNick, @Param("boardNo") int boardNo);
 
+	String selectLike(@Param("userNick") String userNick, @Param("boardNo") int boardNo);
+	
 	void incrementLikeCount(int boardNo);
 
 	void decrementLikeCount(int boardNo);

@@ -162,6 +162,13 @@ public class ReviewBoardService {
         return false;
 	}
 	
+	// 특정 사용자의 좋아요 상태 조회
+	public boolean checkLikeStatus(String userNick, int reviewBoardNo) {
+        return reviewBoardDao.selectLike(userNick, reviewBoardNo) != null;
+    }
+		
+	
+	
 	// 댓글 등록
 	@Transactional
 	public void addComment(ReviewBoardCommentDTO comment) {
