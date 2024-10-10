@@ -46,7 +46,7 @@ const ProductList = () => {
 
     request
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
         setProductList(res.data.list);
         setPi(res.data.pi);
       })
@@ -131,6 +131,18 @@ const ProductList = () => {
               displayEmpty
               input={<OutlinedInput />}
               defaultValue="" // 기본값 설정
+              sx={{
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#1363df", // 여기에 원하는 색상을 지정
+                  borderRadius: "12px", // border-radius 값 변경
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#1363df", // hover 시 색상을 변경하고 싶을 때
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#1363df", // 포커스 시 색상을 변경하고 싶을 때
+                },
+              }}
               renderValue={() => <em>정렬 기준 선택</em>}
             >
               {sortOptions.map((option) => (

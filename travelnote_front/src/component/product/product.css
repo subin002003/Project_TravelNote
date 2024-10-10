@@ -415,6 +415,14 @@ a:hover {
 .review-like-checked,
 .review-like-unchecked {
   margin-right: 10px !important;
+  color: #47b5ff;
+}
+.review-like-checked > i,
+.review-like-unchecked > i {
+}
+
+.reviewReComment-btn {
+  color: var(--gray2);
 }
 
 .review-link-box > span > span {
