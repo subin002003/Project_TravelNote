@@ -26,7 +26,6 @@ const BoardView = () => {
   };
 
   useEffect(() => {
-    console.log(1);
     // 게시물 가져오기
     axios
       .get(`${backServer}/board/boardNo/${boardNo}`)
