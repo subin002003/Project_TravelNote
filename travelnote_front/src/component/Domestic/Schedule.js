@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Schedule.css";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getDate, getMonth, getYear } from "date-fns";
 import SchedulePlanList from "./SchedulePlanList";
 import Swal from "sweetalert2";
@@ -9,9 +9,7 @@ import Swal from "sweetalert2";
 const Schedule = () => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-  const trainApiKey = process.env.REACT_APP_TRAIN_API_KEY;
   const [plans, setPlans] = useState([]); // 사용자의 계획 리스트
-  const [planDays, setPlanDays] = useState([]);
   const [selectedDay, setSelectedDay] = useState(1);
   const [planPageOption, setPlanPageOption] = useState(1);
   const [map, setMap] = useState(null);
@@ -21,13 +19,10 @@ const Schedule = () => {
     lat: 37.5665,
     lng: 126.978,
   });
-  const [trainSchedules, setTrainSchedules] = useState([]);
   const [planDay, setPlanDay] = useState(1); // planDay 초기값 설정
   const [showSearch, setShowSearch] = useState(false);
   const [showTrainSearch, setShowTrainSearch] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
-  const [trainDeparture, setTrainDeparture] = useState("");
-  const [trainArrival, setTrainArrival] = useState("");
   const { itineraryNo, city } = useParams();
   const [selectedPlans, setSelectedPlans] = useState([]);
   const [markers, setMarkers] = useState([]);
@@ -78,7 +73,7 @@ const Schedule = () => {
     return () => {
       document.body.removeChild(script);
     };
-  }, [googleMapsApiKey, cityCoordinates]);
+  }, [googleMapsApiKey]);
 
   // 도시 좌표 설정
   useEffect(() => {
@@ -94,8 +89,8 @@ const Schedule = () => {
 
   // 도시 중심 변경
   useEffect(() => {
-    if (map) {
-      map.setCenter(cityCoordinates);
+    if (map && cityCoordinates) {
+      map.panTo(cityCoordinates); // 지도의 중심을 새 좌표로 이동
     }
   }, [map, cityCoordinates]);
 
@@ -184,6 +179,12 @@ const Schedule = () => {
             text: "장소가 일정에 추가되었습니다.",
             icon: "success",
           });
+          if (map) {
+            map.panTo({
+              lat: plan.geometry.location.lat(),
+              lng: plan.geometry.location.lng(),
+            });
+          }
           setPlanse(planse ? false : true);
         }
       });

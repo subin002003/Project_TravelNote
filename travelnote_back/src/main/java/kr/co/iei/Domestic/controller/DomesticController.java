@@ -89,21 +89,21 @@ public class DomesticController {
     	return ResponseEntity.ok(planNo);
     }
     
-    //불러온 여행 일정 조회
+    //여행 관리 일정 조회
     @GetMapping(value="/Schedule/{itineraryNo}")
     public ResponseEntity<ItineraryDTO> scheduleUpdate(@PathVariable int itineraryNo) {
         ItineraryDTO itinerary = domesticService.scheduleUpdate(itineraryNo);
         return ResponseEntity.ok(itinerary);
     }
     
-    //불러온여행 일정 수정
+    //여행 관리 일정 수정
     @PatchMapping(value="/itinerary/{itineraryNo}")
     public ResponseEntity<String> updateItinerary(@PathVariable int itineraryNo, @RequestBody ItineraryDTO itineraryDTO) {
         domesticService.updateItinerary(itineraryNo, itineraryDTO);
         return ResponseEntity.ok("일정이 성공적으로 수정되었습니다.");
     }
     
-    //일정 관리 삭제
+    //여행 관리 일정 삭제
     @DeleteMapping(value="/planDelete/{itineraryNo}")
     public ResponseEntity<Integer> planDelete(@PathVariable int itineraryNo){
     	domesticService.planDelete(itineraryNo);
@@ -144,7 +144,7 @@ public class DomesticController {
     private void sendEmail(String toEmail) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
-        message.setSubject("TravelNote의 초대를 합니다!!");
+        message.setSubject("TravelNote의 초대 합니다!!");
         message.setText("여행 계획에 초대되었습니다.");
         emailSender.send(message); // 이메일 전송
     }
