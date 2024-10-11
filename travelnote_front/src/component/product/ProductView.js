@@ -148,12 +148,12 @@ const ProductView = () => {
   };
 
   useEffect(() => {
-    console.log(
-      "리뷰 리스트가 업데이트되었습니다:",
-      productReviewList,
-      productReviewReCommentList,
-      pi
-    );
+    // console.log(
+    //   "리뷰 리스트가 업데이트되었습니다:",
+    //   productReviewList,
+    //   productReviewReCommentList,
+    //   pi
+    // );
   }, [productReviewList, productReviewReCommentList]); // productReviewList가 변경될 때마다 콜백이 실행
 
   // 날짜 범위 상태

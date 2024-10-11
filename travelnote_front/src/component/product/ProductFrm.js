@@ -1,5 +1,5 @@
 import { Switch } from "@mui/material";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./product.css";
 
 const ProductFrm = (props) => {
@@ -78,11 +78,20 @@ const ProductFrm = (props) => {
     setShowProductFile([...showProductFile, ...filenameArr]);
   };
 
+  useEffect(() => {
+    // console.log("Updated productStatus:", productStatus);
+  }, [productStatus]);
+
   // 상품 판매여부 입력
-  const handleChange = (e) => {
-    // console.log("Switch clicked:", e.target.checked); // 추가된 로그
-    setProductStatus(e.target.checked ? 1 : 2); // Switch 값에 따라 상품 상태를 1 또는 2으로 설정
+  const handleChange = (event) => {
+    const newStatus = event.target.checked ? 1 : 2;
+    setProductStatus(newStatus);
   };
+
+  // const handleChange = (e) => {
+  //   console.log("Switch clicked:", e.target.checked); // 추가된 로그
+  //   setProductStatus(e.target.checked ? 1 : 2); // Switch 값에 따라 상품 상태를 1 또는 2으로 설정
+  // };
   // console.log("productStatus : ", productStatus);
   // console.log("delProductFileNo : ", delProductFileNo);
 
