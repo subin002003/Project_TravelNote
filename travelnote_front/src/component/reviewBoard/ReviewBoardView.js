@@ -379,7 +379,7 @@ const ReviewBoardView = () => {
               {/* 좋아요 */}
               <span className="material-icons">
                 {/* 좋아요 상태에 따라 아이콘 변경 */}
-                {liked ? "favorite" : "favorite_border"}{" "}
+                {liked === true ? "favorite" : "favorite_border"}{" "}
               </span>
               <span style={{ marginLeft: "2px" }}>{likeCount}</span>
             </p>

@@ -61,7 +61,6 @@ public interface BoardDao {
 
 	void updateComment(int boardNo, int commentNo, String boardCommentContent);
 
-
 	void boardViewReport(String userNick, int boardNo);
 	
 	//오건하 작성 2024-10-04
