@@ -46,7 +46,7 @@ const ProductList = () => {
 
     request
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setProductList(res.data.list);
         setPi(res.data.pi);
       })
