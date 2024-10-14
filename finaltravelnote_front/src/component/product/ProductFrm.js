@@ -1,6 +1,8 @@
 import { Switch } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import "./product.css";
+import Swal from "sweetalert2";
+import axios from "axios";
 
 const ProductFrm = (props) => {
   const backServer = process.env.REACT_APP_BACK_SERVER;
@@ -79,21 +81,26 @@ const ProductFrm = (props) => {
   };
 
   useEffect(() => {
-    // console.log("Updated productStatus:", productStatus);
+    console.log("Updated productStatus:", productStatus);
   }, [productStatus]);
 
-  // 상품 판매여부 입력
+  console.log("초기 productStatus:", productStatus);
+
+  // 스위치 상태 변경 처리
   const handleChange = (event) => {
     const newStatus = event.target.checked ? 1 : 2;
-    setProductStatus(newStatus);
-  };
+    console.log("스위치 상태:", event.target.checked); // 상태 확인
 
-  // const handleChange = (e) => {
-  //   console.log("Switch clicked:", e.target.checked); // 추가된 로그
-  //   setProductStatus(e.target.checked ? 1 : 2); // Switch 값에 따라 상품 상태를 1 또는 2으로 설정
-  // };
-  // console.log("productStatus : ", productStatus);
-  // console.log("delProductFileNo : ", delProductFileNo);
+    // SweetAlert2 알림
+    Swal.fire({
+      title: "판매 상태 변경",
+      text: newStatus === 1 ? "상품이 판매 중으로 변경되었습니다." : "상품이 판매 중지로 변경되었습니다.",
+      icon: "success",
+      confirmButtonText: "확인",
+    });
+
+    setProductStatus(newStatus); // 상태 변경
+  };
 
   return (
     <div className="mt">
@@ -140,8 +147,8 @@ const ProductFrm = (props) => {
             <label htmlFor="productSubName">판매 여부</label>
             <p>{productStatus === 1 ? "판매 중" : "판매 중지"}</p>
             <Switch
-              checked={productStatus === 1}
-              onChange={handleChange}
+              checked={productStatus === 1} // productStatus가 1인 경우 체크됨
+              onChange={handleChange} // 상태 변경 함수 호출
               inputProps={{ "aria-label": "controlled" }}
             />
           </div>
@@ -192,25 +199,25 @@ const ProductFrm = (props) => {
           <div className="product-file-list">
             {productFileList
               ? productFileList.map((productFile, i) => {
-                  const deleteFile = () => {
-                    const newFileList = productFileList.filter((item) => {
-                      return item !== productFile;
-                    });
-                    setProductFileList(newFileList);
-                    setDelProductFileNo([
-                      ...delProductFileNo,
-                      productFile.productFileNo,
-                    ]);
-                  };
-                  return (
-                    <p key={"oldFile-" + i}>
-                      <span className="filename">{productFile.filename}</span>
-                      <span className="det-file-icon" onClick={deleteFile}>
-                        <i className="fa-solid fa-circle-xmark"></i>
-                      </span>
-                    </p>
-                  );
-                })
+                const deleteFile = () => {
+                  const newFileList = productFileList.filter((item) => {
+                    return item !== productFile;
+                  });
+                  setProductFileList(newFileList);
+                  setDelProductFileNo([
+                    ...delProductFileNo,
+                    productFile.productFileNo,
+                  ]);
+                };
+                return (
+                  <p key={"oldFile-" + i}>
+                    <span className="filename">{productFile.filename}</span>
+                    <span className="det-file-icon" onClick={deleteFile}>
+                      <i className="fa-solid fa-circle-xmark"></i>
+                    </span>
+                  </p>
+                );
+              })
               : ""}
             {showProductFile.map((filename, i) => {
               const deleteFile = () => {

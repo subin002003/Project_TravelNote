@@ -93,10 +93,10 @@ const ProductView = () => {
 
     const request = loginEmail
       ? axios.get(
-          `${backServer}/product/productNo/${productNo}/${encodeURIComponent(
-            loginEmail
-          )}/${reqPage}`
-        )
+        `${backServer}/product/productNo/${productNo}/${encodeURIComponent(
+          loginEmail
+        )}/${reqPage}`
+      )
       : axios.get(`${backServer}/product/productNo/${productNo}/${reqPage}`);
 
     request
@@ -182,6 +182,66 @@ const ProductView = () => {
       setStartDate(startDate); // startDate 상태 업데이트
       setEndDate(endDate); // endDate 상태 업데이트
     }
+  };
+
+  // 예약 버튼 클릭 핸들러
+  const handleReserve = () => {
+    // 1. 로그인 여부 체크
+    if (!isLogin) {
+      Swal.fire({
+        title: "로그인이 필요합니다.",
+        text: "여행을 예약하려면 로그인이 필요합니다. 로그인하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "로그인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login"); // 로그인 페이지로 이동
+        }
+      });
+      return; // 로그인 상태가 아니므로 함수 종료
+    }
+
+    // 2. 날짜 범위 체크
+    if (!startDate || !endDate) {
+      Swal.fire({
+        title: "날짜 범위가 선택되지 않았습니다.",
+        text: "여행 날짜를 선택해 주세요.",
+        icon: "warning",
+      });
+      return; // 날짜 범위가 선택되지 않았으므로 함수 종료
+    }
+
+    // 3. 인원 수 체크
+    if (people < 1) {
+      Swal.fire({
+        title: "인원 수가 올바르지 않습니다.",
+        text: "최소 1명의 인원을 선택해 주세요.",
+        icon: "warning",
+      });
+      return; // 인원 수가 올바르지 않으므로 함수 종료
+    }
+
+    // 모든 체크를 통과했을 경우 예약 처리 로직 실행
+    Swal.fire({
+      title: "예약이 완료되었습니다!",
+      text: `여행 날짜: ${startDate} ~ ${endDate}, 인원 수: ${people}`,
+      icon: "success",
+    });
+
+    // 4. localStorage에 예약 정보 저장
+    localStorage.setItem("productNo", product.productNo);
+    localStorage.setItem("productName", product.productName);
+    localStorage.setItem("startDate", startDate);
+    localStorage.setItem("endDate", endDate);
+    localStorage.setItem("people", people);
+    localStorage.setItem("productPrice", product.productPrice);
+
+    // 5. 예약 완료 후 /travelReservation으로 이동
+    navigate("/travelReservation");
   };
 
   // 패키지 상품 삭제
@@ -428,21 +488,13 @@ const ProductView = () => {
           </div>
 
           <div>
-            <Link
-              to="/travelReservation"
-              onClick={() => {
-                localStorage.setItem("productNo", product.productNo);
-                localStorage.setItem("productName", product.productName);
-                localStorage.setItem("startDate", startDate);
-                localStorage.setItem("endDate", endDate);
-                localStorage.setItem("people", people);
-                localStorage.setItem("productPrice", product.productPrice);
-              }}
+            <button
+              onClick={handleReserve}
               style={{ padding: "23.5px 0", width: "100%", display: "block" }}
               className="btn-primary lg"
             >
               여행 예약하기
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -579,9 +631,9 @@ const ProductView = () => {
                               parentReviewNo={reComment.reviewNo} // 부모 리뷰 ID 전달
                               onDeleteReview={handleDeleteReview} // 삭제 핸들러 전달
                               fetchProductReviewList={fetchProductReviewList} // 여기서 전달
-                              // fetchProductReviewReCommentList={
-                              //   fetchProductReviewReCommentList
-                              // } // 여기서 전달
+                            // fetchProductReviewReCommentList={
+                            //   fetchProductReviewReCommentList
+                            // } // 여기서 전달
                             />
                           </li>
                         ))}
@@ -627,7 +679,7 @@ const ProductView = () => {
               open={openReviewDialog}
               handleClose={handleCloseReviewDialog}
               fetchProductReviewList={fetchProductReviewList} // 리뷰 리스트 갱신 함수 전달
-              // fetchProductReviewReCommentList={fetchProductReviewReCommentList} // 리뷰 답글 리스트 갱신 함수 전달
+            // fetchProductReviewReCommentList={fetchProductReviewReCommentList} // 리뷰 답글 리스트 갱신 함수 전달
             />
           </DialogContent>
           <DialogActions>
@@ -820,14 +872,14 @@ const ReviewItem = (props) => {
       const newLikeStatus = !reviewLike; // 좋아요 상태 토글
       const request = newLikeStatus
         ? axios.post(
-            // 리뷰 좋아요
-            `${backServer}/product/${review.reviewNo}/insertReviewLike/${loginEmail}`,
-            { reviewLike: 1 }
-          )
+          // 리뷰 좋아요
+          `${backServer}/product/${review.reviewNo}/insertReviewLike/${loginEmail}`,
+          { reviewLike: 1 }
+        )
         : axios.delete(
-            // 리뷰 좋아요 취소
-            `${backServer}/product/${review.reviewNo}/deleteReviewLike/${loginEmail}?reviewLike=1`
-          );
+          // 리뷰 좋아요 취소
+          `${backServer}/product/${review.reviewNo}/deleteReviewLike/${loginEmail}?reviewLike=1`
+        );
 
       request
         .then((res) => {
@@ -956,8 +1008,8 @@ const ReviewItem = (props) => {
             {dialogType === "update"
               ? "리뷰 수정"
               : dialogType === "reply"
-              ? "답글 작성"
-              : "리뷰 작성"}
+                ? "답글 작성"
+                : "리뷰 작성"}
           </DialogTitle>
           <DialogContent
             sx={{
@@ -1133,14 +1185,14 @@ const ReviewReCommentItem = (props) => {
       const newLikeStatus = !reviewLike; // 좋아요 상태 토글
       const request = newLikeStatus
         ? axios.post(
-            // 리뷰 좋아요
-            `${backServer}/product/${review.reviewNo}/insertReviewLike/${loginEmail}`,
-            { reviewLike: 1 }
-          )
+          // 리뷰 좋아요
+          `${backServer}/product/${review.reviewNo}/insertReviewLike/${loginEmail}`,
+          { reviewLike: 1 }
+        )
         : axios.delete(
-            // 리뷰 좋아요 취소
-            `${backServer}/product/${review.reviewNo}/deleteReviewLike/${loginEmail}?reviewLike=1`
-          );
+          // 리뷰 좋아요 취소
+          `${backServer}/product/${review.reviewNo}/deleteReviewLike/${loginEmail}?reviewLike=1`
+        );
 
       request
         .then((res) => {
@@ -1263,8 +1315,8 @@ const ReviewReCommentItem = (props) => {
             {dialogType === "update"
               ? "답글 수정"
               : dialogType === "reply"
-              ? "답글 작성"
-              : "리뷰 작성"}
+                ? "답글 작성"
+                : "리뷰 작성"}
           </DialogTitle>
           <DialogContent
             sx={{

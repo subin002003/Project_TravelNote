@@ -5,11 +5,13 @@ const DateRangePickerComponent = ({ onDateRangeChange }) => {
   const [dateRangeText, setDateRangeText] = useState("여행 날짜 선택");
 
   const showDateRangePicker = async () => {
+    const today = new Date().toISOString().split("T")[0]; // 오늘 날짜를 YYYY-MM-DD 형식으로 가져오기
+
     const { value: dates } = await Swal.fire({
       title: "Select Date Range",
       html: `
-        <input type="date" id="start-date" class="swal2-input" />
-        <input type="date" id="end-date" class="swal2-input" />
+        <input type="date" id="start-date" class="swal2-input" min="${today}" placeholder="시작 날짜 선택" />
+        <input type="date" id="end-date" class="swal2-input" placeholder="종료 날짜 선택" />
       `,
       focusConfirm: false,
       showCancelButton: true,
@@ -18,14 +20,26 @@ const DateRangePickerComponent = ({ onDateRangeChange }) => {
       preConfirm: () => {
         const startDate = document.getElementById("start-date").value;
         const endDate = document.getElementById("end-date").value;
-        if (!startDate || !endDate) {
-          Swal.showValidationMessage("모든 날짜를 선택해주세요.");
+        if (!startDate) {
+          Swal.showValidationMessage("시작 날짜를 먼저 선택해주세요.");
+          return false;
+        } else if (!endDate) {
+          Swal.showValidationMessage("종료 날짜를 선택해주세요.");
+          return false;
         } else if (new Date(startDate) > new Date(endDate)) {
-          Swal.showValidationMessage(
-            "시작 날짜는 종료 날짜보다 이전이어야 합니다."
-          );
+          Swal.showValidationMessage("시작 날짜는 종료 날짜보다 이전이어야 합니다.");
+          return false;
         }
         return { startDate, endDate };
+      },
+      didOpen: () => {
+        const startDateInput = document.getElementById("start-date");
+        const endDateInput = document.getElementById("end-date");
+
+        startDateInput.addEventListener("change", (e) => {
+          const startDate = e.target.value;
+          endDateInput.setAttribute("min", startDate); // 시작 날짜를 기준으로 종료 날짜 설정
+        });
       },
     });
 
@@ -53,7 +67,6 @@ const DateRangePickerComponent = ({ onDateRangeChange }) => {
 
   return (
     <div>
-      {/* <h2>날짜 범위 선택</h2> */}
       <button className="date-picker" onClick={showDateRangePicker}>
         {dateRangeText}
       </button>
