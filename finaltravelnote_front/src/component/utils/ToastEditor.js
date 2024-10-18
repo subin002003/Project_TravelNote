@@ -42,7 +42,7 @@ const ToastEditor = (props) => {
         <Editor
           ref={editorRef}
           initialValue={productInfo}
-          initialEditType="wysiwyg"
+          initialEditType="wysiwyg" // 초기 편집 모드 (markdown, wysiwyg)
           language="ko-KR"
           height="600px"
           onChange={changeValue}

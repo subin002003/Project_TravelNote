@@ -227,9 +227,10 @@ const ProductView = () => {
 
     // 모든 체크를 통과했을 경우 예약 처리 로직 실행
     Swal.fire({
-      title: "예약이 완료되었습니다!",
-      text: `여행 날짜: ${startDate} ~ ${endDate}, 인원 수: ${people}`,
-      icon: "success",
+      title: "예약 정보를 한 번 더 확인하세요!",
+      html: `여행 날짜: ${startDate} ~ ${endDate} <br>인원 수: 성인 x ${people}`,
+      // text: `여행 날짜: ${startDate} ~ ${endDate} <br />> 인원 수: ${people}`,
+      icon: "info",
     });
 
     // 4. localStorage에 예약 정보 저장
@@ -240,7 +241,7 @@ const ProductView = () => {
     localStorage.setItem("people", people);
     localStorage.setItem("productPrice", product.productPrice);
 
-    // 5. 예약 완료 후 /travelReservation으로 이동
+    // 5. 예약 정보 선택 완료 후 /travelReservation으로 이동
     navigate("/travelReservation");
   };
 

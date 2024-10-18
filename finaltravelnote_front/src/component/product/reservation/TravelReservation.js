@@ -174,15 +174,15 @@ const TravelReservation = () => {
       // 모든 항목이 체크되었는지 확인하여 전체 체크박스 상태 업데이트
       setAllChecked(
         agree1 &&
-          agree11 &&
-          agree12 &&
-          agree13 &&
-          agree2 &&
-          agree21 &&
-          agree22 &&
-          agree3 &&
-          agree31 &&
-          agree32
+        agree11 &&
+        agree12 &&
+        agree13 &&
+        agree2 &&
+        agree21 &&
+        agree22 &&
+        agree3 &&
+        agree31 &&
+        agree32
       );
     }
   };
@@ -251,6 +251,13 @@ const TravelReservation = () => {
       return;
     }
 
+    // 모든 체크를 통과했을 경우 예약 처리 로직 실행
+    Swal.fire({
+      title: "결제 정보를 확인",
+      text: "결제 정보를 최종적으로 확인 후 결제를 완료해 주세요!",
+      icon: "info",
+    });
+
     // 필수 약관에 모두 동의했을 경우 결제 페이지로 이동
     localStorage.setItem("productNo", productNo);
     localStorage.setItem("productName", productName);
@@ -263,7 +270,8 @@ const TravelReservation = () => {
     localStorage.setItem("userEmail", userEmail);
     localStorage.setItem("userPhone", userPhone);
 
-    window.location.href = "/payment"; // 결제 페이지로 이동
+    navigate("/payment");
+    // window.location.href = "/payment"; // 결제 페이지로 이동
   };
 
   return (
