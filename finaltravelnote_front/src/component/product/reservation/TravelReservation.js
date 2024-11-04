@@ -276,309 +276,311 @@ const TravelReservation = () => {
 
   return (
     <section className="sec reservation-wrap">
-      <div className="travel-info">
-        <h2>여행 정보</h2>
-        <ul>
-          <li>
-            <p className="info-title">선택 패키지</p>
+      <div className="container">
+        <div className="travel-info">
+          <h2>여행 정보</h2>
+          <ul>
+            <li>
+              <p className="info-title">선택 패키지</p>
+              <p>{productName}</p>
+            </li>
+            <li>
+              <p className="info-title">여행 예정일</p>{" "}
+              <p>
+                {startDate
+                  ? new Date(startDate).toLocaleDateString()
+                  : "선택되지 않음"}
+              </p>
+              <p className="info-title">여행 기간</p>
+              <p>
+                {" "}
+                {startDate
+                  ? new Date(startDate).toLocaleDateString()
+                  : "선택되지 않음"}
+                <span> ~ </span>{" "}
+                {endDate
+                  ? new Date(endDate).toLocaleDateString()
+                  : "선택되지 않음"}
+              </p>
+            </li>
+            <li>
+              <p className="info-title">여행 인원</p>
+              <p>성인 x {people}</p>
+            </li>
+          </ul>
+        </div>
+
+        <div style={{ margin: "50px 0px" }} className="line"></div>
+
+        <div className="payment-guide">
+          <h2>결제 내역 안내</h2>
+          <p>총 결제 금액</p>
+          <div className="payment-guide-info">
             <p>{productName}</p>
-          </li>
-          <li>
-            <p className="info-title">여행 예정일</p>{" "}
-            <p>
-              {startDate
-                ? new Date(startDate).toLocaleDateString()
-                : "선택되지 않음"}
-            </p>
-            <p className="info-title">여행 기간</p>
             <p>
               {" "}
               {startDate
                 ? new Date(startDate).toLocaleDateString()
                 : "선택되지 않음"}
               <span> ~ </span>{" "}
-              {endDate
-                ? new Date(endDate).toLocaleDateString()
-                : "선택되지 않음"}
+              {endDate ? new Date(endDate).toLocaleDateString() : "선택되지 않음"}
             </p>
-          </li>
-          <li>
-            <p className="info-title">여행 인원</p>
             <p>성인 x {people}</p>
-          </li>
-        </ul>
-      </div>
-
-      <div style={{ margin: "50px 0px" }} className="line"></div>
-
-      <div className="payment-guide">
-        <h2>결제 내역 안내</h2>
-        <p>총 결제 금액</p>
-        <div className="payment-guide-info">
-          <p>{productName}</p>
-          <p>
-            {" "}
-            {startDate
-              ? new Date(startDate).toLocaleDateString()
-              : "선택되지 않음"}
-            <span> ~ </span>{" "}
-            {endDate ? new Date(endDate).toLocaleDateString() : "선택되지 않음"}
-          </p>
-          <p>성인 x {people}</p>
-          <p className="total-price">{totalPrice.toLocaleString()}원</p>
-        </div>
-      </div>
-
-      <div style={{ margin: "50px 0px" }} className="line"></div>
-
-      <div>
-        <h2>예약자 정보</h2>
-
-        <div style={{ margin: "31.5px 0" }} className="input-item">
-          <label htmlFor="productName">한글 성명</label>
-          <input
-            type="text"
-            name="userName"
-            id="userName"
-            value={userName}
-            onChange={inputUserName}
-            placeholder="ex.) 홍길동"
-          />
+            <p className="total-price">{totalPrice.toLocaleString()}원</p>
+          </div>
         </div>
 
-        <div style={{ margin: "31.5px 0" }} className="input-item">
-          <label htmlFor="userEmail">이메일</label>
-          <input
-            type="text"
-            name="userEmail"
-            id="userEmail"
-            value={userEmail}
-            onChange={inputUserEmail}
-            onBlur={checkEmail}
-            placeholder="ex.) travelnote@gmail.com"
-          />
-          <p ref={emailMessage}></p>
+        <div style={{ margin: "50px 0px" }} className="line"></div>
+
+        <div>
+          <h2>예약자 정보</h2>
+
+          <div style={{ margin: "31.5px 0" }} className="input-item">
+            <label htmlFor="productName">한글 성명</label>
+            <input
+              type="text"
+              name="userName"
+              id="userName"
+              value={userName}
+              onChange={inputUserName}
+              placeholder="ex.) 홍길동"
+            />
+          </div>
+
+          <div style={{ margin: "31.5px 0" }} className="input-item">
+            <label htmlFor="userEmail">이메일</label>
+            <input
+              type="text"
+              name="userEmail"
+              id="userEmail"
+              value={userEmail}
+              onChange={inputUserEmail}
+              onBlur={checkEmail}
+              placeholder="ex.) travelnote@gmail.com"
+            />
+            <p ref={emailMessage}></p>
+          </div>
+
+          <div style={{ margin: "31.5px 0" }} className="input-item">
+            <label htmlFor="userPhone">휴대전화번호</label>
+            <input
+              type="text"
+              name="userPhone"
+              id="userPhone"
+              value={userPhone}
+              onChange={inputUserPhone}
+              placeholder="ex.) 010-1234-5678"
+            />
+          </div>
         </div>
 
-        <div style={{ margin: "31.5px 0" }} className="input-item">
-          <label htmlFor="userPhone">휴대전화번호</label>
-          <input
-            type="text"
-            name="userPhone"
-            id="userPhone"
-            value={userPhone}
-            onChange={inputUserPhone}
-            placeholder="ex.) 010-1234-5678"
-          />
-        </div>
-      </div>
-
-      <div style={{ margin: "50px 0px" }} className="line"></div>
+        {/* <div style={{ margin: "50px 0px" }} className="line"></div>
 
       <div>
         <h2>대표 예약자 정보</h2>
+      </div> */}
+
+        <div style={{ margin: "50px 0px" }} className="line"></div>
+
+        <div className="draggable">
+          <h2>
+            <span>
+              <i className="fa-solid fa-circle-check"></i>
+            </span>
+            <span>TravelNote 이용 동의</span>
+          </h2>
+          <div className="allAgree">
+            <input
+              type="checkbox"
+              id="allAgree"
+              checked={allChecked}
+              onChange={handleAllAgreeChange}
+            />
+            <label className="parents-label" htmlFor="allAgree">
+              전체 약관 동의
+            </label>
+          </div>
+
+          <div style={{ margin: "30px 0" }} className="line"></div>
+
+          <div className="agree-box">
+            <div>
+              <input
+                type="checkbox"
+                name="agree"
+                id="agree1"
+                checked={agree1}
+                onChange={(e) =>
+                  handleAgree1Change(
+                    e,
+                    setAgree1,
+                    setAgree11,
+                    setAgree12,
+                    setAgree13
+                  )
+                }
+                required
+              />
+              <label className="parents-label" htmlFor="agree1">
+                이용 규정과 약관
+                <sup style={{ fontSize: "14px", color: "coral" }}>
+                  &nbsp;*필수
+                </sup>
+              </label>
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                name="agree"
+                id="agree11"
+                checked={agree11}
+                onChange={(e) => handleIndividualChange(e, setAgree11, "agree1")}
+                required
+              />
+              <label className="child-label" htmlFor="agree11">
+                TravelNote 예약 규정
+              </label>
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                name="agree"
+                id="agree12"
+                checked={agree12}
+                onChange={(e) => handleIndividualChange(e, setAgree12, "agree1")}
+                required
+              />
+              <label className="child-label" htmlFor="agree12">
+                취소 및 이용 규정
+              </label>
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                name="agree"
+                id="agree13"
+                checked={agree13}
+                onChange={(e) => handleIndividualChange(e, setAgree13, "agree1")}
+                required
+              />
+              <label className="child-label" htmlFor="agree13">
+                취소 및 환불정책
+              </label>
+            </div>
+          </div>
+
+          <div className="agree-box">
+            <div>
+              <input
+                type="checkbox"
+                name="agree"
+                id="agree2"
+                checked={agree2}
+                onChange={(e) =>
+                  handleAgree2Change(e, setAgree2, setAgree21, setAgree22)
+                }
+                required
+              />
+              <label className="parents-label" htmlFor="agree2">
+                개인정보 수집 및 이용 동의
+                <sup style={{ fontSize: "14px", color: "coral" }}>
+                  &nbsp;*필수
+                </sup>
+              </label>
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                name="agree"
+                id="agree21"
+                checked={agree21}
+                onChange={(e) => handleIndividualChange(e, setAgree21, "agree2")}
+                required
+              />
+              <label className="child-label" htmlFor="agree21">
+                개인정보 수집 및 이용
+              </label>
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                name="agree"
+                id="agree22"
+                checked={agree22}
+                onChange={(e) => handleIndividualChange(e, setAgree22, "agree2")}
+                required
+              />
+              <label className="child-label" htmlFor="agree22">
+                개인정보 수집 및 이용
+              </label>
+            </div>
+          </div>
+
+          <div className="agree-box">
+            <div>
+              <input
+                type="checkbox"
+                name="agree"
+                id="agree3"
+                checked={agree3}
+                onChange={(e) =>
+                  handleAgree3Change(e, setAgree3, setAgree31, setAgree32)
+                }
+              />
+              <label className="parents-label" htmlFor="agree3">
+                광고성 수신 동의
+                <sup style={{ fontSize: "14px", color: "#1363df" }}>
+                  &nbsp;(선택)
+                </sup>
+              </label>
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                name="agree"
+                id="agree31"
+                checked={agree31}
+                onChange={(e) => handleIndividualChange(e, setAgree31, "agree3")}
+              />
+              <label className="child-label" htmlFor="agree31">
+                SMS 수신 동의
+              </label>
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                name="agree"
+                id="agree32"
+                checked={agree32}
+                onChange={(e) => handleIndividualChange(e, setAgree32, "agree3")}
+              />
+              <label className="child-label" htmlFor="agree32">
+                이메일 수신 동의
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ margin: "50px 0px" }} className="line"></div>
+
+        <div>
+          <button
+            onClick={handlePayment}
+            style={{ padding: "23.5px 0", width: "100%", display: "block" }}
+            className="btn-primary lg"
+          >
+            결제하기
+          </button>
+        </div>
+        <ChannelTalk />
+        {isLogin ? (
+          <button className="channelTalkBtn">
+            <img src="/image/logo2.png"></img>
+          </button>
+        ) : (
+          ""
+        )}
       </div>
-
-      <div style={{ margin: "50px 0px" }} className="line"></div>
-
-      <div className="draggable">
-        <h2>
-          <span>
-            <i className="fa-solid fa-circle-check"></i>
-          </span>
-          <span>TravelNote 이용 동의</span>
-        </h2>
-        <div className="allAgree">
-          <input
-            type="checkbox"
-            id="allAgree"
-            checked={allChecked}
-            onChange={handleAllAgreeChange}
-          />
-          <label className="parents-label" htmlFor="allAgree">
-            전체 약관 동의
-          </label>
-        </div>
-
-        <div style={{ margin: "30px 0" }} className="line"></div>
-
-        <div className="agree-box">
-          <div>
-            <input
-              type="checkbox"
-              name="agree"
-              id="agree1"
-              checked={agree1}
-              onChange={(e) =>
-                handleAgree1Change(
-                  e,
-                  setAgree1,
-                  setAgree11,
-                  setAgree12,
-                  setAgree13
-                )
-              }
-              required
-            />
-            <label className="parents-label" htmlFor="agree1">
-              이용 규정과 약관
-              <sup style={{ fontSize: "14px", color: "coral" }}>
-                &nbsp;*필수
-              </sup>
-            </label>
-          </div>
-          <div>
-            <input
-              type="checkbox"
-              name="agree"
-              id="agree11"
-              checked={agree11}
-              onChange={(e) => handleIndividualChange(e, setAgree11, "agree1")}
-              required
-            />
-            <label className="child-label" htmlFor="agree11">
-              TravelNote 예약 규정
-            </label>
-          </div>
-          <div>
-            <input
-              type="checkbox"
-              name="agree"
-              id="agree12"
-              checked={agree12}
-              onChange={(e) => handleIndividualChange(e, setAgree12, "agree1")}
-              required
-            />
-            <label className="child-label" htmlFor="agree12">
-              취소 및 이용 규정
-            </label>
-          </div>
-          <div>
-            <input
-              type="checkbox"
-              name="agree"
-              id="agree13"
-              checked={agree13}
-              onChange={(e) => handleIndividualChange(e, setAgree13, "agree1")}
-              required
-            />
-            <label className="child-label" htmlFor="agree13">
-              취소 및 환불정책
-            </label>
-          </div>
-        </div>
-
-        <div className="agree-box">
-          <div>
-            <input
-              type="checkbox"
-              name="agree"
-              id="agree2"
-              checked={agree2}
-              onChange={(e) =>
-                handleAgree2Change(e, setAgree2, setAgree21, setAgree22)
-              }
-              required
-            />
-            <label className="parents-label" htmlFor="agree2">
-              개인정보 수집 및 이용 동의
-              <sup style={{ fontSize: "14px", color: "coral" }}>
-                &nbsp;*필수
-              </sup>
-            </label>
-          </div>
-          <div>
-            <input
-              type="checkbox"
-              name="agree"
-              id="agree21"
-              checked={agree21}
-              onChange={(e) => handleIndividualChange(e, setAgree21, "agree2")}
-              required
-            />
-            <label className="child-label" htmlFor="agree21">
-              개인정보 수집 및 이용
-            </label>
-          </div>
-          <div>
-            <input
-              type="checkbox"
-              name="agree"
-              id="agree22"
-              checked={agree22}
-              onChange={(e) => handleIndividualChange(e, setAgree22, "agree2")}
-              required
-            />
-            <label className="child-label" htmlFor="agree22">
-              개인정보 수집 및 이용
-            </label>
-          </div>
-        </div>
-
-        <div className="agree-box">
-          <div>
-            <input
-              type="checkbox"
-              name="agree"
-              id="agree3"
-              checked={agree3}
-              onChange={(e) =>
-                handleAgree3Change(e, setAgree3, setAgree31, setAgree32)
-              }
-            />
-            <label className="parents-label" htmlFor="agree3">
-              광고성 수신 동의
-              <sup style={{ fontSize: "14px", color: "#1363df" }}>
-                &nbsp;(선택)
-              </sup>
-            </label>
-          </div>
-          <div>
-            <input
-              type="checkbox"
-              name="agree"
-              id="agree31"
-              checked={agree31}
-              onChange={(e) => handleIndividualChange(e, setAgree31, "agree3")}
-            />
-            <label className="child-label" htmlFor="agree31">
-              SMS 수신 동의
-            </label>
-          </div>
-          <div>
-            <input
-              type="checkbox"
-              name="agree"
-              id="agree32"
-              checked={agree32}
-              onChange={(e) => handleIndividualChange(e, setAgree32, "agree3")}
-            />
-            <label className="child-label" htmlFor="agree32">
-              이메일 수신 동의
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div style={{ margin: "50px 0px" }} className="line"></div>
-
-      <div>
-        <button
-          onClick={handlePayment}
-          style={{ padding: "23.5px 0", width: "100%", display: "block" }}
-          className="btn-primary lg"
-        >
-          결제하기
-        </button>
-      </div>
-      <ChannelTalk />
-      {isLogin ? (
-        <button className="channelTalkBtn">
-          <img src="/image/logo2.png"></img>
-        </button>
-      ) : (
-        ""
-      )}
     </section>
   );
 };

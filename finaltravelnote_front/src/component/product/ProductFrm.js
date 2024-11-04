@@ -1,10 +1,9 @@
-import { Switch } from "@mui/material";
+import { Switch as AntSwitch } from "antd"; // Ant Design Switch를 import
 import { useEffect, useRef, useState } from "react";
 import "./product.css";
-import Swal from "sweetalert2";
-import axios from "axios";
 
 const ProductFrm = (props) => {
+  // console.log(props);
   const backServer = process.env.REACT_APP_BACK_SERVER;
   const loginEmail = props.loginEmail;
   // 상품고유번호
@@ -42,6 +41,8 @@ const ProductFrm = (props) => {
   const setProductFileList = props.setProductFileList;
   const delProductFileNo = props.delProductFileNo;
   const setDelProductFileNo = props.setDelProductFileNo;
+
+  // console.log("productStatus:", productStatus); // 상태 변경 로그
 
   // ref로 썸네일 이미지 클릭 시 숨겨놓은 파일첨부 input과 연결
   const thumbnailRef = useRef(null);
@@ -81,26 +82,22 @@ const ProductFrm = (props) => {
   };
 
   useEffect(() => {
-    console.log("Updated productStatus:", productStatus);
+    // console.log("productStatus가 변경되었습니다:", productStatus);
   }, [productStatus]);
 
-  console.log("초기 productStatus:", productStatus);
-
-  // 스위치 상태 변경 처리
-  const handleChange = (event) => {
-    const newStatus = event.target.checked ? 1 : 2;
-    console.log("스위치 상태:", event.target.checked); // 상태 확인
-
-    // SweetAlert2 알림
-    Swal.fire({
-      title: "판매 상태 변경",
-      text: newStatus === 1 ? "상품이 판매 중으로 변경되었습니다." : "상품이 판매 중지로 변경되었습니다.",
-      icon: "success",
-      confirmButtonText: "확인",
-    });
-
-    setProductStatus(newStatus); // 상태 변경
+  // 상품 판매여부 입력
+  const handleChange = (checked) => {
+    const newStatus = checked ? 1 : 2; // true면 1(판매중), false면 2(판매중지)
+    // console.log("Switch 상태 변경됨:", newStatus);
+    setProductStatus(newStatus);
   };
+
+  // const handleChange = (e) => {
+  //   console.log("Switch clicked:", e.target.checked); // 추가된 로그
+  //   setProductStatus(e.target.checked ? 1 : 2); // Switch 값에 따라 상품 상태를 1 또는 2으로 설정
+  // };
+  // console.log("productStatus : ", productStatus);
+  // console.log("delProductFileNo : ", delProductFileNo);
 
   return (
     <div className="mt">
@@ -144,16 +141,17 @@ const ProductFrm = (props) => {
           </div> */}
 
           <div className="input-item">
-            <label htmlFor="productSubName">판매 여부</label>
+            <label htmlFor="productStatus">판매 여부</label>
             <p>{productStatus === 1 ? "판매 중" : "판매 중지"}</p>
-            <Switch
-              checked={productStatus === 1} // productStatus가 1인 경우 체크됨
-              onChange={handleChange} // 상태 변경 함수 호출
-              inputProps={{ "aria-label": "controlled" }}
+            <AntSwitch
+              checked={productStatus === 1} // 1일 때 체크
+              onChange={handleChange} // 상태 변경 시 호출되는 함수
+            // checkedChildren="판매중"
+            // unCheckedChildren="판매중지"
             />
           </div>
 
-          <div style={{ margin: "31.5px 0" }} className="input-item">
+          <div className="input-item productName">
             <label htmlFor="productName">상품명</label>
             <input
               type="text"
@@ -179,7 +177,6 @@ const ProductFrm = (props) => {
 
       <div
         className="product-file"
-        style={{ width: "90%", margin: "150px auto" }}
       >
         <div className="input-item">
           <label htmlFor="productFile">

@@ -17,6 +17,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Rating } from "@mui/material";
+import "./product.css";
+import "./common2.css";
 
 const sortOptions = [
   { label: "좋아요순", value: "mostLiked" },
@@ -94,75 +96,76 @@ const ProductList = () => {
 
   return (
     <section style={{ margin: "50px auto" }} className="section product-list">
-      {/* 검색창 */}
-      <div className="product-search-box">
-        <input
-          id="product-search"
-          type="text"
-          value={keyword}
-          onChange={handleSearchChange}
-          onKeyUp={(e) => {
-            if (e.key === "Enter" || e.keyCode === 13) {
-              handleSearchClick();
-            }
-          }}
-          autoComplete="off"
-          placeholder="상품명 검색"
-        />
-        <button id="product-search-button" onClick={handleSearchClick}>
-          검색
-        </button>
-      </div>
-
-      {isLogin === true && userType === 2 ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Link to="/product/write" className="btn-primary writeBtn">
-            상품 등록
-          </Link>
-          {/* 정렬을 위한 Select 대신 직접적인 클릭 이벤트 처리 */}
-          <FormControl sx={{ m: 1, width: "150px" }}>
-            <Select
-              displayEmpty
-              input={<OutlinedInput />}
-              defaultValue="" // 기본값 설정
-              sx={{
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#1363df", // 여기에 원하는 색상을 지정
-                  borderRadius: "12px", // border-radius 값 변경
-                },
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#1363df", // hover 시 색상을 변경하고 싶을 때
-                },
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#1363df", // 포커스 시 색상을 변경하고 싶을 때
-                },
-              }}
-              renderValue={() => <em>정렬 기준 선택</em>}
-            >
-              {sortOptions.map((option) => (
-                <MenuItem
-                  key={option.value}
-                  value={option.value}
-                  onClick={() => handleSortClick(option.value)} // onClick으로 axios 요청
-                >
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+      <div className="container">
+        {/* 검색창 */}
+        <div className="product-search-box">
+          <input
+            id="product-search"
+            type="text"
+            value={keyword}
+            onChange={handleSearchChange}
+            onKeyUp={(e) => {
+              if (e.key === "Enter" || e.keyCode === 13) {
+                handleSearchClick();
+              }
+            }}
+            autoComplete="off"
+            placeholder="상품명 검색"
+          />
+          <button id="product-search-button" onClick={handleSearchClick}>
+            검색
+          </button>
         </div>
-      ) : (
-        ""
-      )}
 
-      {/* 상품 리스트 */}
-      {/* <div className="product-list-wrap">
+        {isLogin === true && userType === 2 ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Link to="/product/write" className="btn-primary writeBtn">
+              상품 등록
+            </Link>
+            {/* 정렬을 위한 Select 대신 직접적인 클릭 이벤트 처리 */}
+            <FormControl sx={{ m: 1, width: "150px" }}>
+              <Select
+                displayEmpty
+                input={<OutlinedInput />}
+                defaultValue="" // 기본값 설정
+                sx={{
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#1363df", // 여기에 원하는 색상을 지정
+                    borderRadius: "12px", // border-radius 값 변경
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#1363df", // hover 시 색상을 변경하고 싶을 때
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#1363df", // 포커스 시 색상을 변경하고 싶을 때
+                  },
+                }}
+                renderValue={() => <em>정렬 기준 선택</em>}
+              >
+                {sortOptions.map((option) => (
+                  <MenuItem
+                    key={option.value}
+                    value={option.value}
+                    onClick={() => handleSortClick(option.value)} // onClick으로 axios 요청
+                  >
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+        ) : (
+          ""
+        )}
+
+        {/* 상품 리스트 */}
+        {/* <div className="product-list-wrap">
         <ul className="posting-wrap">
           {productList.length > 0 ? (
             {
@@ -174,36 +177,37 @@ const ProductList = () => {
         </ul>
       </div> */}
 
-      <div className="product-list-wrap">
-        <ul className="posting-wrap">
-          {productList.length > 0 ? (
-            productList.map((product, i) => (
-              <ProductItem key={product.productNo} product={product} />
-            ))
-          ) : (
-            <li style={{ margin: "250px", textAlign: "center" }}>
-              <p>검색어 : [{keyword}]</p>
-              검색된 상품이 없습니다.
-            </li>
-          )}
-        </ul>
+        <div className="product-list-wrap">
+          <ul className="posting-wrap">
+            {productList.length > 0 ? (
+              productList.map((product, i) => (
+                <ProductItem key={product.productNo} product={product} />
+              ))
+            ) : (
+              <li className="no-posting-item">
+                <p>검색어 : [{keyword}]</p>
+                검색된 상품이 없습니다.
+              </li>
+            )}
+          </ul>
+        </div>
+        <div className="product-paging-wrap">
+          <PageNavi
+            pi={pi}
+            reqPage={reqPage}
+            setReqPage={setReqPage}
+            keyword={keyword}
+          />
+        </div>
+        <ChannelTalk />
+        {isLogin ? (
+          <button className="channelTalkBtn">
+            <img src="/image/logo2.png"></img>
+          </button>
+        ) : (
+          ""
+        )}
       </div>
-      <div className="product-paging-wrap">
-        <PageNavi
-          pi={pi}
-          reqPage={reqPage}
-          setReqPage={setReqPage}
-          keyword={keyword}
-        />
-      </div>
-      <ChannelTalk />
-      {isLogin ? (
-        <button className="channelTalkBtn">
-          <img src="/image/logo2.png"></img>
-        </button>
-      ) : (
-        ""
-      )}
     </section>
   );
 };
@@ -254,14 +258,14 @@ const ProductItem = ({ product }) => {
       const newLikeStatus = !productLike; // 좋아요 상태 토글
       const request = newLikeStatus
         ? axios.post(
-            // 리뷰 좋아요
-            `${backServer}/product/${productNo}/insertWishLike/${loginEmail}`,
-            { productLike: 1 }
-          )
+          // 리뷰 좋아요
+          `${backServer}/product/${productNo}/insertWishLike/${loginEmail}`,
+          { productLike: 1 }
+        )
         : axios.delete(
-            // 리뷰 좋아요 취소
-            `${backServer}/product/${productNo}/deleteWishLike/${loginEmail}?productLike=1`
-          );
+          // 리뷰 좋아요 취소
+          `${backServer}/product/${productNo}/deleteWishLike/${loginEmail}?productLike=1`
+        );
 
       request
         .then((res) => {
@@ -285,7 +289,7 @@ const ProductItem = ({ product }) => {
   };
 
   return (
-    <li style={{ marginBottom: "25px" }} className="posting-list-item">
+    <li className="posting-list-item">
       <div
         className="posting-info-left"
         onClick={() => {
@@ -325,7 +329,6 @@ const ProductItem = ({ product }) => {
       <div className="posting-info-right">
         <div className="posting-img">
           <img
-            style={{ width: "150px" }}
             src={
               product.productThumb
                 ? `${backServer}/product/thumb/${product.productThumb}`
@@ -333,11 +336,12 @@ const ProductItem = ({ product }) => {
             }
           />
         </div>
-        <div className="like-icon-box" onClick={handleLikeToggle}>
+        <div className="like-icon-box">
           <span
             className={
               productLike ? "product-like-checked" : "product-like-unchecked"
             }
+            onClick={handleLikeToggle}
           >
             <i
               className={

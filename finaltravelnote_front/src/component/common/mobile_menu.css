@@ -1,0 +1,155 @@
+:root {
+    --main-color: #1363df;
+    --point-color: #c57cff;
+    --sub-color: #47b5ff;
+    --base-color: #dff6ff;
+    --background-color: #eef2f3;
+    --text-color: #333;
+    --black: #000;
+    --white: #fff;
+    --gray: #ddd;
+    --gray2: #777;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mobile_menu_wrap {
+    position: relative;
+    width: 100%;
+}
+
+#main-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 100%;
+    max-width: 260px;
+    background-color: rgba(255, 255, 255, 0.8);
+    overflow-x: hidden;
+    transition: 0.5s;
+    z-index: 1000;
+}
+
+.menu {
+    margin-top: 130px;
+    padding: 0;
+}
+
+.menu ul>li>a {
+    display: block;
+    padding: 16px 20px;
+    color: var(--white);
+    text-decoration: none;
+    font-size: 18px;
+    transition: background-color 0.3s;
+}
+
+.menu ul>li>div {
+    display: block;
+    padding: 16px 20px;
+    color: var(--white);
+    text-decoration: none;
+    font-size: 18px;
+    transition: background-color 0.3s;
+}
+
+.mobile-user-menu>li>a {
+    background-color: var(--sub-color);
+}
+
+.main-menu>li>a {
+    background-color: var(--sub-color);
+    /* border-bottom: 1px solid #FF0080; */
+}
+
+.main-menu>li>div {
+    background-color: var(--sub-color);
+    /* border-bottom: 1px solid #FF0080; */
+}
+
+.main-menu>li:hover>a {
+    background-color: var(--main-color);
+}
+
+.sub-menu {
+    display: none;
+    /* padding-left: 20px; */
+}
+
+.menu .sub-menu>li>.sub-menu>li {
+    border-left: 10px solid var(--white);
+}
+
+.main-menu>li:hover .sub-menu {
+    display: block;
+}
+
+.sub-menu>li>a {
+    background-color: var(--text-color);
+    border-left: 10px solid var(--text-color);
+    padding: 12px 20px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+/* .sub-menu>li:hover>a {
+    border-color: var(--sub-color);
+} */
+
+.more {
+    position: absolute;
+    right: 20px;
+    font-size: 20px;
+    transition: transform 0.4s;
+}
+
+.main-menu>li:hover .more {
+    transform: rotate(45deg);
+}
+
+.menu-btn {
+    width: 60px;
+    position: absolute;
+    top: -23px;
+    right: 50px;
+    /* background-color: var(--main-color); */
+    font-size: 24px;
+    z-index: 900;
+    cursor: pointer;
+}
+
+/* .menu-btn>span {
+    color: var(--white);
+} */
+
+.menu-btn,
+.close-btn,
+.menu-btn:hover,
+.close-btn:hover {
+    background-color: transparent;
+}
+
+.menu-btn>span,
+.close-btn>span {
+    color: var(--text-color);
+}
+
+.close-btn {
+    position: absolute;
+    width: 60px;
+    top: 72.25px;
+    right: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    /* color: var(--white);
+    background-color: var(--gray2); */
+}
+
+/* .close-btn:hover {
+    background-color: var(--gray);
+} */

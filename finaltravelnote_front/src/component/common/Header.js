@@ -10,26 +10,24 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import logo from "./images/mainImage/logo2.jpg";
+import MobileMenu from "./MobileMenu";
 
 const Header = () => {
   return (
     <header className="header">
-      <div data-header-container>
+      <div>
         {" "}
         <div className="logo">
-          <Link to="/">
+          <Link style={{ margin: "0", padding: "0", display: "block" }} to="/">
             <img
               src={logo}
               alt="logo"
-              style={{
-                width: "250px",
-                height: "150px",
-              }}
             />
           </Link>
         </div>
         <MainNavi />
         <HeaderLink />
+        <MobileMenu />
       </div>
     </header>
   );

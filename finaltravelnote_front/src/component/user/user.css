@@ -11,9 +11,12 @@
 
 /* 포커스 상태 */
 .user-input:focus {
-  border-color: #1e90ff; /* 파란색 테두리 */
-  background-color: #fff; /* 배경색 밝게 */
-  box-shadow: 0 0 8px rgba(30, 144, 255, 0.4); /* 부드러운 그림자 */
+  border-color: #1e90ff;
+  /* 파란색 테두리 */
+  background-color: #fff;
+  /* 배경색 밝게 */
+  box-shadow: 0 0 8px rgba(30, 144, 255, 0.4);
+  /* 부드러운 그림자 */
 }
 
 /* 비활성화 상태 */
@@ -29,6 +32,7 @@
   margin: 0 auto;
   font-family: "TTLaundryGothicB";
 }
+
 .join-frm {
   margin: 0 auto;
   background-color: var(--base-color);
@@ -36,39 +40,48 @@
   border-radius: 20px;
   padding: 15px;
 }
+
 .logo-box {
   width: 200px;
   height: 200px;
   background-color: var(--main-color);
   margin: 10px auto;
 }
+
 .select-box {
   text-align: center;
   width: 200px;
   margin: 0 auto;
 }
-.select-box > label {
+
+.select-box>label {
   padding: 5px;
 }
+
 .input-group {
   margin: 0 auto;
   width: 600px;
   text-align: center;
   margin-bottom: 15px;
 }
+
 .input-box {
   height: 40px;
 }
+
 .check {
   display: none;
 }
+
 .label-box {
   margin-bottom: 10px;
 }
-.label-box > label {
+
+.label-box>label {
   font-weight: 900;
 }
-.input-box > input {
+
+.input-box>input {
   width: 60%;
   height: 80%;
 }
@@ -80,38 +93,47 @@
   text-align: center;
 }
 
-.button-box > button {
+.button-box>button {
   width: 100px;
   margin: 0px 10px;
 }
+
 .verify-btn {
   width: 120px !important;
 }
+
 .verify-box {
   margin-top: 20px;
 }
+
 .join-btn-box {
   width: 400px;
   text-align: center;
   margin: 0 auto;
 }
-.join-btn-box > button {
+
+.join-btn-box>button {
   font-family: "SUITE-Regular";
   width: 200px;
   font-weight: 700;
 }
+
 .valid {
   color: green;
 }
+
 .invalid {
   color: red;
 }
+
 .hidden {
   display: none;
 }
+
 .pw-group {
   margin-bottom: 15px;
 }
+
 .login-box {
   width: 600px;
   height: 500px;
@@ -120,24 +142,35 @@
   padding: 20px;
   border-radius: 20px;
 }
+
 .img-box {
   width: 150px;
   height: 150px;
   margin: 0 auto;
   border-radius: 8px;
 }
+
+.user-logo {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+}
+
 .login-input-group {
   margin: 0 auto;
   text-align: center;
   margin-top: 15px;
 }
+
 .login-btn-box {
   margin: 0 auto;
   text-align: center;
 }
+
 .login-btn {
   width: 336px;
 }
+
 .menu-box {
   width: 336px;
   margin: 0 auto;
@@ -146,27 +179,28 @@
   margin-bottom: 10px;
   justify-content: space-between;
 }
+
 .naver-login-box {
   width: 140px;
   margin: 0 auto;
 }
+
 .naver-login-btn {
   background-color: transparent;
 }
+
 .naver-login-btn:hover {
   background-color: transparent;
 }
+
 .naver-login-img {
   width: 100px;
 }
-.logo {
-  width: 150px;
-  height: 150px;
-  border-radius: 8px;
-}
+
 .page-title {
   text-align: center;
 }
+
 .email-info-wrap {
   margin: 0 auto;
   margin-top: 15px;
@@ -177,6 +211,7 @@
   text-align: center;
   border-radius: 20px;
 }
+
 .find-email-box {
   width: 600px;
   margin: 0 auto;
@@ -184,6 +219,7 @@
   padding: 20px;
   border-radius: 20px;
 }
+
 .hidden {
   display: none;
 }
@@ -221,7 +257,7 @@
   border-radius: 10px;
 }
 
-.menu > ul > li {
+.menu>ul>li {
   padding: 10px;
 }
 
@@ -231,12 +267,15 @@
   font-family: "TTLaundryGothicB";
   margin-bottom: 30px;
 }
+
 .change-pw-btn {
   width: 360px;
 }
+
 .btn-box {
   padding: 20px;
 }
+
 .change-info-btn {
   margin-right: 20px;
 }
@@ -249,30 +288,35 @@
   background-color: var(--background-color);
   color: #333;
 }
+
 .disable-btn:hover {
   background-color: var(--background-color);
 }
+
 .mypage-page-title {
   text-align: center;
   margin-bottom: 50px;
 }
 
-.personalboard-list-wrap > table {
+.personalboard-list-wrap>table {
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
   font-size: 20px;
   text-align: center;
 }
-.personalboard-list-wrap > th,
+
+.personalboard-list-wrap>th,
 td {
   padding: 12px 15px;
 }
-.personalboard-list-wrap > th {
+
+.personalboard-list-wrap>th {
   background-color: var(--base-color);
   font-weight: bold;
   color: #333;
 }
+
 .personalboard-answer {
   width: 100%;
   min-height: 400px;
@@ -284,23 +328,27 @@ td {
   outline: none;
   transition: border-color 0.3s ease;
 }
+
 .manage-board-wrap {
   padding: 20px;
 }
+
 .report-board-list {
   width: 100%;
   margin-top: 20px;
 }
-.report-board-list > tr,
+
+.report-board-list>tr,
 th,
 td {
   text-align: center;
 }
 
-.myboard-list > table {
+.myboard-list>table {
   width: 100%;
   margin-top: 20px;
 }
+
 .myboard-page-navi {
   margin-bottom: 20px;
 }
@@ -318,7 +366,7 @@ td {
   margin: 0 auto;
 }
 
-.myreview-list > td {
+.myreview-list>td {
   width: 200px;
 }
 
@@ -329,6 +377,7 @@ td {
   width: 150px;
   margin: 0 auto;
 }
+
 .personalboard-title {
   white-space: nowrap;
   overflow: hidden;
@@ -337,6 +386,7 @@ td {
   margin: 0 auto;
   cursor: pointer;
 }
+
 .reservation-item {
   width: 80%;
   background-color: var(--background-color);
@@ -346,14 +396,17 @@ td {
   display: flex;
   align-items: center;
 }
+
 .reservation-thum {
   margin-right: 15px;
 }
+
 .reservation-img {
   width: 100px;
   height: 100px;
   border-radius: 20px;
 }
+
 .reservation-table {
   margin: 0 auto;
 }
@@ -393,27 +446,34 @@ td {
   justify-content: space-between;
   margin: 0 auto;
 }
+
 .myproduct-content {
   width: 200px;
   height: 100%;
 }
+
 .myproduct-thumb {
   width: 200px;
   height: 200px;
 }
+
 .myproduct-img {
   width: 100%;
   height: 100%;
 }
-.myproduct-content > table {
+
+.myproduct-content>table {
   width: 100%;
 }
-.myproduct-content > table > tr {
+
+.myproduct-content>table>tr {
   text-align: center;
 }
-.mypayment-content > table {
+
+.mypayment-content>table {
   width: 100%;
 }
+
 .paymentInfo-table {
   background-color: var(--background-color);
   margin: 0 auto;
@@ -423,7 +483,7 @@ td {
   align-items: center;
 }
 
-.paymentInfo-table > table {
+.paymentInfo-table>table {
   border-collapse: collapse;
   width: 80%;
   border-radius: 10px;
@@ -431,6 +491,7 @@ td {
   margin: 0 auto;
   margin-bottom: 20px;
 }
+
 .paymentInfo-table th,
 .paymentInfo-table td {
   border: 1px solid #ddd;
@@ -512,6 +573,7 @@ td {
   box-sizing: border-box;
   border-radius: 10px;
 }
+
 .myreviewboard-thumb {
   width: 100px;
   height: 100px;
@@ -519,7 +581,7 @@ td {
   border-radius: 10px;
 }
 
-.myreviewboard-thumb > img {
+.myreviewboard-thumb>img {
   width: 100%;
   height: 100%;
   border-radius: 10px;

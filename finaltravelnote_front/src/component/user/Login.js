@@ -76,7 +76,7 @@ const Login = () => {
     <section className="section">
       <div className="login-box">
         <div className="img-box">
-          <img className="logo" src="/image/logo1.png"></img>
+          <img className="user-logo" src="/image/logo1.png"></img>
         </div>
         <form
           onSubmit={(e) => {

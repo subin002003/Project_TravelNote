@@ -42,3 +42,6 @@ npm install @react-google-maps/api --force
 npm install @react-google-maps/api@latest --force
 npm list @react-google-maps/api --force
 
+
+2024-10-19 5:45 이수빈
+npm install antd --force

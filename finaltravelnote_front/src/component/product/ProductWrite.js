@@ -99,53 +99,54 @@ const ProductWrite = () => {
   };
   return (
     <section className="section sec">
-      <div style={{ textAlign: "center" }} className="section-title">
-        상품 등록
-      </div>
-      <form
-        className="product-write-frm"
-        onSubmit={(e) => {
-          e.preventDefault();
-          writeProduct();
-        }}
-      >
-        <ProductFrm
-          loginEmail={loginEmail}
-          productName={productName}
-          setProductName={inputProductName}
-          productSubName={productSubName}
-          setProductSubName={inputProductSubName}
-          thumbnail={thumbnail}
-          setThumbnail={setThumbnail}
-          productPrice={productPrice}
-          setProductPrice={inputProductPrice}
-          productLatitude={productLatitude}
-          setProductLatitude={inputProductLatitude}
-          productLongitude={productLongitude}
-          setProductLongitude={inputProductLongitude}
-          productStatus={productStatus}
-          setProductStatus={setProductStatus}
-          productFile={productFile}
-          setProductFile={setProductFile}
-        />
-
-        <div
-          style={{ width: "90%", margin: "150px auto", marginBottom: "0" }}
-          className="product-info-wrap"
+      <div className="container">
+        <div style={{ textAlign: "center" }} className="section-title">
+          상품 등록
+        </div>
+        <form
+          className="product-write-frm"
+          onSubmit={(e) => {
+            e.preventDefault();
+            writeProduct();
+          }}
         >
-          <label>본문 내용</label>
-          <ToastEditor
-            productInfo={productInfo}
-            setProductInfo={setProductInfo}
-            type={0}
+          <ProductFrm
+            loginEmail={loginEmail}
+            productName={productName}
+            setProductName={inputProductName}
+            productSubName={productSubName}
+            setProductSubName={inputProductSubName}
+            thumbnail={thumbnail}
+            setThumbnail={setThumbnail}
+            productPrice={productPrice}
+            setProductPrice={inputProductPrice}
+            productLatitude={productLatitude}
+            setProductLatitude={inputProductLatitude}
+            productLongitude={productLongitude}
+            setProductLongitude={inputProductLongitude}
+            productStatus={productStatus}
+            setProductStatus={setProductStatus}
+            productFile={productFile}
+            setProductFile={setProductFile}
           />
-        </div>
-        <div className="buttonBox">
-          <button type="submit" className="btn-primary lg">
-            등록
-          </button>
-        </div>
-      </form>
+
+          <div
+            className="product-info-wrap"
+          >
+            <label>본문 내용</label>
+            <ToastEditor
+              productInfo={productInfo}
+              setProductInfo={setProductInfo}
+              type={0}
+            />
+          </div>
+          <div className="buttonBox">
+            <button type="submit" className="btn-primary lg">
+              등록
+            </button>
+          </div>
+        </form>
+      </div>
     </section>
   );
 };

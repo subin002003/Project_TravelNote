@@ -462,7 +462,7 @@ const JoinUser = () => {
             </label>
           </div>
           <div style={{ marginBottom: "15px" }} className="img-box">
-            <img className="logo" src="/image/logo1.png"></img>
+            <img className="user-logo" src="/image/logo1.png"></img>
           </div>
           <div className="input-group">
             <div className="label-box">

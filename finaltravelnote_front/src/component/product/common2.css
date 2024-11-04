@@ -1,0 +1,264 @@
+@charset "utf-8";
+
+/* 모바일 (최대 480px) */
+@media all and (max-width: 480px) {
+    .container {
+        padding: 0px 15px !important;
+    }
+
+    .mt {
+        margin-top: 50px !important;
+    }
+
+    .mb {
+        margin-top: 50px !important;
+    }
+
+    /* .sec {
+            margin: 0px auto 70px auto;
+        } */
+
+    /* 헤더 */
+    .logo {
+        width: 57%;
+    }
+
+    .logo>a>img {
+        width: 150px;
+    }
+
+    .menu-btn,
+    .close-btn {
+        right: 15px;
+        background-color: transparent;
+    }
+
+    .menu-btn>span,
+    .close-btn>span {
+        color: var(--text-color);
+    }
+
+    .close-btn {
+        top: 35.25px;
+    }
+
+    /* list */
+    .posting-list-item {
+        margin-bottom: 40px;
+    }
+
+    .no-posting-item {
+        margin: 50px;
+    }
+
+    .posting-info-left {
+        width: 100% !important;
+        margin-bottom: 10px;
+    }
+
+    .posting-info-right {
+        width: 100% !important;
+    }
+
+    .posting-img {
+        width: 100%;
+        height: auto;
+    }
+
+    .posting-img>img {
+        width: 100%;
+        height: 230px;
+    }
+
+    /* view */
+    .sec {
+        margin: 25px auto;
+    }
+
+    .section-title {
+        margin-bottom: 15px;
+    }
+
+    .product-view-wrap {
+        margin-top: 0;
+    }
+
+    .swiper-slide img {
+        height: 300px !important;
+        object-fit: cover !important;
+    }
+
+    .date-picker,
+    .people,
+    .reservation-btn {
+        border-radius: 15px !important;
+    }
+
+    .date-picker,
+    .people {
+        width: 100%;
+        height: 45px;
+    }
+
+    .date-picker {
+        margin-bottom: 15px;
+    }
+
+    .toastui-editor-contents img {
+        width: 100% !important;
+    }
+
+    .posting-review-info {
+        margin-bottom: 5px;
+    }
+
+    span.space,
+    span.review-date {
+        display: none;
+    }
+
+    /* write */
+    .product-write-frm .product-info-wrap1 {
+        width: 100%;
+        display: block;
+    }
+
+    .product-thumb-wrap {
+        width: 100%;
+        height: 100%;
+    }
+
+    .product-input-wrap {
+        margin-top: 25px;
+        width: 100%;
+    }
+
+    .input-item.productName {
+        margin: 25px 0;
+    }
+
+    .product-file {
+        width: 100%;
+        margin: 50px auto;
+    }
+
+    .product-info {
+        width: 100%;
+        display: block;
+        margin-bottom: 0 !important;
+    }
+
+    .product-info>div {
+        width: 100%;
+    }
+
+    .product-info>div:nth-child(2) {
+        margin: 25px 0;
+    }
+
+    .product-info-wrap,
+    .product-content-wrap {
+        width: 100%;
+        margin: 25px auto;
+    }
+
+    .buttonBox {
+        width: 100%;
+        margin: 25px auto 0 auto !important;
+    }
+}
+
+/* 타블렛 세로, 모바일 가로 (481px ~ 768px) */
+@media all and (max-width: 768px) {
+    .posting-info-left {
+        width: 100%;
+    }
+
+    .posting-info-right {
+        width: 100%;
+    }
+}
+
+/* 타블렛 가로, 작은 노트북 (769px ~ 1024px) */
+@media all and (max-width: 1024px) {
+    .container {
+        padding: 0px 50px;
+    }
+
+    /* 헤더 */
+    .logo {
+        width: 23%;
+    }
+
+    .nav {
+        display: none;
+    }
+
+    .user-menu {
+        display: none;
+    }
+
+    .mobile_menu_wrap {
+        display: block;
+    }
+
+    .posting-info-left {
+        width: 77%;
+    }
+
+    .posting-info-right {
+        width: 23%;
+    }
+
+    .posting-img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .posting-img>img {
+        width: 100%;
+        height: auto;
+    }
+}
+
+/* 중간 크기 데스크탑, 대형 모니터 (1025px ~ 1440px) */
+@media all and (max-width: 1440px) {
+    .container {
+        padding: 0px 50px;
+    }
+
+    /* 헤더 */
+    .logo {
+        width: 20%;
+    }
+
+    .nav {
+        width: auto;
+    }
+
+    .user-menu {
+        width: 25%;
+    }
+
+    /* 기타 스타일 */
+}
+
+/* 데스크탑 (1441px 이상) */
+@media all and (min-width: 1441px) {
+    .container {
+        padding: 0px 50px;
+    }
+
+    /* 헤더 */
+    .logo {
+        width: 20%;
+    }
+
+    .nav {
+        width: auto;
+    }
+
+    .user-menu {
+        width: 25%;
+    }
+}

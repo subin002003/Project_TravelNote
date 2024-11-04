@@ -86,10 +86,17 @@ const ProductView = () => {
   const [openReviewDialog, setOpenReviewDialog] = useState(false); // 다이얼로그 상태
 
   useEffect(() => {
-    if (!productNo || !loginEmail) {
-      // console.error("productNo 또는 loginEmail 유효하지 않습니다.");
+    // 비로그인 상태로 페이지에 접속해도 상품 정보를 볼 수 있도록
+    // 로그인 이메일을 검사하지 않음
+    if (!productNo) {
+      console.error("productNo가 유효하지 않습니다.");
       return;
     }
+
+    // if (!productNo || !loginEmail) {
+    //   console.error("productNo 또는 loginEmail 유효하지 않습니다.");
+    //   return;
+    // }
 
     const request = loginEmail
       ? axios.get(
@@ -395,332 +402,329 @@ const ProductView = () => {
 
   return (
     <section className="section sec product-view-wrap">
-      <div className="product-view-content">
-        <div className="product-view-info">
-          <div className="product-thumbnail-swiper">
-            <Swiper
-              modules={[Navigation, Pagination, Autoplay]}
-              slidesPerView={1}
-              pagination={{
-                el: ".swiper-pagination",
-                type: "fraction",
-                clickable: true,
-              }}
-              navigation={{
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-              }}
-              autoplay={{ delay: 2500 }}
-            >
-              {productFileList && productFileList.length > 0 ? (
-                productFileList.map((file, i) => (
-                  <SwiperSlide key={"file-" + i}>
-                    <img
-                      src={`${backServer}/product/${file.filepath}`}
-                      alt={`Slide ${i}`}
-                      style={{
-                        height: "780px",
-                        width: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
+      <div className="container">
+        <div className="product-view-content">
+          <div style={{ marginTop: "0" }} className="sec product-view-info">
+            <div className="product-thumbnail-swiper">
+              <Swiper
+                modules={[Navigation, Pagination, Autoplay]}
+                slidesPerView={1}
+                pagination={{
+                  el: ".swiper-pagination",
+                  type: "fraction",
+                  clickable: true,
+                }}
+                navigation={{
+                  nextEl: ".swiper-button-next",
+                  prevEl: ".swiper-button-prev",
+                }}
+                autoplay={{ delay: 2500 }}
+              >
+                {productFileList && productFileList.length > 0 ? (
+                  productFileList.map((file, i) => (
+                    <SwiperSlide key={"file-" + i}>
+                      <img
+                        src={`${backServer}/product/${file.filepath}`}
+                        alt={`Slide ${i}`}
+                      />
+                    </SwiperSlide>
+                  ))
+                ) : (
+                  <SwiperSlide>
+                    <img src="/image/default_img.png" alt="기본 이미지" />
                   </SwiperSlide>
-                ))
-              ) : (
-                <SwiperSlide>
-                  <img src="/image/default_img.png" alt="기본 이미지" />
-                </SwiperSlide>
-              )}
+                )}
 
-              {/* Navigation 버튼 추가 */}
-              <div className="swiper-button-next"></div>
-              <div className="swiper-button-prev"></div>
-              {/* Pagination 추가 */}
-              <div className="swiper-pagination"></div>
-            </Swiper>
-          </div>
-          <div className="product-view-preview">
-            {/* 상품 정보 출력 */}
-            <h2>{product.productName}</h2>
-            <p>{product.productSubName}</p>
-            {/* <p>찜 갯수: {product.wishCount}</p>
+                {/* Navigation 버튼 추가 */}
+                <div className="swiper-button-next"></div>
+                <div className="swiper-button-prev"></div>
+                {/* Pagination 추가 */}
+                <div className="swiper-pagination"></div>
+              </Swiper>
+            </div>
+            <div className="product-view-preview">
+              {/* 상품 정보 출력 */}
+              <h2>{product.productName}</h2>
+              <p>{product.productSubName}</p>
+              {/* <p>찜 갯수: {product.wishCount}</p>
             <p>리뷰 별점: {product.reviewRating}</p> */}
-          </div>
-        </div>
-
-        <div className="line"></div>
-
-        <div className="sec product-view-reservation">
-          <h3 className="section-title">여행 예약</h3>
-
-          <DateRangePickerComponent onDateRangeChange={handleDateRangeChange} />
-
-          <div className="people">
-            <button className="btn-primary sm" onClick={minus}>
-              -
-            </button>
-            <input
-              type="number"
-              id="people"
-              value={people}
-              style={{
-                margin: "0 7px",
-                // width: "29px",
-                height: "28px",
-                textAlign: "center",
-                border: "none",
-                backgroundColor: "transparent",
-              }}
-              readOnly
-            />
-            <button className="btn-primary sm" onClick={plus}>
-              +
-            </button>
+            </div>
           </div>
 
-          <div style={{ margin: "50px 0" }}>
-            <p>{product.productName}</p>
-            <p>{dateRange}</p>
-            <p className="price">
-              {typeof product.productPrice === "number"
-                ? `${product.productPrice.toLocaleString()}원`
-                : "가격 정보 없음"}
-            </p>
-          </div>
+          <div className="line"></div>
 
-          <div>
-            <button
-              onClick={handleReserve}
-              style={{ padding: "23.5px 0", width: "100%", display: "block" }}
-              className="btn-primary lg"
-            >
-              여행 예약하기
-            </button>
-          </div>
-        </div>
+          <div className="sec product-view-reservation">
+            <h3 className="section-title">여행 예약</h3>
 
-        <div className="line"></div>
+            <DateRangePickerComponent onDateRangeChange={handleDateRangeChange} />
 
-        <div className="sec product-content">
-          <h3 className="section-title">여행지 소개</h3>
-          <div>
-            {product.productInfo ? (
-              <Viewer initialValue={product.productInfo} />
-            ) : (
-              <p style={{ textAlign: "center", color: "gray" }}>
-                여행지 정보가 없습니다.
+            <div className="people">
+              <button className="btn-primary sm" onClick={minus}>
+                -
+              </button>
+              <input
+                type="number"
+                id="people"
+                value={people}
+                readOnly
+              />
+              <button className="btn-primary sm" onClick={plus}>
+                +
+              </button>
+            </div>
+
+            <div style={{ margin: "50px 0" }}>
+              <p>{product.productName}</p>
+              <p>{dateRange}</p>
+              <p className="price">
+                {typeof product.productPrice === "number"
+                  ? `${product.productPrice.toLocaleString()}원`
+                  : "가격 정보 없음"}
               </p>
-            )}
+            </div>
+
+            <div>
+              <button
+                className="btn-primary lg reservation-btn"
+                onClick={handleReserve}
+              >
+                여행 예약하기
+              </button>
+            </div>
+          </div>
+
+          <div className="line"></div>
+
+          <div className="sec product-content">
+            <h3 className="section-title">여행지 소개</h3>
+            <div>
+              {product.productInfo ? (
+                <Viewer initialValue={product.productInfo} />
+              ) : (
+                <p style={{ textAlign: "center", color: "gray" }}>
+                  여행지 정보가 없습니다.
+                </p>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="clear"></div>
-      <div className="line"></div>
-      <div className="clear"></div>
+        <div className="clear"></div>
+        <div className="line"></div>
+        <div className="clear"></div>
 
-      <div id="product-map" className="sec product-google-map">
-        <h3 className="section-title">지도</h3>
-        {product.productLatitude && product.productLongitude ? (
-          <GoogleMap
-            latitude={product.productLatitude}
-            longitude={product.productLongitude}
-          />
+        <div id="product-map" className="sec product-google-map">
+          <h3 className="section-title">지도</h3>
+          {product.productLatitude && product.productLongitude ? (
+            <GoogleMap
+              latitude={product.productLatitude}
+              longitude={product.productLongitude}
+            />
+          ) : (
+            <p style={{ textAlign: "center", color: "gray" }}>
+              위치 정보가 없습니다.
+            </p>
+          )}
+        </div>
+
+        <div className="clear"></div>
+        <div className="line"></div>
+
+        <div className="sec review">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "0px",
+            }}
+            className="section-title"
+          >
+            <span style={{ fontSize: "20px" }}>
+              <strong>리뷰({productReviewList.length}개)</strong>
+              {/* <strong>리뷰({reviews.length}개)</strong> */}
+            </span>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <button
+                style={{
+                  borderRadius: "10px",
+                  color: "var(--gray2)",
+                  fontSize: "16px",
+                }}
+                className="btn-secondary lg"
+                onClick={handleOpenReviewDialog} // 다이얼로그 열기
+              >
+                <span style={{ marginRight: "5px" }}>
+                  <i className="fa-solid fa-pen-to-square"></i>
+                </span>
+                리뷰 작성
+              </button>
+              {/* 정렬을 위한 Select 대신 직접적인 클릭 이벤트 처리 */}
+              {isLogin ?
+                <FormControl sx={{ m: 1, width: "150px" }}>
+                  <Select
+                    displayEmpty
+                    input={<OutlinedInput />}
+                    defaultValue="" // 기본값 설정
+                    sx={{
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#1363df", // 여기에 원하는 색상을 지정
+                        borderRadius: "12px", // border-radius 값 변경
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#1363df", // hover 시 색상을 변경하고 싶을 때
+                      },
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#1363df", // 포커스 시 색상을 변경하고 싶을 때
+                      },
+                    }}
+                    renderValue={() => <em>정렬 기준 선택</em>}
+                  >
+                    {sortOptions.map((option) => (
+                      <MenuItem
+                        key={option.value}
+                        value={option.value}
+                        onClick={() => handleSortClick(option.value)} // onClick으로 axios 요청
+                      >
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                : ""}
+            </div>
+          </div>
+
+          <div className="line" style={{ margin: "30px 0" }}></div>
+
+          {/* 리뷰 출력 */}
+          <div className="commentBox">
+            {/* 부모 리뷰에 해당하는 자식 리뷰가 하위에 오도록 출력 */}
+            {/* 부모 리뷰 출력 */}
+            <div className="posting-review-wrap">
+              <ul>
+                {productReviewList.length > 0 ? (
+                  productReviewList.map((review) => (
+                    <li className="posting-item" key={review.reviewNo}>
+                      <ReviewItem
+                        product={product}
+                        review={review}
+                        parentReviewNo={review.reviewNo} // 부모 리뷰 ID 전달
+                        onDeleteReview={handleDeleteReview} // 삭제 핸들러 전달
+                        fetchProductReviewList={fetchProductReviewList} // 여기서 전달
+                      />
+                      {/* 해당 부모 리뷰의 자식 리뷰 출력 */}
+                      <ul>
+                        {productReviewReCommentList
+                          .filter(
+                            (reComment) =>
+                              reComment.reviewCommentRef === review.reviewNo
+                          ) // 부모 리뷰 ID와 일치하는 자식 리뷰 필터링
+                          .map((reComment) => (
+                            <li className="posting-item" key={reComment.reviewNo}>
+                              <ReviewReCommentItem
+                                product={product}
+                                review={reComment}
+                                parentReviewNo={reComment.reviewNo} // 부모 리뷰 ID 전달
+                                onDeleteReview={handleDeleteReview} // 삭제 핸들러 전달
+                                fetchProductReviewList={fetchProductReviewList} // 여기서 전달
+                              // fetchProductReviewReCommentList={
+                              //   fetchProductReviewReCommentList
+                              // } // 여기서 전달
+                              />
+                            </li>
+                          ))}
+                      </ul>
+                    </li>
+                  ))
+                ) : (
+                  <li
+                    style={{
+                      margin: "150px auto",
+                      textAlign: "center",
+                      color: "gray",
+                    }}
+                  >
+                    등록된 리뷰가 없습니다.
+                  </li>
+                )}
+              </ul>
+            </div>
+            <div className="review-paging-wrap">
+              <PageNavi pi={pi} reqPage={reqPage} setReqPage={setReqPage} />
+            </div>
+          </div>
+        </div>
+
+        <div className="clear"></div>
+
+        {/* 리뷰 작성 다이얼로그 */}
+        <div className="input-review-popup">
+          <Dialog
+            open={openReviewDialog}
+            onClose={handleCloseReviewDialog}
+            PaperProps={{
+              style: { width: "800px", zIndex: "10" }, // 다이얼로그의 가로 크기를 800px로 설정
+            }}
+            maxWidth={false} // maxWidth 기본값을 사용하지 않도록 설정
+            fullWidth={true} // 다이얼로그가 지정된 너비를 채우도록 설정
+          >
+            <DialogTitle>리뷰 작성</DialogTitle>
+            <DialogContent>
+              <Review
+                productNo={productNo}
+                open={openReviewDialog}
+                handleClose={handleCloseReviewDialog}
+                fetchProductReviewList={fetchProductReviewList} // 리뷰 리스트 갱신 함수 전달
+              // fetchProductReviewReCommentList={fetchProductReviewReCommentList} // 리뷰 답글 리스트 갱신 함수 전달
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseReviewDialog} color="primary">
+                닫기
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+
+        {isLogin && userType === 2 && loginEmail === product.productWriter ? (
+          <div className="buttonBox">
+            <Link
+              className="btn-primary lg"
+              to={`/product/update/${product.productNo}`}
+            >
+              수정
+            </Link>
+            <button
+              type="button"
+              className="btn-secondary lg"
+              onClick={deleteProduct}
+            >
+              삭제
+            </button>
+          </div>
         ) : (
-          <p style={{ textAlign: "center", color: "gray" }}>
-            위치 정보가 없습니다.
-          </p>
+          ""
+        )}
+
+        <ChannelTalk />
+        {isLogin ? (
+          <button className="channelTalkBtn">
+            <img src="/image/logo2.png"></img>
+          </button>
+        ) : (
+          ""
         )}
       </div>
-
-      <div className="clear"></div>
-      <div className="line"></div>
-
-      <div className="sec review">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "0px",
-          }}
-          className="section-title"
-        >
-          <span style={{ fontSize: "20px" }}>
-            <strong>리뷰({productReviewList.length}개)</strong>
-            {/* <strong>리뷰({reviews.length}개)</strong> */}
-          </span>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <button
-              style={{
-                borderRadius: "10px",
-                color: "var(--gray2)",
-                fontSize: "16px",
-              }}
-              className="btn-secondary lg"
-              onClick={handleOpenReviewDialog} // 다이얼로그 열기
-            >
-              <span style={{ marginRight: "5px" }}>
-                <i className="fa-solid fa-pen-to-square"></i>
-              </span>
-              리뷰 작성
-            </button>
-            {/* 정렬을 위한 Select 대신 직접적인 클릭 이벤트 처리 */}
-            <FormControl sx={{ m: 1, width: "150px" }}>
-              <Select
-                displayEmpty
-                input={<OutlinedInput />}
-                defaultValue="" // 기본값 설정
-                sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#1363df", // 여기에 원하는 색상을 지정
-                    borderRadius: "12px", // border-radius 값 변경
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#1363df", // hover 시 색상을 변경하고 싶을 때
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#1363df", // 포커스 시 색상을 변경하고 싶을 때
-                  },
-                }}
-                renderValue={() => <em>정렬 기준 선택</em>}
-              >
-                {sortOptions.map((option) => (
-                  <MenuItem
-                    key={option.value}
-                    value={option.value}
-                    onClick={() => handleSortClick(option.value)} // onClick으로 axios 요청
-                  >
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </div>
-        </div>
-
-        <div className="line" style={{ margin: "30px 0" }}></div>
-
-        {/* 리뷰 출력 */}
-        <div className="commentBox">
-          {/* 부모 리뷰에 해당하는 자식 리뷰가 하위에 오도록 출력 */}
-          {/* 부모 리뷰 출력 */}
-          <div className="posting-review-wrap">
-            <ul>
-              {productReviewList.length > 0 ? (
-                productReviewList.map((review) => (
-                  <li className="posting-item" key={review.reviewNo}>
-                    <ReviewItem
-                      product={product}
-                      review={review}
-                      parentReviewNo={review.reviewNo} // 부모 리뷰 ID 전달
-                      onDeleteReview={handleDeleteReview} // 삭제 핸들러 전달
-                      fetchProductReviewList={fetchProductReviewList} // 여기서 전달
-                    />
-                    {/* 해당 부모 리뷰의 자식 리뷰 출력 */}
-                    <ul>
-                      {productReviewReCommentList
-                        .filter(
-                          (reComment) =>
-                            reComment.reviewCommentRef === review.reviewNo
-                        ) // 부모 리뷰 ID와 일치하는 자식 리뷰 필터링
-                        .map((reComment) => (
-                          <li className="posting-item" key={reComment.reviewNo}>
-                            <ReviewReCommentItem
-                              product={product}
-                              review={reComment}
-                              parentReviewNo={reComment.reviewNo} // 부모 리뷰 ID 전달
-                              onDeleteReview={handleDeleteReview} // 삭제 핸들러 전달
-                              fetchProductReviewList={fetchProductReviewList} // 여기서 전달
-                            // fetchProductReviewReCommentList={
-                            //   fetchProductReviewReCommentList
-                            // } // 여기서 전달
-                            />
-                          </li>
-                        ))}
-                    </ul>
-                  </li>
-                ))
-              ) : (
-                <li
-                  style={{
-                    margin: "150px auto",
-                    textAlign: "center",
-                    color: "gray",
-                  }}
-                >
-                  등록된 리뷰가 없습니다.
-                </li>
-              )}
-            </ul>
-          </div>
-          <div className="review-paging-wrap">
-            <PageNavi pi={pi} reqPage={reqPage} setReqPage={setReqPage} />
-          </div>
-        </div>
-      </div>
-
-      <div className="clear"></div>
-
-      {/* 리뷰 작성 다이얼로그 */}
-      <div className="input-review-popup">
-        <Dialog
-          open={openReviewDialog}
-          onClose={handleCloseReviewDialog}
-          PaperProps={{
-            style: { width: "800px", zIndex: "10" }, // 다이얼로그의 가로 크기를 800px로 설정
-          }}
-          maxWidth={false} // maxWidth 기본값을 사용하지 않도록 설정
-          fullWidth={true} // 다이얼로그가 지정된 너비를 채우도록 설정
-        >
-          <DialogTitle>리뷰 작성</DialogTitle>
-          <DialogContent>
-            <Review
-              productNo={productNo}
-              open={openReviewDialog}
-              handleClose={handleCloseReviewDialog}
-              fetchProductReviewList={fetchProductReviewList} // 리뷰 리스트 갱신 함수 전달
-            // fetchProductReviewReCommentList={fetchProductReviewReCommentList} // 리뷰 답글 리스트 갱신 함수 전달
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseReviewDialog} color="primary">
-              닫기
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
-
-      {isLogin && userType === 2 ? (
-        <div className="buttonBox">
-          <Link
-            className="btn-primary lg"
-            to={`/product/update/${product.productNo}`}
-          >
-            수정
-          </Link>
-          <button
-            type="button"
-            className="btn-secondary lg"
-            onClick={deleteProduct}
-          >
-            삭제
-          </button>
-        </div>
-      ) : (
-        ""
-      )}
-
-      <ChannelTalk />
-      {isLogin ? (
-        <button className="channelTalkBtn">
-          <img src="/image/logo2.png"></img>
-        </button>
-      ) : (
-        ""
-      )}
     </section>
   );
+};
+
+// 이메일(리뷰 작성자) 마스킹 함수
+const maskEmail = (email) => {
+  const [localPart, domain] = email.split("@");
+  const maskedLocalPart = localPart.slice(0, 3) + "*".repeat(localPart.length - 3);
+  return `${maskedLocalPart}@${domain}`;
 };
 
 const ReviewItem = (props) => {
@@ -903,29 +907,56 @@ const ReviewItem = (props) => {
     }
   };
 
+  // 리뷰 수정 버튼 클릭 핸들러
+  const handleUpdateClick = () => {
+    if (loginEmail === review.reviewWriter) {
+      handleOpenReviewDialog("update");
+    } else {
+      Swal.fire({
+        title: "리뷰 작성자만 수정이 가능합니다.",
+        icon: "warning",
+      });
+    }
+  };
+
+  // 리뷰 삭제 버튼 클릭 핸들러
+  const handleDeleteClick = () => {
+    if (loginEmail === review.reviewWriter) {
+      deleteReview();
+    } else {
+      Swal.fire({
+        title: "리뷰 작성자만 삭제가 가능합니다.",
+        icon: "warning",
+      });
+    }
+  };
+
   return (
     <>
       <div className="posting-review">
         <div className="posting-review-info">
           <div className="review-info-left">
             <span style={{ display: "none" }}>{review.reviewNo}</span>
-            <span className="reviewWriter">{review.reviewWriter}</span>
-            <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-            <span className="reviewDate">{review.reviewDate}</span>
+            {/* <span className="review-writer">{review.reviewWriter}</span> */}
+            <span className="review-writer">{maskEmail(review.reviewWriter)}</span>
+            <span className="space">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+            <span className="review-date">{review.reviewDate}</span>
           </div>
           <div className="review-info-right">
-            <button
-              className="btn-secondary sm review-update-btn"
-              onClick={() => handleOpenReviewDialog("update")}
-            >
-              수정
-            </button>
-            <button
-              className="btn-secondary sm review-delete-btn"
-              onClick={deleteReview}
-            >
-              삭제
-            </button>
+            <div>
+              <button
+                className="btn-secondary sm review-update-btn"
+                onClick={handleUpdateClick}
+              >
+                수정
+              </button>
+              <button
+                className="btn-secondary sm review-delete-btn"
+                onClick={handleDeleteClick}
+              >
+                삭제
+              </button>
+            </div>
           </div>
         </div>
         <Rating
@@ -946,7 +977,11 @@ const ReviewItem = (props) => {
         <div className="review-link-box">
           <span
             className={
-              reviewLike && review.reviewWriter === loginEmail
+              // 로그인한 유저가 좋아요를 누른 리뷰(리뷰 답글)인지 확인
+              // 사용자가 포함된 리스트(reviewWriter)에 loginEmail이 있는지를 확인
+              // 있으면 true / 없으면 false
+              // reviewLike && review.reviewWriter.includes(loginEmail)
+              reviewLike
                 ? "review-like-checked"
                 : "review-like-unchecked"
             }
@@ -954,7 +989,7 @@ const ReviewItem = (props) => {
           >
             <i
               className={
-                reviewLike && review.reviewWriter === loginEmail
+                reviewLike
                   ? "fa-solid fa-thumbs-up"
                   : "fa-regular fa-thumbs-up"
               }
@@ -1152,7 +1187,7 @@ const ReviewReCommentItem = (props) => {
               }
             })
             .catch((err) => {
-              // console.log(err);
+              console.log(err);
               Swal.fire({
                 title: "서버와의 통신 중 오류가 발생하였습니다.",
                 text: err.message,
@@ -1216,29 +1251,56 @@ const ReviewReCommentItem = (props) => {
     }
   };
 
+  // 답글 수정 버튼 클릭 핸들러
+  const handleUpdateClick = () => {
+    if (loginEmail === review.reviewWriter) {
+      handleOpenReviewDialog("update");
+    } else {
+      Swal.fire({
+        title: "답글 작성자만 수정이 가능합니다.",
+        icon: "warning",
+      });
+    }
+  };
+
+  // 답글 삭제 버튼 클릭 핸들러
+  const handleDeleteClick = () => {
+    if (loginEmail === review.reviewWriter) {
+      deleteReview();
+    } else {
+      Swal.fire({
+        title: "답글 작성자만 삭제가 가능합니다.",
+        icon: "warning",
+      });
+    }
+  };
+
   return (
     <>
       <div className="posting-review">
         <div className="posting-review-info">
           <div className="review-info-left">
             <span style={{ display: "none" }}>{review.reviewNo}</span>
-            <span className="reviewWriter">{review.reviewWriter}</span>
-            <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-            <span className="reviewDate">{review.reviewDate}</span>
+            {/* <span className="review-writer">{review.reviewWriter}</span> */}
+            <span className="review-writer">{maskEmail(review.reviewWriter)}</span>
+            <span className="space">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+            <span className="review-date">{review.reviewDate}</span>
           </div>
           <div className="review-info-right">
-            <button
-              className="btn-secondary sm review-update-btn"
-              onClick={() => handleOpenReviewDialog("update")}
-            >
-              수정
-            </button>
-            <button
-              className="btn-secondary sm review-delete-btn"
-              onClick={deleteReview}
-            >
-              삭제
-            </button>
+            <div>
+              <button
+                className="btn-secondary sm review-update-btn"
+                onClick={handleUpdateClick}
+              >
+                수정
+              </button>
+              <button
+                className="btn-secondary sm review-delete-btn"
+                onClick={handleDeleteClick}
+              >
+                삭제
+              </button>
+            </div>
           </div>
         </div>
         <div className="posting-review-content">
@@ -1253,7 +1315,7 @@ const ReviewReCommentItem = (props) => {
         <div className="review-link-box">
           <span
             className={
-              reviewLike && review.reviewWriter === loginEmail
+              reviewLike
                 ? "review-like-checked"
                 : "review-like-unchecked"
             }
@@ -1261,7 +1323,7 @@ const ReviewReCommentItem = (props) => {
           >
             <i
               className={
-                reviewLike && review.reviewWriter === loginEmail
+                reviewLike
                   ? "fa-solid fa-thumbs-up"
                   : "fa-regular fa-thumbs-up"
               }
