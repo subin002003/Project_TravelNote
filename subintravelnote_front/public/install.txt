@@ -54,3 +54,6 @@ npm install antd --force
 그런데 @toast-ui/react-editor@3.2.3은 react 17 버전만 지원
  */
 npm install --legacy-peer-deps
+
+2025-04-25 오전 12:21 - 이수빈
+npm install --save-dev @babel/plugin-proposal-private-property-in-object
