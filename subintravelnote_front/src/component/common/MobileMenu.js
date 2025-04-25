@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./mobile_menu.css";
 import React, { useEffect, useRef, useState } from 'react';
 import { isLoginState, loginEmailState, userNickState, userTypeState } from "../utils/RecoilData";
@@ -18,6 +18,9 @@ const MobileMenu = () => {
             setIsRendered(true);
         }
     }, [isLogin]);
+
+    const navigate = useNavigate();
+
     const logout = () => {
         setLoginEmail("");
         setUserType(0);
@@ -25,6 +28,7 @@ const MobileMenu = () => {
         delete axios.defaults.headers.common["Authorization"];
         localStorage.removeItem("accessToken");
         window.localStorage.removeItem("refreshToken");
+        navigate("/"); // 홈으로 이동
     };
 
     const [menuOpen, setMenuOpen] = useState(false); // 메뉴 열기/닫기 상태
@@ -34,7 +38,8 @@ const MobileMenu = () => {
 
     const openMenu = () => {
         if (menuRef.current) {
-            menuRef.current.style.width = "230px";
+            menuRef.current.style.width = "230px";  // 메뉴의 가로 크기 설정
+            // menuRef.current.style.overflowY = "hidden";  // 세로 스크롤 방지
         }
         setMenuOpen(true);
     };
@@ -63,20 +68,54 @@ const MobileMenu = () => {
         setActiveIndex(index); // 부모 클릭 시 해당 인덱스의 메뉴를 활성화
     };
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                closeMenu();
+            }
+        };
+
+        if (menuOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [menuOpen]);
+
     return (
         <div className="mobile_menu_wrap">
-            <button onClick={openMenu} className="menu-btn">
+            {/* 메뉴 열기 버튼 */}
+            <button
+                onClick={() => {
+                    console.log("clicked", menuOpen);
+                    menuOpen ? closeMenu() : openMenu();
+                }}
+                className={menuOpen ? "close-btn" : "menu-btn"}
+                aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"}
+            >
+                <span className="icon-toggle">
+                    <i className={`fa-solid ${menuOpen ? "fa-times" : "fa-bars"}`}></i>
+                </span>
+            </button>
+
+            {/* <button onClick={openMenu} className="menu-btn" aria-label="메뉴 열기">
                 <span className="icon-menu">
                     <i className="fa-solid fa-bars"></i>
                 </span>
-            </button>
+            </button> */}
+
             <div id="main-menu" ref={menuRef} className="menu-container" onClick={(e) => e.stopPropagation()}>
                 {/* 메뉴 닫기 버튼 */}
-                <button onClick={closeMenu} className="close-btn">
+                {/* <button onClick={closeMenu} className="close-btn" aria-label="메뉴 닫기">
                     <span className="icon-close">
                         <i className="fa-solid fa-times"></i>
                     </span>
-                </button>
+                </button> */}
+
                 <div className="menu">
                     <ul className="mobile-user-menu">
                         {isLogin ? (
@@ -115,10 +154,14 @@ const MobileMenu = () => {
                                 <span
                                     className={`more ${activeIndex === 0 ? "active" : ""}`}
                                     onClick={(e) => toggleSubMenu(0, e)}
+                                    style={{
+                                        transform: activeIndex === 0 ? "rotate(45deg)" : "rotate(0deg)",
+                                    }}
                                 >
                                     +
                                 </span>
                             </div>
+
                             {activeIndex === 0 && (
                                 <ul className="sub-menu">
                                     <li>

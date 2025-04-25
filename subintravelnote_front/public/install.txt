@@ -45,3 +45,12 @@ npm list @react-google-maps/api --force
 
 2024-10-19 5:45 이수빈
 npm install antd --force
+
+
+2025-04-25 오후 20:23 - 이수빈
+/* 
+🔍 문제 원인 요약
+현재 프로젝트의 react 버전: 18.3.1
+그런데 @toast-ui/react-editor@3.2.3은 react 17 버전만 지원
+ */
+npm install --legacy-peer-deps

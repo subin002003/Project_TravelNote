@@ -12,14 +12,13 @@
 }
 
 ul {
-    list-style: none;
     margin: 0;
     padding: 0;
 }
 
 .mobile_menu_wrap {
     position: relative;
-    width: 100%;
+    /* width: 100%; */
 }
 
 #main-menu {
@@ -28,10 +27,11 @@ ul {
     right: 0;
     width: 0;
     height: 100%;
-    max-width: 260px;
+    /* max-width: 260px; */
     background-color: rgba(255, 255, 255, 0.8);
+    /* transition: 0.5s; */
+    transition: width 0.3s ease;
     overflow-x: hidden;
-    transition: 0.5s;
     z-index: 1000;
 }
 
@@ -65,6 +65,10 @@ ul {
 .main-menu>li>a {
     background-color: var(--sub-color);
     /* border-bottom: 1px solid #FF0080; */
+}
+
+.main-menu>li:last-child:hover {
+    cursor: pointer;
 }
 
 .main-menu>li>div {
@@ -109,29 +113,25 @@ ul {
 }
 
 .main-menu>li:hover .more {
-    transform: rotate(45deg);
+    transform: rotate(45deg) !important;
 }
 
 .menu-btn {
     width: 60px;
-    position: absolute;
-    top: -23px;
-    right: 50px;
-    /* background-color: var(--main-color); */
+    position: fixed;
+    /* absolute → fixed로 바꿈 */
+    top: 25px;
+    right: 0px;
     font-size: 24px;
-    z-index: 900;
+    z-index: 1100;
+    /* #main-menu (z-index: 1000)보다 더 높게 */
     cursor: pointer;
 }
 
-/* .menu-btn>span {
-    color: var(--white);
-} */
-
 .menu-btn,
-.close-btn,
-.menu-btn:hover,
-.close-btn:hover {
-    background-color: transparent;
+.close-btn {
+    background-color: transparent !important;
+    /* background-color: var(--main-color); */
 }
 
 .menu-btn>span,
@@ -140,16 +140,21 @@ ul {
 }
 
 .close-btn {
+    position: fixed;
+    top: 25px;
+    right: 20px;
+    z-index: 1100;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* .close-btn {
     position: absolute;
     width: 60px;
     top: 72.25px;
     right: 50px;
     font-size: 24px;
     cursor: pointer;
-    /* color: var(--white);
-    background-color: var(--gray2); */
-}
-
-/* .close-btn:hover {
-    background-color: var(--gray);
+    color: var(--white);
+    background-color: var(--gray2);
 } */

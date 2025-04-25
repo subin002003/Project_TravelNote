@@ -18,7 +18,7 @@ const Header = () => {
       <div>
         {" "}
         <div className="logo">
-          <Link style={{ margin: "0", padding: "0", display: "block" }} to="/">
+          <Link to="/">
             <img
               src={logo}
               alt="logo"

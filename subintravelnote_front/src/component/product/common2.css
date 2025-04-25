@@ -19,28 +19,7 @@
         } */
 
     /* 헤더 */
-    .logo {
-        width: 57%;
-    }
 
-    .logo>a>img {
-        width: 150px;
-    }
-
-    .menu-btn,
-    .close-btn {
-        right: 15px;
-        background-color: transparent;
-    }
-
-    .menu-btn>span,
-    .close-btn>span {
-        color: var(--text-color);
-    }
-
-    .close-btn {
-        top: 35.25px;
-    }
 
     /* list */
     .posting-list-item {
@@ -186,10 +165,6 @@
     }
 
     /* 헤더 */
-    .logo {
-        width: 23%;
-    }
-
     .nav {
         display: none;
     }
@@ -228,37 +203,11 @@
     }
 
     /* 헤더 */
-    .logo {
-        width: 20%;
-    }
-
-    .nav {
-        width: auto;
-    }
-
-    .user-menu {
-        width: 25%;
-    }
-
-    /* 기타 스타일 */
 }
 
 /* 데스크탑 (1441px 이상) */
 @media all and (min-width: 1441px) {
     .container {
         padding: 0px 50px;
-    }
-
-    /* 헤더 */
-    .logo {
-        width: 20%;
-    }
-
-    .nav {
-        width: auto;
-    }
-
-    .user-menu {
-        width: 25%;
     }
 }
