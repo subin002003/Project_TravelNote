@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>travelnote_back</artifactId>
+	<artifactId>subintravelnote_back</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>travelnote_back</name>
+	<name>subintravelnote_back</name>
 	<description>Demo project for Spring Boot</description>
 	<url />
 	<licenses>
