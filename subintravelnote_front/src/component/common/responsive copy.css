@@ -1,0 +1,199 @@
+@charset "utf-8";
+
+/* ---------------------------------------------
+   1024px 이하 (태블릿 화면 대응)
+--------------------------------------------- */
+@media (max-width: 1024px) {
+
+    /* 헤더 내부 여백 조정 */
+    .header>div {
+        padding: 0 1rem;
+    }
+
+    /* 네비게이션 메뉴 간격 및 폰트 크기 조정 */
+    .nav>ul {
+        gap: 1rem;
+        font-size: 1rem;
+    }
+
+    /* 유저 메뉴 크기 및 간격 조정 */
+    .user-menu {
+        font-size: 0.95rem;
+        gap: 1rem;
+    }
+
+    /* 로고 이미지 크기 축소 */
+    .logo>a>img {
+        height: 4.5rem;
+    }
+
+    /* 섹션 패딩 조정 */
+    .section {
+        padding: 0 1rem;
+    }
+}
+
+
+/* ---------------------------------------------
+   768px 이하 (모바일 기본 대응)
+--------------------------------------------- */
+@media (max-width: 768px) {
+
+    /* 기본 폰트 사이즈 조정 */
+    html {
+        font-size: 14px;
+    }
+
+    /* 헤더 레이아웃을 세로 정렬로 변경 */
+    .header>div {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    /* 로고 가운데 정렬 */
+    .logo {
+        justify-content: center;
+        width: 100%;
+    }
+
+    /* 로고 이미지 크기 축소 */
+    .logo>a>img {
+        height: 4rem;
+    }
+
+    /* 데스크탑 네비게이션 숨기기 */
+    .nav {
+        display: none;
+    }
+
+    /* 모바일 전용 메뉴 표시 */
+    .mobile_menu_wrap {
+        display: block;
+        width: 100%;
+    }
+
+    /* 유저 메뉴 레이아웃 및 크기 조정 */
+    .user-menu {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        font-size: 1rem;
+    }
+
+    /* 메인 컨텐츠 여백 축소 */
+    .main-content {
+        padding: 0 1rem;
+    }
+
+    /* 섹션 여백 조정 */
+    .section {
+        padding: 0 0.75rem;
+    }
+
+    /* 푸터 여백 조정 */
+    .footer {
+        padding: 1rem;
+    }
+
+    .footer>div {
+        padding: 1rem 0;
+    }
+
+    /* 푸터 메뉴 리스트를 세로로 배치 */
+    .footer>ul>li {
+        float: none;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+}
+
+
+/* ---------------------------------------------
+   480px 이하 (소형 모바일 대응)
+--------------------------------------------- */
+@media (max-width: 480px) {
+
+    /* 기본 폰트 사이즈 더 축소 */
+    html {
+        font-size: 13px;
+    }
+
+    /* 헤더 정렬 및 패딩 최소화 */
+    .header>div {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        padding: 0 0.75rem;
+    }
+
+    /* 로고 이미지 더 작게 */
+    .logo>a>img {
+        height: 3.5rem;
+    }
+
+    /* 유저 메뉴를 세로 정렬 */
+    .user-menu {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    /* 메인 콘텐츠 여백 최소화 */
+    .main-content {
+        padding: 0 0.75rem;
+    }
+
+    /* 섹션 여백 축소 */
+    .section {
+        padding: 0 0.5rem;
+    }
+
+    /* 버튼 전체 너비 및 터치 영역 확대 */
+    button {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+    }
+
+    /* 푸터 간결하게 정렬 및 여백 축소 */
+    .footer {
+        padding: 0.75rem;
+        text-align: center;
+    }
+
+    .footer>div {
+        padding: 0.75rem 0;
+    }
+
+    .footer>p {
+        font-size: 0.95rem;
+        line-height: 1.5rem;
+    }
+
+    /* 푸터 메뉴를 세로 정렬로 변경 */
+    .footer>ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer>ul>li {
+        margin: 0.25rem 0;
+    }
+
+    /* 커뮤니티 메뉴를 기본 흐름에 맞게 수정 */
+    .community-menu {
+        min-width: 100%;
+        position: static;
+        box-shadow: none;
+        border: none;
+    }
+
+    /* 커뮤니티 메뉴 호버 시 자연스럽게 표시 */
+    .nav li:hover .community-menu {
+        display: block;
+        position: static;
+    }
+}

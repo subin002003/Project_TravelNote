@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./default.css";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
@@ -25,15 +25,15 @@ const Header = () => {
             />
           </Link>
         </div>
-        <MainNavi />
-        <HeaderLink />
+        <MainMenu />
+        <UserMenu />
         <MobileMenu />
       </div>
     </header>
   );
 };
 
-const MainNavi = () => {
+const MainMenu = () => {
   const [isCommunityOpen, setIsCommunityOpen] = useState(false);
   const handleMouseEnter = () => {
     setIsCommunityOpen(true);
@@ -44,6 +44,9 @@ const MainNavi = () => {
   return (
     <nav className="nav">
       <ul>
+        <li>
+          <Link to="/accordion/">아코디언</Link>
+        </li>
         <li>
           <Link to="/domestic/list">국내 여행</Link>
         </li>
@@ -74,26 +77,31 @@ const MainNavi = () => {
   );
 };
 
-const HeaderLink = () => {
+const UserMenu = () => {
   const [loginEmail, setLoginEmail] = useRecoilState(loginEmailState);
   const [userType, setUserType] = useRecoilState(userTypeState);
   const [userNick, setUserNick] = useRecoilState(userNickState);
   const isLogin = useRecoilValue(isLoginState);
+  const navigate = useNavigate(); // navigate 훅을 사용하여 페이지 이동
 
-  const [isRendered, setIsRendered] = useState(false); // 렌더링 여부
+  // const [isRendered, setIsRendered] = useState(false); // 렌더링 여부
 
-  useEffect(() => {
-    if (isLogin) {
-      setIsRendered(true);
-    }
-  }, [isLogin]);
+  // useEffect(() => {
+  //   if (isLogin) {
+  //     setIsRendered(true);
+  //   }
+  // }, [isLogin]);
+
   const logout = () => {
     setLoginEmail("");
     setUserType(0);
     setUserNick("");
+
     delete axios.defaults.headers.common["Authorization"];
     localStorage.removeItem("accessToken");
-    window.localStorage.removeItem("refreshToken");
+    localStorage.removeItem("refreshToken");
+
+    navigate("/"); // 홈 화면으로 이동
   };
 
   return (
@@ -104,10 +112,15 @@ const HeaderLink = () => {
             <Link to="/mypage">{userNick}</Link>
           </li>
           <li>
+            <button onClick={logout} className="logout-button">
+              로그아웃
+            </button>
+          </li>
+          {/* <li>
             <Link to="/#" onClick={logout}>
               로그아웃
             </Link>
-          </li>
+          </li> */}
         </>
       ) : (
         <>

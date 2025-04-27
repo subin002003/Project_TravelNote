@@ -16,7 +16,7 @@ const MobileMenu = () => {
     const navigate = useNavigate(); // navigate 훅을 사용하여 페이지 이동
     const menuRef = useRef(null); // 메뉴를 참조할 ref
     const [menuOpen, setMenuOpen] = useState(false); // 메뉴 열림 여부 상태
-    const [activeIndex, setActiveIndex] = useState(null); // 활성화된 서브 메뉴 인덱스 관리
+    const [activeIndex, setActiveIndex] = useState(null); // 활성화된 서브 메뉴 인덱스
 
     // 메뉴 토글 핸들러
     const handleMenuToggle = useCallback(() => {
@@ -41,11 +41,9 @@ const MobileMenu = () => {
         setLoginEmail("");
         setUserType(0);
         setUserNick("");
-
         delete axios.defaults.headers.common["Authorization"];
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
-
         navigate("/"); // 홈 화면으로 이동
     }, [navigate, setLoginEmail, setUserNick, setUserType]);
 
@@ -72,13 +70,13 @@ const MobileMenu = () => {
         <ul className="mobile-user-menu">
             {isLogin ? (
                 <>
-                    <li><Link to="/mypage">{userNick}</Link></li>
-                    <li><button onClick={handleLogout} className="logout-btn">로그아웃</button></li>
+                    <li><Link to="/mypage">{userNick}</Link></li> {/* 마이페이지 링크 */}
+                    <li><button onClick={handleLogout} className="logout-btn">로그아웃</button></li> {/* 로그아웃 버튼 */}
                 </>
             ) : (
                 <>
-                    <li><Link to="/login">로그인</Link></li>
-                    <li><Link to="/joinUser">회원가입</Link></li>
+                    <li><Link to="/login">로그인</Link></li> {/* 로그인 링크 */}
+                    <li><Link to="/joinUser">회원가입</Link></li> {/* 회원가입 링크 */}
                 </>
             )}
         </ul>
@@ -87,10 +85,11 @@ const MobileMenu = () => {
     // 메인 메뉴 컴포넌트
     const MainMenu = ({ activeIndex, handleSubMenuToggle }) => (
         <ul className="main-menu">
-            <li><Link to="/domestic/list">국내 여행</Link></li>
-            <li><Link to="/foreign/list">해외 여행</Link></li>
-            <li><Link to="/product/list">패키지 상품</Link></li>
-            <li><Link to="/customerService">고객센터</Link></li>
+            <li><Link to="/domestic/list">국내 여행</Link></li> {/* 국내 여행 링크 */}
+            <li><Link to="/foreign/list">해외 여행</Link></li> {/* 해외 여행 링크 */}
+            <li><Link to="/product/list">패키지 상품</Link></li> {/* 패키지 상품 링크 */}
+            <li><Link to="/customerService">고객센터</Link></li> {/* 고객센터 링크 */}
+
             {/* 커뮤니티 메뉴 (서브 메뉴) */}
             <li>
                 <div href="#" onClick={() => handleSubMenuToggle(0)} className="community-toggle">

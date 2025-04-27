@@ -106,18 +106,18 @@ const Main = () => {
 
   return (
     <>
-      <div style={{ width: "100%", margin: "80px auto", textAlign: "center" }}>
-        <h1 style={{ fontSize: "40px" }}>여행지 정보</h1>
+      <div style={{ width: "100%", margin: "5rem auto", textAlign: "center" }}>
+        <h1 style={{ fontSize: "2.5rem" }}>여행지 정보</h1>
         <h2
           style={{
-            fontSize: "30px",
+            fontSize: "1.875rem",
           }}
         >
           {locations[currentIndex].name}
         </h2>
 
         {/* 설명 + 이미지 */}
-        <div style={{ marginTop: "50px", display: "flex", justifyContent: "space-between", alignItems: "center", }}>
+        <div style={{ marginTop: "3.125rem", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0rem 0.625rem" }}>
           {/* 설명 + 날씨 + 환율 */}
           <div
             style={{
@@ -133,11 +133,11 @@ const Main = () => {
             </div>
 
             {/* 날씨 + 환율 */}
-            <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-around" }}>
+            <div style={{ marginTop: "1.25rem", display: "flex", justifyContent: "space-around" }}>
               <div
                 style={{
                   display: "flex",
-                  gap: "50px"
+                  gap: "3.125rem"
                 }}
               >
                 {/* 날씨 */}
@@ -221,7 +221,7 @@ const Main = () => {
               style={{
                 width: "100%",
                 // maxWidth: "500px",
-                height: "400px",
+                height: "25rem",
                 objectFit: "cover",
               }}
             />
@@ -239,7 +239,7 @@ const Main = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          fontSize: "24px",
+          fontSize: "1.5rem",
           // maxWidth: "1800px",
           // margin: "20px 0",
           // gap: "1630px",
@@ -248,7 +248,8 @@ const Main = () => {
         <button
           onClick={prevLocation}
           style={{
-            marginRight: "10px",
+            margin: "0rem",
+            padding: "0.625rem",
             background: "transparent",
             color: "#000",
           }}
@@ -259,7 +260,8 @@ const Main = () => {
         <button
           onClick={nextLocation}
           style={{
-            marginLeft: "10px",
+            margin: "0rem",
+            padding: "0.625rem",
             background: "transparent",
             color: "#000",
           }}

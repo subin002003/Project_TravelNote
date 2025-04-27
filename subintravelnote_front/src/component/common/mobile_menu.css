@@ -1,160 +1,204 @@
-:root {
-    --main-color: #1363df;
-    --point-color: #c57cff;
-    --sub-color: #47b5ff;
-    --base-color: #dff6ff;
-    --background-color: #eef2f3;
-    --text-color: #333;
-    --black: #000;
-    --white: #fff;
-    --gray: #ddd;
-    --gray2: #777;
-}
+@charset "utf-8";
 
+/* ul 기본 스타일: 
+  기본적인 margin과 padding을 제거하여 
+  ul 요소의 기본 스타일을 없애기 위한 설정 */
 ul {
     margin: 0;
     padding: 0;
 }
 
+/* 모바일 메뉴 전체를 감싸는 wrap: 메뉴 전체 영역을 감싸는 컨테이너로, 
+   모바일 메뉴가 위치할 수 있도록 relative로 설정 */
 .mobile_menu_wrap {
     position: relative;
     /* width: 100%; */
 }
 
+/* 메뉴 컨테이너 (오버레이): 
+   메뉴가 화면에 고정되어 오른쪽에서 왼쪽으로 열리도록 설정 */
 #main-menu {
     position: fixed;
     top: 0;
     right: 0;
+    /* 메뉴가 오른쪽에서 열리도록 설정 */
     width: 0;
+    /* 기본 상태에서는 메뉴가 보이지 않도록 width를 0으로 설정 */
     height: 100%;
-    /* max-width: 260px; */
+    /* 화면 높이 전체를 차지 */
     background-color: rgba(255, 255, 255, 0.8);
-    /* transition: 0.5s; */
     transition: width 0.3s ease;
+    /* 메뉴 열릴 때 부드럽게 열리도록 애니메이션 설정 */
     overflow-x: hidden;
+    /* 메뉴가 좌우로 넘치는 것을 방지 */
     z-index: 1000;
 }
 
+/* 메뉴 안의 내용 스타일: 메뉴 열렸을 때 메뉴 항목들이 위치할 부분 */
 .menu {
-    margin-top: 130px;
+    margin-top: 8.125rem;
+    /* 130px -> 8.125rem */
+    /* 상단에 여백을 주어 메뉴가 상단에 밀리지 않도록 */
     padding: 0;
 }
 
+/* 메인 메뉴의 각 항목 스타일: 메뉴 항목의 링크 스타일 */
 .menu ul>li>a {
     display: block;
-    padding: 16px 20px;
+    /* a 태그를 블록 요소로 만들어 전체 영역을 클릭할 수 있도록 설정 */
+    padding: 1rem 1.25rem;
+    /* 16px 20px -> 1rem 1.25rem */
+    /* 각 항목에 패딩을 주어 클릭 영역 확대 */
     color: var(--white);
-    text-decoration: none;
-    font-size: 18px;
+    font-size: 1.125rem;
+    /* 18px -> 1.125rem */
+    box-sizing: border-box;
+    /* padding을 포함한 크기 계산 */
     transition: background-color 0.3s;
+    /* 배경색 변화 */
 }
 
 .menu ul>li>div {
     display: block;
+    /* a 태그를 블록 요소로 만들어 전체 영역을 클릭할 수 있도록 설정 */
+    padding: 1rem 1.25rem;
+    /* 16px 20px -> 1rem 1.25rem */
+    /* 각 항목에 패딩을 주어 클릭 영역 확대 */
+    color: var(--white);
+    font-size: 1.125rem;
+    /* 18px -> 1.125rem */
+    box-sizing: border-box;
+    /* padding을 포함한 크기 계산 */
+    transition: background-color 0.3s;
+    /* 배경색 변화 */
+
+    /* display: block;
     padding: 16px 20px;
     color: var(--white);
-    text-decoration: none;
     font-size: 18px;
-    transition: background-color 0.3s;
+    box-sizing: border-box;
+    transition: background-color 0.3s; */
 }
 
+/* 사용자 메뉴 스타일: 서브 메뉴 항목의 스타일 */
 .mobile-user-menu>li>a {
     background-color: var(--sub-color);
+    /* 서브 메뉴 항목 배경 색상 */
+    transition-duration: 0.3s;
+    /* 배경색 변화 시간 설정 */
 }
 
-.main-menu>li>a {
-    background-color: var(--sub-color);
-    /* border-bottom: 1px solid #FF0080; */
-}
-
-.main-menu>li:last-child:hover {
-    cursor: pointer;
-}
-
-.main-menu>li>div {
-    background-color: var(--sub-color);
-    /* border-bottom: 1px solid #FF0080; */
-}
-
-.main-menu>li:hover>a {
+.mobile-user-menu>li:hover>a {
     background-color: var(--main-color);
 }
 
+/* 메인 메뉴 항목의 배경색과 hover 효과: 메뉴 항목의 기본 배경색 및 hover 효과 */
+.main-menu>li>a {
+    background-color: var(--sub-color);
+    /* 기본 배경색 */
+    transition-duration: 0.3s;
+    /* 배경색 변화 시간 설정 */
+}
+
+/* 메인 메뉴 항목의 배경색과 hover 효과: 메뉴 항목의 기본 배경색 및 hover 효과 */
+.main-menu>li>div {
+    background-color: var(--sub-color);
+    /* 기본 배경색 */
+    transition-duration: 0.3s;
+    /* 배경색 변화 시간 설정 */
+}
+
+/* 메뉴 항목에 hover 시 배경색 변화 */
+.main-menu>li:hover>a {
+    background-color: var(--main-color);
+    /* hover 시 배경색 변화 */
+}
+
+/* 서브 메뉴의 숨김 및 보이기: 기본적으로 서브 메뉴는 숨겨짐 */
 .sub-menu {
     display: none;
-    /* padding-left: 20px; */
+    /* 기본적으로 서브 메뉴는 보이지 않도록 설정 */
 }
 
-.menu .sub-menu>li>.sub-menu>li {
-    border-left: 10px solid var(--white);
-}
-
-.main-menu>li:hover .sub-menu {
+/* show 클래스를 추가하면 서브 메뉴를 보이게 설정 */
+.sub-menu.show {
     display: block;
 }
 
+/* 서브 메뉴 항목의 스타일: 서브 메뉴 항목에 대한 배경색과 경계선 설정 */
 .sub-menu>li>a {
     background-color: var(--text-color);
-    border-left: 10px solid var(--text-color);
-    padding: 12px 20px;
-    font-size: 16px;
+    /* 서브 메뉴 항목 배경 색상 */
+    border-left: 0.625rem solid var(--text-color);
+    /* 10px -> 0.625rem */
+    /* 서브 메뉴 항목 왼쪽에 경계선 */
+    padding: 0.75rem 1.25rem;
+    /* 12px 20px -> 0.75rem 1.25rem */
+    font-size: 1rem;
+    /* 16px -> 1rem */
     transition: border-color 0.3s;
+    /* 경계선 색상 변화 */
 }
 
-/* .sub-menu>li:hover>a {
+/* 서브 메뉴 항목에 hover 시 경계선 색상 변화 */
+.sub-menu>li:hover>a {
     border-color: var(--sub-color);
-} */
+    /* hover 시 경계선 색상 변화 */
+}
 
+/* 커뮤니티 메뉴의 토글 버튼 스타일: 토글 버튼의 위치와 크기 설정 */
 .more {
     position: absolute;
-    right: 20px;
-    font-size: 20px;
+    right: 1.25rem;
+    /* 20px -> 1.25rem */
+    font-size: 1.25rem;
+    /* 20px -> 1.25rem */
     transition: transform 0.4s;
+    /* 회전 애니메이션 설정 */
 }
 
-.main-menu>li:hover .more {
-    transform: rotate(45deg) !important;
+/* 토글 버튼이 활성화되었을 때: 토글 버튼이 회전하도록 설정 */
+.more.active {
+    transform: rotate(45deg);
+    /* 활성화되면 45도 회전 */
 }
 
+/* 메뉴 열기/닫기 버튼 스타일: 메뉴 버튼의 위치, 크기 및 스타일 설정 */
 .menu-btn {
-    width: 60px;
+    width: 3.75rem;
+    /* 60px -> 3.75rem */
     position: fixed;
-    /* absolute → fixed로 바꿈 */
-    top: 25px;
-    right: 0px;
-    font-size: 24px;
+    top: 1.5625rem;
+    /* 25px -> 1.5625rem */
+    right: 0;
+    font-size: 1.5rem;
+    /* 24px -> 1.5rem */
     z-index: 1100;
-    /* #main-menu (z-index: 1000)보다 더 높게 */
+    /* 메뉴보다 높은 z-index 값 */
     cursor: pointer;
 }
 
+/* 메뉴 열기 버튼과 닫기 버튼의 배경을 투명으로 설정 */
 .menu-btn,
 .close-btn {
     background-color: transparent !important;
-    /* background-color: var(--main-color); */
 }
 
+/* 메뉴 열기 버튼과 닫기 버튼의 텍스트 색상 설정 */
 .menu-btn>span,
 .close-btn>span {
     color: var(--text-color);
 }
 
+/* 메뉴 닫기 버튼 스타일: 메뉴 닫기 버튼의 위치, 크기, 스타일 설정 */
 .close-btn {
     position: fixed;
-    top: 25px;
-    right: 20px;
+    top: 1.5625rem;
+    /* 25px -> 1.5625rem */
+    right: 1.25rem;
+    /* 20px -> 1.25rem */
     z-index: 1100;
-    font-size: 24px;
+    font-size: 1.5rem;
+    /* 24px -> 1.5rem */
     cursor: pointer;
 }
-
-/* .close-btn {
-    position: absolute;
-    width: 60px;
-    top: 72.25px;
-    right: 50px;
-    font-size: 24px;
-    cursor: pointer;
-    color: var(--white);
-    background-color: var(--gray2);
-} */
